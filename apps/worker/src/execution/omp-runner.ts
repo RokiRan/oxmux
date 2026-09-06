@@ -136,7 +136,8 @@ const runOmpPromptCore = async (params: WorkerAgentPromptParams): Promise<Worker
     args.push('--resume', resumeSessionId)
   }
   args.push(...(params.runtimeArgs ?? []))
-  args.push(params.prompt)
+  // prompt 常以「--- 最近对话 ---」开头，必须以 -- 结束选项解析，否则 omp 把 prompt 当未知 flag 拒绝
+  args.push('--', params.prompt)
 
   return new Promise<WorkerAgentPromptResult>((resolve, reject) => {
     const child = spawn(executable, args, {

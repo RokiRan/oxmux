@@ -352,6 +352,27 @@ const createImportedBindings = async (input: ImportModelProfileInput) => {
       } satisfies ModelProfileRuntimeSettings,
     }]
   }
+  if (input.agentType === 'Omp') {
+    const fallbackModel = exported.agentSettings?.Omp.defaultModel?.trim() || ''
+    const parsed = parseExecutionModelId(fallbackModel)
+    const providerId = parsed?.providerId || 'omp'
+    const modelId = parsed?.modelId || fallbackModel
+
+    if (!modelId) {
+      return []
+    }
+
+    return [{
+      providerId,
+      modelId,
+      baseUrl: undefined,
+      label: buildImportedProfileName('Omp', parsed ? buildExecutionModelId(providerId, modelId) : modelId),
+      runtimeSettings: {
+        defaultModel: parsed ? buildExecutionModelId(providerId, modelId) : modelId,
+        profile: exported.agentSettings?.Omp.profile?.trim() || undefined,
+      } satisfies ModelProfileRuntimeSettings,
+    }]
+  }
 
   const model = parseClaudeCodeConfigModel(exported.claudeCodeConfigContent)
   if (!model) {

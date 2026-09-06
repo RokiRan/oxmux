@@ -126,7 +126,7 @@ const requestExit = () => {
 }
 
 const resolveBootstrapTarget = (rawTarget: string): WorkerRuntimeTarget => {
-  if (rawTarget === 'all' || rawTarget === 'base' || rawTarget === 'Codex' || rawTarget === 'ClaudeCode' || rawTarget === 'Pi' || rawTarget === 'OpenCode') {
+  if (rawTarget === 'all' || rawTarget === 'base' || rawTarget === 'Codex' || rawTarget === 'ClaudeCode' || rawTarget === 'Pi' || rawTarget === 'OpenCode' || rawTarget === 'Omp') {
     return rawTarget
   }
 

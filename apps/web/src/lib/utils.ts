@@ -28,6 +28,7 @@ export const agentMeta: Record<AgentType, { label: string; soft: string; accent:
   Codex: { label: 'Codex', soft: 'bg-sky-100 text-sky-700', accent: 'bg-sky-500 text-white' },
   ClaudeCode: { label: 'Claude Code', soft: 'bg-amber-100 text-amber-800', accent: 'bg-amber-500 text-white' },
   Pi: { label: 'Pi', soft: 'bg-emerald-100 text-emerald-800', accent: 'bg-emerald-500 text-white' },
+  Omp: { label: 'Oh My Pi', soft: 'bg-teal-100 text-teal-800', accent: 'bg-teal-500 text-white' },
 }
 
 export const getRuntimeLabel = (runtime: RuntimeId | 'inherit') => {

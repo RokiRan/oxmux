@@ -20,6 +20,7 @@ import type {
   ManagedCloudCfSandboxConfig,
   ManagedCloudConfig,
   OpenCodeAgentSettings,
+  OmpAgentSettings,
   PiAgentSettings,
   RuntimeId,
   RuntimeSettingsById,
@@ -57,6 +58,11 @@ export const DEFAULT_PI_AGENT_SETTINGS: PiAgentSettings = {
   defaultModel: '',
   agentDir: '',
 }
+export const DEFAULT_OMP_AGENT_SETTINGS: OmpAgentSettings = {
+  _runtime: 'Omp',
+  defaultModel: '',
+  profile: '',
+}
 
 export const DEFAULT_WORKER_UPDATE_SETTINGS: WorkerUpdateSettings = {
   exitMode: 'auto',
@@ -67,6 +73,7 @@ export const DEFAULT_AGENT_SETTINGS: AgentSettings = {
   Codex: DEFAULT_CODEX_AGENT_SETTINGS,
   ClaudeCode: DEFAULT_CLAUDE_CODE_AGENT_SETTINGS,
   Pi: DEFAULT_PI_AGENT_SETTINGS,
+  Omp: DEFAULT_OMP_AGENT_SETTINGS,
 }
 
 export const DEFAULT_MANAGED_CLOUD_CONFIG: ManagedCloudConfig = {
@@ -123,6 +130,7 @@ const cloneSettings = (settings: AgentSettings): AgentSettings => ({
   Codex: { ...settings.Codex },
   ClaudeCode: { ...settings.ClaudeCode },
   Pi: { ...settings.Pi },
+  Omp: { ...settings.Omp },
 })
 
 const normalizeManagedCloudDockerTargetConfig = (value: unknown): ManagedCloudConfig['dockerPool'][number] | null => {
@@ -262,6 +270,9 @@ export const normalizeAgentSettings = (settings?: Partial<AgentSettings>, legacy
   if (settings?.Pi) {
     next.Pi = { ...next.Pi, ...settings.Pi }
   }
+  if (settings?.Omp) {
+    next.Omp = { ...next.Omp, ...settings.Omp }
+  }
   if (!next.OpenCode.defaultModel.trim() && legacyDefaultModel?.trim()) {
     next.OpenCode.defaultModel = legacyDefaultModel.trim()
   }
@@ -384,6 +395,17 @@ const normalizePiRuntimeSettings = (
     agentDir: typeof record.agentDir === 'string' ? record.agentDir : fallback.agentDir,
   }
 }
+const normalizeOmpRuntimeSettings = (
+  value: unknown,
+  fallback: OmpAgentSettings,
+): OmpAgentSettings => {
+  const record = isRecord(value) ? value : {}
+  return {
+    _runtime: 'Omp',
+    defaultModel: typeof record.defaultModel === 'string' ? record.defaultModel : fallback.defaultModel,
+    profile: typeof record.profile === 'string' ? record.profile : fallback.profile,
+  }
+}
 
 const isOpenCodeRuntimeSettings = (value: unknown) => {
   return isRecord(value) && ('agent' in value || 'permissionPolicy' in value)
@@ -399,6 +421,9 @@ const isClaudeCodeRuntimeSettings = (value: unknown) => {
 
 const isPiRuntimeSettings = (value: unknown) => {
   return isRecord(value) && ('agentDir' in value)
+}
+const isOmpRuntimeSettings = (value: unknown) => {
+  return isRecord(value) && ('profile' in value || 'defaultModel' in value)
 }
 
 export const mergeAgentRuntimeSettings = (
@@ -416,6 +441,10 @@ export const mergeAgentRuntimeSettings = (
 
   if (runtimeId === 'ClaudeCode') {
     return normalizeClaudeCodeRuntimeSettings(isClaudeCodeRuntimeSettings(value) ? value : undefined, fallback as ClaudeCodeAgentSettings)
+  }
+
+  if (runtimeId === 'Omp') {
+    return normalizeOmpRuntimeSettings(isOmpRuntimeSettings(value) ? value : undefined, fallback as OmpAgentSettings)
   }
 
   return normalizePiRuntimeSettings(isPiRuntimeSettings(value) ? value : undefined, fallback as PiAgentSettings)
@@ -447,7 +476,7 @@ export const listBundledAgentModels = (agentType: Exclude<AgentType, 'OpenCode'>
   }
 
   const slashIndex = normalizedDefaultModel.indexOf('/')
-  const providerId = slashIndex >= 0 ? normalizedDefaultModel.slice(0, slashIndex) : 'pi'
+  const providerId = slashIndex >= 0 ? normalizedDefaultModel.slice(0, slashIndex) : agentType === 'Omp' ? 'omp' : 'pi'
   const modelId = slashIndex >= 0 ? normalizedDefaultModel.slice(slashIndex + 1) : normalizedDefaultModel
 
   return [{

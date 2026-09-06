@@ -41,6 +41,7 @@ const RUNTIME_CONTEXT_DESCRIPTORS: Record<RuntimeId, { skillRoot: string }> = {
   Codex: { skillRoot: '.codex/skills' },
   ClaudeCode: { skillRoot: '.claude/skills' },
   Pi: { skillRoot: '.pi/skills' },
+  Omp: { skillRoot: '.omp/skills' },
 }
 
 const getRuntimeSkillRoot = (agentType: AgentType) => {
@@ -959,12 +960,24 @@ const createPiRuntimePreparation = (params: RuntimePreparationParams): RuntimePr
     },
   }
 }
+const createOmpRuntimePreparation = (params: RuntimePreparationParams): RuntimePreparationResult => {
+  // omp 的凭据/模型/会话由 CLI 按 profile 自管（omp-runner 负责 --profile 派生），无需运行时目录注入
+  return {
+    promptPrefix: params.promptPrefix,
+    runtimeEnv: {},
+    runtimeArgs: [],
+    cleanup: () => {
+      params.runtimeSkills?.cleanup()
+    },
+  }
+}
 
 const RUNTIME_PREPARERS: Partial<Record<RuntimeId, (params: RuntimePreparationParams) => RuntimePreparationResult>> = {
   OpenCode: createOpenCodeRuntimePreparation,
   Codex: createCodexRuntimePreparation,
   ClaudeCode: createClaudeRuntimePreparation,
   Pi: createPiRuntimePreparation,
+  Omp: createOmpRuntimePreparation,
 }
 
 export const prepareWorkerAgentRuntime = (params: {

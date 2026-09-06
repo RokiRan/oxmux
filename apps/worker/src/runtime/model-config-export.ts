@@ -436,7 +436,7 @@ const resolvePiBinding = (config: WorkerConfig): ResolvedModelImportBinding[] =>
 
 export const resolveExportedModelBindings = (params: {
   config: WorkerConfig
-  agentType?: 'OpenCode' | 'Codex' | 'ClaudeCode' | 'Pi'
+  agentType?: 'OpenCode' | 'Codex' | 'ClaudeCode' | 'Pi' | 'Omp'
   availableModels: ExecutionModelOption[]
 }) => {
   if (params.agentType === 'OpenCode') {

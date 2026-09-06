@@ -111,6 +111,9 @@ const claudeCodeRunner = createWorkerOnlyRunner('ClaudeCode', {
 const piRunner = createWorkerOnlyRunner('Pi', {
   defaultModel: '',
 })
+const ompRunner = createWorkerOnlyRunner('Omp', {
+  defaultModel: '',
+})
 
 const openCodeRunner: CodingAgentRunner = {
   async checkAdapter(config, adapter) {
@@ -140,6 +143,7 @@ const runners: Record<ServerAgentType, CodingAgentRunner> = {
   Codex: codexRunner,
   ClaudeCode: claudeCodeRunner,
   Pi: piRunner,
+  Omp: ompRunner,
 }
 
 const resolveRunner = (agentType?: ServerAgentType) => {

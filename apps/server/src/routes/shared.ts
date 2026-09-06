@@ -892,6 +892,11 @@ export const settingsSchema = z.object({
       defaultModel: z.string().optional().default(DEFAULT_AGENT_SETTINGS.Pi.defaultModel),
       agentDir: z.string().optional().default(DEFAULT_AGENT_SETTINGS.Pi.agentDir || ''),
     }).optional().default(DEFAULT_AGENT_SETTINGS.Pi),
+    Omp: z.object({
+      _runtime: z.literal('Omp').optional().default('Omp'),
+      defaultModel: z.string().optional().default(DEFAULT_AGENT_SETTINGS.Omp.defaultModel),
+      profile: z.string().optional().default(DEFAULT_AGENT_SETTINGS.Omp.profile || ''),
+    }).optional().default(DEFAULT_AGENT_SETTINGS.Omp),
   }).optional().default(DEFAULT_AGENT_SETTINGS),
   workspaceExecutionDefaults: z.object({
     executorNodeId: z.string().trim().optional().default(''),

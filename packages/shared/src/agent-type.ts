@@ -3,11 +3,11 @@
 // [POS]: Agent/Runtime 类型契约
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
-export const AGENT_TYPES = ['Pi', 'OpenCode', 'Codex', 'ClaudeCode'] as const
+export const AGENT_TYPES = ['Pi', 'Omp', 'OpenCode', 'Codex', 'ClaudeCode'] as const
 
 export type AgentType = (typeof AGENT_TYPES)[number]
 
-export const VISIBLE_AGENT_TYPES = ['Pi', 'OpenCode', 'Codex', 'ClaudeCode'] as const satisfies readonly AgentType[]
+export const VISIBLE_AGENT_TYPES = ['Pi', 'Omp', 'OpenCode', 'Codex', 'ClaudeCode'] as const satisfies readonly AgentType[]
 
 export const DEFAULT_AGENT_TYPE: AgentType = 'OpenCode'
 
@@ -63,6 +63,14 @@ export const RUNTIME_DESCRIPTORS: Record<RuntimeId, RuntimeDescriptor> = {
     modelIdStrategy: 'canonical',
     workerOnly: true,
     agentType: 'Pi',
+  },
+  Omp: {
+    id: 'Omp',
+    label: 'Oh My Pi',
+    transport: 'STDIO',
+    modelIdStrategy: 'native',
+    workerOnly: true,
+    agentType: 'Omp',
   },
 }
 

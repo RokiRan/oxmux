@@ -63,7 +63,7 @@ type ProviderDraft = {
 
 const DEFAULT_PROVIDER_TEMPLATE = getProviderTemplate('openai')
 const CUSTOM_PROVIDER_TEMPLATE_ID = 'custom'
-const MODEL_PROFILE_AGENT_TEST_TYPES = ['Codex', 'ClaudeCode', 'OpenCode', 'Pi'] as const satisfies readonly AgentType[]
+const MODEL_PROFILE_AGENT_TEST_TYPES = ['Codex', 'ClaudeCode', 'OpenCode', 'Pi', 'Omp'] as const satisfies readonly AgentType[]
 
 const createProviderDraft = (): ProviderDraft => ({
   key: crypto.randomUUID(),

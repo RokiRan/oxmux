@@ -8,6 +8,7 @@ export type RuntimeRequirementId =
   | 'unzip'
   | 'opencode'
   | 'pi-runtime'
+  | 'omp-cli'
   | 'codex-cli'
   | 'codex-auth'
   | 'claude-cli'

@@ -13,6 +13,7 @@ import type {
   ModelProfileBinding,
   ModelProfileRuntimeSettings,
   OpenCodeAgentSettings,
+  OmpAgentSettings,
   PiAgentSettings,
 } from './types'
 
@@ -410,6 +411,13 @@ export const normalizeModelProfileRuntimeSettings = (
     return {
       ...(settings.defaultModel?.trim() ? { defaultModel: settings.defaultModel.trim() } : {}),
       ...(settings.agentDir?.trim() ? { agentDir: settings.agentDir.trim() } : {}),
+    }
+  }
+  if (runtimeId === 'Omp') {
+    const settings = runtimeSettings as Partial<OmpAgentSettings>
+    return {
+      ...(settings.defaultModel?.trim() ? { defaultModel: settings.defaultModel.trim() } : {}),
+      ...(settings.profile?.trim() ? { profile: settings.profile.trim() } : {}),
     }
   }
 

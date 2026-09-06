@@ -173,6 +173,12 @@ export interface PiAgentSettings {
   defaultModel: string
   agentDir?: string
 }
+export interface OmpAgentSettings {
+  _runtime: 'Omp'
+  defaultModel: string
+  /** 可选 omp profile 名；缺省由 worker 按 actingUserId 派生隔离 profile，保证凭据按用户隔离 */
+  profile?: string
+}
 
 export interface WorkerUpdateSettings {
   exitMode: WorkerUpdateExitMode
@@ -183,6 +189,7 @@ export interface AgentSettings {
   Codex: CodexAgentSettings
   ClaudeCode: ClaudeCodeAgentSettings
   Pi: PiAgentSettings
+  Omp: OmpAgentSettings
 }
 
 /** @deprecated Use AgentSettings directly. Kept for backward compatibility. */
@@ -193,12 +200,14 @@ export type AgentRuntimeSettings =
   | CodexAgentSettings
   | ClaudeCodeAgentSettings
   | PiAgentSettings
+  | OmpAgentSettings
 
 export type ModelProfileRuntimeSettings =
   | Partial<OpenCodeAgentSettings>
   | Partial<CodexAgentSettings>
   | Partial<ClaudeCodeAgentSettings>
   | Partial<PiAgentSettings>
+  | Partial<OmpAgentSettings>
 
 export interface ModelProfileBinding {
   id: string

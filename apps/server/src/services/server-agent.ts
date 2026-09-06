@@ -60,6 +60,12 @@ export const getServerAgentSettings = (
       : undefined
     return mergeAgentRuntimeSettings('Pi', getRuntimeFallbackSettings('Pi'), piSettings)
   }
+  if (agentType === 'Omp') {
+    const ompSettings = isRecord(config.agentSettings)
+      ? (config.agentSettings as Record<string, unknown>).Omp
+      : undefined
+    return mergeAgentRuntimeSettings('Omp', getRuntimeFallbackSettings('Omp'), ompSettings)
+  }
 
   return getAgentSettings(config, agentType)
 }

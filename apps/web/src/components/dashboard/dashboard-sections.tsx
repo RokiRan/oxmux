@@ -41,6 +41,7 @@ const agentBarClassName: Record<AgentType, string> = {
   Codex: 'bg-sky-400',
   ClaudeCode: 'bg-amber-400',
   Pi: 'bg-emerald-400',
+  Omp: 'bg-teal-400',
 }
 
 const activityToneClassName = {

@@ -33,6 +33,7 @@ const runtimeTabs: Array<{ id: RuntimeTabId; label: string }> = [
   { id: 'Codex', label: 'Codex' },
   { id: 'ClaudeCode', label: 'Claude Code' },
   { id: 'Pi', label: 'Pi' },
+  { id: 'Omp', label: 'Oh My Pi' },
 ]
 
 function Section({
@@ -497,6 +498,44 @@ export function ModelCenterRuntimePanel({
                     },
                   })}
                   placeholder=".pi/agents/default"
+                  className={inputClassName}
+                />
+              </Field>
+            </div>
+          ) : null}
+          {activeRuntimeTab === 'Omp' ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Default Model" hint={language === 'zh' ? 'omp 接受 provider/model 或模糊模型名；模型目录由 omp 按 profile 自管。' : 'omp accepts provider/model or a fuzzy model name; the model catalog is managed by omp per profile.'}>
+                <Input
+                  value={config.agentSettings.Omp.defaultModel}
+                  onChange={(event) => onConfigChange({
+                    ...config,
+                    agentSettings: {
+                      ...config.agentSettings,
+                      Omp: {
+                        ...config.agentSettings.Omp,
+                        defaultModel: event.target.value,
+                      },
+                    },
+                  })}
+                  placeholder="provider/model"
+                  className={inputClassName}
+                />
+              </Field>
+              <Field label="Profile" hint={language === 'zh' ? 'omp profile 名，可选；留空时按执行用户自动派生隔离 profile，凭据互不可见。' : 'Optional omp profile name; when empty, an isolated profile is derived per acting user so credentials stay separated.'}>
+                <Input
+                  value={config.agentSettings.Omp.profile || ''}
+                  onChange={(event) => onConfigChange({
+                    ...config,
+                    agentSettings: {
+                      ...config.agentSettings,
+                      Omp: {
+                        ...config.agentSettings.Omp,
+                        profile: event.target.value,
+                      },
+                    },
+                  })}
+                  placeholder="wemux-<user>"
                   className={inputClassName}
                 />
               </Field>

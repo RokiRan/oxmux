@@ -144,6 +144,7 @@ const createCodexAuthProbeEnvironment = () => {
 
 const getRequirementLabel = (id: RuntimeRequirementId) => {
   if (id === 'codex-cli') return 'Codex CLI'
+  if (id === 'omp-cli') return 'omp CLI'
   if (id === 'codex-auth') return 'Codex 登录'
   if (id === 'claude-cli') return 'Claude Code CLI'
   if (id === 'claude-auth') return 'Claude Code 认证'
@@ -314,6 +315,19 @@ const checkCodexCli = (): RuntimeCheck => {
     installer: strategy?.installer,
     installCommand: strategy?.commandSummary,
     hint: strategy?.manualHint || '请先安装 Codex CLI，并确认 `codex` 已进入 PATH。',
+  }
+}
+const checkOmpCli = (): RuntimeCheck => {
+  const executable = resolveExecutable('omp')
+  const version = executable ? runCommand(executable, ['--version']) : null
+
+  return {
+    id: 'omp-cli',
+    label: 'omp CLI',
+    ok: Boolean(executable && version?.ok),
+    detail: executable && version?.ok ? version.stdout || executable : '未检测到 `omp` 可执行文件。',
+    autoInstallable: false,
+    hint: '请先安装 Oh My Pi（omp）并确认 `omp` 已进入 PATH；凭据与模型由 omp 自管，执行前请运行一次 `omp` 完成登录。',
   }
 }
 
@@ -643,6 +657,7 @@ const checkClaudeAuth = (): RuntimeCheck => {
 
 export const inspectAgentCliRequirement = async (id: RuntimeRequirementId): Promise<RuntimeCheck | null> => {
   if (id === 'codex-cli') return checkCodexCli()
+  if (id === 'omp-cli') return checkOmpCli()
   if (id === 'codex-auth') return checkCodexAuth()
   if (id === 'claude-cli') return checkClaudeCli()
   if (id === 'claude-auth') return checkClaudeAuth()

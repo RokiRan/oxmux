@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { resolveOpencodeInstallStrategy, resolveWorkerRuntimeBootstrapMode } from './runtime-bootstrap'
+import { getTargetReadyMessage, resolveOpencodeInstallStrategy, resolveWorkerRuntimeBootstrapMode } from './runtime-bootstrap'
 
 test('runtime bootstrap prompts by default in interactive terminals', () => {
   assert.equal(
@@ -10,6 +10,13 @@ test('runtime bootstrap prompts by default in interactive terminals', () => {
     }),
     'prompt',
   )
+})
+test('ready message for all targets covers every checked runtime including Oh My Pi', () => {
+  const message = getTargetReadyMessage('all')
+  assert.ok(message.includes('Oh My Pi'), `all 目标就绪提示必须列出 omp-cli 检查项对应的 Oh My Pi：${message}`)
+  assert.ok(message.includes('OpenCode'))
+  assert.ok(message.includes('Codex'))
+  assert.ok(message.includes('Claude Code'))
 })
 
 test('runtime bootstrap auto-installs by default in non-interactive terminals', () => {

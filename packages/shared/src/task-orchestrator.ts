@@ -96,6 +96,16 @@ export const createAdapters = (): AgentAdapter[] => {
       strengths: ['规范化 provider/model 标识', '适合统一模型目录与 SDK 型接入', '便于与工作区级 runtime 设置协同'],
       limitations: ['依赖 worker 执行节点与 Pi runtime runner 配置'],
     },
+    {
+      id: 'Omp',
+      name: 'Omp',
+      runtimeId: 'Omp',
+      transport: 'STDIO',
+      status: 'offline',
+      heartbeatAt: timestamp,
+      strengths: ['omp CLI 非交互执行', '凭据与模型由 omp profile 自管', 'NDJSON 事件流便于 UI 回放'],
+      limitations: ['仅支持通过 worker 执行节点运行'],
+    },
   ]
 }
 

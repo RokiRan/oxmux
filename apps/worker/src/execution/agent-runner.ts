@@ -8,6 +8,7 @@ import { runWorkerOpenCodePrompt, runWorkerOpenCodeTask, type OpenCodePromptEven
 import { runClaudeCodePrompt } from './claude-runner'
 import { runCodexPrompt } from './codex-runner'
 import { runPiPrompt } from './pi-runner'
+import { runOmpPrompt } from './omp-runner'
 import { ensureWorkerRuntimeReady } from '../core/runtime-bootstrap'
 import { emitAgentEvent, type WorkerAgentPromptParams, type WorkerAgentTaskParams } from './agent-runner-shared'
 import { injectPromptAttachments, materializePromptAttachments } from './prompt-attachments'
@@ -118,6 +119,14 @@ const PROMPT_RUNNERS: Partial<Record<RuntimeId, RuntimePromptRunner>> = {
       ...params,
       prompt,
       runtimeEnv,
+    })
+  },
+  Omp: async ({ params, prompt, runtimeEnv, runtimeArgs }) => {
+    return runOmpPrompt({
+      ...params,
+      prompt,
+      runtimeEnv,
+      runtimeArgs,
     })
   },
 }

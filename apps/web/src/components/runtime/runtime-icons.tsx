@@ -53,6 +53,7 @@ const brandIconByRuntime: Record<AgentType | RuntimeId, BrandIconId> = {
   Codex: 'openai',
   OpenCode: 'opencode',
   Pi: 'pi',
+  Omp: 'pi',
 }
 
 const getRuntimeLabelText = (runtime: AgentType | RuntimeId) => {

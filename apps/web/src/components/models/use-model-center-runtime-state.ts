@@ -9,7 +9,7 @@ import type { AgentConfig, ExecutionModelOption, ExecutorRecord } from '@shared/
 import { api } from '../../lib/api'
 import { prependCurrentModelOption, sortExecutionModelOptions } from './model-center-runtime-utils'
 
-export type RuntimeTabId = 'OpenCode' | 'Codex' | 'ClaudeCode' | 'Pi'
+export type RuntimeTabId = 'OpenCode' | 'Codex' | 'ClaudeCode' | 'Pi' | 'Omp'
 
 type RuntimeModelOptionsMap = Record<RuntimeTabId, ExecutionModelOption[]>
 
@@ -18,6 +18,7 @@ const EMPTY_OPTIONS: RuntimeModelOptionsMap = {
   Codex: [],
   ClaudeCode: [],
   Pi: [],
+  Omp: [],
 }
 
 export const useModelCenterRuntimeState = ({
@@ -42,7 +43,8 @@ export const useModelCenterRuntimeState = ({
       api.listAgentModels('Codex', config.workspaceExecutionDefaults.executorNodeId).catch(() => null),
       api.listAgentModels('ClaudeCode', config.workspaceExecutionDefaults.executorNodeId).catch(() => null),
       api.listAgentModels('Pi', config.workspaceExecutionDefaults.executorNodeId).catch(() => null),
-    ]).then(([openCodeResponse, codexResponse, claudeCodeResponse, piResponse]) => {
+      api.listAgentModels('Omp', config.workspaceExecutionDefaults.executorNodeId).catch(() => null),
+    ]).then(([openCodeResponse, codexResponse, claudeCodeResponse, piResponse, ompResponse]) => {
       if (cancelled) {
         return
       }
@@ -52,6 +54,7 @@ export const useModelCenterRuntimeState = ({
         Codex: sortExecutionModelOptions(codexResponse?.models ?? []),
         ClaudeCode: sortExecutionModelOptions(claudeCodeResponse?.models ?? []),
         Pi: sortExecutionModelOptions(piResponse?.models ?? []),
+        Omp: sortExecutionModelOptions(ompResponse?.models ?? []),
       })
     }).finally(() => {
       if (!cancelled) {
@@ -121,6 +124,7 @@ export const useModelCenterRuntimeState = ({
     Codex: prependCurrentModelOption(runtimeModelOptions.Codex, config.agentSettings.Codex.defaultModel),
     ClaudeCode: prependCurrentModelOption(runtimeModelOptions.ClaudeCode, config.agentSettings.ClaudeCode.defaultModel),
     Pi: prependCurrentModelOption(runtimeModelOptions.Pi, config.agentSettings.Pi.defaultModel),
+    Omp: prependCurrentModelOption(runtimeModelOptions.Omp, config.agentSettings.Omp.defaultModel),
   }), [config.agentSettings, runtimeModelOptions])
 
   return {

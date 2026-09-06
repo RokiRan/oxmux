@@ -36,6 +36,10 @@ export const listWorkerAvailableModels = async (agentType?: Task['agentType']) =
   if (agentType === 'Pi') {
     return listWorkerAvailablePiModels(config)
   }
+  if (agentType === 'Omp') {
+    // omp 的模型目录按 profile 存于 ~/.omp/profiles/<name>/agent（models.yml），由 omp CLI 自管；v1 不枚举
+    return { models: [], message: 'omp 模型由 omp CLI 按 profile 自管，请在 omp 中配置默认模型。' }
+  }
 
   return listWorkerOpenCodeModels()
 }

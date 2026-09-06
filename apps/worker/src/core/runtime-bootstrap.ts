@@ -92,6 +92,7 @@ const getRequirementLabel = (id: RuntimeRequirementId) => {
   if (id === 'unzip') return 'unzip'
   if (id === 'opencode') return 'OpenCode runtime'
   if (id === 'pi-runtime') return 'Pi runtime'
+  if (id === 'omp-cli') return 'omp CLI'
   if (id === 'codex-cli') return 'Codex CLI'
   if (id === 'codex-auth') return 'Codex 登录'
   if (id === 'claude-cli') return 'Claude Code CLI'
@@ -655,7 +656,10 @@ const getRequirementIdsForTarget = (target: WorkerRuntimeTarget): RuntimeRequire
   const linuxBaseRequirements: RuntimeRequirementId[] = process.platform === 'linux' ? ['unzip'] : []
 
   if (target === 'all') {
-    return ['git', ...linuxBaseRequirements, 'opencode', 'pi-runtime', 'codex-cli', 'codex-auth', 'claude-cli', 'claude-auth']
+    return ['git', ...linuxBaseRequirements, 'opencode', 'pi-runtime', 'omp-cli', 'codex-cli', 'codex-auth', 'claude-cli', 'claude-auth']
+  }
+  if (target === 'Omp') {
+    return ['git', 'omp-cli']
   }
 
   if (target === 'Pi') {
@@ -673,11 +677,12 @@ const getRequirementIdsForTarget = (target: WorkerRuntimeTarget): RuntimeRequire
   return ['git', ...linuxBaseRequirements, 'opencode']
 }
 
-const getTargetReadyMessage = (target: WorkerRuntimeTarget) => {
+export const getTargetReadyMessage = (target: WorkerRuntimeTarget) => {
   if (target === 'Pi') return 'Pi 运行环境已就绪。'
+  if (target === 'Omp') return 'Git 与 omp CLI 已就绪。'
   if (target === 'Codex') return 'Git、Codex CLI 与登录状态已就绪。'
   if (target === 'ClaudeCode') return 'Git、Claude Code CLI 与登录状态已就绪。'
-  if (target === 'all') return 'Git、OpenCode、Pi、Codex、Claude Code 运行环境已就绪。'
+  if (target === 'all') return 'Git、OpenCode、Pi、Oh My Pi、Codex、Claude Code 运行环境已就绪。'
   return process.platform === 'linux' ? 'Git、unzip 与 OpenCode 运行时已就绪。' : 'Git 与 OpenCode 运行时已就绪。'
 }
 

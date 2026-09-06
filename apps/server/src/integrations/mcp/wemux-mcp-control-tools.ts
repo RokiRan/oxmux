@@ -533,7 +533,7 @@ export const registerWemuxMcpControlTools = (server: McpServer, ctx: WemuxMcpCon
     inputSchema: {
       projectId: z.string().min(1).describe('项目 ID'),
       executorNodeId: z.string().min(1).optional().describe('可选，执行节点 ID；未提供时使用模型设置中的默认节点'),
-      agentType: z.enum(['Pi', 'OpenCode', 'Codex', 'ClaudeCode']).optional().describe('可选，Coding Agent；未提供时使用模型设置中的默认 Agent'),
+      agentType: z.enum(['Pi', 'Omp', 'OpenCode', 'Codex', 'ClaudeCode']).optional().describe('可选，Coding Agent；未提供时使用模型设置中的默认 Agent'),
       name: z.string().min(1).describe('工作区对人可见的业务名称。请简洁描述工作目标；不要添加 Agent 身份前缀、任务 ID 或本地路径。'),
     },
   }, async ({ projectId, executorNodeId, agentType, name }) => {

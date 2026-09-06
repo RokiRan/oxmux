@@ -362,13 +362,18 @@ export const registerTaskInteractionRoutes = (app: Hono, requireAuth: Middleware
   app.post('/api/tasks/:id/send', requireAuth, async (c) => {
     const userId = getUserIdFromHeader(c)!
     const taskId = c.req.param('id')
-    const { message, attachments } = await c.req.json().catch(() => ({ message: '', attachments: [] }))
+    const { message, attachments, workspaceId, workspaceSessionId } = await c.req.json().catch(() => ({ message: '', attachments: [], workspaceId: '', workspaceSessionId: '' }))
     const normalizedAttachments = normalizeTaskChatAttachments(attachments)
+    const scopedWorkspaceId = workspaceId?.trim() || undefined
+    const scopedWorkspaceSessionId = workspaceSessionId?.trim() || undefined
     if (!message?.trim()) return c.json({ message: '消息不能为空。' }, 400)
 
     const state = loadState()
     const taskResult = getAuthorizedTask(state, userId, taskId)
     if (!taskResult.task || !taskResult.project) return jsonError(c, taskResult.message, taskResult.status)
+    if (scopedWorkspaceId && !getTaskChatWorkspaceIfVisible(userId, taskResult.project, scopedWorkspaceId)) {
+      return jsonError(c, '工作区不存在或无权访问。', 404)
+    }
 
     console.log('[task-send] start', JSON.stringify({
       taskId,
@@ -383,6 +388,8 @@ export const registerTaskInteractionRoutes = (app: Hono, requireAuth: Middleware
     if (!executionLease) {
       await queueTaskChatMessage({
         taskId,
+        workspaceId: scopedWorkspaceId,
+        workspaceSessionId: scopedWorkspaceSessionId,
         message: message.trim(),
         attachments: normalizedAttachments,
         createdBy: userId,
@@ -406,6 +413,8 @@ export const registerTaskInteractionRoutes = (app: Hono, requireAuth: Middleware
         project: taskResult.project,
         message: message.trim(),
         attachments: normalizedAttachments,
+        workspaceId: scopedWorkspaceId,
+        workspaceSessionId: scopedWorkspaceSessionId,
         turnId: crypto.randomUUID(),
         executionSlotAlreadyAcquired: true,
         sessionLease: executionLease,

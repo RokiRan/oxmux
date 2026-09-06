@@ -7,7 +7,6 @@ import { execFile } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { parse } from 'yaml'
 import type { ExecutionModelOption, WorkerConfig } from '@shared/types'
 import { loadWorkerConfig } from '../core/config'
 import { resolveExecutable } from './agent-runner-shared'
@@ -22,7 +21,8 @@ type OmpModelEntry = {
   name?: string
 }
 
-// 列表时没有 actingUserId 上下文：只用显式配置的 profile，缺省回退 omp 主配置（~/.omp/agent）
+// profile 解析与执行期（omp-runner）同一规则：显式配置 > 按 actingUserId 派生 > omp 主配置（~/.omp/agent），
+// 保证 UI 枚举出的模型就是运行时可用的模型
 const resolveOmpAgentDir = (profile: string) => {
   return profile
     ? path.join(os.homedir(), '.omp', 'profiles', profile, 'agent')
@@ -35,9 +35,15 @@ const readLocalOmpDefaultModel = (agentDir: string) => {
     return ''
   }
   try {
-    const parsed = parse(readFileSync(configPath, 'utf8')) as { modelRoles?: { default?: unknown } } | null
-    const value = parsed?.modelRoles?.default
-    return typeof value === 'string' ? value.trim() : ''
+    // 不引 yaml 依赖（worker bundle 打 ESM，CJS 依赖会引入 dynamic require 导致远端启动崩溃）；
+    // config.yml 里 modelRoles.default 是简单标量行，定向行解析即可
+    const content = readFileSync(configPath, 'utf8')
+    const rolesIndex = content.indexOf('modelRoles:')
+    if (rolesIndex < 0) {
+      return ''
+    }
+    const match = /^\s{2}default:\s*(\S+)\s*$/m.exec(content.slice(rolesIndex))
+    return match?.[1]?.trim() ?? ''
   } catch {
     return ''
   }
@@ -70,7 +76,7 @@ const buildOmpExecutionModelOption = (providerId: string, modelId: string, defau
   }
 }
 
-export const listWorkerAvailableOmpModels = async (config = loadWorkerConfig()): Promise<{
+export const listWorkerAvailableOmpModels = async (config = loadWorkerConfig(), actingUserId?: string): Promise<{
   models: ExecutionModelOption[]
   defaultModel?: string
   message?: string
@@ -78,7 +84,7 @@ export const listWorkerAvailableOmpModels = async (config = loadWorkerConfig()):
   const settings = config.agentSettings?.Omp
   let profile = ''
   try {
-    profile = resolveOmpProfile(settings, undefined)
+    profile = resolveOmpProfile(settings, actingUserId?.trim() || undefined)
   } catch (error) {
     return { models: [], message: error instanceof Error ? error.message : 'omp profile 配置非法。' }
   }

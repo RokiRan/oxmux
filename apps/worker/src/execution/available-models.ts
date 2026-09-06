@@ -23,7 +23,16 @@ const listClaudeCodeModels = (): { models: ExecutionModelOption[]; defaultModel?
   return { models, defaultModel: 'default' }
 }
 
-export const listWorkerAvailableModels = async (agentType?: Task['agentType']) => {
+export interface WorkerAvailableModelSnapshot {
+  models: ExecutionModelOption[]
+  defaultModel?: string
+  message?: string
+}
+
+export const listWorkerAvailableModels = async (
+  agentType?: Task['agentType'],
+  options?: { actingUserId?: string },
+): Promise<WorkerAvailableModelSnapshot> => {
   const config = loadWorkerConfig()
 
   if (agentType === 'Codex') {
@@ -39,7 +48,7 @@ export const listWorkerAvailableModels = async (agentType?: Task['agentType']) =
   }
   if (agentType === 'Omp') {
     // omp 只枚举已授权 provider 的模型（omp models ls 天然过滤静态目录）；模型按 profile 隔离
-    return listWorkerAvailableOmpModels(config)
+    return listWorkerAvailableOmpModels(config, options?.actingUserId)
   }
 
   return listWorkerOpenCodeModels()

@@ -414,6 +414,7 @@ export const executorWsRequests = {
     options?: {
       timeoutMs?: number
       agentType?: ServerAgentType
+      actingUserId?: string
       includeResolvedModelBindings?: boolean
     },
   ) {
@@ -439,6 +440,7 @@ export const executorWsRequests = {
         type: 'config.export.request',
         requestId,
         agentType: options?.agentType as import('@shared/types').AgentType | undefined,
+        actingUserId: options?.actingUserId,
         includeResolvedModelBindings: options?.includeResolvedModelBindings ?? false,
         at: new Date().toISOString(),
       }),

@@ -221,6 +221,7 @@ const performRuntimeModelExport = (params: {
 
   const promise = executorWsService.requestConfigExport(params.executorId, {
     agentType: params.agentType as Task['agentType'],
+    actingUserId: params.userId,
     includeResolvedModelBindings: true,
   }).then((exported) => {
     runtimeModelExportCache.set(key, {
@@ -451,9 +452,10 @@ const buildModelListMessage = (params: {
   })
 
   if (activeSources.length === 0) {
+    // 优先展示 worker 现场报告的具体原因（如 omp 派生 profile 未授权），server 兜底文案排最后
     return params.runtimeErrorMessage
-      || params.fallbackMessage
       || params.runtimeMessage
+      || params.fallbackMessage
       || '未读取到可用模型。'
   }
 

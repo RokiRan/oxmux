@@ -615,6 +615,7 @@ export type ControlPlaneToExecutorMessage =
       type: 'config.export.request'
       requestId: string
       agentType?: AgentType
+      actingUserId?: string
       includeResolvedModelBindings?: boolean
       at: string
     }

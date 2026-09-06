@@ -15,7 +15,7 @@ import {
   saveWorkerConfig,
 } from '../../core/config'
 import { getWorkerRuntimeState, updateWorkerRuntimeState } from '../../core/runtime-state'
-import { listWorkerAvailableModels } from '../../execution/available-models'
+import { listWorkerAvailableModels, type WorkerAvailableModelSnapshot } from '../../execution/available-models'
 import { parseCodexCredentialEnvironment, resolveCodexProviderConfig } from '../../execution/codex-models'
 import { resolveExportedModelBindings } from '../model-config-export'
 import { getWorkerVersion } from '../../core/app-root'
@@ -223,7 +223,7 @@ export const handleConfigSyncMessage = (
   if (message.type === 'config.export.request') {
     config = loadWorkerConfig()
     params.setConfig(config)
-    void listWorkerAvailableModels(message.agentType).then((modelSnapshot: Awaited<ReturnType<typeof listWorkerAvailableModels>>) => {
+    void listWorkerAvailableModels(message.agentType, { actingUserId: message.actingUserId }).then((modelSnapshot: WorkerAvailableModelSnapshot) => {
       const localOpencodeConfigContent = getWorkerLocalOpencodeConfigContent()
       const localCodexConfigContent = getWorkerLocalCodexConfigContent()
       const localCodexAuthContent = getWorkerLocalCodexAuthContent()

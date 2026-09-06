@@ -1375,6 +1375,7 @@ export type WorkerDoctorPayload = {
     codexAuthenticated?: boolean
     claudeCliAvailable?: boolean
     claudeAuthenticated?: boolean
+    ompCliAvailable?: boolean
     opencodeConfigLoaded?: boolean
     codexConfigLoaded?: boolean
     claudeConfigLoaded?: boolean

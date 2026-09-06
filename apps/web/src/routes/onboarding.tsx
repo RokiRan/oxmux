@@ -248,7 +248,10 @@ function OnboardingRoute() {
     () => executors.filter((executor) => executor.status === 'online'),
     [executors],
   )
-  const activeRuntimeExecutor = onlineExecutors[0] ?? null
+  const activeRuntimeExecutor = useMemo(() => {
+    // 节点探测默认优先与控制面同机的 worker，避免有多台节点时探到没装对应 CLI 的远程机器
+    return onlineExecutors.find((executor) => executor.coLocatedWithServer) ?? onlineExecutors[0] ?? null
+  }, [onlineExecutors])
   const selectedRuntimeDetection = runtimeAgentDetections[selectedRuntimeAgentType] ?? null
   const detectedRuntimeDefaultModel = selectedRuntimeDetection?.defaultModel?.trim() || ''
   const visibleDefaultRuntimeModel = resolveMatchingAgentExecutionModelOptionId(
@@ -362,7 +365,7 @@ function OnboardingRoute() {
               ? Boolean(checks.opencodeAvailable || models.length > 0)
               : option.value === 'Pi'
                 ? Boolean(exportedDefaultModel || exportedAgentSettings?.Pi?.agentDir?.trim() || models.length > 0)
-                : Boolean(exportedDefaultModel || exportedAgentSettings?.Omp?.profile?.trim() || models.length > 0)
+                : Boolean(checks.ompCliAvailable || exportedDefaultModel || exportedAgentSettings?.Omp?.profile?.trim() || models.length > 0)
 
         const status: RuntimeAgentDetectionStatus = !available
           ? 'missing'
@@ -378,7 +381,11 @@ function OnboardingRoute() {
               ? (available ? (models.length > 0 ? `${models.length} 个模型已同步。` : '已检测到 OpenCode，但本机 provider 里还没有模型。') : '本机未检测到 OpenCode runtime。')
               : option.value === 'Pi'
                 ? (available ? (models.length > 0 ? `${models.length} 个模型已就绪。` : '已检测到 Pi，但还没有可用模型。') : '本机未检测到 Pi runtime。')
-                : (available ? (models.length > 0 ? `${models.length} 个模型已就绪。` : '已检测到 Oh My Pi（omp CLI），但还没有可用模型。') : '本机未检测到 omp CLI。')
+                : (available
+                  ? (models.length > 0
+                    ? `${models.length} 个模型已就绪。`
+                    : '已检测到 omp CLI，可在模型中心配置默认模型与 Profile。')
+                  : '本机未检测到 omp CLI。')
 
         nextDetections[option.value] = {
           value: option.value,

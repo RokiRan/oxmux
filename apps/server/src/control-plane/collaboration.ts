@@ -3,6 +3,7 @@
 // [POS]: executor 协作归属逻辑（workspaceIds/teamId 过滤）
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
+import os from 'node:os'
 import type { ExecutorRecord } from '@shared/types'
 import { getTeamProjects, getUserTeams } from '../repositories/auth'
 import { executorRegistry } from './executor-registry'
@@ -62,6 +63,7 @@ export const listVisibleExecutorsForUser = (userId: string, workspaceId?: string
     ...executor,
     realtimeBaseUrl: resolveExecutorRealtimeBaseUrl(executor) || undefined,
     managedCloudLifecycle: managedCloudLifecycleByExecutorId.get(executor.executorId),
+    coLocatedWithServer: Boolean(executor.machineName?.trim()) && executor.machineName.trim().toLowerCase() === os.hostname().trim().toLowerCase(),
   }))
 }
 

@@ -118,6 +118,7 @@ const buildWorkerDoctor = async () => {
   const codexAuth = runtimeBootstrap.items.find((item) => item.id === 'codex-auth') ?? { ok: false, detail: 'Codex sign-in status is unknown.' }
   const claudeCli = runtimeBootstrap.items.find((item) => item.id === 'claude-cli') ?? { ok: false, detail: 'Claude Code CLI status is unknown.' }
   const claudeAuth = runtimeBootstrap.items.find((item) => item.id === 'claude-auth') ?? { ok: false, detail: 'Claude Code authentication status is unknown.' }
+  const ompCli = runtimeBootstrap.items.find((item) => item.id === 'omp-cli') ?? { ok: false, detail: 'omp CLI status is unknown.' }
   const opencodeConfigReady = Boolean(config.opencodeConfigContent?.trim())
   const codexConfigReady = Boolean(config.codexConfigContent?.trim())
   const claudeConfigReady = Boolean(config.claudeCodeConfigContent?.trim())
@@ -177,6 +178,14 @@ const buildWorkerDoctor = async () => {
       ok: claudeAuth.ok,
       detail: claudeAuth.detail,
       hint: claudeAuth.ok ? undefined : 'Configure Claude Console/API credentials, or run `claude` and complete sign-in before trying again.',
+    },
+    {
+      id: 'omp-cli',
+      category: 'tooling',
+      label: 'Oh My Pi CLI',
+      ok: ompCli.ok,
+      detail: ompCli.detail,
+      hint: ompCli.ok ? undefined : 'Install the omp CLI first (e.g. `bun install -g @oh-my-pi/pi-coding-agent`), then configure models per profile.',
     },
     {
       id: 'opencode-config',
@@ -285,6 +294,7 @@ const buildWorkerDoctor = async () => {
       codexAuthenticated: codexAuth.ok,
       claudeCliAvailable: claudeCli.ok,
       claudeAuthenticated: claudeAuth.ok,
+      ompCliAvailable: ompCli.ok,
       opencodeConfigLoaded: opencodeConfigReady,
       codexConfigLoaded: codexConfigReady,
       claudeConfigLoaded: claudeConfigReady,

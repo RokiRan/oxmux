@@ -134,6 +134,8 @@ export interface ExecutorPresenceSnapshot {
 
 export interface ExecutorRecord extends ExecutorDescriptor {
   presence?: ExecutorPresenceSnapshot
+  /** server 侧计算：worker 的 machineName 与控制面主机名一致（同机部署），供 UI 默认节点选择 */
+  coLocatedWithServer?: boolean
 }
 
 export type ExecutorLocalAccessCandidateRole = 'target' | 'mesh-source'
@@ -227,6 +229,7 @@ export interface WorkerDoctorChecks {
   codexAuthenticated: boolean
   claudeCliAvailable: boolean
   claudeAuthenticated: boolean
+  ompCliAvailable: boolean
   opencodeConfigLoaded: boolean
   codexConfigLoaded: boolean
   claudeConfigLoaded: boolean

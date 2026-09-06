@@ -551,6 +551,11 @@ export const loadAgentModelOptionsFromExecutor = async (
             'runtime',
           )
           runtimeMessage = exported.modelsMessage || '已从执行节点读取运行时模型配置。'
+        } else if (agentType === 'Omp') {
+          // omp 的可用模型由 worker 调 omp CLI 枚举（已授权 provider），不走 resolvedModelBindings
+          runtimeDefaultModel = exported.defaultModel?.trim() || ''
+          runtimeModels = applyModelSource(exported.availableModels ?? [], 'runtime')
+          runtimeMessage = exported.modelsMessage || '已从执行节点读取运行时模型配置。'
         } else {
           runtimeDefaultModel = agentType === 'Codex'
             ? parseCodexConfigModel(exported.codexConfigContent)

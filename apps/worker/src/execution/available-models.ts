@@ -9,6 +9,7 @@ import { loadWorkerConfig } from '../core/config'
 import { listWorkerAvailableCodexModels } from './codex-models'
 import { listWorkerAvailableModels as listWorkerOpenCodeModels } from './opencode'
 import { listWorkerAvailablePiModels } from './pi-models'
+import { listWorkerAvailableOmpModels } from './omp-models'
 import type { ExecutionModelOption } from '@shared/types'
 
 const listClaudeCodeModels = (): { models: ExecutionModelOption[]; defaultModel?: string; message?: string } => {
@@ -37,8 +38,8 @@ export const listWorkerAvailableModels = async (agentType?: Task['agentType']) =
     return listWorkerAvailablePiModels(config)
   }
   if (agentType === 'Omp') {
-    // omp 的模型目录按 profile 存于 ~/.omp/profiles/<name>/agent（models.yml），由 omp CLI 自管；v1 不枚举
-    return { models: [], message: 'omp 模型由 omp CLI 按 profile 自管，请在 omp 中配置默认模型。' }
+    // omp 只枚举已授权 provider 的模型（omp models ls 天然过滤静态目录）；模型按 profile 隔离
+    return listWorkerAvailableOmpModels(config)
   }
 
   return listWorkerOpenCodeModels()

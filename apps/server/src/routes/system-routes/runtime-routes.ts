@@ -1244,7 +1244,12 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
         config: nextConfig,
         adapters,
       }
-      const managedCloudSync = await getManagedCloudGate().reconcileExecutors(nextState.config)
+      const managedCloudSync = await getManagedCloudGate().reconcileExecutors(nextState.config) ?? {
+        totalCount: 0,
+        rewrittenConfigCount: 0,
+        relabeledCount: 0,
+        warnings: [] as string[],
+      }
       const syncedExecutorIds = syncSettingsToVisibleExecutors({
         userId,
         config: nextState.config,

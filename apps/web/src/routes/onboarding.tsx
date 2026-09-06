@@ -72,6 +72,7 @@ const RUNTIME_AGENT_OPTIONS: Array<{ value: RuntimeAgentType; label: string; des
   { value: 'ClaudeCode', label: 'Claude Code', description: '如果本机已有 Claude Code，也会自动接进来。' },
   { value: 'OpenCode', label: 'OpenCode', description: '会读取本机 provider 和模型配置。' },
   { value: 'Pi', label: 'Pi', description: '如果本机已有 Pi runtime，也会一起探测。' },
+  { value: 'Omp', label: 'Oh My Pi', description: '如果本机已有 omp CLI，也会一起探测。' },
 ]
 
 const ONBOARDING_PROMPT_SUGGESTIONS = [
@@ -359,7 +360,9 @@ function OnboardingRoute() {
             ? Boolean(checks.claudeCliAvailable && checks.claudeAuthenticated)
             : option.value === 'OpenCode'
               ? Boolean(checks.opencodeAvailable || models.length > 0)
-              : Boolean(exportedDefaultModel || exportedAgentSettings?.Pi?.agentDir?.trim() || models.length > 0)
+              : option.value === 'Pi'
+                ? Boolean(exportedDefaultModel || exportedAgentSettings?.Pi?.agentDir?.trim() || models.length > 0)
+                : Boolean(exportedDefaultModel || exportedAgentSettings?.Omp?.profile?.trim() || models.length > 0)
 
         const status: RuntimeAgentDetectionStatus = !available
           ? 'missing'
@@ -373,7 +376,9 @@ function OnboardingRoute() {
             ? (!checks.claudeCliAvailable ? '本机未检测到 Claude Code CLI。' : !checks.claudeAuthenticated ? 'Claude Code 还没有登录。' : models.length > 0 ? `${models.length} 个模型已就绪。` : 'Claude Code 已就绪，但还没有探测到可用模型。')
             : option.value === 'OpenCode'
               ? (available ? (models.length > 0 ? `${models.length} 个模型已同步。` : '已检测到 OpenCode，但本机 provider 里还没有模型。') : '本机未检测到 OpenCode runtime。')
-              : (available ? (models.length > 0 ? `${models.length} 个模型已就绪。` : '已检测到 Pi，但还没有可用模型。') : '本机未检测到 Pi runtime。')
+              : option.value === 'Pi'
+                ? (available ? (models.length > 0 ? `${models.length} 个模型已就绪。` : '已检测到 Pi，但还没有可用模型。') : '本机未检测到 Pi runtime。')
+                : (available ? (models.length > 0 ? `${models.length} 个模型已就绪。` : '已检测到 Oh My Pi（omp CLI），但还没有可用模型。') : '本机未检测到 omp CLI。')
 
         nextDetections[option.value] = {
           value: option.value,

@@ -23,13 +23,13 @@ type OmpModelEntry = {
 
 // profile 解析与执行期（omp-runner）同一规则：显式配置 > 按 actingUserId 派生 > omp 主配置（~/.omp/agent），
 // 保证 UI 枚举出的模型就是运行时可用的模型
-const resolveOmpAgentDir = (profile: string) => {
+export const resolveOmpAgentDir = (profile: string) => {
   return profile
     ? path.join(os.homedir(), '.omp', 'profiles', profile, 'agent')
     : path.join(os.homedir(), '.omp', 'agent')
 }
 
-const readLocalOmpDefaultModel = (agentDir: string) => {
+export const readLocalOmpDefaultModel = (agentDir: string) => {
   const configPath = path.join(agentDir, 'config.yml')
   if (!existsSync(configPath)) {
     return ''

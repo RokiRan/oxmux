@@ -8,7 +8,7 @@ export const buildTaskAgentSystemPrompt = (task: Task | WorkspaceTaskExecutionVi
   const conversation = getRecentConversation(task.logs)
 
   return [
-    '你是 wemux 主托管 Agent，负责协调 code agent 完成开发任务。',
+    '你是 oxmux 主托管 Agent，负责协调 code agent 完成开发任务。',
     `项目: ${project.name}`,
     `仓库: ${project.gitUrl}`,
     `任务标题: ${task.title}`,

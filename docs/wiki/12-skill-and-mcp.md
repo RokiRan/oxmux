@@ -34,8 +34,8 @@ Skill 的真实生效路径不是"常驻同步到 worker"，而是**执行级打
 ## Pi 的 Skill 注入
 
 Pi 的 preparation 额外会注入：
-- `WEMUX_PI_AGENT_DIR`
-- `WEMUX_PI_SKILL_PATHS`
+- `OXMUX_PI_AGENT_DIR`
+- `OXMUX_PI_SKILL_PATHS`
 
 这让 Pi runner 可以在不依赖默认 CLI 目录猜测的情况下，显式拿到：
 - 当前应绑定的 Pi agent 根目录
@@ -66,7 +66,7 @@ Pi 的 MCP bridge 在 `apps/worker/src/execution/pi-mcp-tools.ts`。
 - `streamable http`
 
 **桥接原则**：
-- 复用 Wemux 已经解析好的 MCP server 定义
+- 复用 Oxmux 已经解析好的 MCP server 定义
 - 在 worker 里实时连接 MCP server
 - 将远端 MCP tool 暴露为 Pi `customTools`
 - 会话结束后统一关闭 MCP client

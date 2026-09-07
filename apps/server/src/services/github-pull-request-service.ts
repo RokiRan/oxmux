@@ -245,7 +245,7 @@ const isGitHubWorkflowLogBlobNotReady = (status: number, detail: string) => (
 
 const createGitLabHeaders = (token: string) => ({
   'PRIVATE-TOKEN': token,
-  'User-Agent': 'wemux-pr-status',
+  'User-Agent': 'oxmux-pr-status',
 })
 
 const normalizeGitLabState = (payload: GitLabMergeRequestPayload) => {

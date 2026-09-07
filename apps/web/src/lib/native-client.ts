@@ -13,18 +13,18 @@ type NativeShellBridge = {
 }
 
 type NativeShellWindow = Window & {
-  __WEMUX_DESKTOP__?: NativeShellBridge
-  __WEMUX_MOBILE__?: NativeShellBridge
+  __OXMUX_DESKTOP__?: NativeShellBridge
+  __OXMUX_MOBILE__?: NativeShellBridge
 }
 
 const getElectronDesktopBridge = () => {
   if (typeof window === 'undefined') return undefined
-  return (window as NativeShellWindow).__WEMUX_DESKTOP__
+  return (window as NativeShellWindow).__OXMUX_DESKTOP__
 }
 
 const getReactNativeMobileBridge = () => {
   if (typeof window === 'undefined') return undefined
-  return (window as NativeShellWindow).__WEMUX_MOBILE__
+  return (window as NativeShellWindow).__OXMUX_MOBILE__
 }
 
 const getNativeShellBridge = () => getElectronDesktopBridge() ?? getReactNativeMobileBridge()
@@ -47,8 +47,8 @@ export const isMacNativeClient = () => {
 }
 
 if (typeof document !== 'undefined' && isNativeClient()) {
-  if (isMacNativeClient()) document.documentElement.classList.add('wemux-native-window')
-  if (isElectronDesktopClient()) document.documentElement.classList.add('wemux-electron-window')
+  if (isMacNativeClient()) document.documentElement.classList.add('oxmux-native-window')
+  if (isElectronDesktopClient()) document.documentElement.classList.add('oxmux-electron-window')
 }
 
 /**
@@ -104,9 +104,9 @@ export const setAutostartEnabled = (enabled: boolean) => isDesktopNativeClient()
 /**
  * 解析深链 URL 为 web 路由路径。
  * 支持格式：
- *   Wemux://chat                      → /chat
- *   Wemux:///meeting-records          → /meeting-records
- *   Wemux://workspace?workspaceId=x   → /workspace?workspaceId=x
+ *   Oxmux://chat                      → /chat
+ *   Oxmux:///meeting-records          → /meeting-records
+ *   Oxmux://workspace?workspaceId=x   → /workspace?workspaceId=x
  */
 export const resolveDeepLinkRoute = (rawUrl: string): string => {
   try {
@@ -181,7 +181,7 @@ export const getPendingNativeUpdate = () => isDesktopNativeClient()
   : Promise.resolve(null)
 
 /**
- * 下载并安装桌面端更新（进度经 wemux-update 事件流回传）。
+ * 下载并安装桌面端更新（进度经 oxmux-update 事件流回传）。
  * 与 invokeNative 不同：错误向上抛出（调用方需要区分「成功」与「失败」）。
  */
 export const installUpdateNative = async (): Promise<void> => {

@@ -121,7 +121,7 @@ test('TaskChatFeed shows created task card under the final assistant result', ()
                 id: 'tool-task-created',
                 name: 'task.create',
                 args: 'title: 切换工作区节点时保留 agent 原生会话续接',
-                result: 'title=切换工作区节点时保留 agent 原生会话续接 | taskId=task-created-1 | status=todo | project=Wemux',
+                result: 'title=切换工作区节点时保留 agent 原生会话续接 | taskId=task-created-1 | status=todo | project=Oxmux',
                 startedAt: '2026-06-11T10:45:01.000Z',
                 finishedAt: '2026-06-11T10:45:02.000Z',
                 metadata: {
@@ -1700,7 +1700,7 @@ test('TaskChatFeed keeps the final run duration visible after the current worksp
             step: '工作区对话已完成',
             workspaceExecutor: {
               executorId: 'a48370fc-42e1-401e-b588-1b056ed53df4',
-              name: 'Wemux Cloud Workspace',
+              name: 'Oxmux Cloud Workspace',
               executorSource: 'managed-cloud',
               managedBy: 'vibemux',
               runtimeClass: 'managed-worker',
@@ -1724,7 +1724,7 @@ test('TaskChatFeed keeps the final run duration visible after the current worksp
   )
 
   assert.match(html, /已完成/)
-  assert.match(html, /运行节点 Wemux Cloud Workspace · 云节点/)
+  assert.match(html, /运行节点 Oxmux Cloud Workspace · 云节点/)
   assert.match(html, /00:20/)
 })
 

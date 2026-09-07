@@ -545,7 +545,7 @@ export const searchDriveFiles = async (scope: DriveScope, query: string): Promis
   }))
 }
 
-// ---------- 工作区大脑（Wemux Brain）纳入的云盘文件 ----------
+// ---------- 工作区大脑（Oxmux Brain）纳入的云盘文件 ----------
 
 /** 列出工作区大脑纳入的云盘文件（join drive_files 拿文件名）。 */
 export const listWorkspaceBrainFiles = async (workspaceId: string): Promise<WorkspaceBrainFile[]> => {

@@ -21,7 +21,7 @@ import pg from 'pg'
 
 const { Client } = pg
 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgres://wemux:wemux@127.0.0.1:5434/wemux'
+const DATABASE_URL = process.env.DATABASE_URL || 'postgres://oxmux:oxmux@127.0.0.1:5434/oxmux'
 const apply = process.argv.includes('--apply')
 
 const normalizeVisibility = (value: unknown) => (value === 'workspace' ? 'workspace' : 'private')

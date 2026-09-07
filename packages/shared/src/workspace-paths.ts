@@ -5,7 +5,7 @@
 
 import type { AgentConfig, Project } from './types'
 
-export const DEFAULT_WORKSPACE_ROOT = '~/.wemux'
+export const DEFAULT_WORKSPACE_ROOT = '~/.oxmux'
 
 type ProjectLike = Pick<Project, 'id' | 'name' | 'gitUrl'>
 type ProjectPathLike = Pick<Project, 'name' | 'gitUrl'>
@@ -35,8 +35,8 @@ const requireScopeId = (value: string | undefined, label: 'userId' | 'workspaceI
   return normalized
 }
 const normalizeWorkspaceId = (workspaceId?: string) => normalizeScopeId(workspaceId)
-// 兼容窗口：新旧品牌 home 段都识别（`.wemux*` 为新默认，`.vibemux*` 为存量）
-const isHomeSegment = (value?: string) => /^\.(?:wemux|vibemux)(?:-[^/]+)?$/.test(value ?? '')
+// 兼容窗口：新旧品牌 home 段都识别（`.oxmux*` 为新默认，`.vibemux*` 为存量）
+const isHomeSegment = (value?: string) => /^\.(?:oxmux|vibemux)(?:-[^/]+)?$/.test(value ?? '')
 
 const stripObsoleteWorkspaceRootSuffix = (value: string) => {
   const normalized = trimTrailingSlash(value.trim().replace(/\\/g, '/'))
@@ -201,7 +201,7 @@ const isObsoleteManagedWorkspacePath = (
   const requiredWorkspaceScopePattern = normalizedWorkspaceId
     ? `workspaces/${escapeRegExp(normalizedWorkspaceId)}/`
     : `(?:workspaces/[^/]+/)?`
-  return new RegExp(`(?:^|/)\\.(?:wemux|vibemux)(?:-[^/]+)?/(?:workspace/${userScopePattern}${workspaceScopePattern}|${requiredUserScopePattern}${requiredWorkspaceScopePattern})${containerName}/${repoName}$`).test(normalizedTargetPath)
+  return new RegExp(`(?:^|/)\\.(?:oxmux|vibemux)(?:-[^/]+)?/(?:workspace/${userScopePattern}${workspaceScopePattern}|${requiredUserScopePattern}${requiredWorkspaceScopePattern})${containerName}/${repoName}$`).test(normalizedTargetPath)
 }
 
 export const isManagedWorkspaceProjectPath = (

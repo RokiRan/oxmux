@@ -23,7 +23,7 @@ export default defineRailway(() => {
   const db = postgres("Postgres");
   // Bucket regions cannot be changed after creation; pick the region closest
   // to your users before the first apply.
-  const storage = bucket("wemux-object-storage", { region: "sjc" });
+  const storage = bucket("oxmux-object-storage", { region: "sjc" });
 
   const controlPlane = service("control-plane", {
     build: "pnpm build:client && pnpm build:server && pnpm build:worker:preview-installer",
@@ -35,7 +35,7 @@ export default defineRailway(() => {
     },
   });
 
-  return project("wemux-community", {
+  return project("oxmux-community", {
     resources: [controlPlane, db, storage],
   });
 });

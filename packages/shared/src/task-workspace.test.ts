@@ -222,7 +222,7 @@ test('buildWorkspaceCodeBranchName adds a discriminator for new workspace code b
       workspaceName: 'Design Lab',
       discriminator: 'dev-mib9',
     }),
-    'wemux/work-design-lab-dev-mib9',
+    'oxmux/work-design-lab-dev-mib9',
   )
 })
 
@@ -818,5 +818,5 @@ test('resolveWorkspaceSessionBranchName uses short id followed by workspace name
     worktreeId: '2b4054f3-1111-4222-8333-abcdefabcdef',
     workspaceName: '原目录',
     workingDirectoryMode: 'worktree',
-  }), 'wemux/2b40-原目录')
+  }), 'oxmux/2b40-原目录')
 })

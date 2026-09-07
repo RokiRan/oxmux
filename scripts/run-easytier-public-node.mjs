@@ -8,12 +8,12 @@ dotenv.config({ path: '.env' })
 const truthy = new Set(['1', 'true', 'yes', 'on'])
 
 const readEnv = (key, fallback = '') => {
-  const wemuxKey = key.startsWith('WEMUX_') ? `WEMUX_${key.slice('WEMUX_'.length)}` : key
-  return process.env[wemuxKey]?.trim() || process.env[key]?.trim() || fallback
+  const oxmuxKey = key.startsWith('OXMUX_') ? `OXMUX_${key.slice('OXMUX_'.length)}` : key
+  return process.env[oxmuxKey]?.trim() || process.env[key]?.trim() || fallback
 }
 
 const resolvePortProfile = () => {
-  const explicit = readEnv('WEMUX_EASYTIER_PORT_PROFILE').toLowerCase()
+  const explicit = readEnv('OXMUX_EASYTIER_PORT_PROFILE').toLowerCase()
   if (['dev', 'development', 'local'].includes(explicit)) {
     return 'development'
   }
@@ -24,11 +24,11 @@ const resolvePortProfile = () => {
     return 'production'
   }
 
-  const url = `${readEnv('WEMUX_PUBLIC_BASE_URL')} ${readEnv('WEMUX_CLOUD_URL')}`.toLowerCase()
-  if (url.includes('wemux.xyz')) {
+  const url = `${readEnv('OXMUX_PUBLIC_BASE_URL')} ${readEnv('OXMUX_CLOUD_URL')}`.toLowerCase()
+  if (url.includes('oxmux.xyz')) {
     return 'preview'
   }
-  if (url.includes('wemux.com')) {
+  if (url.includes('oxmux.com')) {
     return 'production'
   }
   return process.env.NODE_ENV === 'development' ? 'development' : 'production'
@@ -75,22 +75,22 @@ const resolveExecutable = (command) => {
   return ''
 }
 
-const enabled = truthy.has(readEnv('WEMUX_MESH_ENABLED').toLowerCase())
-const corePath = resolveExecutable(readEnv('WEMUX_EASYTIER_CORE_PATH', 'easytier-core'))
-const ipv4 = readEnv('WEMUX_EASYTIER_SERVER_IPV4')
-const hostname = readEnv('WEMUX_EASYTIER_SERVER_HOSTNAME', readEnv('WEMUX_NODE_NAME', 'wemux-server'))
+const enabled = truthy.has(readEnv('OXMUX_MESH_ENABLED').toLowerCase())
+const corePath = resolveExecutable(readEnv('OXMUX_EASYTIER_CORE_PATH', 'easytier-core'))
+const ipv4 = readEnv('OXMUX_EASYTIER_SERVER_IPV4')
+const hostname = readEnv('OXMUX_EASYTIER_SERVER_HOSTNAME', readEnv('OXMUX_NODE_NAME', 'oxmux-server'))
 const listenUrls = splitCsv(readEnv(
-  'WEMUX_EASYTIER_LISTEN_URLS',
+  'OXMUX_EASYTIER_LISTEN_URLS',
   getDefaultListenUrls(),
 ))
 
 if (!enabled) {
-  console.error('[easytier] WEMUX_MESH_ENABLED is not enabled. Set WEMUX_MESH_ENABLED=1 to start the public node.')
+  console.error('[easytier] OXMUX_MESH_ENABLED is not enabled. Set OXMUX_MESH_ENABLED=1 to start the public node.')
   process.exit(1)
 }
 
 if (!corePath) {
-  console.error('[easytier] easytier-core was not found. Set WEMUX_EASYTIER_CORE_PATH or install EasyTier.')
+  console.error('[easytier] easytier-core was not found. Set OXMUX_EASYTIER_CORE_PATH or install EasyTier.')
   process.exit(1)
 }
 

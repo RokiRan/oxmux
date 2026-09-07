@@ -8,8 +8,8 @@ and workspace sessions may reference them, but do not own their remote state.
 The system therefore keeps three independent authorities:
 
 1. Provider-specific resource records store synchronized GitHub facts.
-2. `github_project_resources` stores which Wemux projects can use each resource.
-3. `github_resource_bindings` stores relationships to Wemux execution context.
+2. `github_project_resources` stores which Oxmux projects can use each resource.
+3. `github_resource_bindings` stores relationships to Oxmux execution context.
 
 `Task.result.delivery` and `Workspace.deliverySummary` remain historical execution
 snapshots. They are not a live GitHub status source.
@@ -29,7 +29,7 @@ same record rather than create a second representation.
 ## Project Scope
 
 Provider resource identity is global to the GitHub repository, so one PR, issue,
-or workflow run has one synchronized fact record even when several Wemux
+or workflow run has one synchronized fact record even when several Oxmux
 projects point at the same repository.
 
 `github_project_resources` is the many-to-many project membership layer:
@@ -86,7 +86,7 @@ fields such as `matchedTaskId` are projections for older Review Center callers,
 not the relationship authority.
 
 All binding joins must include `projectId` as well as `resourceId`, because the
-same GitHub resource may be visible through more than one Wemux project.
+same GitHub resource may be visible through more than one Oxmux project.
 
 ## Synchronization
 
@@ -101,7 +101,7 @@ Workflow run synchronization also creates branch-based suggested bindings.
 ## Future Remote Conversations
 
 GitHub comments and review threads should be modeled as provider conversation
-records referencing a canonical resource id. Wemux task comments remain local
+records referencing a canonical resource id. Oxmux task comments remain local
 collaboration records.
 
 Do not copy GitHub comments into task comments as a second authority. Cross-post

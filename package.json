@@ -1,13 +1,13 @@
 {
-  "name": "wemux",
+  "name": "oxmux",
   "version": "0.3.131",
-  "description": "wemux — an AI delivery platform where workers execute code tasks on real device nodes: self-hostable control plane, web console, and worker daemon (monorepo).",
+  "description": "oxmux — an AI delivery platform where workers execute code tasks on real device nodes: self-hostable control plane, web console, and worker daemon (monorepo).",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wemux-ai/wemux.git"
+    "url": "https://github.com/oxmux-ai/oxmux.git"
   },
-  "bugs": "https://github.com/wemux-ai/wemux/issues",
+  "bugs": "https://github.com/oxmux-ai/oxmux/issues",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -17,16 +17,16 @@
   "scripts": {
     "dev": "pnpm dev:tui",
     "quickstart": "node scripts/quickstart.mjs",
-    "dev:oss": "cross-env WEMUX_EXTENSION_DISABLED=1 pnpm dev",
+    "dev:oss": "cross-env OXMUX_EXTENSION_DISABLED=1 pnpm dev",
     "dev:preview": "pnpm dev:tui:preview",
     "dev:client": "vite dev",
     "dev:client:docker": "vite dev",
     "dev:offline": "vite dev --mode offline",
     "dev:server": "cross-env NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx watch apps/server/src/index.ts",
     "dev:server:docker": "cross-env NODE_ENV=development tsx watch apps/server/src/index.ts",
-    "dev:worker": "pnpm build:worker:console && cross-env WEMUX_WORKER_HOME= WEMUX_WORKER_PORT_PROFILE=development WEMUX_WORKER_PORT=48121 WEMUX_CLOUD_URL=http://127.0.0.1:8989 NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx apps/worker/src/index.ts daemon",
-    "dev:worker:hybrid": "pnpm build:worker:console && cross-env WEMUX_WORKER_HOME= WEMUX_WORKER_PORT_PROFILE=development WEMUX_WORKER_PORT=48121 WEMUX_CLOUD_URL=http://127.0.0.1:18989 NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx apps/worker/src/index.ts daemon",
-    "dev:worker:preview": "pnpm build:worker:console && cross-env WEMUX_WORKER_HOME= WEMUX_WORKER_PORT_PROFILE=preview WEMUX_WORKER_PORT=48123 WEMUX_CLOUD_URL=https://wemux.xyz/ NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx apps/worker/src/index.ts daemon",
+    "dev:worker": "pnpm build:worker:console && cross-env OXMUX_WORKER_HOME= OXMUX_WORKER_PORT_PROFILE=development OXMUX_WORKER_PORT=48121 OXMUX_CLOUD_URL=http://127.0.0.1:8989 NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx apps/worker/src/index.ts daemon",
+    "dev:worker:hybrid": "pnpm build:worker:console && cross-env OXMUX_WORKER_HOME= OXMUX_WORKER_PORT_PROFILE=development OXMUX_WORKER_PORT=48121 OXMUX_CLOUD_URL=http://127.0.0.1:18989 NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx apps/worker/src/index.ts daemon",
+    "dev:worker:preview": "pnpm build:worker:console && cross-env OXMUX_WORKER_HOME= OXMUX_WORKER_PORT_PROFILE=preview OXMUX_WORKER_PORT=48123 OXMUX_CLOUD_URL=https://oxmux.xyz/ NODE_ENV=development DOTENV_CONFIG_PATH=.env.development.local tsx apps/worker/src/index.ts daemon",
     "dev:desktop": "pnpm --dir apps/desktop dev",
     "dev:native": "pnpm dev:desktop",
     "dev:mobile": "pnpm --dir apps/mobile start",
@@ -49,8 +49,8 @@
     "dev:docker:up": "node scripts/run-full-dev.mjs up",
     "dev:docker:down": "docker compose -f deploy/docker/docker-compose.dev-full.yml down --remove-orphans",
     "dev:docker:logs": "docker compose -f deploy/docker/docker-compose.dev-full.yml logs -f web server worker",
-    "db:reset": "pnpm dev:infra:down && docker volume rm wemux_wemux-postgres-data && pnpm dev:infra:up",
-    "db:reset:all": "pnpm dev:infra:down && docker volume rm wemux_wemux-postgres-data wemux_wemux-rustfs-data && pnpm dev:infra:up",
+    "db:reset": "pnpm dev:infra:down && docker volume rm oxmux_oxmux-postgres-data && pnpm dev:infra:up",
+    "db:reset:all": "pnpm dev:infra:down && docker volume rm oxmux_oxmux-postgres-data oxmux_oxmux-rustfs-data && pnpm dev:infra:up",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",

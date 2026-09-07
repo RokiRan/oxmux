@@ -11,15 +11,15 @@ import compareAiChatVsDeliveryMarkdown from '../content/compare/ai-chat-vs-ai-de
 import compareBestAiCodingPlatformForTeamsMarkdown from '../content/compare/best-ai-coding-platform-for-teams.md?raw'
 import compareBestCursorAlternativeForTeamsMarkdown from '../content/compare/best-cursor-alternative-for-teams.md?raw'
 import compareCodexHandoffAlternativeMarkdown from '../content/compare/codex-handoff-alternative.md?raw'
-import compareWemuxVsClineKanbanMarkdown from '../content/compare/wemux-vs-cline-kanban.md?raw'
-import compareWemuxVsClaudeCodeMarkdown from '../content/compare/wemux-vs-claude-code.md?raw'
-import compareWemuxVsCodexMarkdown from '../content/compare/wemux-vs-codex.md?raw'
-import compareWemuxVsCursorMarkdown from '../content/compare/wemux-vs-cursor.md?raw'
-import compareWemuxVsDevinMarkdown from '../content/compare/wemux-vs-devin.md?raw'
-import compareWemuxVsGitHubCopilotMarkdown from '../content/compare/wemux-vs-github-copilot.md?raw'
-import compareWemuxVsOpenHandsMarkdown from '../content/compare/wemux-vs-openhands.md?raw'
-import compareWemuxVsOrcaMarkdown from '../content/compare/wemux-vs-orca.md?raw'
-import compareWemuxVsReplitMarkdown from '../content/compare/wemux-vs-replit.md?raw'
+import compareOxmuxVsClineKanbanMarkdown from '../content/compare/oxmux-vs-cline-kanban.md?raw'
+import compareOxmuxVsClaudeCodeMarkdown from '../content/compare/oxmux-vs-claude-code.md?raw'
+import compareOxmuxVsCodexMarkdown from '../content/compare/oxmux-vs-codex.md?raw'
+import compareOxmuxVsCursorMarkdown from '../content/compare/oxmux-vs-cursor.md?raw'
+import compareOxmuxVsDevinMarkdown from '../content/compare/oxmux-vs-devin.md?raw'
+import compareOxmuxVsGitHubCopilotMarkdown from '../content/compare/oxmux-vs-github-copilot.md?raw'
+import compareOxmuxVsOpenHandsMarkdown from '../content/compare/oxmux-vs-openhands.md?raw'
+import compareOxmuxVsOrcaMarkdown from '../content/compare/oxmux-vs-orca.md?raw'
+import compareOxmuxVsReplitMarkdown from '../content/compare/oxmux-vs-replit.md?raw'
 import useCaseAiCodingDeliveryMarkdown from '../content/use-cases/ai-coding-delivery.md?raw'
 import useCaseRemoteTeamsMarkdown from '../content/use-cases/ai-coding-workflow-for-remote-teams.md?raw'
 import useCaseContinueOnAnotherMachineMarkdown from '../content/use-cases/continue-ai-coding-work-on-another-machine.md?raw'
@@ -41,15 +41,15 @@ const contentMarkdownByPath = new Map<string, string>([
   ['/compare/best-ai-coding-platform-for-teams', compareBestAiCodingPlatformForTeamsMarkdown],
   ['/compare/best-cursor-alternative-for-teams', compareBestCursorAlternativeForTeamsMarkdown],
   ['/compare/codex-handoff-alternative', compareCodexHandoffAlternativeMarkdown],
-  ['/compare/wemux-vs-cline-kanban', compareWemuxVsClineKanbanMarkdown],
-  ['/compare/wemux-vs-claude-code', compareWemuxVsClaudeCodeMarkdown],
-  ['/compare/wemux-vs-codex', compareWemuxVsCodexMarkdown],
-  ['/compare/wemux-vs-cursor', compareWemuxVsCursorMarkdown],
-  ['/compare/wemux-vs-devin', compareWemuxVsDevinMarkdown],
-  ['/compare/wemux-vs-github-copilot', compareWemuxVsGitHubCopilotMarkdown],
-  ['/compare/wemux-vs-openhands', compareWemuxVsOpenHandsMarkdown],
-  ['/compare/wemux-vs-orca', compareWemuxVsOrcaMarkdown],
-  ['/compare/wemux-vs-replit', compareWemuxVsReplitMarkdown],
+  ['/compare/oxmux-vs-cline-kanban', compareOxmuxVsClineKanbanMarkdown],
+  ['/compare/oxmux-vs-claude-code', compareOxmuxVsClaudeCodeMarkdown],
+  ['/compare/oxmux-vs-codex', compareOxmuxVsCodexMarkdown],
+  ['/compare/oxmux-vs-cursor', compareOxmuxVsCursorMarkdown],
+  ['/compare/oxmux-vs-devin', compareOxmuxVsDevinMarkdown],
+  ['/compare/oxmux-vs-github-copilot', compareOxmuxVsGitHubCopilotMarkdown],
+  ['/compare/oxmux-vs-openhands', compareOxmuxVsOpenHandsMarkdown],
+  ['/compare/oxmux-vs-orca', compareOxmuxVsOrcaMarkdown],
+  ['/compare/oxmux-vs-replit', compareOxmuxVsReplitMarkdown],
   ['/use-cases/ai-coding-delivery', useCaseAiCodingDeliveryMarkdown],
   ['/use-cases/ai-coding-workflow-for-remote-teams', useCaseRemoteTeamsMarkdown],
   ['/use-cases/continue-ai-coding-work-on-another-machine', useCaseContinueOnAnotherMachineMarkdown],

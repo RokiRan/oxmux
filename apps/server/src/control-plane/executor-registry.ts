@@ -110,7 +110,7 @@ const normalizeExecutorDescriptor = (executor: ExecutorDescriptor): ExecutorDesc
   previewIngressPort: executor.previewIngressPort ?? 38080,
   executorSource: executor.executorSource ?? 'customer-worker',
   // 品牌迁移兼容窗口：存量数据行可能仍存旧值 'vibemux'，读入时归一化为新值
-  managedBy: executor.managedBy === 'vibemux' ? 'wemux' : (executor.managedBy ?? 'user'),
+  managedBy: executor.managedBy === 'vibemux' ? 'oxmux' : (executor.managedBy ?? 'user'),
   runtimeClass: executor.runtimeClass ?? 'user-worker',
   billingClass: executor.billingClass ?? 'standard',
 })

@@ -90,11 +90,11 @@ const previewChrome: Record<PreviewViewId, ChromeCopy> = {
     subtitle: { zh: 'Agent 切换、会话列表、聊天记录和输入区', en: 'Agent switcher, sessions, transcript, and composer' },
   },
   'project-product': {
-    title: { zh: 'Wemux Console', en: 'Wemux Console' },
-    subtitle: { zh: 'github.com/wemux-ai/wemux · main', en: 'github.com/wemux-ai/wemux · main' },
+    title: { zh: 'Oxmux Console', en: 'Oxmux Console' },
+    subtitle: { zh: 'github.com/oxmux-ai/oxmux · main', en: 'github.com/oxmux-ai/oxmux · main' },
   },
   'project-docs': {
-    title: { zh: 'Wemux Docs', en: 'Wemux Docs' },
+    title: { zh: 'Oxmux Docs', en: 'Oxmux Docs' },
     subtitle: { zh: 'docs / release notes · content workflow', en: 'docs / release notes · content workflow' },
   },
   'project-growth': {
@@ -340,7 +340,7 @@ function ProjectsPreview({ language }: { language: Language }) {
               <Pill tone="sky">worker</Pill>
             </div>
             <div className="mt-4 rounded-lg border border-zinc-800 bg-[#09090b] p-3">
-              <p className="truncate font-mono text-xs text-zinc-500">github.com/wemux/{project.name.toLowerCase().replace(/\s+/g, '-')}</p>
+              <p className="truncate font-mono text-xs text-zinc-500">github.com/oxmux/{project.name.toLowerCase().replace(/\s+/g, '-')}</p>
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <InfoCell label="Worker" value={project.viewId === 'project-product' ? 'MacBook' : 'Cloud VM'} />
                 <InfoCell label="Branch" value="main" />
@@ -426,8 +426,8 @@ function DrivePreview({ language }: { language: Language }) {
 
 function DocsPreview({ language }: { language: Language }) {
   const docs = [
-    { title: localize({ zh: '产品发布说明', en: 'Product release notes' }, language), meta: 'Wemux Docs · updated 8 min ago', active: true },
-    { title: localize({ zh: 'Agent 协作规范', en: 'Agent collaboration guide' }, language), meta: 'Wemux Core · updated yesterday' },
+    { title: localize({ zh: '产品发布说明', en: 'Product release notes' }, language), meta: 'Oxmux Docs · updated 8 min ago', active: true },
+    { title: localize({ zh: 'Agent 协作规范', en: 'Agent collaboration guide' }, language), meta: 'Oxmux Core · updated yesterday' },
     { title: localize({ zh: '节点接入手册', en: 'Worker setup guide' }, language), meta: 'Platform · updated Monday' },
     { title: localize({ zh: '品牌视觉方向', en: 'Brand visual direction' }, language), meta: 'Design · updated Monday' },
   ]
@@ -457,7 +457,7 @@ function DocsPreview({ language }: { language: Language }) {
         <article className="min-w-0 bg-[radial-gradient(circle_at_top,rgba(39,39,42,0.28),transparent_45%),linear-gradient(180deg,rgba(9,9,11,0.96),rgba(9,9,11,1))]">
           <header className="flex items-center justify-between gap-4 border-b border-zinc-800 px-5 py-4">
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-violet-300">Wemux Docs</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-violet-300">Oxmux Docs</p>
               <h2 className="mt-2 truncate text-xl font-semibold text-zinc-50">{localize({ zh: '产品发布说明', en: 'Product release notes' }, language)}</h2>
             </div>
             <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-[10px] text-emerald-300">{localize({ zh: '已同步', en: 'Synced' }, language)}</span>
@@ -511,7 +511,7 @@ function TeamsPreview({ language }: { language: Language }) {
       </section>
       <div className="grid flex-1 grid-cols-[15rem_1fr] gap-3">
         <MiniPanel title={localize({ zh: '团队', en: 'Teams' }, language)}>
-          {['Wemux Core', 'Wemux Docs', 'Community Operations'].map((team, index) => (
+          {['Oxmux Core', 'Oxmux Docs', 'Community Operations'].map((team, index) => (
             <ListButton active={index === 0} key={team} title={team} subtitle={index === 0 ? '8 members' : 'shared workspace'} />
           ))}
         </MiniPanel>
@@ -523,8 +523,8 @@ function TeamsPreview({ language }: { language: Language }) {
               <PeopleRow name="Developer Bot" role="member" tone="emerald" />
             </MiniPanel>
             <MiniPanel title={localize({ zh: '项目', en: 'Projects' }, language)}>
-              <TaskListRow agent="shared" title="Wemux Console" tone="violet" />
-              <TaskListRow agent="shared" title="Wemux Docs" tone="sky" />
+              <TaskListRow agent="shared" title="Oxmux Console" tone="violet" />
+              <TaskListRow agent="shared" title="Oxmux Docs" tone="sky" />
               <TaskListRow agent="private" title="Community Operations" tone="emerald" />
             </MiniPanel>
             <MiniPanel title={localize({ zh: '节点', en: 'Workers' }, language)}>
@@ -535,7 +535,7 @@ function TeamsPreview({ language }: { language: Language }) {
           </div>
           <div className="flex-1">
             <MiniPanel title={localize({ zh: '团队动态', en: 'Team Activity' }, language)}>
-            <TimelineRow tone="emerald" time="09:41" title="invite" value={localize({ zh: 'Mia 加入 Wemux Core', en: 'Mia joined Wemux Core' }, language)} />
+            <TimelineRow tone="emerald" time="09:41" title="invite" value={localize({ zh: 'Mia 加入 Oxmux Core', en: 'Mia joined Oxmux Core' }, language)} />
             <TimelineRow tone="violet" time="10:06" title="worker" value={localize({ zh: 'Cloud VM 绑定团队节点', en: 'Cloud VM bound as team worker' }, language)} />
             </MiniPanel>
           </div>
@@ -750,7 +750,7 @@ function ChatPreviewMainPanel({ language }: { language: Language }) {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm font-medium text-zinc-200">Wemux Developer Agent</span>
+              <span className="text-sm font-medium text-zinc-200">Oxmux Developer Agent</span>
               <span className="text-xs text-zinc-600">{localize({ zh: '主会话', en: 'Main Session' }, language)}</span>
               <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] text-zinc-500">
                 {localize({ zh: '直接对话', en: 'Direct chat' }, language)}

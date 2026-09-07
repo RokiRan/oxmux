@@ -1,6 +1,6 @@
 # Client Architecture
 
-Wemux uses two maintained native shells:
+Oxmux uses two maintained native shells:
 
 - Desktop: Electron in `apps/desktop`
 - Mobile: React Native + Expo in `apps/mobile`
@@ -9,7 +9,7 @@ Both shells reuse the React product renderer in `apps/web`. Platform capabilitie
 
 | Capability | Electron | React Native |
 |---|---:|---:|
-| Deep links (`wemux://`) | Yes | Yes |
+| Deep links (`oxmux://`) | Yes | Yes |
 | System notifications | Yes | Yes |
 | Automatic updates | electron-updater | Expo Updates |
 | Microphone recording | Yes | Yes |
@@ -25,7 +25,7 @@ pnpm mobile:ios        # Open iOS simulator
 pnpm mobile:android    # Open Android emulator
 ```
 
-For a physical mobile device, set `EXPO_PUBLIC_WEMUX_APP_URL` to a LAN-reachable web URL before starting Expo. The defaults target `127.0.0.1:15173` on iOS Simulator and `10.0.2.2:15173` on Android Emulator.
+For a physical mobile device, set `EXPO_PUBLIC_OXMUX_APP_URL` to a LAN-reachable web URL before starting Expo. The defaults target `127.0.0.1:15173` on iOS Simulator and `10.0.2.2:15173` on Android Emulator.
 
 ## Builds
 

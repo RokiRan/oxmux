@@ -128,8 +128,8 @@ const canaryPatterns = [
   /credit_node_prices/i,
   /hosted_model_catalog/i,
   /CREEM_/i,
-  /connector\.wemux\.xyz/i,
-  /internal\.wemux/i,
+  /connector\.oxmux\.xyz/i,
+  /internal\.oxmux/i,
   /Partner Portal/i,
 ]
 

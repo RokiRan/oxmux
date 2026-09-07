@@ -25,7 +25,7 @@ export const Route = createFileRoute('/topics/$slug')({
       description: topic.description,
       path: `/topics/${topic.slug}`,
       structuredData: buildMarketingTopicStructuredData(topic),
-      title: `${topic.title} | Wemux Topic`,
+      title: `${topic.title} | Oxmux Topic`,
     })
   },
   component: TopicsSlugRoute,
@@ -46,7 +46,7 @@ function TopicsSlugRoute() {
       title={topic.title}
     >
       <MarketingSection
-        description="Every topic hub should gather multiple page types around one search intent. That gives Wemux a cleaner pillar-and-cluster structure."
+        description="Every topic hub should gather multiple page types around one search intent. That gives Oxmux a cleaner pillar-and-cluster structure."
         title="Why this topic exists"
       >
         <p className="text-sm leading-8 text-zinc-300">{topic.description}</p>

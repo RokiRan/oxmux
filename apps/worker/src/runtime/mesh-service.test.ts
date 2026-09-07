@@ -16,7 +16,7 @@ class FakeSupervisorChild extends EventEmitter implements MeshSupervisorChild {
 }
 
 const buildWorkerConfig = (ipv4: string): WorkerConfig => ({
-  cloudUrl: 'https://wemux.xyz',
+  cloudUrl: 'https://oxmux.xyz',
   machineId: 'machine-1',
   machineName: 'Machine 1',
   agentSettings: normalizeAgentSettings(),

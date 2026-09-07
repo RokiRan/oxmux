@@ -174,7 +174,7 @@ export const registerChannelSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
       ok: true,
       agent: updated,
       ...buildAgentChannelPayload({ requestUrl: c.req.url, agentId, profile }),
-      message: '飞书连接已断开，wemux 中保存的飞书凭据已清除。',
+      message: '飞书连接已断开，oxmux 中保存的飞书凭据已清除。',
     })
   })
 
@@ -235,7 +235,7 @@ export const registerChannelSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
       ok: true,
       agent: updated,
       ...buildAgentChannelPayload({ requestUrl: c.req.url, agentId, profile }),
-      message: '微信连接已断开，wemux 中保存的微信凭证已清除。',
+      message: '微信连接已断开，oxmux 中保存的微信凭证已清除。',
     })
   })
 

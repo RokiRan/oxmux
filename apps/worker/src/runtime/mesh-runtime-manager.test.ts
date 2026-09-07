@@ -378,7 +378,7 @@ test('startWorkerMeshRuntimeAsync spawns when an existing runtime reports a diff
 test('startWorkerMeshRuntimeAsync auto prepares EasyTier binaries when PATH is missing', async () => {
   const spawned: Array<{ command: string; args: string[] }> = []
   // 节点级 tool 缓存固定落机器级 workerHome：临时指向不存在的目录，确保走自动下载分支
-  await withEnvAsync({ WEMUX_WORKER_HOME: '/tmp/vibemux-worker' }, async () => {
+  await withEnvAsync({ OXMUX_WORKER_HOME: '/tmp/vibemux-worker' }, async () => {
     const status = await startWorkerMeshRuntimeAsync({
       enabled: true,
       workspaceRoot: '/tmp/vibemux-worker',
@@ -521,7 +521,7 @@ process.exit(1)
     const status = refreshWorkerMeshRuntimeStatus({
       enabled: true,
       cliPath,
-      peers: ['tcp://wemux.xyz:11010'],
+      peers: ['tcp://oxmux.xyz:11010'],
       ipv4: '10.144.161.94',
       hostname: 'MBP',
     })

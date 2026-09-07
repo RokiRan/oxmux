@@ -1,6 +1,6 @@
 {
-  "name": "wemux",
-  "short_name": "wemux",
+  "name": "oxmux",
+  "short_name": "oxmux",
   "description": "把需求交给 Agent 系统，自动拆解任务并派发到真实工作站执行。",
   "start_url": "/",
   "scope": "/",

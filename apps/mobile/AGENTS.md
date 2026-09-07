@@ -7,7 +7,7 @@
 - Owns mobile deep links, local notifications, microphone recording and Expo OTA update commands.
 - Android also owns the foreground meeting-listening service, GGUF model
   downloads, and the JNI MOSS/MiniCPM5 runtime used for offline transcription.
-- Exposes only the message-based `window.__WEMUX_MOBILE__` bridge to the renderer.
+- Exposes only the message-based `window.__OXMUX_MOBILE__` bridge to the renderer.
 
 ## Boundaries
 

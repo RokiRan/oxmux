@@ -6,8 +6,8 @@ import { buildNoIndexHead } from '../lib/marketing-site'
 
 export const Route = createFileRoute('/embed/session/$token' as never)({
   head: () => buildNoIndexHead({
-    title: 'Wemux Shared Session',
-    description: 'A live, embeddable view of a shared Wemux session. Not meant to appear in search results.',
+    title: 'Oxmux Shared Session',
+    description: 'A live, embeddable view of a shared Oxmux session. Not meant to appear in search results.',
   }),
   component: EmbedSessionRoute,
 })

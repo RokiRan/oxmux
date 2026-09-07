@@ -19,7 +19,7 @@ export const Route = createFileRoute('/download')({
       '@graph': [
         {
           '@type': 'SoftwareApplication',
-          name: 'Wemux',
+          name: 'Oxmux',
           applicationCategory: 'DeveloperApplication',
           operatingSystem: 'macOS, Windows',
           url: buildPageUrl('/download'),

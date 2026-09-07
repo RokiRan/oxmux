@@ -146,7 +146,7 @@ export const deleteProjectRootDirectory = async (params: {
     return {
       deleted: false as const,
       path: targetPath,
-      message: `当前路径不是 wemux 托管目录，已跳过目录删除：${targetPath}`,
+      message: `当前路径不是 oxmux 托管目录，已跳过目录删除：${targetPath}`,
     }
   }
 

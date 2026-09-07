@@ -2,7 +2,7 @@
 
 ## 概述
 
-Wemux 支持 4 个 coding runtime 的统一底座：
+Oxmux 支持 4 个 coding runtime 的统一底座：
 
 | Runtime | Transport | 模型 ID 策略 | 状态 |
 |---------|-----------|--------------|------|

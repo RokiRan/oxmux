@@ -14,7 +14,7 @@ const ssrServerFile = path.resolve(process.cwd(), 'apps/web/.output/server/_ssr/
 const rendererTemplateFile = path.resolve(process.cwd(), 'apps/web/.output/server/_chunks/renderer-template.mjs')
 const assetsPrefix = `${path.resolve(publicDir, 'assets')}${path.sep}`
 const publicDirPrefix = `${publicDir}${path.sep}`
-const seoBlockPattern = /<!-- wemux-seo:start -->[\s\S]*?<!-- wemux-seo:end -->/
+const seoBlockPattern = /<!-- oxmux-seo:start -->[\s\S]*?<!-- oxmux-seo:end -->/
 export const rootMarkupPattern = /<div id="root"><\/div>/
 const htmlLangPattern = /<html lang="[^"]+">/
 

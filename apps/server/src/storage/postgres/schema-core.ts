@@ -252,7 +252,7 @@ export const driveFiles = pgTable('drive_files', {
 ])
 
 /**
- * 工作区大脑（Wemux Brain）纳入的云盘文件：用户把云盘文件设为大脑上下文，
+ * 工作区大脑（Oxmux Brain）纳入的云盘文件：用户把云盘文件设为大脑上下文，
  * 大脑整理出 digest 供 Agent 快上下文引用。文件更新（digestAt < file.updatedAt）时重新整理。
  */
 export const workspaceBrainFiles = pgTable('workspace_brain_files', {

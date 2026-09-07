@@ -6,7 +6,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, rmSync } from 'node:fs'
 import path from 'node:path'
-import { buildWemuxAgentCommitMessage } from '@shared/git-commit-message'
+import { buildOxmuxAgentCommitMessage } from '@shared/git-commit-message'
 import type { DistributedTask, TaskRuntimeGitIdentity, WorkerProjectBinding } from '@shared/types'
 import { getWorkspaceRepoBaseDir } from '@shared/workspace-paths'
 import { mergeTaskGitCommitIdentityEnv } from '../git-identity'
@@ -265,8 +265,8 @@ export const commitAndMaybePush = async (params: {
   }
 
   await git.add(['--all'])
-  await git.commit(buildWemuxAgentCommitMessage({
-    fallback: `wemux: ${params.task.id}`,
+  await git.commit(buildOxmuxAgentCommitMessage({
+    fallback: `oxmux: ${params.task.id}`,
     agentIdentity: {
       name: params.identity.agentCoAuthorName,
       email: params.identity.agentCoAuthorEmail,

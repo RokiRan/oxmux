@@ -41,8 +41,8 @@ test('worker console port environment resolves from release channel and local de
 })
 
 test('worker console port environment resolves from new and legacy cloud URLs', () => {
-  assert.equal(resolveWorkerConsolePortEnvironment({ cloudUrl: 'https://wemux.ai' }), 'production')
-  assert.equal(resolveWorkerConsolePortEnvironment({ cloudUrl: 'https://wemux.xyz' }), 'preview')
+  assert.equal(resolveWorkerConsolePortEnvironment({ cloudUrl: 'https://oxmux.ai' }), 'production')
+  assert.equal(resolveWorkerConsolePortEnvironment({ cloudUrl: 'https://oxmux.xyz' }), 'preview')
   // 兼容窗口：旧域名仍然识别
   assert.equal(resolveWorkerConsolePortEnvironment({ cloudUrl: 'https://vibemux.com' }), 'production')
   assert.equal(resolveWorkerConsolePortEnvironment({ cloudUrl: 'https://vibemux.xyz' }), 'preview')

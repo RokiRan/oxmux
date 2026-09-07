@@ -142,7 +142,7 @@ const parseExecutionModel = (value?: string) => {
 }
 
 const resolvePiAgentDir = (settings: PiAgentSettings | undefined, runtimeEnv?: Record<string, string>) => {
-  const runtimeAgentDir = runtimeEnv?.WEMUX_PI_AGENT_DIR?.trim()
+  const runtimeAgentDir = runtimeEnv?.OXMUX_PI_AGENT_DIR?.trim()
   if (runtimeAgentDir) {
     return runtimeAgentDir
   }
@@ -157,7 +157,7 @@ const resolvePiAgentDir = (settings: PiAgentSettings | undefined, runtimeEnv?: R
 
 const buildManagedSessionDir = (cwd: string, agentDir: string, executionModel?: string) => {
   const digest = createHash('sha1').update(`${agentDir}::${cwd}::${executionModel?.trim() || ''}`).digest('hex').slice(0, 16)
-  return path.join(agentDir, 'sessions-wemux', digest)
+  return path.join(agentDir, 'sessions-oxmux', digest)
 }
 
 const resolveRuntimeProviderConfig = (model: PiResolvedModel, runtimeEnv?: Record<string, string>) => {
@@ -374,7 +374,7 @@ const createOverlayModelRegistry = (params: {
   apiKey?: string
   baseUrl?: string
 }) => {
-  const runtimeRoot = path.join(os.tmpdir(), `wemux-pi-models-${randomUUID()}`)
+  const runtimeRoot = path.join(os.tmpdir(), `oxmux-pi-models-${randomUUID()}`)
   mkdirSync(runtimeRoot, { recursive: true })
 
   const overlay = mergeProviderConfig({

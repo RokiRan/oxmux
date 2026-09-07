@@ -30,6 +30,6 @@ export const assertBetterAuthSecretConfigured = () => {
   }
 
   throw new Error(
-    'BETTER_AUTH_SECRET is required in production. All wemux control-plane nodes must share the same BETTER_AUTH_SECRET, otherwise Better Auth sessions, OAuth flows, and related cross-node auth checks will randomly fail.',
+    'BETTER_AUTH_SECRET is required in production. All oxmux control-plane nodes must share the same BETTER_AUTH_SECRET, otherwise Better Auth sessions, OAuth flows, and related cross-node auth checks will randomly fail.',
   )
 }

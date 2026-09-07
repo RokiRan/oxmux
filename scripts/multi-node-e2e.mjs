@@ -21,7 +21,7 @@ import path from 'node:path'
 const MAIN_DB_URL = process.env.DATABASE_URL
   || 'postgres://vibemux:vibemux@127.0.0.1:5434/vibemux'
 const E2E_DB = 'vibemux_multinode_e2e'
-const STALE_TIMEOUT_MS = Number(process.env.WEMUX_CLUSTER_NODE_STALE_TIMEOUT_MS ?? process.env.VIBEMUX_CLUSTER_NODE_STALE_TIMEOUT_MS || 5_000)
+const STALE_TIMEOUT_MS = Number(process.env.OXMUX_CLUSTER_NODE_STALE_TIMEOUT_MS ?? process.env.VIBEMUX_CLUSTER_NODE_STALE_TIMEOUT_MS || 5_000)
 const BOOT_TIMEOUT_MS = 90_000
 
 const TSX = path.resolve('node_modules/.bin/tsx')
@@ -87,11 +87,11 @@ const buildServerEnv = (nodeId, port, extra = {}) => {
     HOST: '127.0.0.1',
     PORT: String(port),
     DATABASE_URL: e2eDbUrl(),
-    WEMUX_NODE_ID: nodeId,
-    WEMUX_NODE_NAME: nodeId,
-    WEMUX_NODE_URL: `http://127.0.0.1:${port}`,
-    WEMUX_NODE_RELAY_URL: `http://127.0.0.1:${port}`,
-    WEMUX_NODE_REGION: 'e2e',
+    OXMUX_NODE_ID: nodeId,
+    OXMUX_NODE_NAME: nodeId,
+    OXMUX_NODE_URL: `http://127.0.0.1:${port}`,
+    OXMUX_NODE_RELAY_URL: `http://127.0.0.1:${port}`,
+    OXMUX_NODE_REGION: 'e2e',
     VIBEMUX_CLUSTER_NODE_STALE_TIMEOUT_MS: String(STALE_TIMEOUT_MS),
     VIBEMUX_ENABLE_DEV_LOGIN: 'true',
     VIBEMUX_BUNDLED_POSTGRES_ENABLED: 'false',
@@ -155,7 +155,7 @@ const main = async () => {
   await ensureE2eDatabase()
   log('created e2e database')
 
-  const workdir = mkdtempSync(path.join(tmpdir(), 'wemux-e2e-'))
+  const workdir = mkdtempSync(path.join(tmpdir(), 'oxmux-e2e-'))
   const serverA = spawnServer('node-a', 19001)
   const serverB = spawnServer('node-b', 19002)
 

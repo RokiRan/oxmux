@@ -73,11 +73,11 @@ export const resolveWorkerReleaseChannel = (params: {
   packageName?: string
   environmentChannel?: string
 }) => {
-  // 兼容窗口：新老包名都识别，后续移除 wemux-* 分支
-  if (params.packageName === 'vibemux-worker-preview' || params.packageName === 'wemux-worker-preview') {
+  // 兼容窗口：新老包名都识别，后续移除 oxmux-* 分支
+  if (params.packageName === 'vibemux-worker-preview' || params.packageName === 'oxmux-worker-preview') {
     return 'preview'
   }
-  if (params.packageName === 'vibemux-worker' || params.packageName === 'wemux-worker') {
+  if (params.packageName === 'vibemux-worker' || params.packageName === 'oxmux-worker') {
     return 'production'
   }
 
@@ -91,10 +91,10 @@ export const resolveWorkerReleaseChannel = (params: {
 
 export const getPackagedWorkerReleaseChannel = () => {
   const packageName = getWorkerPackageJson().name?.trim()
-  if (packageName === 'vibemux-worker-preview' || packageName === 'wemux-worker-preview') {
+  if (packageName === 'vibemux-worker-preview' || packageName === 'oxmux-worker-preview') {
     return 'preview'
   }
-  if (packageName === 'vibemux-worker' || packageName === 'wemux-worker') {
+  if (packageName === 'vibemux-worker' || packageName === 'oxmux-worker') {
     return 'production'
   }
 
@@ -105,17 +105,17 @@ export const getWorkerReleaseChannel = () => {
   return resolveWorkerReleaseChannel({
     metadataChannel: getReleaseMetadata().channel,
     packageName: getWorkerPackageJson().name,
-    environmentChannel: getEnv('WEMUX_WORKER_RELEASE_CHANNEL'),
+    environmentChannel: getEnv('OXMUX_WORKER_RELEASE_CHANNEL'),
   })
 }
 
 const getTargetPackageName = (channel: string, currentPackageName?: string) => {
   const suffix = channel === 'preview' ? 'worker-preview' : 'worker'
-  // 兼容窗口：存量 vibemux-worker 安装继续查旧包，新装 wemux-worker 查新包
-  if (currentPackageName === `wemux-${suffix}`) {
-    return `wemux-${suffix}`
+  // 兼容窗口：存量 vibemux-worker 安装继续查旧包，新装 oxmux-worker 查新包
+  if (currentPackageName === `oxmux-${suffix}`) {
+    return `oxmux-${suffix}`
   }
-  return `wemux-${suffix}`
+  return `oxmux-${suffix}`
 }
 
 const getTargetPackageTag = (channel: string) => {
@@ -140,12 +140,12 @@ const loadNpmPackageMetadata = async (packageName: string) => {
 }
 
 const getInstallerServerUrl = () => {
-  const explicitUrl = getEnv('WEMUX_WORKER_INSTALLER_URL')?.trim() || getEnv('WEMUX_INSTALL_URL')?.trim()
+  const explicitUrl = getEnv('OXMUX_WORKER_INSTALLER_URL')?.trim() || getEnv('OXMUX_INSTALL_URL')?.trim()
   if (explicitUrl) {
     return explicitUrl.replace(/\/(?:install(?:\/worker\.sh)?|install\/worker(?:\/manifest\.json)?)?$/, '')
   }
 
-  const defaultUrl = getReleaseMetadata().defaultCloudUrl?.trim().replace(/\/$/, '') || 'https://wemux.ai'
+  const defaultUrl = getReleaseMetadata().defaultCloudUrl?.trim().replace(/\/$/, '') || 'https://oxmux.ai'
   return resolveDefaultCloudUrl(defaultUrl)
 }
 
@@ -173,7 +173,7 @@ export const checkInstallerPackageUpdate = async (
     const manifest = await loadInstallerManifest(serverUrl)
     const latestVersion = manifest.packageVersion?.trim()
     if (manifest.packageName?.trim()) {
-      // 兼容窗口：vibemux-* 与 wemux-* 包名同属一个 channel，只校验通道一致
+      // 兼容窗口：vibemux-* 与 oxmux-* 包名同属一个 channel，只校验通道一致
       const manifestChannel = resolveWorkerReleaseChannel({ packageName: manifest.packageName })
       if (manifestChannel !== channel) {
         return {
@@ -314,6 +314,6 @@ export const checkForWorkerUpdate = async (): Promise<WorkerUpdateCheckResult> =
   }
 
   // worker 更新统一走 server installer（HTTP）通道，npm registry 不再参与。
-  // 存量 vibemux-* 包与 wemux-* 包都能从各自 server 的 manifest / package.tgz 更新。
+  // 存量 vibemux-* 包与 oxmux-* 包都能从各自 server 的 manifest / package.tgz 更新。
   return checkInstallerPackageUpdate(currentVersion, channel, packageName, packageTag)
 }

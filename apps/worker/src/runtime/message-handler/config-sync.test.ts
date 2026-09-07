@@ -11,7 +11,7 @@ import { handleConfigSyncMessage } from './config-sync'
 import type { ControlPlaneMessageHandlerParams } from './types'
 
 const createWorkerConfig = (): WorkerConfig => ({
-  cloudUrl: 'https://wemux.xyz',
+  cloudUrl: 'https://oxmux.xyz',
   machineId: 'machine-1',
   machineName: 'worker-test',
   executorName: 'worker-test',

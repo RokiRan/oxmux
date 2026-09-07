@@ -332,7 +332,7 @@ export const refreshAuthStore = async () => {
     revokedTokenHashes.add(row.tokenHash)
   }
   // 只在确实存在已过期 token 时才执行清理 DELETE。
-  // 无条件发 DELETE（即使匹配 0 行）也会触发 wemux_storage_change 语句级触发器，
+  // 无条件发 DELETE（即使匹配 0 行）也会触发 oxmux_storage_change 语句级触发器，
   // 产生 storage_change_events + pg_notify → storage-change listener 再次 refreshAuthStore
   // → 再次 DELETE → 自反馈死循环（曾导致 storage_change_events 膨胀到数十 GB）。
   const hasExpiredTokens = revokedTokenRows.some((row) => row.expiresAt < now)
@@ -616,7 +616,7 @@ export const ensureOAuthUser = async (input: {
 
 /**
  * 邮箱密码用户同步（better-auth emailAndPassword 注册/登录后 bridge 调用）。
- * 权威密码在 better-auth account.password（scrypt）；wemux users.passwordHash 存随机占位。
+ * 权威密码在 better-auth account.password（scrypt）；oxmux users.passwordHash 存随机占位。
  */
 export const ensurePasswordUser = async (input: {
   email: string
@@ -1519,7 +1519,7 @@ export const markUserEmailVerified = (userId: string) => {
   )
 }
 
-/** 强制下线：清除该用户全部 better-auth 会话（cookie），wemux token 由 status 阻断兜底。 */
+/** 强制下线：清除该用户全部 better-auth 会话（cookie），oxmux token 由 status 阻断兜底。 */
 export const revokeAllUserSessions = async (userId: string): Promise<number> => {
   const result = await getDrizzleDb().delete(betterAuthSessions).where(eq(betterAuthSessions.userId, userId))
   const user = cache.users.find((item) => item.id === userId)

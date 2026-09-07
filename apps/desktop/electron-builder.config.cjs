@@ -4,8 +4,8 @@ const { readFileSync } = require('node:fs')
 const repoRoot = path.resolve(__dirname, '../..')
 const productPackage = JSON.parse(readFileSync(path.join(repoRoot, 'package.json'), 'utf8'))
 const runtimeBinary = process.platform === 'win32'
-  ? path.join(repoRoot, 'apps/meeting-runtime/native/build/Release/wemux-meeting-runtime.exe')
-  : path.join(repoRoot, 'apps/meeting-runtime/native/build/wemux-meeting-runtime')
+  ? path.join(repoRoot, 'apps/meeting-runtime/native/build/Release/oxmux-meeting-runtime.exe')
+  : path.join(repoRoot, 'apps/meeting-runtime/native/build/oxmux-meeting-runtime')
 const shouldNotarize = Boolean(
   process.env.APPLE_ID && process.env.APPLE_APP_SPECIFIC_PASSWORD && process.env.APPLE_TEAM_ID,
 )
@@ -13,22 +13,22 @@ const shouldNotarize = Boolean(
 // Signing is enabled per-platform by CSC_* secrets in the building workflow.
 const shouldSignMac = Boolean(process.env.CSC_LINK || process.env.MACOS_CERTIFICATE)
 
-// Update-feed target: set WEMUX_DESKTOP_PUBLISH_URL (generic provider, e.g. a
+// Update-feed target: set OXMUX_DESKTOP_PUBLISH_URL (generic provider, e.g. a
 // self-hosted R2 download base) to emit latest*.yml pointing there; default is
 // the public GitHub Releases channel.
-const publishTargets = process.env.WEMUX_DESKTOP_PUBLISH_URL?.trim()
-  ? [{ provider: 'generic', url: process.env.WEMUX_DESKTOP_PUBLISH_URL.trim().replace(/\/+$/, '') }]
-  : [{ provider: 'github', owner: 'wemux-ai', repo: 'wemux' }]
+const publishTargets = process.env.OXMUX_DESKTOP_PUBLISH_URL?.trim()
+  ? [{ provider: 'generic', url: process.env.OXMUX_DESKTOP_PUBLISH_URL.trim().replace(/\/+$/, '') }]
+  : [{ provider: 'github', owner: 'oxmux-ai', repo: 'oxmux' }]
 
 module.exports = {
-  appId: 'com.wemux.app',
-  productName: 'Wemux',
-  // 包名是 scoped（@wemux/desktop），electron-builder 会拿它当可执行文件名，
+  appId: 'com.oxmux.app',
+  productName: 'Oxmux',
+  // 包名是 scoped（@oxmux/desktop），electron-builder 会拿它当可执行文件名，
   // '@' 和 '/' 在 AppImage 路径里不合法 —— 显式指定安全名称。
-  executableName: 'wemux-desktop',
+  executableName: 'oxmux-desktop',
   extraMetadata: {
     version: productPackage.version,
-    description: 'Wemux desktop client',
+    description: 'Oxmux desktop client',
   },
   directories: {
     output: 'dist',
@@ -55,8 +55,8 @@ module.exports = {
   ],
   protocols: [
     {
-      name: 'Wemux deep link',
-      schemes: ['wemux'],
+      name: 'Oxmux deep link',
+      schemes: ['oxmux'],
     },
   ],
   asar: true,
@@ -68,7 +68,7 @@ module.exports = {
     identity: shouldSignMac ? undefined : null,
     minimumSystemVersion: '10.15',
     extendInfo: {
-      NSMicrophoneUsageDescription: 'Wemux uses the microphone for local meeting transcription.',
+      NSMicrophoneUsageDescription: 'Oxmux uses the microphone for local meeting transcription.',
     },
     notarize: shouldNotarize,
     target: [

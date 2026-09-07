@@ -7,8 +7,8 @@ import type { MiddlewareHandler } from 'hono'
 import { Hono } from 'hono'
 import { validateMcpServerPolicy } from '@shared/mcp'
 import type { McpServerPolicy } from '@shared/mcp'
-import { createWemuxMcpServer } from '../integrations/mcp/wemux-mcp-server'
-import { normalizeMcpArguments } from '../integrations/mcp/wemux-mcp-chat-tools'
+import { createOxmuxMcpServer } from '../integrations/mcp/oxmux-mcp-server'
+import { normalizeMcpArguments } from '../integrations/mcp/oxmux-mcp-chat-tools'
 import { WebStandardStreamableHTTPServerTransport } from '../integrations/mcp/sdk'
 import { executorRegistry } from '../control-plane/executor-registry'
 import { loadState } from '../storage/app-state-store'
@@ -78,7 +78,7 @@ export const registerMcpRoutes = (app: Hono, requireAuth: MiddlewareHandler) => 
       return c.json({ message: 'executor token 无效。' }, 401)
     }
 
-    const actingUserId = c.req.header('x-wemux-acting-user')?.trim()
+    const actingUserId = c.req.header('x-oxmux-acting-user')?.trim()
     if (actingUserId && actingUserId !== executor.ownerUserId) {
       if (!(executor.visibility === 'team' && executor.teamId && ensureTeamMember(executor.teamId, actingUserId))) {
         return c.json({ message: 'acting user 无权通过该执行器访问 MCP。' }, 403)
@@ -86,8 +86,8 @@ export const registerMcpRoutes = (app: Hono, requireAuth: MiddlewareHandler) => 
     }
 
     const userId = actingUserId || executor.ownerUserId
-    const runtimeAgentId = c.req.header('x-wemux-runtime-agent')?.trim()
-    const server = createWemuxMcpServer({
+    const runtimeAgentId = c.req.header('x-oxmux-runtime-agent')?.trim()
+    const server = createOxmuxMcpServer({
       userId,
       runtimeAgentId,
       getState: () => getScopedState(loadState(), userId),
@@ -105,7 +105,7 @@ export const registerMcpRoutes = (app: Hono, requireAuth: MiddlewareHandler) => 
     if (!userId) {
       return c.json({ message: '未登录' }, 401)
     }
-    const server = createWemuxMcpServer({
+    const server = createOxmuxMcpServer({
       userId,
       getState: () => getScopedState(loadState(), userId),
     })
@@ -137,8 +137,8 @@ export const registerMcpRoutes = (app: Hono, requireAuth: MiddlewareHandler) => 
       return c.json({ ok: true, phase: 'validated', message: 'stdio command format is valid. Connection test not applicable for stdio servers.' })
     }
 
-    if (target === 'built-in://wemux') {
-      return c.json({ ok: true, phase: 'validated', message: 'Built-in Wemux MCP server.' })
+    if (target === 'built-in://oxmux') {
+      return c.json({ ok: true, phase: 'validated', message: 'Built-in Oxmux MCP server.' })
     }
 
     const normalizedUrl = target.startsWith('sse://')

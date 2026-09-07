@@ -1,4 +1,4 @@
-# Wemux vs Devin for AI Software Delivery
+# Oxmux vs Devin for AI Software Delivery
 
 Devin is often understood as an autonomous software engineering agent. Its appeal is straightforward: users want to assign real software tasks in natural language and have the system act more like an outsourced engineer than a code assistant.
 
@@ -15,9 +15,9 @@ Devin is strong when buyers want an agent that feels like a delegated software w
 
 That makes Devin interesting not only to engineers, but also to founders, product people, and business-side operators who want software work done without living inside the terminal.
 
-## Where Wemux is different
+## Where Oxmux is different
 
-Wemux is less about the “autonomous outsourced engineer” story and more about the delivery operating layer:
+Oxmux is less about the “autonomous outsourced engineer” story and more about the delivery operating layer:
 
 - route execution to the right machine
 - keep repository work visible
@@ -29,7 +29,7 @@ So the real comparison is not “which one sounds more autonomous.” The real c
 
 ## Side-by-side
 
-| Dimension | Devin | Wemux |
+| Dimension | Devin | Oxmux |
 | --- | --- | --- |
 | Product shape | Autonomous software-engineering agent narrative | Worker-routed AI delivery control plane |
 | Buyer appeal | Founders, PMs, business operators, and engineering teams seeking delegation | Teams that already care about execution surfaces, repos, and delivery visibility |
@@ -42,13 +42,13 @@ So the real comparison is not “which one sounds more autonomous.” The real c
 
 Choose Devin if your main mental model is: “I want to hand a software task to an autonomous agent and see if it can complete it.”
 
-Choose Wemux if your main mental model is: “I want AI software work to run inside the correct environment, stay visible, and remain controllable as part of a real delivery workflow.”
+Choose Oxmux if your main mental model is: “I want AI software work to run inside the correct environment, stay visible, and remain controllable as part of a real delivery workflow.”
 
 ## Why this distinction matters
 
 Many teams do not actually want maximum autonomy. They want reliable delivery with clear control.
 
-That is where Wemux becomes more attractive. It treats AI work as something that should:
+That is where Oxmux becomes more attractive. It treats AI work as something that should:
 
 - run in the right repo
 - run on the right machine
@@ -56,4 +56,4 @@ That is where Wemux becomes more attractive. It treats AI work as something that
 - remain reviewable by humans
 - continue across device and host changes
 
-Devin is compelling as an autonomous-agent narrative. Wemux is compelling when the real need is durable, inspectable, machine-aware software delivery.
+Devin is compelling as an autonomous-agent narrative. Oxmux is compelling when the real need is durable, inspectable, machine-aware software delivery.

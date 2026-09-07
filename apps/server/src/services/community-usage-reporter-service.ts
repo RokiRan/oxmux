@@ -1,6 +1,6 @@
 // [INPUT]: app_meta（installId 持久化）、本地 Postgres 计数表、环境变量开关
 // [OUTPUT]: 社区版匿名使用上报（启动 45s 首报 + 每 24h 周期）；失败静默不拖垮主链路
-// [POS]: 自托管实例 → wemux.ai collector 的唯一上报出口；与内部 telemetry（本地落库）严格分开
+// [POS]: 自托管实例 → oxmux.ai collector 的唯一上报出口；与内部 telemetry（本地落库）严格分开
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 import os from 'node:os'
 import { getEnv } from '@shared/env'
@@ -28,12 +28,12 @@ export interface CommunityUsageReportingConfig {
   endpoint: string
 }
 
-/** 解析 reporter 配置：`WEMUX_USAGE_REPORTING_DISABLED=1/true` 关闭；endpoint 可用 env 覆盖。 */
+/** 解析 reporter 配置：`OXMUX_USAGE_REPORTING_DISABLED=1/true` 关闭；endpoint 可用 env 覆盖。 */
 export const resolveCommunityUsageReportingConfig = (
   env: NodeJS.ProcessEnv = process.env,
 ): CommunityUsageReportingConfig => {
-  const rawDisabled = (env.WEMUX_USAGE_REPORTING_DISABLED ?? env.VIBEMUX_USAGE_REPORTING_DISABLED ?? '').trim().toLowerCase()
-  const rawEndpoint = (env.WEMUX_USAGE_REPORTING_ENDPOINT ?? '').trim()
+  const rawDisabled = (env.OXMUX_USAGE_REPORTING_DISABLED ?? env.VIBEMUX_USAGE_REPORTING_DISABLED ?? '').trim().toLowerCase()
+  const rawEndpoint = (env.OXMUX_USAGE_REPORTING_ENDPOINT ?? '').trim()
   return {
     enabled: rawDisabled !== '1' && rawDisabled !== 'true',
     endpoint: rawEndpoint || DEFAULT_COMMUNITY_USAGE_ENDPOINT,
@@ -70,7 +70,7 @@ export const buildCommunityUsagePayload = async (installId: string) => ({
   installId,
   version: clusterConfig.version || 'unknown',
   os: buildOsLabel(),
-  deploymentMode: (getEnv('WEMUX_DEPLOYMENT_MODE') ?? '').trim(),
+  deploymentMode: (getEnv('OXMUX_DEPLOYMENT_MODE') ?? '').trim(),
   reportedAt: new Date().toISOString(),
   counters: await collectCommunityUsageCounters(),
 })

@@ -11,7 +11,7 @@ const webPublicDir = path.resolve(repoRoot, 'apps/web/.output/public')
 const webRendererFile = path.resolve(repoRoot, 'apps/web/.output/server/_chunks/renderer-template.mjs')
 const outputDir = path.resolve(repoRoot, 'apps/web/native-static')
 
-const siteOrigin = 'https://wemux.ai'
+const siteOrigin = 'https://oxmux.ai'
 
 const renderShellHtml = async (requestPath) => {
   const rendererTemplate = (await import(pathToFileURL(webRendererFile).href)).default

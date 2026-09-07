@@ -8,26 +8,26 @@ import { randomUUID } from 'node:crypto'
 import os from 'node:os'
 import path from 'node:path'
 import { normalizeAgentSettings, normalizeWorkerUpdateSettings } from '@shared/agent-config'
-import { bridgeWemuxEnvToLegacy } from '@shared/env'
+import { bridgeOxmuxEnvToLegacy } from '@shared/env'
 import { buildOpencodeConfigWithMcp } from '@shared/mcp'
 import { parseOpencodeConfigContent } from '@shared/opencode-config'
 import type { WorkerConfig } from '@shared/types'
 import { getWorkerConsolePortBase } from '@shared/worker-console-ports'
 import { getEnv } from '@shared/env'
 import { getWorkspaceNodeDir, normalizeWorkspaceRoot } from '@shared/workspace-paths'
-import { resolveWemuxHomeDir, type WemuxHomeProfile } from '@shared/wemux-home'
+import { resolveOxmuxHomeDir, type OxmuxHomeProfile } from '@shared/oxmux-home'
 import { resolveDefaultCloudUrl } from './default-cloud-url'
 import { getWorkerRuntimeMetadata } from './app-root'
 import { getWorkerRuntimeState } from './runtime-state'
 import { getPackagedWorkerReleaseChannel, getWorkerReleaseChannel } from '../update/worker-release'
 
-// 兼容窗口：新默认 `~/.wemux*`；存量 `~/.vibemux*` 目录存在时沿用
+// 兼容窗口：新默认 `~/.oxmux*`；存量 `~/.vibemux*` 目录存在时沿用
 const DEFAULT_WORKER_HOMES = new Set(
   (['development', 'preview', 'production'] as const).flatMap((profile) => {
     const suffix = profile === 'development' ? '-dev' : profile === 'preview' ? '-preview' : ''
     return [
-      path.resolve(path.join(os.homedir(), `.wemux${suffix}`)),
-      path.resolve(path.join(os.homedir(), `.wemux${suffix}`)),
+      path.resolve(path.join(os.homedir(), `.oxmux${suffix}`)),
+      path.resolve(path.join(os.homedir(), `.oxmux${suffix}`)),
     ]
   }),
 )
@@ -44,11 +44,11 @@ const LEGACY_LOCAL_CLOUD_URLS = new Set([
 ])
 
 const hasManagedCloudUrlOverride = () => {
-  return Boolean(getEnv('WEMUX_CLOUD_URL')?.trim())
+  return Boolean(getEnv('OXMUX_CLOUD_URL')?.trim())
 }
 
 const getManagedCloudUrl = () => {
-  const explicit = getEnv('WEMUX_CLOUD_URL')?.trim()
+  const explicit = getEnv('OXMUX_CLOUD_URL')?.trim()
   if (explicit) {
     return explicit
   }
@@ -56,7 +56,7 @@ const getManagedCloudUrl = () => {
   return resolveDefaultCloudUrl(runtimeDefault || DEFAULT_LOCAL_CLOUD_URL)
 }
 
-const PREVIEW_CLOUD_HOSTNAMES = ['vibemux.xyz', 'wemux.xyz']
+const PREVIEW_CLOUD_HOSTNAMES = ['vibemux.xyz', 'oxmux.xyz']
 
 const isPreviewCloudUrl = (cloudUrl: string) => {
   return PREVIEW_CLOUD_HOSTNAMES.some((hostname) => cloudUrl.includes(hostname))
@@ -118,7 +118,7 @@ export const isWorkerDevelopmentOrPreviewEnvironment = () => {
 }
 
 const resolveDefaultWorkerHome = () => {
-  const profile: WemuxHomeProfile = (() => {
+  const profile: OxmuxHomeProfile = (() => {
     switch (resolveWorkerEnvironment()) {
       case 'development':
         return 'development'
@@ -128,11 +128,11 @@ const resolveDefaultWorkerHome = () => {
         return 'production'
     }
   })()
-  return resolveWemuxHomeDir(profile)
+  return resolveOxmuxHomeDir(profile)
 }
 
 const getManagedLocalServerPort = () => {
-  const envPort = Number(getEnv('WEMUX_WORKER_PORT')?.trim())
+  const envPort = Number(getEnv('OXMUX_WORKER_PORT')?.trim())
   if (Number.isFinite(envPort) && envPort > 0) {
     return envPort
   }
@@ -275,7 +275,7 @@ const expandHomeTilde = (value: string) => {
 }
 
 const getConfiguredWorkerHome = () => {
-  const vibemuxWorkerHome = getEnv('WEMUX_WORKER_HOME')?.trim()
+  const vibemuxWorkerHome = getEnv('OXMUX_WORKER_HOME')?.trim()
   if (vibemuxWorkerHome) {
     const resolvedWorkerHome = path.resolve(expandHomeTilde(vibemuxWorkerHome))
     const defaultWorkerHome = path.resolve(resolveDefaultWorkerHome())
@@ -284,7 +284,7 @@ const getConfiguredWorkerHome = () => {
       : resolvedWorkerHome
   }
 
-  const vibemuxHome = getEnv('WEMUX_HOME')?.trim()
+  const vibemuxHome = getEnv('OXMUX_HOME')?.trim()
   if (vibemuxHome) {
     return path.join(expandHomeTilde(vibemuxHome), 'worker')
   }
@@ -293,7 +293,7 @@ const getConfiguredWorkerHome = () => {
 }
 
 const normalizeWorkerRunMode = () => {
-  const value = getEnv('WEMUX_WORKER_RUN_MODE')?.trim().toLowerCase()
+  const value = getEnv('OXMUX_WORKER_RUN_MODE')?.trim().toLowerCase()
   if (value === 'docker' || value === 'container') {
     return 'docker'
   }
@@ -363,7 +363,7 @@ export const getDefaultWorkerConfig = (): WorkerConfig => ({
   maxConcurrency: 5,
   labels: normalizeWorkerRunModeLabels(),
   capabilities: ['code-execution', 'git-operations'],
-  localServerPort: Number(getEnv('WEMUX_WORKER_PORT') || getManagedLocalServerPort()),
+  localServerPort: Number(getEnv('OXMUX_WORKER_PORT') || getManagedLocalServerPort()),
   previewExposureMode: 'private',
   previewIngressPort: 38080,
   previewProxySecret: '',
@@ -371,7 +371,7 @@ export const getDefaultWorkerConfig = (): WorkerConfig => ({
 })
 
 export const loadWorkerConfig = (): WorkerConfig => {
-  bridgeWemuxEnvToLegacy()
+  bridgeOxmuxEnvToLegacy()
   const configPath = getWorkerConfigPath()
   const parsed = existsSync(configPath)
     ? JSON.parse(readFileSync(configPath, 'utf8')) as Partial<WorkerConfig>
@@ -398,12 +398,12 @@ export const loadWorkerConfig = (): WorkerConfig => {
     config.cloudUrl = getManagedCloudUrl()
   }
 
-  const managedLocalServerPort = Number(getEnv('WEMUX_WORKER_PORT')?.trim())
+  const managedLocalServerPort = Number(getEnv('OXMUX_WORKER_PORT')?.trim())
   if (Number.isFinite(managedLocalServerPort) && managedLocalServerPort > 0) {
     config.localServerPort = managedLocalServerPort
   }
 
-  const managedPreviewIngressPort = Number(getEnv('WEMUX_PREVIEW_INGRESS_PORT')?.trim())
+  const managedPreviewIngressPort = Number(getEnv('OXMUX_PREVIEW_INGRESS_PORT')?.trim())
   if (Number.isFinite(managedPreviewIngressPort) && managedPreviewIngressPort > 0) {
     config.previewIngressPort = managedPreviewIngressPort
   }

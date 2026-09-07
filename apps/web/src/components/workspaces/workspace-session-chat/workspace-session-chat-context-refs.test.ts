@@ -91,8 +91,8 @@ test('buildSelectedContextItemsFromRefs creates display items for project and wo
     ],
     project: {
       id: 'project-1',
-      name: 'Wemux',
-      gitUrl: 'https://github.com/example/wemux',
+      name: 'Oxmux',
+      gitUrl: 'https://github.com/example/oxmux',
       defaultBranch: 'dev',
       color: '#34d399',
     } as never,
@@ -106,8 +106,8 @@ test('buildSelectedContextItemsFromRefs creates display items for project and wo
   })), [
     {
       kind: 'project',
-      label: 'Wemux',
-      meta: '/Users/x/work/Vibemux · https://github.com/example/wemux · dev',
+      label: 'Oxmux',
+      meta: '/Users/x/work/Vibemux · https://github.com/example/oxmux · dev',
     },
     {
       kind: 'workspace_file',

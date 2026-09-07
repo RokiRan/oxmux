@@ -33,18 +33,18 @@ pnpm dev:worker:hybrid
 
 默认地址：
 
-- Web：`http://app.wemux.localtest.me:15173`
-- Server：`http://app.wemux.localtest.me:18989`
+- Web：`http://app.oxmux.localtest.me:15173`
+- Server：`http://app.oxmux.localtest.me:18989`
 - Server（宿主机直连）：`http://127.0.0.1:18989`
 - Worker Console：`http://127.0.0.1:48121`
 
-hybrid dev 现在默认把 Web / Server 浏览器入口都收口到 `app.wemux.localtest.me`。这样工作区右侧本地 Preview iframe 会和 `*.wemux.localtest.me` 处在同一站点家族下，本地授权 cookie 与网络模型都尽量接近生产。
+hybrid dev 现在默认把 Web / Server 浏览器入口都收口到 `app.oxmux.localtest.me`。这样工作区右侧本地 Preview iframe 会和 `*.oxmux.localtest.me` 处在同一站点家族下，本地授权 cookie 与网络模型都尽量接近生产。
 
-如果你误从 `127.0.0.1:15173` 或 `localhost:15173` 打开页面，登录页会自动把你收回到 `app.wemux.localtest.me:15173`。
+如果你误从 `127.0.0.1:15173` 或 `localhost:15173` 打开页面，登录页会自动把你收回到 `app.oxmux.localtest.me:15173`。
 
 如果你要在本地直接跳过 Google OAuth，使用内建测试账号，见 [DEV-TEST-AUTH.md](./DEV-TEST-AUTH.md)。
 
-`pnpm dev:hybrid` / `pnpm dev:hybrid:up` 会默认把 `web`、`server` 绑定到 `0.0.0.0`。浏览器公开入口默认收口到 `app.wemux.localtest.me`，避免 workspace preview 落到跨站点 iframe，也避免浏览器从非 loopback 源站去直连 `127.0.0.1` 时触发 Private Network Access 拦截。如果你明确需要给局域网其他设备访问，再在 `.env` 里固定：
+`pnpm dev:hybrid` / `pnpm dev:hybrid:up` 会默认把 `web`、`server` 绑定到 `0.0.0.0`。浏览器公开入口默认收口到 `app.oxmux.localtest.me`，避免 workspace preview 落到跨站点 iframe，也避免浏览器从非 loopback 源站去直连 `127.0.0.1` 时触发 Private Network Access 拦截。如果你明确需要给局域网其他设备访问，再在 `.env` 里固定：
 
 ```bash
 HYBRID_BIND_HOST=0.0.0.0
@@ -64,7 +64,7 @@ workspace preview 现在有三条 transport，按优先级依次尝试：
    只有当 preview `sourceAppUrl` 是 loopback（`localhost` / `127.0.0.1` / `::1`），并且当前 workspace `executorId` 与本机 worker status 读到的 `runtime.executorId` 一致时，iframe 才会优先直连本机 `127.0.0.1:<port>`。浏览器按页面环境选择本机 worker 端口：development / hybrid 优先 `48121`，preview `vibemux.xyz` 优先 `48123`，production `vibemux.com` 优先 `48100`；优先端口不可达时再尝试其他环境端口。
 
 2. `Gateway`
-   正常 hosted preview 走平台 `public-proxy` 路径，由 `*.wemux.xyz` 入口完成鉴权和反代。
+   正常 hosted preview 走平台 `public-proxy` 路径，由 `*.oxmux.xyz` 入口完成鉴权和反代。
 
 3. `Tunnel`
    当 preview 不是 `public-proxy`，或者本地直连条件不满足时，保留原有 tunnel 兼容路径。
@@ -97,7 +97,7 @@ pnpm dev:hybrid:down
 - `web` 容器运行 `pnpm dev:client:docker`，实际是 `vite dev`
 - `server` 容器运行 `pnpm dev:server:docker`，实际是 `tsx watch apps/server/src/index.ts`
 - 两个容器都挂载当前仓库源码，所以改代码会立刻触发热更新或自动重启
-- `server` 通过 `WEMUX_WORKER_CONSOLE_URL=http://host.docker.internal:48121` 访问宿主机 worker console
+- `server` 通过 `OXMUX_WORKER_CONSOLE_URL=http://host.docker.internal:48121` 访问宿主机 worker console
 - `server` 直接读取根目录 `.env` 里的 `OBJECT_STORAGE_*`，因此 hybrid dev 会跟随你当前配置的 R2 / S3-compatible 对象存储
 - `server` 通过独立 runtime volume 持久化执行器 registry，避免容器重建后 worker token 丢失
 
@@ -128,6 +128,6 @@ pnpm dev:hybrid:up
 
 ## 注意事项
 
-- `worker` 仍然读取 `.env.development.local`，但 `WEMUX_CLOUD_URL` 会被 `dev:worker:hybrid` 强制指向 `http://127.0.0.1:18989`
+- `worker` 仍然读取 `.env.development.local`，但 `OXMUX_CLOUD_URL` 会被 `dev:worker:hybrid` 强制指向 `http://127.0.0.1:18989`
 - Linux Docker 需要支持 `host-gateway`，这样容器内 `host.docker.internal` 才能回连宿主机 worker
 - 如果文件监听不稳定，可以继续把 `.env` 里的 `CHOKIDAR_USEPOLLING` 保持为 `true`

@@ -12,10 +12,10 @@ import {
   summarizeProject,
   summarizeTask,
   toJsonResource,
-  type WemuxMcpContext,
-} from './wemux-mcp-context'
+  type OxmuxMcpContext,
+} from './oxmux-mcp-context'
 
-const summarizeExecutor = (ctx: WemuxMcpContext, executor: ReturnType<typeof listVisibleExecutorsForUser>[number]) => ({
+const summarizeExecutor = (ctx: OxmuxMcpContext, executor: ReturnType<typeof listVisibleExecutorsForUser>[number]) => ({
   executorId: executor.executorId,
   name: executor.name,
   machineName: executor.machineName,
@@ -33,13 +33,13 @@ const summarizeExecutor = (ctx: WemuxMcpContext, executor: ReturnType<typeof lis
   lastSeenAt: executor.lastSeenAt,
 })
 
-const listVisibleWorkspaces = (ctx: WemuxMcpContext) => {
+const listVisibleWorkspaces = (ctx: OxmuxMcpContext) => {
   const state = ctx.getState()
   return state.projects.flatMap((project) => listProjectWorkspacesForUser(ctx.userId, project))
 }
 
-export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContext, ResourceTemplateCtor: typeof ResourceTemplate) => {
-  server.registerResource('workspace-overview', 'wemux://overview', {
+export const registerOxmuxMcpResources = (server: McpServer, ctx: OxmuxMcpContext, ResourceTemplateCtor: typeof ResourceTemplate) => {
+  server.registerResource('workspace-overview', 'oxmux://overview', {
     title: 'Workspace Overview',
     description: '当前用户可见的项目、任务和会话总览',
     mimeType: JSON_MIME_TYPE,
@@ -57,7 +57,7 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('projects', 'wemux://projects', {
+  server.registerResource('projects', 'oxmux://projects', {
     title: 'Projects',
     description: '当前用户可访问的项目列表',
     mimeType: JSON_MIME_TYPE,
@@ -68,7 +68,7 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('tasks', 'wemux://tasks', {
+  server.registerResource('tasks', 'oxmux://tasks', {
     title: 'Tasks',
     description: '当前用户可访问的任务列表',
     mimeType: JSON_MIME_TYPE,
@@ -79,7 +79,7 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('conversations', 'wemux://conversations', {
+  server.registerResource('conversations', 'oxmux://conversations', {
     title: 'Conversations',
     description: '当前用户可访问的统一会话列表',
     mimeType: JSON_MIME_TYPE,
@@ -89,7 +89,7 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('executors', 'wemux://executors', {
+  server.registerResource('executors', 'oxmux://executors', {
     title: 'Executors',
     description: '当前用户可见的执行节点列表',
     mimeType: JSON_MIME_TYPE,
@@ -99,12 +99,12 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('project-detail', new ResourceTemplateCtor('wemux://projects/{projectId}', {
+  server.registerResource('project-detail', new ResourceTemplateCtor('oxmux://projects/{projectId}', {
     list: async () => {
       const state = ctx.getState()
       return {
         resources: state.projects.map((project) => ({
-          uri: `wemux://projects/${project.id}`,
+          uri: `oxmux://projects/${project.id}`,
           name: project.name,
           title: project.name,
           mimeType: JSON_MIME_TYPE,
@@ -128,12 +128,12 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('task-detail', new ResourceTemplateCtor('wemux://tasks/{taskId}', {
+  server.registerResource('task-detail', new ResourceTemplateCtor('oxmux://tasks/{taskId}', {
     list: async () => {
       const state = ctx.getState()
       return {
         resources: state.tasks.map((task) => ({
-          uri: `wemux://tasks/${task.id}`,
+          uri: `oxmux://tasks/${task.id}`,
           name: task.title,
           title: task.title,
           mimeType: JSON_MIME_TYPE,
@@ -159,12 +159,12 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('workspace-detail', new ResourceTemplateCtor('wemux://workspaces/{workspaceId}', {
+  server.registerResource('workspace-detail', new ResourceTemplateCtor('oxmux://workspaces/{workspaceId}', {
     list: async () => {
       const workspaces = listVisibleWorkspaces(ctx)
       return {
         resources: workspaces.map((workspace) => ({
-          uri: `wemux://workspaces/${workspace.id}`,
+          uri: `oxmux://workspaces/${workspace.id}`,
           name: workspace.name,
           title: workspace.name,
           mimeType: JSON_MIME_TYPE,
@@ -188,12 +188,12 @@ export const registerWemuxMcpResources = (server: McpServer, ctx: WemuxMcpContex
     })
   })
 
-  server.registerResource('conversation-detail', new ResourceTemplateCtor('wemux://conversations/{conversationId}', {
+  server.registerResource('conversation-detail', new ResourceTemplateCtor('oxmux://conversations/{conversationId}', {
     list: async () => {
       const conversations = ctx.getConversations()
       return {
         resources: conversations.map((item) => ({
-          uri: `wemux://conversations/${item.conversation.id}`,
+          uri: `oxmux://conversations/${item.conversation.id}`,
           name: item.conversation.title,
           title: item.conversation.title,
           mimeType: JSON_MIME_TYPE,

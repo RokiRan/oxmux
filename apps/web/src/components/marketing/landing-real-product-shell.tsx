@@ -5,8 +5,8 @@
  * 透明窗口 + macOS acrylic 侧边栏 vibrancy + 红绿灯 overlay，加载的就是 /chat。
  *
  * 这里把真实外壳的 DOM 结构与毛玻璃参数原样搬进落地页预览，并尽量复用真实组件：
- * - 外壳：wemux-desktop-shell / wemux-desktop-frame / wemux-shell-sidebar /
- *   wemux-shell-header / wemux-app-content + --wemux-glass-* 变量
+ * - 外壳：oxmux-desktop-shell / oxmux-desktop-frame / oxmux-shell-sidebar /
+ *   oxmux-shell-header / oxmux-app-content + --oxmux-glass-* 变量
  * - 顶栏标签：真实 PageTabsBar（预览模式：不导航、不写 store，由父组件提供标签）
  * - 侧栏导航：每个按钮可点击，打开对应页面预览（动态开标签，像真实桌面端一样）
  * - 页面内容：复用已有的静态页面视图（ProductPreviewSurface）+ 真实三栏聊天
@@ -54,10 +54,10 @@ import type { PreviewViewId } from './landing-product-preview-data'
 
 /** 桌面端默认毛玻璃参数（与 theme-provider 的默认用户设置一致）。 */
 const glassVars = {
-  '--wemux-glass-opacity': '20%',
-  '--wemux-glass-blur': '28px',
-  '--wemux-glass-saturation': '109%',
-  '--wemux-glass-border-opacity': '14%',
+  '--oxmux-glass-opacity': '20%',
+  '--oxmux-glass-blur': '28px',
+  '--oxmux-glass-saturation': '109%',
+  '--oxmux-glass-border-opacity': '14%',
 } as CSSProperties
 
 /** 模拟团队成员的人像头像（3D Q 版潮玩风独立生成，透明底，与 Agent 像素资产区分）。 */
@@ -107,8 +107,8 @@ const viewSpecs: Record<ShellViewId, ViewSpec> = {
   inbox: { pathname: '/inbox', zh: '收件箱', en: 'Inbox' },
   usage: { pathname: '/usage', zh: '用量统计', en: 'Usage' },
   integrations: { pathname: '/integrations', zh: '集成', en: 'Integrations' },
-  'project-product': { pathname: '/kanban?projectId=wemux-console', zh: 'Wemux Console', en: 'Wemux Console' },
-  'project-docs': { pathname: '/kanban?projectId=docs', zh: 'Wemux Docs', en: 'Wemux Docs' },
+  'project-product': { pathname: '/kanban?projectId=oxmux-console', zh: 'Oxmux Console', en: 'Oxmux Console' },
+  'project-docs': { pathname: '/kanban?projectId=docs', zh: 'Oxmux Docs', en: 'Oxmux Docs' },
   'project-growth': { pathname: '/kanban?projectId=growth', zh: 'Community Operations', en: 'Community Operations' },
   'agent-developer': { pathname: '/agents', zh: 'Developer Agent', en: 'Developer Agent' },
   'agent-tester': { pathname: '/agents', zh: 'Tester Agent', en: 'Tester Agent' },
@@ -226,7 +226,7 @@ export function RealProductShell({
 
   return (
     <div
-      className="wemux-desktop-shell wemux-shell-web relative flex h-full min-h-[700px] w-full flex-col text-zinc-100"
+      className="oxmux-desktop-shell oxmux-shell-web relative flex h-full min-h-[700px] w-full flex-col text-zinc-100"
       style={{ ...glassVars, backgroundColor: 'transparent' }}
     >
       {/* macOS 红绿灯：随外壳一起缩放（对齐 Electron main.mjs 的 trafficLightPosition x=16 y=20） */}
@@ -236,15 +236,15 @@ export function RealProductShell({
         <div className="h-[13px] w-[13px] rounded-full bg-[#28c840] shadow-[0_0.5px_1px_rgba(0,0,0,0.3),inset_0_0.5px_0_rgba(255,255,255,0.2)]" />
       </div>
 
-      <div className="wemux-desktop-frame flex min-h-0 min-w-0 flex-1 overflow-hidden">
+      <div className="oxmux-desktop-frame flex min-h-0 min-w-0 flex-1 overflow-hidden">
         {/* 左侧主侧栏（真实 AppSidebar 结构的静态复刻） */}
         <DesktopSidebar activeView={activeView} onNavigate={navigateTo} />
 
         {/* 右侧应用框架 */}
         <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
-          <div className="wemux-app-frame flex h-full min-h-0 w-full flex-col text-zinc-100">
-            {/* 顶栏：真实 SiteHeader（wemux-shell-header）+ 真实 PageTabsBar（px-2 与真实头部一致，避免首个标签贴住侧栏） */}
-            <header className="wemux-shell-header sticky top-0 z-20 border-b border-transparent bg-transparent">
+          <div className="oxmux-app-frame flex h-full min-h-0 w-full flex-col text-zinc-100">
+            {/* 顶栏：真实 SiteHeader（oxmux-shell-header）+ 真实 PageTabsBar（px-2 与真实头部一致，避免首个标签贴住侧栏） */}
+            <header className="oxmux-shell-header sticky top-0 z-20 border-b border-transparent bg-transparent">
               <div className="flex h-10 items-center gap-2 px-2">
                 <PageTabsBar
                   title=""
@@ -257,8 +257,8 @@ export function RealProductShell({
               </div>
             </header>
 
-            {/* 内容容器：与真实 wemux-app-content 一致 */}
-            <div className="wemux-app-content flex flex-1 min-h-0 flex-col overflow-hidden">
+            {/* 内容容器：与真实 oxmux-app-content 一致 */}
+            <div className="oxmux-app-content flex flex-1 min-h-0 flex-col overflow-hidden">
               <div className="flex flex-1 min-h-0 flex-col overflow-auto">
                 {renderActiveView(activeView, language)}
               </div>
@@ -335,7 +335,7 @@ function DesktopSidebar({
   ]
 
   return (
-    <aside className="wemux-shell-sidebar flex w-[260px] shrink-0 flex-col border-r border-white/[0.08]">
+    <aside className="oxmux-shell-sidebar flex w-[260px] shrink-0 flex-col border-r border-white/[0.08]">
       {/* 第一行：macOS 红绿灯区（pl-[72px]，与真实 isMacNative 头部一致）+ 折叠按钮 */}
       <div className="flex h-10 items-center bg-transparent pl-[72px] pr-2">
         <Button
@@ -355,7 +355,7 @@ function DesktopSidebar({
           <div className="flex min-w-0 items-center gap-2 rounded-lg px-1.5 py-1 transition-colors duration-150 hover:bg-white/[0.04]">
             <img src="/logo.svg" alt="" className="h-7 w-7 shrink-0" />
             <div className="min-w-0">
-              <p className="truncate text-[13px] font-medium text-zinc-100">Wemux Labs</p>
+              <p className="truncate text-[13px] font-medium text-zinc-100">Oxmux Labs</p>
             </div>
             <ChevronsUpDown className="ml-auto h-3.5 w-3.5 shrink-0 text-zinc-600" />
           </div>
@@ -431,7 +431,7 @@ function DesktopSidebar({
                 </span>
               </div>
               <div className="space-y-0.5">
-                <ProjectRow name="Wemux Console" color="#34d399" onClick={() => onNavigate('projects')} />
+                <ProjectRow name="Oxmux Console" color="#34d399" onClick={() => onNavigate('projects')} />
               </div>
             </div>
           </div>
@@ -466,7 +466,7 @@ function DesktopSidebar({
                 </span>
               </div>
               <div className="space-y-0.5">
-                <AgentRow avatar="lead" name="Wemux Lead Agent" onClick={() => onNavigate('agent-developer')} />
+                <AgentRow avatar="lead" name="Oxmux Lead Agent" onClick={() => onNavigate('agent-developer')} />
               </div>
             </div>
           </div>
@@ -603,7 +603,7 @@ function AgentRow({ avatar, name, onClick }: { avatar: 'developer' | 'tester' | 
         <span className="block truncate text-[13px] font-medium">{name}</span>
         <span className="mt-0.5 flex items-center gap-1.5 text-xs text-zinc-500">
           <Radio className="h-3 w-3 shrink-0 text-emerald-400" />
-          <span className="truncate">Wemux 云节点</span>
+          <span className="truncate">Oxmux 云节点</span>
         </span>
       </span>
     </Button>
@@ -683,7 +683,7 @@ function ChatTargetsColumn({ language }: { language: Language }) {
           />
           <ChatTargetItem
             avatar="lead"
-            name="Wemux Lead Agent"
+            name="Oxmux Lead Agent"
             subtitle={language === 'zh' ? '全局统筹、决策与优先级' : 'Orchestration, decisions, and priorities'}
             accent="from-blue-500 via-indigo-400 to-purple-400"
           />
@@ -709,7 +709,7 @@ function ChatTargetsColumn({ language }: { language: Language }) {
           <SectionLabel label={language === 'zh' ? '群聊' : 'Groups'} />
           <ChatTargetItem
             group
-            name="Wemux 交付群"
+            name="Oxmux 交付群"
             subtitle={language === 'zh' ? '5 人 · 3 个 Agent 在线' : '5 members · 3 agents online'}
             accent="from-emerald-400 via-teal-300 to-cyan-400"
             active
@@ -794,7 +794,7 @@ function ChatSessionsColumn({ language }: { language: Language }) {
         <div className="scrollbar-subtle flex-1 space-y-1 p-1.5">
           <ChatSessionItem
             active
-            title={language === 'zh' ? 'Wemux 交付群' : 'Wemux Delivery Group'}
+            title={language === 'zh' ? 'Oxmux 交付群' : 'Oxmux Delivery Group'}
             subtitle={language === 'zh' ? '群聊 · 5 人' : 'Group · 5 members'}
           />
           <ChatSessionItem
@@ -857,7 +857,7 @@ function ChatMainPanel({ language }: { language: Language }) {
                   +2
                 </span>
               </span>
-              <span className="text-sm font-medium text-zinc-200">{language === 'zh' ? 'Wemux 交付群' : 'Wemux Delivery Group'}</span>
+              <span className="text-sm font-medium text-zinc-200">{language === 'zh' ? 'Oxmux 交付群' : 'Oxmux Delivery Group'}</span>
               <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] text-zinc-500">
                 {language === 'zh' ? '群聊 · 5 人' : 'Group · 5 members'}
               </span>
@@ -901,7 +901,7 @@ function ChatMainPanel({ language }: { language: Language }) {
             language={language}
             role="agent"
             avatar="developer"
-            sender="Wemux Developer Agent"
+            sender="Oxmux Developer Agent"
             accent="from-violet-400 via-fuchsia-300 to-sky-400"
             body={language === 'zh'
               ? '已完成根因梳理：竞态条件 + 缺少幂等键导致回调重复入账。正在补最小复现用例并跑回归。'
@@ -923,7 +923,7 @@ function ChatMainPanel({ language }: { language: Language }) {
             language={language}
             role="agent"
             avatar="reviewer"
-            sender="Wemux Reviewer Agent"
+            sender="Oxmux Reviewer Agent"
             accent="from-amber-300 via-orange-300 to-rose-300"
             body={language === 'zh'
               ? 'Diff 已审查通过，风险集中在回调幂等性；我已经补上发布前的验证清单。'

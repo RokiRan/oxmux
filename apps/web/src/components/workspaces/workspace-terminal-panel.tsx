@@ -751,8 +751,8 @@ const WorkspaceTerminalInstance = forwardRef<WorkspaceTerminalInstanceHandle, Wo
         realtimeBaseUrlFailedRef.current = true
         const fallbackMessage = tr(
           language,
-          '执行节点的实时入口地址不可达，已改用当前站点地址重试。请检查该节点的 WEMUX_NODE_URL 配置。',
-          'The executor realtime endpoint is unreachable; retrying via the current site origin. Check that node\'s WEMUX_NODE_URL.',
+          '执行节点的实时入口地址不可达，已改用当前站点地址重试。请检查该节点的 OXMUX_NODE_URL 配置。',
+          'The executor realtime endpoint is unreachable; retrying via the current site origin. Check that node\'s OXMUX_NODE_URL.',
         )
         xterm.writeln(`\r\n[terminal] ${fallbackMessage}`)
         openTerminalSocket(serverOriginFallbackUrl, 'server', '', false)

@@ -371,15 +371,15 @@ const isPreviewIpHostname = (hostname: string) => {
 
 const isHostedPreviewHostname = (hostname: string) => {
   const normalized = normalizePreviewHostname(hostname)
-  // 兼容窗口：新旧 preview 域名都按托管域名处理，后续可移除 wemux.* 分支
+  // 兼容窗口：新旧 preview 域名都按托管域名处理，后续可移除 oxmux.* 分支
   return normalized === 'vibemux.xyz'
-    || normalized.endsWith('.wemux.xyz')
-    || normalized === 'wemux.xyz'
-    || normalized.endsWith('.wemux.xyz')
+    || normalized.endsWith('.oxmux.xyz')
+    || normalized === 'oxmux.xyz'
+    || normalized.endsWith('.oxmux.xyz')
     || normalized === 'vibemux.localtest.me'
-    || normalized.endsWith('.wemux.localtest.me')
-    || normalized === 'wemux.localtest.me'
-    || normalized.endsWith('.wemux.localtest.me')
+    || normalized.endsWith('.oxmux.localtest.me')
+    || normalized === 'oxmux.localtest.me'
+    || normalized.endsWith('.oxmux.localtest.me')
 }
 
 const resolveCookieUnsafePreviewHostReason = (hostname: string) => {
@@ -424,7 +424,7 @@ export const resolvePreviewCookieAccessWarning = (params: {
       reason,
       host: parsedPreviewUrl.host,
       origin: parsedPreviewUrl.origin,
-      isHostedWemuxPage: currentHostname === 'vibemux.xyz' || currentHostname.endsWith('.vibemux.xyz') || currentHostname === 'wemux.xyz' || currentHostname.endsWith('.wemux.xyz'),
+      isHostedOxmuxPage: currentHostname === 'vibemux.xyz' || currentHostname.endsWith('.vibemux.xyz') || currentHostname === 'oxmux.xyz' || currentHostname.endsWith('.oxmux.xyz'),
     }
   } catch {
     return null
@@ -1601,7 +1601,7 @@ export function WorkspacePreviewPanel({
                       iframe 正在通过 <code className="text-amber-200">{cookieAccessWarning.host}</code> 访问源应用，登录态 cookie 可能不会在嵌入的 Preview 中稳定生效。
                     </p>
                     <p className="mt-1">
-                      需要登录验证时，建议外部打开，或切到公网预览域名 / 隧道预览域名这类 <code className="text-amber-200">*.wemux.xyz</code> 域名入口。
+                      需要登录验证时，建议外部打开，或切到公网预览域名 / 隧道预览域名这类 <code className="text-amber-200">*.oxmux.xyz</code> 域名入口。
                     </p>
                   </div>
                   <DropdownMenuSeparator />
@@ -1902,7 +1902,7 @@ export function WorkspacePreviewPanel({
                 <div className="rounded-lg border border-amber-500/20 bg-amber-500/8 p-3 text-amber-100">
                   <p className="text-sm font-medium">本地 Preview 需要同站点 host</p>
                   <p className="mt-1 text-xs leading-5 text-amber-100/80">
-                    当前 Wemux 页面还是 <code>127.0.0.1</code> 或 <code>localhost</code>，但 Preview iframe 在 <code>*.{localPreviewSiteWarning.suggestedHost.replace(/^app\./, '')}</code>。
+                    当前 Oxmux 页面还是 <code>127.0.0.1</code> 或 <code>localhost</code>，但 Preview iframe 在 <code>*.{localPreviewSiteWarning.suggestedHost.replace(/^app\./, '')}</code>。
                     浏览器会把它当成跨站点 iframe，导致 Preview 授权 cookie 无法在后续请求里带回。
                   </p>
                   <p className="mt-2 text-xs leading-5 text-amber-100/80">
@@ -1919,7 +1919,7 @@ export function WorkspacePreviewPanel({
               <div className="max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.28)]">
                 <p className="text-base font-medium text-zinc-100">公网 IP 直连需要外部打开</p>
                 <p className="mt-2 text-sm leading-6 text-zinc-500">
-                  这条路线会直接访问服务器 IP 和端口，适合快速诊断节点端口是否通。为了避免 HTTPS 控制台内嵌 HTTP 页面被浏览器拦截，Wemux 不在这里嵌入加载它。
+                  这条路线会直接访问服务器 IP 和端口，适合快速诊断节点端口是否通。为了避免 HTTPS 控制台内嵌 HTTP 页面被浏览器拦截，Oxmux 不在这里嵌入加载它。
                 </p>
                 <p className="mt-2 text-xs leading-5 text-zinc-600">
                   如果想在 Preview 面板内直接查看页面，请切到「公网预览域名」或「隧道预览域名」。
@@ -1958,7 +1958,7 @@ export function WorkspacePreviewPanel({
               <p className="mt-2 max-w-md text-sm leading-6 text-zinc-500">
                 {activeTransport === 'local-direct' || activeTransport === 'mesh-bridge'
                   ? '检测到当前工作区可以直连本机 localhost。等源应用就绪后，这里会直接显示本地页面，不会先启动隧道。'
-                  : 'Preview 需要先准备远端访问链路。切到公网访问或 Tunnel 后，Wemux 会按需启动对应的 Preview 通道。'}
+                  : 'Preview 需要先准备远端访问链路。切到公网访问或 Tunnel 后，Oxmux 会按需启动对应的 Preview 通道。'}
               </p>
             </div>
           ) : shouldShowRemoteConnectingState ? (

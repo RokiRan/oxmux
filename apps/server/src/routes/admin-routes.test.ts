@@ -27,7 +27,7 @@ test('resolveEnvAdminEmails 解析逗号分隔并小写化', () => {
 
 test('resolveEnvAdminEmails 未配置返回空集', () => {
   delete process.env.VIBEMUX_ADMIN_EMAILS
-  delete process.env.WEMUX_ADMIN_EMAILS
+  delete process.env.OXMUX_ADMIN_EMAILS
   assert.equal(resolveEnvAdminEmails().size, 0)
   restore()
 })
@@ -57,7 +57,7 @@ test('不在白名单：role=user 拒绝，role=admin 放行，isInternal 兼容
 
 test('无 env 白名单时按既有 role/isInternal 判定', () => {
   delete process.env.VIBEMUX_ADMIN_EMAILS
-  delete process.env.WEMUX_ADMIN_EMAILS
+  delete process.env.OXMUX_ADMIN_EMAILS
   assert.equal(resolveAdminAccess({ email: 'x@example.com' }).allowed, false)
   assert.equal(resolveAdminAccess({ email: 'x@example.com', role: 'owner' }).role, 'owner')
   assert.equal(resolveAdminAccess({ email: 'x@example.com', isInternal: true }).role, 'admin')

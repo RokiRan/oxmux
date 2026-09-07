@@ -109,7 +109,7 @@ export const DEFAULT_MANAGED_CLOUD_CONFIG: ManagedCloudConfig = {
     keepAliveSeconds: '900',
     mountDrive: false,
     driveMountPath: '/drive',
-    bootstrapCommand: 'wemux-worker daemon',
+    bootstrapCommand: 'oxmux-worker daemon',
   },
 }
 

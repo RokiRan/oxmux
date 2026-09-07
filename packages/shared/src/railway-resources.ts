@@ -1,6 +1,6 @@
 /**
  * [INPUT]: Railway project/environment/deployment facts and local resource bindings.
- * [OUTPUT]: Shared contracts for linking Railway deployments to Wemux context.
+ * [OUTPUT]: Shared contracts for linking Railway deployments to Oxmux context.
  * [POS]: Pure cross-app domain boundary; remote deployment facts remain in provider-specific records.
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */

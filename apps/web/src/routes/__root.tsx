@@ -157,7 +157,7 @@ function AppShell() {
   }
 
   if (isAdminPage) {
-    // Admin 深浅主题由 AdminLayout 内部自管（wemux-admin-dark/light，默认深色），
+    // Admin 深浅主题由 AdminLayout 内部自管（oxmux-admin-dark/light，默认深色），
     // 与全局 ThemeProvider 解耦，避免 documentElement 的 .dark 串扰。
     return <Outlet />
   }
@@ -216,7 +216,7 @@ function AppShellFrame() {
         <div
           data-route={routeName}
           className={cn(
-            "wemux-app-frame flex h-full min-h-0 w-full flex-col text-zinc-100",
+            "oxmux-app-frame flex h-full min-h-0 w-full flex-col text-zinc-100",
             isMacNative ? "bg-transparent" : "bg-black",
             isMobile && "pt-[env(safe-area-inset-top)]",
           )}
@@ -224,7 +224,7 @@ function AppShellFrame() {
           <SiteHeader />
           <div
             className={cn(
-              "wemux-app-content flex flex-1 min-h-0 flex-col",
+              "oxmux-app-content flex flex-1 min-h-0 flex-col",
               isDesktopShell
                 ? "overflow-hidden"
                 : "bg-black",

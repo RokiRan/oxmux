@@ -1,4 +1,4 @@
-# Wemux Community Governance
+# Oxmux Community Governance
 
 This document defines where community input belongs and how maintainers turn it into actionable work.
 

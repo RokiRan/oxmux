@@ -1,11 +1,11 @@
 ---
 title: Installation
-description: Install and configure the Wemux worker on your machine.
+description: Install and configure the Oxmux worker on your machine.
 ---
 
 # Installation
 
-This guide walks you through installing and configuring the Wemux worker.
+This guide walks you through installing and configuring the Oxmux worker.
 
 ## Prerequisites
 
@@ -20,26 +20,26 @@ Before installing, ensure you have:
 ### 1. Install the Worker
 
 ```bash
-npm install -g wemux-worker
+npm install -g oxmux-worker
 ```
 
 Or use pnpm:
 
 ```bash
-pnpm add -g wemux-worker
+pnpm add -g oxmux-worker
 ```
 
 ### 2. Start the Worker
 
 ```bash
-Wemux worker daemon
+Oxmux worker daemon
 ```
 
 The worker console will be available at `http://127.0.0.1:48121`.
 
 ### 3. Pair with Control Plane
 
-1. Open the Wemux web interface
+1. Open the Oxmux web interface
 2. Navigate to `/execution`
 3. Click "Add Executor" to generate a pairing code
 4. Paste the code in the Worker Console
@@ -51,8 +51,8 @@ The worker reads configuration from environment variables or `.env` files:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `WEMUX_CLOUD_URL` | Control plane URL | `http://127.0.0.1:8989` |
-| `WEMUX_RUNTIME_DIR` | Working directory for tasks | `/tmp/wemux-runtime` |
+| `OXMUX_CLOUD_URL` | Control plane URL | `http://127.0.0.1:8989` |
+| `OXMUX_RUNTIME_DIR` | Working directory for tasks | `/tmp/oxmux-runtime` |
 
 ## Next Steps
 

@@ -1,6 +1,6 @@
 ---
 title: Workers
-description: Understand how Workers execute tasks in wemux.
+description: Understand how Workers execute tasks in oxmux.
 ---
 
 # Workers
@@ -11,7 +11,7 @@ Workers are the executor machines that run AI agents and execute tasks in real r
 
 A worker is a paired machine (local Mac, Linux box, VM, or cloud instance) that:
 
-- Runs the Wemux worker daemon
+- Runs the Oxmux worker daemon
 - Receives task assignments from the control plane
 - Executes AI agents in isolated Git worktrees
 - Reports execution logs, branches, and artifacts back to the system
@@ -21,7 +21,7 @@ A worker is a paired machine (local Mac, Linux box, VM, or cloud instance) that:
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   Control Plane                     │
-│                   (Wemux Server)                  │
+│                   (Oxmux Server)                  │
 └─────────────────────┬───────────────────────────────┘
                       │ Tasks, commands, status
 ┌─────────────────────▼───────────────────────────────┐
@@ -47,8 +47,8 @@ A worker is a paired machine (local Mac, Linux box, VM, or cloud instance) that:
 ## Pairing a Worker
 
 1. Install the worker daemon on your machine
-2. Start the daemon with `wemux worker daemon`
-3. Open the Wemux web interface
+2. Start the daemon with `oxmux worker daemon`
+3. Open the Oxmux web interface
 4. Navigate to the project **Workers** tab
 5. Click **"Add Worker"** to generate a pairing code
 6. Enter the code in the Worker Console

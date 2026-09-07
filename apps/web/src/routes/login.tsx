@@ -20,8 +20,8 @@ import { cn } from '../lib/utils'
 
 export const Route = createFileRoute('/login')({
   head: () => buildNoIndexHead({
-    title: 'Log In to Wemux',
-    description: 'Sign in to the Wemux control plane to manage AI coding delivery, workers, and review flows.',
+    title: 'Log In to Oxmux',
+    description: 'Sign in to the Oxmux control plane to manage AI coding delivery, workers, and review flows.',
   }),
   component: LoginPage,
 })
@@ -258,8 +258,8 @@ export function LoginPage() {
   const loginBrand = useAppBrand()
   const communityLogin = isCommunityEdition(loginBrand)
   const title = communityLogin
-    ? tr('登录 Wemux 社区版', 'Sign in to Wemux Community')
-    : tr('登录 Wemux', 'Sign in to Wemux')
+    ? tr('登录 Oxmux 社区版', 'Sign in to Oxmux Community')
+    : tr('登录 Oxmux', 'Sign in to Oxmux')
   const subtitle = tr('使用邮箱账号登录或注册，也可使用 Google 账号继续。', 'Sign in with your email or create an account, or continue with Google.')
   const googleLoginDisabled = loading || !googleConfigured || (isTurnstileEnabled && !turnstileToken)
 
@@ -286,7 +286,7 @@ export function LoginPage() {
           <div className="max-w-xl">
             <div className="flex items-center gap-3">
               <img src="/logo.svg" alt="" className="h-9 w-9 rounded-lg" />
-              <span className="text-lg font-semibold text-zinc-100">Wemux</span>
+              <span className="text-lg font-semibold text-zinc-100">Oxmux</span>
             </div>
             <p className="mt-10 max-w-lg text-3xl font-semibold leading-tight text-zinc-50 lg:text-4xl">
               {tr('让任务、Agent 与工作区在同一个交付界面协作。', 'Bring tasks, agents, and workspaces into one delivery surface.')}
@@ -318,7 +318,7 @@ export function LoginPage() {
         <header className="space-y-1.5 text-center">
           <p className="text-xs font-medium text-emerald-300">
             {communityLogin
-              ? tr('Wemux 社区版 · 开源自托管', 'Wemux Community · Open-source self-hosted')
+              ? tr('Oxmux 社区版 · 开源自托管', 'Oxmux Community · Open-source self-hosted')
               : t('login.workspaceBadge')}
           </p>
           <h1 className="text-xl font-semibold tracking-tight text-zinc-50">{title}</h1>
@@ -379,7 +379,7 @@ export function LoginPage() {
               </Button>
               <p className="text-center text-xs text-zinc-600">
                 {googleConfigured
-                  ? tr('Google 登录后直接进入系统。', 'Google sign-in takes you straight into Wemux.')
+                  ? tr('Google 登录后直接进入系统。', 'Google sign-in takes you straight into Oxmux.')
                   : tr('未配置 Google 登录（需 GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET）。', 'Google sign-in is not configured (requires GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET).')}
               </p>
             </div>
@@ -404,7 +404,7 @@ export function LoginPage() {
 
 /**
  * 桌面端服务器地址选择（仅 Electron 客户端显示）：
- * 默认官方 wemux.ai；自托管用户填写自己部署的实例地址。
+ * 默认官方 oxmux.ai；自托管用户填写自己部署的实例地址。
  * 切换服务器时清空旧登录态（auth_token/user），避免串号。
  */
 function ServerSelector({ tr }: { tr: (zh: string, en: string) => string }) {
@@ -437,7 +437,7 @@ function ServerSelector({ tr }: { tr: (zh: string, en: string) => string }) {
     <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/60 p-3">
       <p className="text-xs font-medium text-zinc-300">{tr('服务器地址（桌面客户端）', 'Server address (desktop client)')}</p>
       <p className="mt-1 text-[11px] leading-4 text-zinc-500">
-        {tr('默认连接 Wemux 官方服务。自托管用户请填写自己部署的服务器地址。', 'Defaults to the official Wemux service. Self-hosted users should enter their own server address.')}
+        {tr('默认连接 Oxmux 官方服务。自托管用户请填写自己部署的服务器地址。', 'Defaults to the official Oxmux service. Self-hosted users should enter their own server address.')}
       </p>
       <div className="mt-2 flex gap-2">
         <input

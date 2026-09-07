@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(wemux_meeting_runtime_sidecar LANGUAGES C CXX)
+project(oxmux_meeting_runtime_sidecar LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -73,22 +73,22 @@ set(MOSS_SOURCES
   ${moss_SOURCE_DIR}/src/moss_transcribe_capi.cpp
 )
 
-add_library(wemux_moss STATIC ${MOSS_SOURCES})
-target_include_directories(wemux_moss PUBLIC
+add_library(oxmux_moss STATIC ${MOSS_SOURCES})
+target_include_directories(oxmux_moss PUBLIC
   ${moss_SOURCE_DIR}/include
   PRIVATE ${moss_SOURCE_DIR}/src ${moss_SOURCE_DIR}/third_party
 )
-target_link_libraries(wemux_moss PUBLIC ggml)
+target_link_libraries(oxmux_moss PUBLIC ggml)
 
-add_executable(wemux-meeting-runtime main.cpp)
-target_include_directories(wemux-meeting-runtime PRIVATE
+add_executable(oxmux-meeting-runtime main.cpp)
+target_include_directories(oxmux-meeting-runtime PRIVATE
   ${moss_SOURCE_DIR}/include
   ${moss_SOURCE_DIR}/src
   ${llama_SOURCE_DIR}/include
 )
-target_link_libraries(wemux-meeting-runtime PRIVATE wemux_moss llama)
+target_link_libraries(oxmux-meeting-runtime PRIVATE oxmux_moss llama)
 
 if(MSVC)
   # CRT 已由上方 CMAKE_MSVC_RUNTIME_LIBRARY 全局统一，勿在单目标上覆盖。
-  target_compile_definitions(wemux-meeting-runtime PRIVATE _CRT_SECURE_NO_WARNINGS)
+  target_compile_definitions(oxmux-meeting-runtime PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()

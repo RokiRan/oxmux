@@ -35,10 +35,10 @@ export const parseSsePayload = (text: string): string[] => {
 
 const resolveBridgeConfig = () => {
   const config = loadWorkerConfig()
-  const cloudUrl = getEnv('WEMUX_MCP_CLOUD_URL')?.trim() || config.cloudUrl || getWorkerDefaultCloudUrl()
-  const executorToken = getEnv('WEMUX_MCP_EXECUTOR_TOKEN')?.trim() || config.executorToken || ''
-  const actingUserId = getEnv('WEMUX_MCP_ACTING_USER')?.trim()
-  const runtimeAgentId = getEnv('WEMUX_MCP_RUNTIME_AGENT')?.trim()
+  const cloudUrl = getEnv('OXMUX_MCP_CLOUD_URL')?.trim() || config.cloudUrl || getWorkerDefaultCloudUrl()
+  const executorToken = getEnv('OXMUX_MCP_EXECUTOR_TOKEN')?.trim() || config.executorToken || ''
+  const actingUserId = getEnv('OXMUX_MCP_ACTING_USER')?.trim()
+  const runtimeAgentId = getEnv('OXMUX_MCP_RUNTIME_AGENT')?.trim()
 
   return {
     url: `${trimTrailingSlash(cloudUrl)}/mcp/executor`,
@@ -90,7 +90,7 @@ const forwardMessage = async (rawLine: string) => {
     : null
 
   if (!config.executorToken) {
-    writeErrorResponse(id, 'Wemux MCP executor token is not configured. Pair this worker or set VIBEMUX_MCP_EXECUTOR_TOKEN.')
+    writeErrorResponse(id, 'Oxmux MCP executor token is not configured. Pair this worker or set VIBEMUX_MCP_EXECUTOR_TOKEN.')
     return
   }
 
@@ -102,19 +102,19 @@ const forwardMessage = async (rawLine: string) => {
         'Content-Type': 'application/json',
         Accept: 'application/json, text/event-stream',
         'x-executor-token': config.executorToken,
-        ...(config.actingUserId ? { 'x-wemux-acting-user': config.actingUserId } : {}),
-        ...(config.runtimeAgentId ? { 'x-wemux-runtime-agent': config.runtimeAgentId } : {}),
+        ...(config.actingUserId ? { 'x-oxmux-acting-user': config.actingUserId } : {}),
+        ...(config.runtimeAgentId ? { 'x-oxmux-runtime-agent': config.runtimeAgentId } : {}),
       },
       body: JSON.stringify(payload),
     })
   } catch (error) {
-    writeErrorResponse(id, `Wemux MCP bridge network error: ${error instanceof Error ? error.message : 'fetch failed'}`)
+    writeErrorResponse(id, `Oxmux MCP bridge network error: ${error instanceof Error ? error.message : 'fetch failed'}`)
     return
   }
 
   const text = await readText(response)
   if (!response.ok) {
-    writeErrorResponse(id, `Wemux MCP HTTP ${response.status}: ${text || response.statusText}`)
+    writeErrorResponse(id, `Oxmux MCP HTTP ${response.status}: ${text || response.statusText}`)
     return
   }
 
@@ -154,7 +154,7 @@ export const runMcpStdioBridge = async () => {
       buffer = buffer.slice(index + 1)
       if (line) {
         pending = pending.then(() => forwardMessage(line)).catch((error) => {
-          writeErrorResponse(readMessageId(line), error instanceof Error ? error.message : 'Wemux MCP bridge failed.')
+          writeErrorResponse(readMessageId(line), error instanceof Error ? error.message : 'Oxmux MCP bridge failed.')
         })
       }
     }

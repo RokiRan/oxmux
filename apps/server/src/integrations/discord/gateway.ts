@@ -59,7 +59,7 @@ const connectGateway = (entry: GatewayEntry, token: string) => {
           d: {
             token,
             intents: DISCORD_GATEWAY_INTENTS,
-            properties: { $os: 'linux', $browser: 'wemux', $device: 'wemux' },
+            properties: { $os: 'linux', $browser: 'oxmux', $device: 'oxmux' },
           },
         }))
         break

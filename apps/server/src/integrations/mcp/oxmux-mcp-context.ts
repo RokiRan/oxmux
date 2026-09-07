@@ -1,6 +1,6 @@
 // [INPUT]: Authenticated MCP scope, persisted users/Agents, app state, and conversation snapshots.
 // [OUTPUT]: MCP context helpers, actor-aware creator identity, resource summaries, and JSON tool results.
-// [POS]: Shared server MCP adapter boundary used by all Wemux product tools.
+// [POS]: Shared server MCP adapter boundary used by all Oxmux product tools.
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 import { readCustomAgentConfig } from '@shared/custom-agent'
 import type { AgentRecord, AppState, CreatorIdentity, Project, Task, TaskRun } from '@shared/types'
@@ -12,7 +12,7 @@ import { ErrorCode, McpError } from './sdk'
 
 export const JSON_MIME_TYPE = 'application/json'
 
-export type WemuxMcpContext = {
+export type OxmuxMcpContext = {
   userId: string
   runtimeAgentId?: string
   getState: () => AppState
@@ -25,7 +25,7 @@ type CreatorIdentityLookups = {
 }
 
 export const resolveMcpCreatorIdentity = (
-  ctx: Pick<WemuxMcpContext, 'runtimeAgentId' | 'userId'>,
+  ctx: Pick<OxmuxMcpContext, 'runtimeAgentId' | 'userId'>,
   lookups: CreatorIdentityLookups = { getAgentById: getAgent, getUserById },
 ): CreatorIdentity => {
   const runtimeAgentId = ctx.runtimeAgentId?.trim()
@@ -184,7 +184,7 @@ export const requireProject = (state: AppState, projectId: string) => {
 }
 
 export const listProjectsForMcpActor = (
-  ctx: Pick<WemuxMcpContext, 'runtimeAgentId' | 'userId'>,
+  ctx: Pick<OxmuxMcpContext, 'runtimeAgentId' | 'userId'>,
   state: AppState,
 ) => {
   const runtimeAgentId = ctx.runtimeAgentId?.trim()
@@ -205,7 +205,7 @@ export const listProjectsForMcpActor = (
 }
 
 export const requireProjectForMcpActor = (
-  ctx: Pick<WemuxMcpContext, 'runtimeAgentId' | 'userId'>,
+  ctx: Pick<OxmuxMcpContext, 'runtimeAgentId' | 'userId'>,
   state: AppState,
   projectId: string,
 ) => {

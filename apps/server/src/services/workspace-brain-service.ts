@@ -251,7 +251,7 @@ const truncateForContext = (text: string, max = 120) => {
   return normalized.length > max ? `${normalized.slice(0, max)}...` : normalized
 }
 
-// —— 云盘文件纳入大脑上下文（P0：设为 Wemux Brain 上下文）——
+// —— 云盘文件纳入大脑上下文（P0：设为 Oxmux Brain 上下文）——
 
 const DEEPSEEK_CHAT_COMPLETIONS_URL = 'https://api.deepseek.com/chat/completions'
 

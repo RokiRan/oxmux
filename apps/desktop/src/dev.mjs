@@ -5,8 +5,8 @@ import electronPath from 'electron'
 
 const repoRoot = fileURLToPath(new URL('../../..', import.meta.url))
 const desktopRoot = fileURLToPath(new URL('..', import.meta.url))
-const serverHealthUrl = process.env.WEMUX_DESKTOP_SERVER_HEALTH_URL || 'http://127.0.0.1:8989/api/health'
-const webUrl = process.env.WEMUX_DESKTOP_DEV_URL || 'http://127.0.0.1:15173/chat'
+const serverHealthUrl = process.env.OXMUX_DESKTOP_SERVER_HEALTH_URL || 'http://127.0.0.1:8989/api/health'
+const webUrl = process.env.OXMUX_DESKTOP_DEV_URL || 'http://127.0.0.1:15173/chat'
 const webOrigin = new URL(webUrl).origin
 const managedChildren = new Set()
 
@@ -86,7 +86,7 @@ process.on('SIGTERM', () => shutdown(143))
 try {
   let serverProcess
   if (!(await isReachable(serverHealthUrl))) {
-    if (process.env.WEMUX_DESKTOP_SKIP_INFRA !== '1') {
+    if (process.env.OXMUX_DESKTOP_SKIP_INFRA !== '1') {
       console.log('[desktop] ensuring local Postgres and object storage are running...')
       await runSetupCommand(['dev:infra:up'])
     }
@@ -124,7 +124,7 @@ try {
   console.log(`[desktop] launching Electron at ${webUrl}`)
   const electronProcess = spawn(electronPath, ['.'], {
     cwd: desktopRoot,
-    env: { ...process.env, WEMUX_DESKTOP_DEV_URL: webUrl },
+    env: { ...process.env, OXMUX_DESKTOP_DEV_URL: webUrl },
     stdio: 'inherit',
     detached: !isWindows,
   })

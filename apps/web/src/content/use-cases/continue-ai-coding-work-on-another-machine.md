@@ -54,9 +54,9 @@ Real teams hit this problem all the time:
 
 If the AI workflow cannot survive that transition, it remains fragile even if the model itself is strong.
 
-## How Wemux approaches it
+## How Oxmux approaches it
 
-Wemux treats this as a workload continuity problem.
+Oxmux treats this as a workload continuity problem.
 
 That means the system is designed to help teams:
 

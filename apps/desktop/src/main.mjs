@@ -25,8 +25,8 @@ import {
 import updater from 'electron-updater'
 
 const { autoUpdater } = updater
-const DESKTOP_SCHEME = 'wemux-app'
-const DEEP_LINK_SCHEME = 'wemux'
+const DESKTOP_SCHEME = 'oxmux-app'
+const DEEP_LINK_SCHEME = 'oxmux'
 const WORKER_HOST = '127.0.0.1'
 const WORKER_PORT = 48121
 const DEFAULT_BOUNDS = { width: 1440, height: 960 }
@@ -85,7 +85,7 @@ let meetingRuntime = null
 let meetingRuntimeStarting = null
 
 const meetingRuntimeBinaryPath = () => {
-  const binaryName = process.platform === 'win32' ? 'wemux-meeting-runtime.exe' : 'wemux-meeting-runtime'
+  const binaryName = process.platform === 'win32' ? 'oxmux-meeting-runtime.exe' : 'oxmux-meeting-runtime'
   if (app.isPackaged) return path.join(process.resourcesPath, 'meeting-runtime', binaryName)
   const buildRoot = path.resolve(desktopRoot, '../meeting-runtime/native/build')
   const releaseRoot = process.platform === 'win32' ? path.join(buildRoot, 'Release') : buildRoot
@@ -368,7 +368,7 @@ const parseMossTranscript = (raw, startedAtMs, endedAtMs) => {
 const transcribeMeetingAudio = async ({ audioBase64, startedAtMs, endedAtMs, brainContext }) => {
   if (typeof audioBase64 !== 'string' || audioBase64.length > 16_000_000) throw new Error('本地音频片段过大')
   if (!Number.isFinite(startedAtMs) || !Number.isFinite(endedAtMs)) throw new Error('本地音频时间戳无效')
-  const temporary = path.join(app.getPath('temp'), `wemux-meeting-${process.pid}-${Date.now()}.wav`)
+  const temporary = path.join(app.getPath('temp'), `oxmux-meeting-${process.pid}-${Date.now()}.wav`)
   try {
     writeFileSync(temporary, Buffer.from(audioBase64, 'base64'), { mode: 0o600 })
     const raw = await sendMeetingRuntimeCommand('TRANSCRIBE', [temporary])
@@ -459,7 +459,7 @@ const dispatchDeepLinks = (urls) => {
   const normalized = urls.filter((url) => typeof url === 'string' && url.toLowerCase().startsWith(`${DEEP_LINK_SCHEME}://`))
   if (normalized.length === 0) return
   showMainWindow()
-  if (!sendRendererEvent('wemux:deep-link', normalized)) pendingDeepLinks.push(...normalized)
+  if (!sendRendererEvent('oxmux:deep-link', normalized)) pendingDeepLinks.push(...normalized)
 }
 
 const takeDeepLinksFromArgv = (argv) => argv.filter((value) => value.toLowerCase().startsWith(`${DEEP_LINK_SCHEME}://`))
@@ -484,7 +484,7 @@ const workerStatus = async () => ({
 })
 
 const createTrayMenu = () => Menu.buildFromTemplate([
-  { label: '打开 Wemux', click: showMainWindow },
+  { label: '打开 Oxmux', click: showMainWindow },
   { label: `本地 Worker: ${workerRunning ? '在线' : '离线'}`, enabled: false },
   { type: 'separator' },
   {
@@ -499,7 +499,7 @@ const createTrayMenu = () => Menu.buildFromTemplate([
 const refreshTrayWorkerStatus = async () => {
   workerRunning = await probeWorker()
   if (!tray || tray.isDestroyed()) return
-  tray.setToolTip(`Wemux - Worker ${workerRunning ? '在线' : '离线'}`)
+  tray.setToolTip(`Oxmux - Worker ${workerRunning ? '在线' : '离线'}`)
   tray.setContextMenu(createTrayMenu())
 }
 
@@ -513,7 +513,7 @@ const createTray = () => {
   setInterval(() => void refreshTrayWorkerStatus(), 15_000).unref()
 }
 
-const emitUpdate = (payload) => sendRendererEvent('wemux:update', payload)
+const emitUpdate = (payload) => sendRendererEvent('oxmux:update', payload)
 
 const configureUpdater = () => {
   autoUpdater.autoDownload = false
@@ -554,7 +554,7 @@ const installDesktopUpdate = async () => {
 }
 
 const registerIpc = () => {
-  ipcMain.handle('wemux:invoke', async (event, command, args = {}) => {
+  ipcMain.handle('oxmux:invoke', async (event, command, args = {}) => {
     if (!mainWindow || event.sender !== mainWindow.webContents) throw new Error('unauthorized renderer')
     switch (command) {
       case 'app_version':
@@ -603,7 +603,7 @@ const registerIpc = () => {
         })
       }
       case 'show_notification': {
-        const title = typeof args.title === 'string' ? args.title.slice(0, 160) : 'Wemux'
+        const title = typeof args.title === 'string' ? args.title.slice(0, 160) : 'Oxmux'
         const body = typeof args.body === 'string' ? args.body.slice(0, 2000) : ''
         if (!Notification.isSupported()) throw new Error('system notifications are unavailable')
         new Notification({ title, body }).show()
@@ -671,7 +671,7 @@ const createMainWindow = async () => {
     minWidth: 960,
     minHeight: 640,
     show: false,
-    title: 'Wemux',
+    title: 'Oxmux',
     icon: windowIcon,
     backgroundColor: isMac ? '#00000000' : '#09090b',
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
@@ -706,7 +706,7 @@ const createMainWindow = async () => {
     return { action: 'deny' }
   })
   mainWindow.webContents.on('will-navigate', (event, url) => {
-    const allowedOrigin = app.isPackaged ? `${DESKTOP_SCHEME}://local` : new URL(process.env.WEMUX_DESKTOP_DEV_URL || 'http://127.0.0.1:15173/chat').origin
+    const allowedOrigin = app.isPackaged ? `${DESKTOP_SCHEME}://local` : new URL(process.env.OXMUX_DESKTOP_DEV_URL || 'http://127.0.0.1:15173/chat').origin
     if (new URL(url).origin === allowedOrigin) return
     event.preventDefault()
     if (/^https?:\/\//i.test(url)) void shell.openExternal(url)
@@ -715,7 +715,7 @@ const createMainWindow = async () => {
     if (pendingDeepLinks.length > 0) {
       const urls = pendingDeepLinks
       pendingDeepLinks = []
-      mainWindow?.webContents.send('wemux:deep-link', urls)
+      mainWindow?.webContents.send('oxmux:deep-link', urls)
     }
   })
   mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedUrl) => {
@@ -732,7 +732,7 @@ const createMainWindow = async () => {
 
   const initialUrl = app.isPackaged
     ? `${DESKTOP_SCHEME}://local/chat`
-    : process.env.WEMUX_DESKTOP_DEV_URL || 'http://127.0.0.1:15173/chat'
+    : process.env.OXMUX_DESKTOP_DEV_URL || 'http://127.0.0.1:15173/chat'
   const retryableDevLoadError = (error) => !app.isPackaged
     && (String(error?.code) === '-3' || String(error?.message).includes('ERR_ABORTED'))
 

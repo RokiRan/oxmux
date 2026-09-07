@@ -167,13 +167,13 @@ export const createHttpApp = () => {
   app.use('/mcp', cors({
     origin: '*',
     allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-    allowHeaders: ['Content-Type', 'Authorization', 'Last-Event-ID', 'mcp-protocol-version', 'mcp-session-id', 'x-executor-token', 'x-wemux-acting-user', 'x-wemux-runtime-agent'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Last-Event-ID', 'mcp-protocol-version', 'mcp-session-id', 'x-executor-token', 'x-oxmux-acting-user', 'x-oxmux-runtime-agent'],
     exposeHeaders: ['mcp-protocol-version', 'mcp-session-id'],
   }))
   app.use('/mcp/*', cors({
     origin: '*',
     allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-    allowHeaders: ['Content-Type', 'Authorization', 'Last-Event-ID', 'mcp-protocol-version', 'mcp-session-id', 'x-executor-token', 'x-wemux-acting-user', 'x-wemux-runtime-agent'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Last-Event-ID', 'mcp-protocol-version', 'mcp-session-id', 'x-executor-token', 'x-oxmux-acting-user', 'x-oxmux-runtime-agent'],
     exposeHeaders: ['mcp-protocol-version', 'mcp-session-id'],
   }))
 

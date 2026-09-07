@@ -52,7 +52,7 @@ const isManagedWorkspacePath = (workspaceRoot: string, rawPath: string | undefin
   }
 
   const normalizedForMatch = resolvedPath.replace(/\\/g, '/')
-  return new RegExp(`(?:^|/)\\.(?:wemux|vibemux)(?:-[^/]+)?/(?:workspace/(?:users/[^/]+/)?(?:workspaces/[^/]+/)?|users/[^/]+/(?:workspaces/[^/]+/)?|workspaces/[^/]+/)${directoryName}/.+$`).test(normalizedForMatch)
+  return new RegExp(`(?:^|/)\\.(?:oxmux|vibemux)(?:-[^/]+)?/(?:workspace/(?:users/[^/]+/)?(?:workspaces/[^/]+/)?|users/[^/]+/(?:workspaces/[^/]+/)?|workspaces/[^/]+/)${directoryName}/.+$`).test(normalizedForMatch)
 }
 
 export const isManagedProjectPath = (workspaceRoot: string, rawPath?: string) => {
@@ -82,7 +82,7 @@ export const remapManagedProjectPath = (workspaceRoot: string, rawPath?: string)
     return remappedParts ? path.join(resolvedWorkspaceRoot, ...remappedParts) : resolvedPath
   }
 
-  const match = normalizedForMatch.match(/(?:^|\/)\.wemux(?:-[^/]+)?\/(.+)$/)
+  const match = normalizedForMatch.match(/(?:^|\/)\.oxmux(?:-[^/]+)?\/(.+)$/)
   if (!match) {
     return resolvedPath
   }

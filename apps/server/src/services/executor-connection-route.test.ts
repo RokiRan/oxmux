@@ -21,8 +21,8 @@ test('resolveExecutorConnectionRoute assigns domestic realtime url for CN reques
     VIBEMUX_EXECUTOR_ROUTE_RULES_JSON: process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON,
   }
 
-  process.env.VIBEMUX_DOMESTIC_REALTIME_BASE_URL = 'https://hk.wemux.xyz'
-  process.env.VIBEMUX_PUBLIC_BASE_URL = 'https://wemux.xyz'
+  process.env.VIBEMUX_DOMESTIC_REALTIME_BASE_URL = 'https://hk.oxmux.xyz'
+  process.env.VIBEMUX_PUBLIC_BASE_URL = 'https://oxmux.xyz'
   process.env.VIBEMUX_DOMESTIC_COUNTRY_CODES = 'CN,MO'
   delete process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON
 
@@ -34,7 +34,7 @@ test('resolveExecutorConnectionRoute assigns domestic realtime url for CN reques
       },
     })
 
-    assert.equal(route.assignedCloudUrl, 'https://hk.wemux.xyz')
+    assert.equal(route.assignedCloudUrl, 'https://hk.oxmux.xyz')
     assert.deepEqual(route.assignedLabels, ['route:hk', 'realtime:hk'])
     assert.deepEqual(route.managedRoutingLabels, ['route:hk', 'realtime:hk'])
     assert.equal(route.countryCode, 'CN')
@@ -42,7 +42,7 @@ test('resolveExecutorConnectionRoute assigns domestic realtime url for CN reques
     assert.deepEqual(route.candidates, [
       {
         id: 'domestic-hk',
-        cloudUrl: 'https://hk.wemux.xyz',
+        cloudUrl: 'https://hk.oxmux.xyz',
         labels: ['route:hk', 'realtime:hk'],
       },
       {
@@ -63,8 +63,8 @@ test('resolveExecutorConnectionRoute falls back to public base url for unmatched
     VIBEMUX_EXECUTOR_ROUTE_RULES_JSON: process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON,
   }
 
-  process.env.VIBEMUX_DOMESTIC_REALTIME_BASE_URL = 'https://hk.wemux.xyz'
-  process.env.VIBEMUX_PUBLIC_BASE_URL = 'https://wemux.xyz'
+  process.env.VIBEMUX_DOMESTIC_REALTIME_BASE_URL = 'https://hk.oxmux.xyz'
+  process.env.VIBEMUX_PUBLIC_BASE_URL = 'https://oxmux.xyz'
   delete process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON
 
   try {
@@ -101,23 +101,23 @@ test('resolveExecutorConnectionRoute supports explicit regional route rules with
     VIBEMUX_DOMESTIC_REALTIME_BASE_URL: process.env.VIBEMUX_DOMESTIC_REALTIME_BASE_URL,
   }
 
-  process.env.VIBEMUX_PUBLIC_BASE_URL = 'https://wemux.ai'
+  process.env.VIBEMUX_PUBLIC_BASE_URL = 'https://oxmux.ai'
   process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON = JSON.stringify([
     {
       id: 'hk',
-      cloudUrl: 'https://hk.wemux.ai',
+      cloudUrl: 'https://hk.oxmux.ai',
       labels: ['route:hk', 'realtime:hk'],
       countries: ['CN', 'HK'],
     },
     {
       id: 'us',
-      cloudUrl: 'https://us.wemux.ai',
+      cloudUrl: 'https://us.oxmux.ai',
       labels: ['route:us', 'realtime:us'],
       continents: ['NA'],
     },
     {
       id: 'eu',
-      cloudUrl: 'https://eu.wemux.ai',
+      cloudUrl: 'https://eu.oxmux.ai',
       labels: ['route:eu', 'realtime:eu'],
       continents: ['EU'],
     },
@@ -133,7 +133,7 @@ test('resolveExecutorConnectionRoute supports explicit regional route rules with
       },
     })
 
-    assert.equal(route.assignedCloudUrl, 'https://us.wemux.ai')
+    assert.equal(route.assignedCloudUrl, 'https://us.oxmux.ai')
     assert.deepEqual(route.assignedLabels, ['route:us', 'realtime:us'])
     assert.deepEqual(route.managedRoutingLabels, [
       'route:hk',
@@ -149,7 +149,7 @@ test('resolveExecutorConnectionRoute supports explicit regional route rules with
     assert.deepEqual(route.candidates, [
       {
         id: 'us',
-        cloudUrl: 'https://us.wemux.ai',
+        cloudUrl: 'https://us.oxmux.ai',
         labels: ['route:us', 'realtime:us'],
       },
       {

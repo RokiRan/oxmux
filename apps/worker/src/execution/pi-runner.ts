@@ -626,7 +626,7 @@ const runPiPromptWithPatchedFetch = async (params: WorkerAgentPromptParams): Pro
     mcpServers: effectiveMcpServers,
     workerConfig,
   })
-  const skillPaths = parsePiSkillPaths(params.runtimeEnv?.WEMUX_PI_SKILL_PATHS)
+  const skillPaths = parsePiSkillPaths(params.runtimeEnv?.OXMUX_PI_SKILL_PATHS)
   const resourceLoader = new DefaultResourceLoader({
     cwd: params.cwd,
     agentDir: runtime.agentDir,

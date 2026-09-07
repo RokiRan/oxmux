@@ -21,7 +21,7 @@ export class MacOSService implements PlatformService {
   constructor(private readonly serviceName = getDefaultWorkerServiceName()) {}
 
   private label() {
-    return `com.wemux.${this.serviceName}`
+    return `com.oxmux.${this.serviceName}`
   }
 
   private launchTarget() {
@@ -33,11 +33,11 @@ export class MacOSService implements PlatformService {
   }
 
   private stdoutPath() {
-    return path.join(os.homedir(), 'Library', 'Logs', 'Wemux', `${this.serviceName}.stdout.log`)
+    return path.join(os.homedir(), 'Library', 'Logs', 'Oxmux', `${this.serviceName}.stdout.log`)
   }
 
   private stderrPath() {
-    return path.join(os.homedir(), 'Library', 'Logs', 'Wemux', `${this.serviceName}.stderr.log`)
+    return path.join(os.homedir(), 'Library', 'Logs', 'Oxmux', `${this.serviceName}.stderr.log`)
   }
 
   async install(options: ServiceInstallOptions) {

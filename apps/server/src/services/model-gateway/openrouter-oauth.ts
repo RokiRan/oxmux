@@ -15,7 +15,7 @@ import {
 export const OPENROUTER_SITE_BASE = 'https://openrouter.ai'
 export const OPENROUTER_API_BASE = `${OPENROUTER_SITE_BASE}/api/v1`
 /** 授权后在用户 OpenRouter 后台显示的 key 备注 */
-export const OPENROUTER_OAUTH_KEY_LABEL = 'Wemux'
+export const OPENROUTER_OAUTH_KEY_LABEL = 'Oxmux'
 /** OAuth 登记的聚合 profile 名称 / 标记（description 精确匹配，用于 status 判定与幂等更新） */
 export const OPENROUTER_OAUTH_PROFILE_NAME = 'OpenRouter 免费模型'
 export const OPENROUTER_OAUTH_PROFILE_DESCRIPTION = 'OpenRouter 免费模型（OAuth 一键接入，费用记在用户自己的 OpenRouter 账户）'

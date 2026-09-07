@@ -1,8 +1,8 @@
 # 项目概述
 
-## Wemux 是什么
+## Oxmux 是什么
 
-Wemux 是一个以 worker 为唯一代码执行入口的 AI 编排平台。
+Oxmux 是一个以 worker 为唯一代码执行入口的 AI 编排平台。
 
 核心特点：
 - **Worker-first 架构**：所有代码执行必须通过 worker，禁止 server 本地执行

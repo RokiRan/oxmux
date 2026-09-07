@@ -29,8 +29,8 @@ const defaultDevelopmentUrl = Platform.select({
   default: 'http://127.0.0.1:15173/chat',
 }) as string
 
-const appUrl = process.env.EXPO_PUBLIC_WEMUX_APP_URL
-  || (__DEV__ ? defaultDevelopmentUrl : 'https://wemux.ai/chat')
+const appUrl = process.env.EXPO_PUBLIC_OXMUX_APP_URL
+  || (__DEV__ ? defaultDevelopmentUrl : 'https://oxmux.ai/chat')
 
 const serializeInjectedEvent = (eventName: string, detail: unknown) => `
 window.dispatchEvent(new CustomEvent(${JSON.stringify(eventName)}, { detail: ${JSON.stringify(detail)} }));
@@ -54,7 +54,7 @@ export default function App() {
       return
     }
     webViewRef.current.injectJavaScript(`
-window.__WEMUX_MOBILE_DISPATCH_DEEP_LINK__?.(${JSON.stringify(urls)});
+window.__OXMUX_MOBILE_DISPATCH_DEEP_LINK__?.(${JSON.stringify(urls)});
 true;
 `)
   }, [webReady])
@@ -98,10 +98,10 @@ true;
       request,
       () => pendingDeepLinks.current.splice(0),
     )
-    webViewRef.current?.injectJavaScript(serializeInjectedEvent('wemux-mobile-response', response))
+    webViewRef.current?.injectJavaScript(serializeInjectedEvent('oxmux-mobile-response', response))
     if (request.command === 'install_update' && !response.error) {
       webViewRef.current?.injectJavaScript(`
-window.__WEMUX_MOBILE_DISPATCH_UPDATE__?.({ type: 'installed' });
+window.__OXMUX_MOBILE_DISPATCH_UPDATE__?.({ type: 'installed' });
 true;
 `)
     }
@@ -124,7 +124,7 @@ true;
         onNavigationStateChange={handleNavigationChange}
         onLoadStart={() => setLoadError('')}
         onLoadEnd={() => setWebReady(true)}
-        onError={(event) => setLoadError(event.nativeEvent.description || 'Unable to load Wemux')}
+        onError={(event) => setLoadError(event.nativeEvent.description || 'Unable to load Oxmux')}
         onHttpError={(event) => setLoadError(`HTTP ${event.nativeEvent.statusCode}`)}
         onContentProcessDidTerminate={() => webViewRef.current?.reload()}
         sharedCookiesEnabled
@@ -134,7 +134,7 @@ true;
         allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}
         setSupportMultipleWindows={false}
-        originWhitelist={['http://*', 'https://*', 'wemux://*']}
+        originWhitelist={['http://*', 'https://*', 'oxmux://*']}
         startInLoadingState
         renderLoading={() => (
           <View style={styles.centered}>
@@ -144,7 +144,7 @@ true;
       />
       {loadError ? (
         <View style={styles.errorOverlay}>
-          <Text style={styles.errorTitle}>无法连接 Wemux</Text>
+          <Text style={styles.errorTitle}>无法连接 Oxmux</Text>
           <Text style={styles.errorMessage}>{loadError}</Text>
           <Text style={styles.errorUrl}>{appUrl}</Text>
           <Pressable style={styles.retryButton} onPress={() => webViewRef.current?.reload()}>

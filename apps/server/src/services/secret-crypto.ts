@@ -22,7 +22,7 @@ const getSecretEncryptionKey = () => {
       }
 
       return createHash('sha256')
-        .update(`wemux-dev:${os.homedir()}:${process.cwd()}`)
+        .update(`oxmux-dev:${os.homedir()}:${process.cwd()}`)
         .digest()
         .subarray(0, ENCRYPTION_KEY_BYTES)
     }

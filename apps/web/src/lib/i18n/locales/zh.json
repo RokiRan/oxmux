@@ -73,10 +73,10 @@
     "rememberMe": "记住我"
   },
   "app": {
-    "title": "Wemux",
-    "tagline": "Wemux 把需求交给 Agent 系统，自动拆解任务并派发到真实节点执行。",
+    "title": "Oxmux",
+    "tagline": "Oxmux 把需求交给 Agent 系统，自动拆解任务并派发到真实节点执行。",
     "guest": "访客",
-    "consoleVersion": "Wemux 控制台 v{{version}}",
+    "consoleVersion": "Oxmux 控制台 v{{version}}",
     "engineeringConsole": "工程控制台",
     "online": "在线",
     "offline": "离线",
@@ -264,7 +264,7 @@
         "description": "这会同时删除该工作区对应的本地隔离目录，并解除相关任务里的工作区关联。",
         "confirm": "删除工作区",
         "deleteLocalBranch": "同时删除本地工作分支",
-        "deleteLocalBranchHint": "只会尝试删除 Wemux 创建的受管 worktree 分支。",
+        "deleteLocalBranchHint": "只会尝试删除 Oxmux 创建的受管 worktree 分支。",
         "deleteRemoteBranch": "同时删除远程工作分支",
         "deleteRemoteBranchHint": "会删除对应的 origin 分支；勾选后也会一并删除本地分支。"
       },
@@ -299,7 +299,7 @@
       "title": "新建工作区",
       "aiEntryBadge": "AI 工作区",
       "heroTitle": "先说你想让 AI 做什么",
-      "heroDescription": "像开一段对话一样创建工作区。Wemux 会用第一句话自动命名，并在准备完成后把它放进新会话输入框。",
+      "heroDescription": "像开一段对话一样创建工作区。Oxmux 会用第一句话自动命名，并在准备完成后把它放进新会话输入框。",
       "agentModelHint": "这里的选择会作为新工作区首个会话的默认执行配置。",
       "runtimeChoiceLabel": "执行 Agent",
       "setupLabel": "环境配置",
@@ -1246,7 +1246,7 @@
     }
   },
   "login": {
-    "title": "登录 Wemux",
+    "title": "登录 Oxmux",
     "subtitle": "输入凭据以访问您的组织",
     "submit": "登录",
     "noAccount": "没有账户？",
@@ -1265,7 +1265,7 @@
     "registerNow": "立即注册",
     "loginNow": "立即登录",
     "emailAlreadyRegistered": "这个邮箱已经注册过了，直接登录即可。",
-    "workspaceBadge": "Wemux 组织",
+    "workspaceBadge": "Oxmux 组织",
     "authGateway": "认证入口",
     "emailPlaceholder": "name@example.com",
     "featureProjectsTitle": "Projects",
@@ -1413,8 +1413,8 @@
   },
   "landing": {
     "hero": {
-      "title": "Wemux",
-      "subtitle": "Wemux 把需求交给 Agent 系统，自动拆解任务并派发到真实节点执行。"
+      "title": "Oxmux",
+      "subtitle": "Oxmux 把需求交给 Agent 系统，自动拆解任务并派发到真实节点执行。"
     },
     "features": {
       "title": "功能特性"
@@ -1560,7 +1560,7 @@
       "gitNone": "未启用 Git",
       "gitRemoteDesc": "已连接远端仓库，支持分支、隔离目录、push 和 PR 等完整 Git 工作流。",
       "gitLocalDesc": "已识别本地 Git 仓库，支持本地分支、diff、graph、rebase 和隔离目录；没有远端时暂不直接支持 PR。",
-      "gitNoneDesc": "当前项目由 Wemux 托管但尚未初始化 Git；暂不支持 Git diff / rebase / PR，初始化 Git 后会自动升级。"
+      "gitNoneDesc": "当前项目由 Oxmux 托管但尚未初始化 Git；暂不支持 Git diff / rebase / PR，初始化 Git 后会自动升级。"
     },
     "sourceDisplay": {
       "noRemoteRepoSet": "远端仓库未设置",
@@ -1962,15 +1962,15 @@
           "loading": "正在扫描本地工作目录...",
           "empty": "这个 Agent 的工作目录里还没有索引到文件。",
           "boundaryTitle": "边界说明",
-          "boundaryDescription": "把 Agent 可见的 workdir 和 Wemux 自己的系统元数据分开，下一版多节点同步时就只需要同步真正的工作文件。",
+          "boundaryDescription": "把 Agent 可见的 workdir 和 Oxmux 自己的系统元数据分开，下一版多节点同步时就只需要同步真正的工作文件。",
           "boundaryLabels": {
             "workdir": "Agent 可见目录",
             "system": "系统保留区",
             "compatibility": "同步兼容层"
           },
           "boundaryItems": {
-            "workdir": "只有 ~/.wemux/agents/{agentId}/workdir 才是默认开放给 Agent 的可写目录。",
-            "system": "隐藏的 .system 区域不默认暴露给 Agent，由 Wemux 自己维护。",
+            "workdir": "只有 ~/.oxmux/agents/{agentId}/workdir 才是默认开放给 Agent 的可写目录。",
+            "system": "隐藏的 .system 区域不默认暴露给 Agent，由 Oxmux 自己维护。",
             "compatibility": "快照索引只存相对路径，后续做多节点同步时可以直接复用。"
           },
           "summary": {
@@ -1992,7 +1992,7 @@
         "hints": {
           "avatarStorageConfigured": "支持 JPG、PNG、WebP、GIF，单文件不超过 {{size}}MB。新建草稿阶段可先填 URL，保存后再上传。",
           "avatarStorageMissing": "当前对象存储未配置，只能先手动填写外部图片 URL。",
-          "piSkillSnapshot": "Pi 会通过 `WEMUX_PI_SKILL_PATHS` 注入这些已挂载 Skill；修改会在下一次执行按快照生效。",
+          "piSkillSnapshot": "Pi 会通过 `OXMUX_PI_SKILL_PATHS` 注入这些已挂载 Skill；修改会在下一次执行按快照生效。",
           "unresolvedSkillWarning": "这个挂载项在当前 Skill Registry 里没有解析到匹配记录，迁移或执行前需要人工确认。",
           "piMountSnapshot": "Pi 下一次执行会按当前挂载快照注入。",
           "mountPolicySaved": "当前挂载策略会随 Agent 配置一起保存。",
@@ -2586,13 +2586,13 @@
         "systemMcp": "系统内置 MCP",
         "healthCheckLater": "后续可接入健康检查。",
         "removeMcp": "只影响 Agent 的挂载列表，不会删除外部 MCP 服务。",
-        "systemMcpRemoveDisabled": "系统内置 Wemux MCP 不能移除，但可以关闭。",
+        "systemMcpRemoveDisabled": "系统内置 Oxmux MCP 不能移除，但可以关闭。",
         "advancedRawConfig": "保留原始 JSON 入口用于兼容，正常维护请优先使用 Skills 与 MCP 面板。",
         "mcpAccess": "系统级 MCP 统一在 Settings / 全局 MCP 中维护。"
       },
       "vibemuxMcp": {
-        "title": "Wemux MCP",
-        "description": "用于把 Wemux 控制面资源暴露给 Agent。"
+        "title": "Oxmux MCP",
+        "description": "用于把 Oxmux 控制面资源暴露给 Agent。"
       },
       "status": {
         "enabled": "已启用",
@@ -2944,7 +2944,7 @@
         },
         "executor": {
           "title": "先把节点连上",
-          "description": "只有连上真实节点，Wemux 才能真正帮你在仓库里执行任务。这里先完成最关键的一步。"
+          "description": "只有连上真实节点，Oxmux 才能真正帮你在仓库里执行任务。这里先完成最关键的一步。"
         },
         "runtime": {
           "title": "先确认 coding agent",
@@ -2960,7 +2960,7 @@
         },
         "done": {
           "title": "你的首用链路已经跑通",
-          "description": "从这里开始，Wemux 就进入正常工作模式了。你可以继续在真实项目里发任务、跟踪执行和补充设置。",
+          "description": "从这里开始，Oxmux 就进入正常工作模式了。你可以继续在真实项目里发任务、跟踪执行和补充设置。",
           "nextLabel": "进入看板"
         }
       }
@@ -2975,7 +2975,7 @@
     },
     "executor": {
       "title": "先把节点连上",
-      "description": "Wemux 的任务不是在聊天框里假装完成，而是会派到真实节点执行。所以第一步要先把 worker 配对成功。",
+      "description": "Oxmux 的任务不是在聊天框里假装完成，而是会派到真实节点执行。所以第一步要先把 worker 配对成功。",
       "connectedNode": "已连接节点",
       "readyTitle": "节点已经就绪",
       "readyDescription": "{{name}} 已可用于下一步项目接入。",
@@ -3021,7 +3021,7 @@
       "localProjectTitle": "接入本地项目",
       "localProjectDescription": "节点上已经有仓库目录，直接选文件夹接入。",
       "cloneProjectTitle": "克隆仓库",
-      "cloneProjectDescription": "让 Worker 帮你 clone 仓库，再把它绑定成 Wemux 项目。",
+      "cloneProjectDescription": "让 Worker 帮你 clone 仓库，再把它绑定成 Oxmux 项目。",
       "note": "优先把真实仓库接进来，后面进入工作区后会直接带入当前项目上下文。"
     },
     "firstTask": {
@@ -3911,12 +3911,12 @@
     "title": "反馈",
     "subtitle": "报告 Bug 或提出功能建议——我们都会认真看。",
     "dialogTitle": "反馈与建议",
-    "dialogSubtitle": "发现什么问题、或有什么想让 Wemux 变得更好的想法?",
+    "dialogSubtitle": "发现什么问题、或有什么想让 Oxmux 变得更好的想法?",
     "successHint": "我们会逐一查看并在这里更新处理状态。",
     "bug": "报告 Bug",
     "bugDesc": "某个功能坏了或不符合预期。",
     "feature": "功能建议",
-    "featureDesc": "让 Wemux 变得更好的想法。",
+    "featureDesc": "让 Oxmux 变得更好的想法。",
     "titleLabel": "标题",
     "titlePlaceholder": "简短概括，例如「Worker 配对失败，提示配对码无效」",
     "bodyLabel": "详情",
@@ -3939,7 +3939,7 @@
     "normalizedDuplicate": "已并入",
     "draftReply": "AI 起草",
     "draftReplyHint": "根据反馈与历史说明起草回复草稿（不承诺时间线，不泄露内部信息）",
-    "draftReplyNoModel": "未配置模型，无法起草；请手写回复或配置 WEMUX_FEEDBACK_NORMALIZATION_API_KEY",
+    "draftReplyNoModel": "未配置模型，无法起草；请手写回复或配置 OXMUX_FEEDBACK_NORMALIZATION_API_KEY",
     "draftReplyFailed": "AI 起草失败",
     "reviewHighRisk": "回复存在高风险内容，已被审查拦截",
     "reviewForceSend": "仍然发送？（强行发送将记录为审查通过）",

@@ -77,14 +77,14 @@ const getWorkspaceSessionCompletionSignature = (
 
 const getToneTitle = (tone: WorkspaceSessionCompletionTone) => {
   if (tone === 'attention') {
-    return 'wemux 工作区会话等待确认'
+    return 'oxmux 工作区会话等待确认'
   }
 
   if (tone === 'error') {
-    return 'wemux 工作区会话执行出错'
+    return 'oxmux 工作区会话执行出错'
   }
 
-  return 'wemux 工作区会话已完成'
+  return 'oxmux 工作区会话已完成'
 }
 
 const buildWorkspaceSessionCompletionMessage = (params: {

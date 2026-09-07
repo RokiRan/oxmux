@@ -35,10 +35,10 @@ const outputDir = path.resolve(readArg('--output-dir', path.join(rootDir, '.arti
 const packageVersion = readArg('--package-version', '')
 const disableNpmUpdateCheck = ['1', 'true', 'on'].includes(readArg('--disable-update-check', '').trim().toLowerCase())
 // 可选覆盖：用于一次性迁移包（如旧 vibemux-* 包名承载新代码），默认跟随 channel
-const packageName = readArg('--package-name', channel === 'preview' ? 'wemux-worker-preview' : 'wemux-worker')
+const packageName = readArg('--package-name', channel === 'preview' ? 'oxmux-worker-preview' : 'oxmux-worker')
 const binName = packageName
 const nodeWrapperBinName = `${binName}-node-wrapper`
-const defaultCloudUrl = channel === 'preview' ? 'https://wemux.xyz' : 'https://wemux.ai'
+const defaultCloudUrl = channel === 'preview' ? 'https://oxmux.xyz' : 'https://oxmux.ai'
 const defaultLocalServerPort = channel === 'preview' ? 48123 : 48100
 const rootPackageJson = JSON.parse(readFileSync(path.join(rootDir, 'package.json'), 'utf8'))
 const finalVersion = packageVersion || rootPackageJson.version
@@ -54,7 +54,7 @@ const workerPackageJson = {
   bin: {
     vbx: './bin/vbx.mjs',
     vibemux: './bin/vibemux.mjs',
-    wemux: './bin/wemux.mjs',
+    oxmux: './bin/oxmux.mjs',
     [binName]: './bin/cli.mjs',
     [nodeWrapperBinName]: './bin/node-wrapper.mjs',
   },
@@ -105,8 +105,8 @@ const buildCliLauncher = (cliName, { selfRepair = false } = {}) => {
     '',
     'const scriptDir = path.dirname(fileURLToPath(import.meta.url))',
     "const appRoot = path.resolve(scriptDir, '..')",
-    `process.env.WEMUX_CLI_NAME = ${JSON.stringify(cliName)}`,
-    'process.env.WEMUX_RUNTIME_ROOT = appRoot',
+    `process.env.OXMUX_CLI_NAME = ${JSON.stringify(cliName)}`,
+    'process.env.OXMUX_RUNTIME_ROOT = appRoot',
   ]
   if (!selfRepair) {
     lines.push('', entryImport)
@@ -141,8 +141,8 @@ writeFileSync(
   buildCliLauncher('vibemux'),
 )
 writeFileSync(
-  path.join(packageRoot, 'bin', 'wemux.mjs'),
-  buildCliLauncher('wemux'),
+  path.join(packageRoot, 'bin', 'oxmux.mjs'),
+  buildCliLauncher('oxmux'),
 )
 
 writeFileSync(
@@ -177,9 +177,9 @@ writeFileSync(
     "  return path.join(installPrefix, 'bin', binName)",
     '}',
     'const workerBin = resolveWorkerBin()',
-    "process.env.WEMUX_RUNTIME_ROOT = appRoot",
-    "process.env.WEMUX_WORKER_INSTALL_PREFIX = process.env.WEMUX_WORKER_INSTALL_PREFIX || installPrefix",
-    'process.env.WEMUX_WORKER_EXECUTABLE_PATH = workerBin',
+    "process.env.OXMUX_RUNTIME_ROOT = appRoot",
+    "process.env.OXMUX_WORKER_INSTALL_PREFIX = process.env.OXMUX_WORKER_INSTALL_PREFIX || installPrefix",
+    'process.env.OXMUX_WORKER_EXECUTABLE_PATH = workerBin',
     "await import(pathToFileURL(path.join(appRoot, 'dist-worker', 'apps', 'worker', 'src', 'index.js')).href)",
   ].join('\n') + '\n',
 )
@@ -192,7 +192,7 @@ cpSync(
 
 // 自包含包会被安装器 tar 直出并原样落盘，bin 入口必须带可执行位：
 // 安装器的 -x 校验和 mac/linux 直接 spawn 都依赖它（npm 安装会自动加位，tar 直出不会）。
-for (const binFile of ['cli.mjs', 'vbx.mjs', 'vibemux.mjs', 'wemux.mjs', 'node-wrapper.mjs', 'self-repair.mjs']) {
+for (const binFile of ['cli.mjs', 'vbx.mjs', 'vibemux.mjs', 'oxmux.mjs', 'node-wrapper.mjs', 'self-repair.mjs']) {
   chmodSync(path.join(packageRoot, 'bin', binFile), 0o755)
 }
 

@@ -123,7 +123,7 @@ function MockSidebar({ language }: { language: Language }) {
               ALPHA
             </span>
           </div>
-          <NavLink icon="🤖" label="Project Agent" subtitle="🟢 Wemux Assistant" />
+          <NavLink icon="🤖" label="Project Agent" subtitle="🟢 Oxmux Assistant" />
         </div>
 
         {/* 系统分组 */}

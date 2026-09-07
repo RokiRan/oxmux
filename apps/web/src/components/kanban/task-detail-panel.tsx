@@ -1571,7 +1571,7 @@ export function TaskDetailPanel({
             title="确认删除工作区「{{name}}」？"
             description="这会同时删除该工作区对应的本地隔离目录，并解除相关任务里的工作区关联。"
             localBranchLabel="同时删除本地工作分支"
-            localBranchHint="只会尝试删除 Wemux 创建的受管 worktree 分支。"
+            localBranchHint="只会尝试删除 Oxmux 创建的受管 worktree 分支。"
             remoteBranchLabel="同时删除远程工作分支"
             remoteBranchHint="会删除对应的 origin 分支；勾选后也会一并删除本地分支。"
             cancelText="取消"

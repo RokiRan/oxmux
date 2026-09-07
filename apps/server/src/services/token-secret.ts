@@ -24,6 +24,6 @@ export const assertSharedTokenSecretConfigured = () => {
   }
 
   throw new Error(
-    'TOKEN_SECRET is required in production. All wemux control-plane nodes must share the same TOKEN_SECRET, otherwise login, preview access, turnstile cookies, and other signed cross-node tokens will randomly fail.',
+    'TOKEN_SECRET is required in production. All oxmux control-plane nodes must share the same TOKEN_SECRET, otherwise login, preview access, turnstile cookies, and other signed cross-node tokens will randomly fail.',
   )
 }

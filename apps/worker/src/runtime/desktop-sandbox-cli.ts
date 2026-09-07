@@ -18,16 +18,16 @@ const readRequiredOption = (flags: ReturnType<typeof parseCliFlags>, name: strin
 const printUsage = () => {
   console.log([
     'Usage:',
-    '  wemux-worker desktop-sandbox status',
-    '  wemux-worker desktop-sandbox start --display-profile auto|1080p|720p|480p',
-    '  wemux-worker desktop-sandbox stop',
-    '  wemux-worker desktop-sandbox command --command "pwd"',
-    '  wemux-worker desktop-sandbox read-file --path /tmp/file.txt',
-    '  wemux-worker desktop-sandbox write-file --path /tmp/file.txt --content "hello"',
-    '  wemux-worker desktop-sandbox action --action terminal',
-    '  wemux-worker desktop-sandbox cli-start',
-    '  wemux-worker desktop-sandbox cli-stop',
-    '  wemux-worker desktop-sandbox cli-command --command "node -v"',
+    '  oxmux-worker desktop-sandbox status',
+    '  oxmux-worker desktop-sandbox start --display-profile auto|1080p|720p|480p',
+    '  oxmux-worker desktop-sandbox stop',
+    '  oxmux-worker desktop-sandbox command --command "pwd"',
+    '  oxmux-worker desktop-sandbox read-file --path /tmp/file.txt',
+    '  oxmux-worker desktop-sandbox write-file --path /tmp/file.txt --content "hello"',
+    '  oxmux-worker desktop-sandbox action --action terminal',
+    '  oxmux-worker desktop-sandbox cli-start',
+    '  oxmux-worker desktop-sandbox cli-stop',
+    '  oxmux-worker desktop-sandbox cli-command --command "node -v"',
   ].join('\n'))
 }
 

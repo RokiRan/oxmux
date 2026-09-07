@@ -87,7 +87,7 @@ export const openDingtalkStreamConnection = async (params: {
         clientId: params.appKey,
         clientSecret: params.appSecret,
         subscriptions: [{ type: 'EVENT', topic: '*' }],
-        ua: 'wemux/0.3.116',
+        ua: 'oxmux/0.3.116',
       }),
     })
     const payload = await response.json() as { endpoint?: string; ticket?: string; code?: string; message?: string }

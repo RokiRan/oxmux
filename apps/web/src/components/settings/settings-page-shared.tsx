@@ -116,7 +116,7 @@ export function MenuPanel({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="wemux-page-outer-frame flex h-full flex-col overflow-hidden">
+    <div className="oxmux-page-outer-frame flex h-full flex-col overflow-hidden">
       <div className="border-b border-zinc-800/80 px-5 py-4 sm:px-6">
         {mobile && onBack ? (
           <Button
@@ -241,7 +241,7 @@ export function SettingsMenuList({
   }, [])
 
   return (
-    <aside className="wemux-page-leading-panel flex h-full flex-col overflow-hidden rounded-none border border-zinc-800/90 bg-zinc-950/80 shadow-[0_18px_60px_rgba(0,0,0,0.2)]">
+    <aside className="oxmux-page-leading-panel flex h-full flex-col overflow-hidden rounded-none border border-zinc-800/90 bg-zinc-950/80 shadow-[0_18px_60px_rgba(0,0,0,0.2)]">
       <div className="border-b border-zinc-800/80 px-3 py-2.5">
         <p className="text-sm font-medium tracking-tight text-zinc-50">{t('settings.title')}</p>
       </div>

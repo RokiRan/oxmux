@@ -13,8 +13,8 @@ if (!validModes.has(mode)) {
 }
 
 const readEnv = (key, fallback = '') => {
-  const wemuxKey = key.startsWith('WEMUX_') ? `WEMUX_${key.slice('WEMUX_'.length)}` : key
-  return process.env[wemuxKey]?.trim() || process.env[key]?.trim() || fallback
+  const oxmuxKey = key.startsWith('OXMUX_') ? `OXMUX_${key.slice('OXMUX_'.length)}` : key
+  return process.env[oxmuxKey]?.trim() || process.env[key]?.trim() || fallback
 }
 const trimTrailingSlash = (value) => value.replace(/\/+$/, '')
 const loopbackHosts = new Set(['127.0.0.1', 'localhost', '::1', '[::1]'])
@@ -84,18 +84,18 @@ const normalizeServerOrigin = (value, port) => {
 }
 
 const webOrigin = normalizeOrigin(
-  readEnv('VITE_APP_BASE_URL') || readEnv('APP_BASE_URL') || readEnv('WEMUX_PUBLIC_BASE_URL'),
+  readEnv('VITE_APP_BASE_URL') || readEnv('APP_BASE_URL') || readEnv('OXMUX_PUBLIC_BASE_URL'),
   hybridWebPort,
 )
 const browserServerOrigin = normalizeOrigin(
-  readEnv('VITE_API_BASE_URL') || readEnv('BETTER_AUTH_URL') || readEnv('APP_URL') || readEnv('WEMUX_CLOUD_URL'),
+  readEnv('VITE_API_BASE_URL') || readEnv('BETTER_AUTH_URL') || readEnv('APP_URL') || readEnv('OXMUX_CLOUD_URL'),
   hybridServerPort,
 )
 const browserApiOrigin = webOrigin
 const browserAuthClientOrigin = `${webOrigin}/api/identity`
 const stackServerProxyTarget = `http://server:${hybridServerPort}`
 const directServerOrigin = normalizeServerOrigin(
-  readEnv('APP_URL') || readEnv('WEMUX_CLOUD_URL'),
+  readEnv('APP_URL') || readEnv('OXMUX_CLOUD_URL'),
   hybridServerPort,
 )
 const authOrigin = (() => {
@@ -138,8 +138,8 @@ const hybridEnv = {
   VITE_BETTER_AUTH_URL: browserAuthClientOrigin,
   APP_BASE_URL: webOrigin,
   APP_URL: directServerOrigin,
-  WEMUX_PUBLIC_BASE_URL: webOrigin,
-  WEMUX_CLOUD_URL: directServerOrigin,
+  OXMUX_PUBLIC_BASE_URL: webOrigin,
+  OXMUX_CLOUD_URL: directServerOrigin,
   BETTER_AUTH_URL: authOrigin,
   BETTER_AUTH_TRUSTED_ORIGINS: trustedOrigins,
   VITE_SERVER_PROXY_TARGET: stackServerProxyTarget,

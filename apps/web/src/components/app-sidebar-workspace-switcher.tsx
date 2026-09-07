@@ -132,7 +132,7 @@ export function AppSidebarWorkspaceSwitcher({
           side="bottom"
           sideOffset={8}
           className={cn(
-            "wemux-sidebar-menu-surface w-[--radix-dropdown-menu-trigger-width] min-w-60 rounded-xl p-1.5",
+            "oxmux-sidebar-menu-surface w-[--radix-dropdown-menu-trigger-width] min-w-60 rounded-xl p-1.5",
             compact && "rounded-2xl p-2",
           )}
         >

@@ -99,7 +99,7 @@ export function AdminAnalyticsPage({ data, days, onDaysChange }: { data: AdminAn
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = `wemux-analytics-${new Date().toISOString().slice(0, 10)}.csv`
+    anchor.download = `oxmux-analytics-${new Date().toISOString().slice(0, 10)}.csv`
     anchor.click()
     URL.revokeObjectURL(url)
   }

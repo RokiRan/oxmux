@@ -535,7 +535,7 @@ export function ModelCenterRuntimePanel({
                       },
                     },
                   })}
-                  placeholder="wemux-<user>"
+                  placeholder="oxmux-<user>"
                   className={inputClassName}
                 />
               </Field>

@@ -1,8 +1,8 @@
-# Wemux vs GitHub Copilot for AI Development Workflows
+# Oxmux vs GitHub Copilot for AI Development Workflows
 
 GitHub Copilot is one of the default entry points into AI coding. It is widely adopted because it integrates naturally into the day-to-day editor and GitHub workflow that many developers already use.
 
-But Wemux is aimed at a later stage in the workflow.
+But Oxmux is aimed at a later stage in the workflow.
 
 ## Where GitHub Copilot is strong
 
@@ -15,9 +15,9 @@ GitHub Copilot is strong for:
 
 For many teams, Copilot is the first step into AI coding because it improves local productivity with relatively low operational friction.
 
-## Where Wemux is different
+## Where Oxmux is different
 
-Wemux matters more when the bottleneck shifts away from code suggestion and toward execution and delivery:
+Oxmux matters more when the bottleneck shifts away from code suggestion and toward execution and delivery:
 
 - the real repo or runtime is on another machine
 - the task needs long-running agent work
@@ -25,11 +25,11 @@ Wemux matters more when the bottleneck shifts away from code suggestion and towa
 - review needs more than a code diff
 - AI work has to survive device changes and handoff
 
-Copilot helps a developer type and think faster. Wemux helps a team route, execute, inspect, and continue AI work in real environments.
+Copilot helps a developer type and think faster. Oxmux helps a team route, execute, inspect, and continue AI work in real environments.
 
 ## Side-by-side
 
-| Dimension | GitHub Copilot | Wemux |
+| Dimension | GitHub Copilot | Oxmux |
 | --- | --- | --- |
 | Product shape | AI coding assistant integrated into existing workflows | Worker-routed AI coding delivery system |
 | Best fit | Developers improving local coding speed | Teams operationalizing AI work across machines |
@@ -42,13 +42,13 @@ Copilot helps a developer type and think faster. Wemux helps a team route, execu
 
 Choose GitHub Copilot if your main need is lightweight AI acceleration inside the development workflow you already have.
 
-Choose Wemux if your main need is turning AI coding into a visible, routed, reviewable execution system.
+Choose Oxmux if your main need is turning AI coding into a visible, routed, reviewable execution system.
 
 ## Why teams may use both
 
 These products are not mutually exclusive in every workflow.
 
-Many teams may still use Copilot inside the editor while also needing Wemux for:
+Many teams may still use Copilot inside the editor while also needing Oxmux for:
 
 - routed agent execution
 - task continuity

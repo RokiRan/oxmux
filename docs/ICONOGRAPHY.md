@@ -2,7 +2,7 @@
 
 ## Decision
 
-Wemux uses `lucide-react` as the only general-purpose product icon library.
+Oxmux uses `lucide-react` as the only general-purpose product icon library.
 It already ships in the web bundle and is used throughout the application, so
 adding a second general icon set would create mixed stroke weight, corner
 geometry, naming, and bundle behavior.

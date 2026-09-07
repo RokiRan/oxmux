@@ -9,8 +9,8 @@ import { useEffect } from 'react'
 export const Route = createFileRoute('/docs/')({
   head: () => ({
     meta: [
-      { title: 'Wemux Docs' },
-      { name: 'description', content: 'Wemux documentation: AI coding delivery platform docs.' },
+      { title: 'Oxmux Docs' },
+      { name: 'description', content: 'Oxmux documentation: AI coding delivery platform docs.' },
       { name: 'robots', content: 'index, follow' },
     ],
   }),

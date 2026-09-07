@@ -62,14 +62,14 @@ const desktopSandboxCommandSchema = desktopSandboxScopeSchema.extend({
 })
 
 const buildAgentUsageHint = () => [
-  'Agent can operate the wemux Desktop Sandbox through the local worker CLI:',
+  'Agent can operate the oxmux Desktop Sandbox through the local worker CLI:',
   '```bash',
-  'if [ -n "${WEMUX_WORKER_RUNNER:-}" ] && [ -n "${WEMUX_WORKER_ENTRY:-}" ]; then',
-  '  "$WEMUX_WORKER_RUNNER" "$WEMUX_WORKER_ENTRY" desktop-sandbox status',
-  'elif [ -n "${WEMUX_WORKER_LAUNCHER:-}" ]; then',
-  '  "$WEMUX_WORKER_LAUNCHER" desktop-sandbox status',
+  'if [ -n "${OXMUX_WORKER_RUNNER:-}" ] && [ -n "${OXMUX_WORKER_ENTRY:-}" ]; then',
+  '  "$OXMUX_WORKER_RUNNER" "$OXMUX_WORKER_ENTRY" desktop-sandbox status',
+  'elif [ -n "${OXMUX_WORKER_LAUNCHER:-}" ]; then',
+  '  "$OXMUX_WORKER_LAUNCHER" desktop-sandbox status',
   'else',
-  '  wemux-worker desktop-sandbox status',
+  '  oxmux-worker desktop-sandbox status',
   'fi',
   '```',
   'Useful subcommands: `start`, `stop`, `command --command "..."`, `read-file --path ...`, `write-file --path ... --content ...`, `action --action terminal`, `cli-command --command "..."`.',
@@ -90,7 +90,7 @@ const describeTunnelUrl = (value: string) => {
 
 const DESKTOP_PREVIEW_PURPOSE = 'desktop' as const
 const DEFAULT_NOVNC_WEBSOCKET_PATH = 'websockify'
-const LOCAL_DESKTOP_PREVIEW_BASE_HOST = 'wemux.localtest.me'
+const LOCAL_DESKTOP_PREVIEW_BASE_HOST = 'oxmux.localtest.me'
 const DEFAULT_LOCAL_DESKTOP_SERVER_PORT = '18989'
 const DEFAULT_LOCAL_DESKTOP_WEB_PORT = '15173'
 
@@ -178,7 +178,7 @@ const isLocaltestHost = (host: string) => {
 const getConfiguredLocalDesktopServerPort = () => {
   const candidates = [
     process.env.HYBRID_SERVER_PORT,
-    getEnv('WEMUX_SERVER_PORT'),
+    getEnv('OXMUX_SERVER_PORT'),
     process.env.PORT,
   ]
 

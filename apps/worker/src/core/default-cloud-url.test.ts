@@ -3,30 +3,30 @@ import test from 'node:test'
 import {
   LEGACY_PREVIEW_CLOUD_URL,
   LEGACY_PRODUCTION_CLOUD_URL,
-  WEMUX_PREVIEW_CLOUD_URL,
-  WEMUX_PRODUCTION_CLOUD_URL,
+  OXMUX_PREVIEW_CLOUD_URL,
+  OXMUX_PRODUCTION_CLOUD_URL,
   __setReachabilityProbeForTest,
   resolveDefaultCloudUrl,
   warmDefaultCloudUrlFallback,
 } from './default-cloud-url'
 
-test('resolveDefaultCloudUrl keeps wemux default when the wemux domain is reachable', async () => {
+test('resolveDefaultCloudUrl keeps oxmux default when the oxmux domain is reachable', async () => {
   __setReachabilityProbeForTest(async () => true)
   try {
     await warmDefaultCloudUrlFallback()
-    assert.equal(resolveDefaultCloudUrl(WEMUX_PRODUCTION_CLOUD_URL), WEMUX_PRODUCTION_CLOUD_URL)
-    assert.equal(resolveDefaultCloudUrl(WEMUX_PREVIEW_CLOUD_URL), WEMUX_PREVIEW_CLOUD_URL)
+    assert.equal(resolveDefaultCloudUrl(OXMUX_PRODUCTION_CLOUD_URL), OXMUX_PRODUCTION_CLOUD_URL)
+    assert.equal(resolveDefaultCloudUrl(OXMUX_PREVIEW_CLOUD_URL), OXMUX_PREVIEW_CLOUD_URL)
   } finally {
     __setReachabilityProbeForTest(null)
   }
 })
 
-test('resolveDefaultCloudUrl falls back to vibemux defaults when wemux is unreachable', async () => {
+test('resolveDefaultCloudUrl falls back to vibemux defaults when oxmux is unreachable', async () => {
   __setReachabilityProbeForTest(async () => false)
   try {
     await warmDefaultCloudUrlFallback()
-    assert.equal(resolveDefaultCloudUrl(WEMUX_PRODUCTION_CLOUD_URL), LEGACY_PRODUCTION_CLOUD_URL)
-    assert.equal(resolveDefaultCloudUrl(WEMUX_PREVIEW_CLOUD_URL), LEGACY_PREVIEW_CLOUD_URL)
+    assert.equal(resolveDefaultCloudUrl(OXMUX_PRODUCTION_CLOUD_URL), LEGACY_PRODUCTION_CLOUD_URL)
+    assert.equal(resolveDefaultCloudUrl(OXMUX_PREVIEW_CLOUD_URL), LEGACY_PREVIEW_CLOUD_URL)
   } finally {
     __setReachabilityProbeForTest(null)
   }

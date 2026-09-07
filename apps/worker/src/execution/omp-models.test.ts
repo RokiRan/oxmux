@@ -35,10 +35,10 @@ const seedProfileDefaultModel = (home: string, profile: string, defaultModel: st
 
 test('empty configured profile reads default model from the actingUserId-derived profile', () => {
   withTempHome((home) => {
-    seedProfileDefaultModel(home, 'wemux-user-abc', 'derived-provider/derived-model')
+    seedProfileDefaultModel(home, 'oxmux-user-abc', 'derived-provider/derived-model')
     // 与 listWorkerAvailableOmpModels 完全相同的解析式：空配置 → 派生 profile
     const profile = resolveOmpProfile({ _runtime: 'Omp', defaultModel: '', profile: '' }, 'user-abc')
-    assert.equal(profile, 'wemux-user-abc')
+    assert.equal(profile, 'oxmux-user-abc')
     assert.equal(readLocalOmpDefaultModel(resolveOmpAgentDir(profile)), 'derived-provider/derived-model')
   })
 })
@@ -46,7 +46,7 @@ test('empty configured profile reads default model from the actingUserId-derived
 test('explicit profile reads default model from that profile, ignoring the derived one', () => {
   withTempHome((home) => {
     seedProfileDefaultModel(home, 'team-shared', 'shared-provider/shared-model')
-    seedProfileDefaultModel(home, 'wemux-user-abc', 'derived-provider/derived-model')
+    seedProfileDefaultModel(home, 'oxmux-user-abc', 'derived-provider/derived-model')
     const profile = resolveOmpProfile({ _runtime: 'Omp', defaultModel: '', profile: 'team-shared' }, 'user-abc')
     assert.equal(profile, 'team-shared')
     assert.equal(readLocalOmpDefaultModel(resolveOmpAgentDir(profile)), 'shared-provider/shared-model')

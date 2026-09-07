@@ -480,7 +480,7 @@ export const sendExecutorLatencyProbe = (executorId: string, socket?: ExecutorSo
 
 const TERMINAL_DEBUG_PREFIX = '[server][terminal]'
 const TERMINAL_DEBUG_ENABLED = ['1', 'true', 'yes', 'on'].includes(
-  (getEnv('WEMUX_TERMINAL_DEBUG') ?? '').trim().toLowerCase(),
+  (getEnv('OXMUX_TERMINAL_DEBUG') ?? '').trim().toLowerCase(),
 )
 
 const previewValue = (value?: unknown) => {

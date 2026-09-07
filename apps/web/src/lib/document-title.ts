@@ -1,5 +1,5 @@
 const DEV_TITLE_PREFIX = '【DEV】'
-const DEFAULT_APP_TITLE = 'Wemux'
+const DEFAULT_APP_TITLE = 'Oxmux'
 
 export function getDefaultDocumentTitle() {
   return withDevDocumentTitlePrefix(DEFAULT_APP_TITLE)

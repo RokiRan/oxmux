@@ -2,11 +2,11 @@
 
 > 更新时间：2026-05-15
 
-这份文档描述 Wemux 当前的 `worker-only coding runtime` 架构，以及 4 个 coding agent 在会话续接、MCP、Skill、模型绑定上的真实状态。
+这份文档描述 Oxmux 当前的 `worker-only coding runtime` 架构，以及 4 个 coding agent 在会话续接、MCP、Skill、模型绑定上的真实状态。
 
 ## 1. 当前结论
 
-- Wemux 已经是明确的 `worker-only execution` 架构。
+- Oxmux 已经是明确的 `worker-only execution` 架构。
 - `server` 负责控制面、状态持久化、权限、调度和执行快照组装。
 - `apps/worker` 负责本地仓库、runtime readiness、Skill 物化、MCP 注入、CLI/SDK 调用、native session 续接和结果回传。
 - 4 个 coding runtime 现在都已经进入统一底座：
@@ -87,8 +87,8 @@ runtime 上下文准备在：
 
 Pi 的 preparation 额外会注入：
 
-- `WEMUX_PI_AGENT_DIR`
-- `WEMUX_PI_SKILL_PATHS`
+- `OXMUX_PI_AGENT_DIR`
+- `OXMUX_PI_SKILL_PATHS`
 
 这让 Pi runner 可以在不依赖默认 CLI 目录猜测的情况下，显式拿到：
 
@@ -140,7 +140,7 @@ Pi 的 MCP bridge 在：
 
 桥接原则：
 
-- 复用 Wemux 已经解析好的 MCP server 定义
+- 复用 Oxmux 已经解析好的 MCP server 定义
 - 在 worker 里实时连接 MCP server
 - 将远端 MCP tool 暴露为 Pi `customTools`
 - 会话结束后统一关闭 MCP client
@@ -172,17 +172,17 @@ Pi 会话准备在：
 当前行为：
 
 - `agentDir` 按以下优先级解析：
-  - 执行级 `WEMUX_PI_AGENT_DIR`
+  - 执行级 `OXMUX_PI_AGENT_DIR`
   - `agentSettings.Pi.agentDir`
   - `workerConfig.piAgentDir`
   - `~/.pi/agent`
 - Pi 会话目录不再依赖默认 CLI 路径，而是固定落到：
-  - `agentDir/sessions-wemux/<agentDir+cwd hash>`
+  - `agentDir/sessions-oxmux/<agentDir+cwd hash>`
 - 执行模型会优先走 canonical `provider/model`
 - 如果 worker 运行时提供了自定义 `baseUrl` 或模型不在当前 `models.json` 中，会生成 overlay `models.json`
 - API key 会通过 `AuthStorage.setRuntimeApiKey()` 注入 runtime 作用域
 
-这保证了 Pi 在 Wemux 中具备：
+这保证了 Pi 在 Oxmux 中具备：
 
 - 稳定的会话续接路径
 - 可控的模型/provider 覆盖能力
@@ -300,9 +300,9 @@ Pi 导出能力包括：
 
 Pi inspect 现在不仅会扫默认 `sessions` 目录，也会扫：
 
-- `agentDir/sessions-wemux`
+- `agentDir/sessions-oxmux`
 
-因此 worker console 可以看到 Wemux 自己管理的 Pi 会话，而不是只看到 Pi 默认 CLI 会话。
+因此 worker console 可以看到 Oxmux 自己管理的 Pi 会话，而不是只看到 Pi 默认 CLI 会话。
 
 ## 12. Runtime 能力矩阵
 
@@ -319,7 +319,7 @@ Pi inspect 现在不仅会扫默认 `sessions` 目录，也会扫：
 
 统一原则：
 
-- Wemux 默认同步的是 `worker managed config`，不是直接复制宿主机 `~/.agent-home`。
+- Oxmux 默认同步的是 `worker managed config`，不是直接复制宿主机 `~/.agent-home`。
 - 真正执行时始终物化临时 runtime home，并把本次执行需要的配置、Skill、MCP、env 注入进去。
 - 只有用户显式从模型库切换模型时，才覆盖 runtime 默认模型/provider；否则优先尊重同步过来的本地 runtime 配置。
 - 高敏感凭证优先走“运行时环境变量注入”，不默认复制或中央托管原始认证文件。
@@ -349,4 +349,4 @@ Pi inspect 现在不仅会扫默认 `sessions` 目录，也会扫：
 
 ## 14. 一句话总结
 
-Wemux 的 worker agent 架构为多个 coding runtime 提供统一的会话续接、Skill 注入、MCP 注入、模型导出和本地会话观测链路。
+Oxmux 的 worker agent 架构为多个 coding runtime 提供统一的会话续接、Skill 注入、MCP 注入、模型导出和本地会话观测链路。

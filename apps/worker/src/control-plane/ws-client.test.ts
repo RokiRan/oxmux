@@ -42,7 +42,7 @@ class FakeWebSocket {
 }
 
 const createWorkerConfig = (): WorkerConfig => ({
-  cloudUrl: 'https://wemux.xyz',
+  cloudUrl: 'https://oxmux.xyz',
   machineId: 'machine-1',
   machineName: 'worker-test',
   executorId: 'executor-1',

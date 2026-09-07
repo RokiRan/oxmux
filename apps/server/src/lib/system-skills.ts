@@ -5,15 +5,15 @@ import {
   type SkillSelectionPolicy,
 } from '@shared/skill'
 
-export const WEMUX_YML_SYSTEM_SKILL_SLUG = 'wemux-yml'
-export const WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG = 'vibemux-desktop-sandbox'
-export const WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG = 'vibemux-test-agent'
-export const WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG = 'vibemux-agent-ops'
-export const WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG = 'vibemux-drive-writeback'
-export const WEMUX_MEMORY_SYSTEM_SKILL_SLUG = 'vibemux-memory'
+export const OXMUX_YML_SYSTEM_SKILL_SLUG = 'oxmux-yml'
+export const OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG = 'vibemux-desktop-sandbox'
+export const OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG = 'vibemux-test-agent'
+export const OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG = 'vibemux-agent-ops'
+export const OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG = 'vibemux-drive-writeback'
+export const OXMUX_MEMORY_SYSTEM_SKILL_SLUG = 'vibemux-memory'
 
-export const WEMUX_AGENT_OPS_REQUIRED_INSTRUCTION =
-  `每轮都必须先读取并遵循 @${WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG}；涉及 wemux 产品状态或协作时，优先使用 wemux 工具。`
+export const OXMUX_AGENT_OPS_REQUIRED_INSTRUCTION =
+  `每轮都必须先读取并遵循 @${OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG}；涉及 oxmux 产品状态或协作时，优先使用 oxmux 工具。`
 
 type SystemSkillDefinition = {
   name: string
@@ -36,24 +36,24 @@ const buildUtf8File = (content: string): SkillFileContent => ({
   content,
 })
 
-const WEMUX_YML_SKILL_MARKDOWN = `---
-name: wemux YML
-description: Create or update the repo-root .wemux.yml environment template that wemux imports for workspace start, stop, app ports, health path, logs, and preview networking.
+const OXMUX_YML_SKILL_MARKDOWN = `---
+name: oxmux YML
+description: Create or update the repo-root .oxmux.yml environment template that oxmux imports for workspace start, stop, app ports, health path, logs, and preview networking.
 ---
 
-# wemux YML
+# oxmux YML
 
 Use this skill when the user asks to create, fix, explain, or update any of these:
-- \`wemux.yml\`
-- \`wemux.yml\`
-- \`.wemux.yml\`
-- wemux environment template
+- \`oxmux.yml\`
+- \`oxmux.yml\`
+- \`.oxmux.yml\`
+- oxmux environment template
 - workspace start/stop/app port/health path/logs config
 
 ## Important naming
 
-- The real file consumed by wemux is \`.wemux.yml\` in the repository root.
-- If the user says \`wemux.yml\` without the leading dot, still write \`.vibemux.yml\` unless they explicitly ask for a different filename.
+- The real file consumed by oxmux is \`.oxmux.yml\` in the repository root.
+- If the user says \`oxmux.yml\` without the leading dot, still write \`.vibemux.yml\` unless they explicitly ask for a different filename.
 
 ## Required behavior
 
@@ -63,14 +63,14 @@ Use this skill when the user asks to create, fix, explain, or update any of thes
 - Quote all command, port, and path values.
 - Prefer \`{{worktree.path}}\` over hardcoded absolute paths.
 - Ports must be dynamic per-worktree expressions, never literal numbers. In \`start\`, \`stop\`, \`appPort\`, and each \`ports[].port\`, use a deterministic helper such as \`{{add worktree.unique_id BASE_PORT}}\`.
-- Do not write localhost URLs in \`.wemux.yml\`. wemux derives internal source URLs from ports and exposes public domains through Preview / Public Networking.
+- Do not write localhost URLs in \`.oxmux.yml\`. oxmux derives internal source URLs from ports and exposes public domains through Preview / Public Networking.
 - Health is a path on the primary app port. Use \`healthPath: "/health"\`, not a separate health port or URL.
 - If the dev command cannot accept a port flag and you cannot make the port dynamic, ask the user before writing any port value. Never silently hardcode a literal port.
 - If a field cannot be inferred confidently, omit that optional field instead of inventing a wrong command.
 
 ## Port strategy
 
-- Every port you write must be a dynamic per-worktree expression using \`{{add worktree.unique_id BASE_PORT}}\`. Literal numeric ports are not allowed anywhere in \`.wemux.yml\`.
+- Every port you write must be a dynamic per-worktree expression using \`{{add worktree.unique_id BASE_PORT}}\`. Literal numeric ports are not allowed anywhere in \`.oxmux.yml\`.
 - For Vite, Next.js, Remix, Astro, SvelteKit, Storybook, and similar dev servers, pass the dynamic port into the CLI's port flag.
 - Keep the same rendered port expression everywhere the service is referenced. For example, if \`start\` uses \`{{add worktree.unique_id 3000}}\`, then \`stop\` and \`appPort\` must use the same expression.
 - Pick a conventional base port for the framework, then add \`worktree.unique_id\`: Vite-style apps often use \`3000\` or \`5173\`, Next.js often uses \`3000\`, Storybook often uses \`6006\`.
@@ -88,7 +88,7 @@ Open \`references/schema.md\` for the exact supported keys and rendering helpers
 2. Infer the smallest correct install command.
 3. Infer a start/stop pair that works per worktree.
 4. Add appPort/healthPath/logs/ports only when they are grounded in the repo.
-5. Write \`.wemux.yml\` at the repo root.
+5. Write \`.oxmux.yml\` at the repo root.
 6. In the reply, mention any assumptions or fields you intentionally left out.
 
 
@@ -97,12 +97,12 @@ Open \`references/schema.md\` for the exact supported keys and rendering helpers
 Open \`references/examples.md\` when you need starter patterns for pnpm/npm/docker-compose style repos.
 `
 
-const WEMUX_YML_SCHEMA_REFERENCE = `# .wemux.yml schema used by wemux
+const OXMUX_YML_SCHEMA_REFERENCE = `# .oxmux.yml schema used by oxmux
 
 The file must live at the repository root and be named exactly:
 
 \`\`\`text
-.wemux.yml
+.oxmux.yml
 \`\`\`
 
 Current supported shape:
@@ -123,8 +123,8 @@ environment:
 
 Rules that matter:
 
-- \`start\` or \`appPort\` is required for wemux to import the template. In normal app projects, write both.
-- \`appPort\` is the primary app port. wemux derives the internal app URL from it.
+- \`start\` or \`appPort\` is required for oxmux to import the template. In normal app projects, write both.
+- \`appPort\` is the primary app port. oxmux derives the internal app URL from it.
 - \`healthPath\` is a path on \`appPort\`, such as \`/health\`. Do not write a health URL or health port.
 - \`ports\` is a YAML list for additional previewable services. Each entry supports \`id\`, \`port\`, \`note\`, optional \`domain\`, and optional \`type\`.
 - Quote command, port, and path values.
@@ -141,7 +141,7 @@ Supported template values:
 - \`{{project.name}}\`
 - \`{{project.slug}}\`
 
-\`{{environment.slug}}\` is the preferred stable, command-safe identifier for per-workspace runtime resources such as Docker Compose project names, tmux sessions, temp directories, or log prefixes. Keep tool-specific naming decisions in the command itself instead of assuming wemux manages that tool.
+\`{{environment.slug}}\` is the preferred stable, command-safe identifier for per-workspace runtime resources such as Docker Compose project names, tmux sessions, temp directories, or log prefixes. Keep tool-specific naming decisions in the command itself instead of assuming oxmux manages that tool.
 
 Supported math helpers:
 
@@ -150,7 +150,7 @@ Supported math helpers:
 - \`{{mul worktree.unique_id 10}}\`
 `
 
-const WEMUX_YML_EXAMPLES_REFERENCE = `# Example .wemux.yml patterns
+const OXMUX_YML_EXAMPLES_REFERENCE = `# Example .oxmux.yml patterns
 
 Use these as starting points only after checking the real repo.
 
@@ -209,19 +209,19 @@ environment:
 When the repo already has explicit \`start\`, \`stop\`, \`dev\`, or \`logs\` scripts, prefer those over generic fallbacks.
 `
 
-const WEMUX_AGENT_OPS_SKILL_MARKDOWN = `---
-name: wemux-agent-ops
-description: Required collaboration protocol for every wemux Agent. Use on every turn involving wemux projects, tasks, comments, mentions, workspaces, Agent events, execution, waiting, delivery, direct chat, or group chat; prefer wemux product tools and server state over ad hoc filesystem or shell discovery.
+const OXMUX_AGENT_OPS_SKILL_MARKDOWN = `---
+name: oxmux-agent-ops
+description: Required collaboration protocol for every oxmux Agent. Use on every turn involving oxmux projects, tasks, comments, mentions, workspaces, Agent events, execution, waiting, delivery, direct chat, or group chat; prefer oxmux product tools and server state over ad hoc filesystem or shell discovery.
 ---
 
-# wemux Agent Collaboration
+# oxmux Agent Collaboration
 
-这是所有 wemux Agent 的强制协作协议。先遵循本协议，再应用角色专属指令和其他任务 Skill。
+这是所有 oxmux Agent 的强制协作协议。先遵循本协议，再应用角色专属指令和其他任务 Skill。
 
 ## 核心顺序
 
 1. 识别当前是普通对话、任务事件、评论 Mention、工作区执行还是外部等待。
-2. 涉及 wemux 对象或状态时，先用 wemux 产品工具读取服务端真实状态。
+2. 涉及 oxmux 对象或状态时，先用 oxmux 产品工具读取服务端真实状态。
 3. 涉及项目文件或执行时，遵循工作区原则。
 4. 委派执行后读取工作区会话的实际输出和结论，不要只看任务顶层状态。
 5. 需要外部结果时等待；已经可交付时原子地写回一次交付。
@@ -239,13 +239,13 @@ description: Required collaboration protocol for every wemux Agent. Use on every
 
 不要把 \`project.workspaceId\`、执行 \`workspaceId\`、\`workspaceSessionId\`、\`taskId\` 或 runtime session id 混为一谈。
 
-## wemux 工具优先
+## oxmux 工具优先
 
-- 查询或修改 Project、Task、Workspace、Session、评论、Agent Inbox 与交付时，使用当前运行时提供的 wemux 工具。
+- 查询或修改 Project、Task、Workspace、Session、评论、Agent Inbox 与交付时，使用当前运行时提供的 oxmux 工具。
 - 工具描述名通常是 \`task.get\`；Pi 的实际函数名通常是 \`vibemux__task_get\`。以当前函数工具列表中的真实名称和 schema 为准。
-- 不要用 bash、curl、端口扫描、数据库查询或本地文件来猜测、绕过或替代 wemux 控制面。
+- 不要用 bash、curl、端口扫描、数据库查询或本地文件来猜测、绕过或替代 oxmux 控制面。
 - 服务端状态是权威来源。浏览器状态、聊天记忆和本地目录只能作为线索。
-- 如果所需 wemux 工具未挂载或返回错误，直接说明真实错误，不要伪造成功或静默降级。
+- 如果所需 oxmux 工具未挂载或返回错误，直接说明真实错误，不要伪造成功或静默降级。
 
 执行具体平台操作前，按需读取 \`references/mcp-tools-full.md\`。
 
@@ -287,7 +287,7 @@ description: Required collaboration protocol for every wemux Agent. Use on every
 
 Main Chat、Direct Chat、Group Chat 和外部渠道消息里的项目仓库工作，优先走 Task + Workspace Session：那里才有正确仓库上下文、隔离 worktree 和可追溯执行记录。工作不涉及项目仓库，或没有关联项目、没有可用 Workspace 时，可以直接在当前 Agent 的默认工作目录完成，不必硬造 Task。
 
-不要在项目原目录中修改项目文件或执行 Git。禁止扫描或复用 \`~/.wemux*\` 中其他任务留下的历史工作区目录。Agent Home 只用于 Agent 自己的长期文件，不用于代替项目工作区。
+不要在项目原目录中修改项目文件或执行 Git。禁止扫描或复用 \`~/.oxmux*\` 中其他任务留下的历史工作区目录。Agent Home 只用于 Agent 自己的长期文件，不用于代替项目工作区。
 
 ## 云盘文件（Drive）
 
@@ -326,7 +326,7 @@ Main Chat、Direct Chat、Group Chat 和外部渠道消息里的项目仓库工�
 - 不要代表其他 Agent 声称它已完成；读取它的工作区会话或交付记录后再总结。
 `
 
-const WEMUX_AGENT_OPS_MCP_REFERENCE = `# wemux MCP collaboration tools
+const OXMUX_AGENT_OPS_MCP_REFERENCE = `# oxmux MCP collaboration tools
 
 以当前运行时的函数工具列表和 input schema 为准。本参考只定义稳定协作语义，不替代运行时工具发现。
 
@@ -412,12 +412,12 @@ Agent 运行时会自动绑定当前 Agent；普通 MCP 调用 \`task.comment.ad
 - 只有明确可恢复的执行失败才使用 \`task.retry_execution\`；先读取原 run 的失败原因。
 `
 
-const WEMUX_DESKTOP_SANDBOX_SKILL_MARKDOWN = `---
-name: wemux Desktop Sandbox
-description: Use wemux worker's optional Desktop Sandbox only when a task needs an isolated Linux desktop, noVNC observation, or commands inside a sandbox.
+const OXMUX_DESKTOP_SANDBOX_SKILL_MARKDOWN = `---
+name: oxmux Desktop Sandbox
+description: Use oxmux worker's optional Desktop Sandbox only when a task needs an isolated Linux desktop, noVNC observation, or commands inside a sandbox.
 ---
 
-# wemux Desktop Sandbox
+# oxmux Desktop Sandbox
 
 Use this skill only when the task specifically benefits from an isolated Linux desktop, visual noVNC observation, or running commands inside the worker-selected Desktop Sandbox provider.
 
@@ -433,17 +433,17 @@ Use this skill only when the task specifically benefits from an isolated Linux d
 Open \`references/commands.md\` for the command wrapper and common subcommands.
 `
 
-const WEMUX_DESKTOP_SANDBOX_COMMANDS_REFERENCE = `# Desktop Sandbox commands
+const OXMUX_DESKTOP_SANDBOX_COMMANDS_REFERENCE = `# Desktop Sandbox commands
 
 Use the worker-provided launcher when available:
 
 \`\`\`bash
-if [ -n "\${WEMUX_WORKER_RUNNER:-}" ] && [ -n "\${WEMUX_WORKER_ENTRY:-}" ]; then
-  "\$WEMUX_WORKER_RUNNER" "\$WEMUX_WORKER_ENTRY" desktop-sandbox status
-elif [ -n "\${WEMUX_WORKER_LAUNCHER:-}" ]; then
-  "\$WEMUX_WORKER_LAUNCHER" desktop-sandbox status
+if [ -n "\${OXMUX_WORKER_RUNNER:-}" ] && [ -n "\${OXMUX_WORKER_ENTRY:-}" ]; then
+  "\$OXMUX_WORKER_RUNNER" "\$OXMUX_WORKER_ENTRY" desktop-sandbox status
+elif [ -n "\${OXMUX_WORKER_LAUNCHER:-}" ]; then
+  "\$OXMUX_WORKER_LAUNCHER" desktop-sandbox status
 else
-  wemux-worker desktop-sandbox status
+  oxmux-worker desktop-sandbox status
 fi
 \`\`\`
 
@@ -459,12 +459,12 @@ Common subcommands:
 - \`cli-command --command "..."\`
 `
 
-const WEMUX_TEST_AGENT_SKILL_MARKDOWN = `---
-name: wemux Test Agent
+const OXMUX_TEST_AGENT_SKILL_MARKDOWN = `---
+name: oxmux Test Agent
 description: Run and test projects inside Desktop Sandbox with visual observation and UI automation.
 ---
 
-# wemux Test Agent
+# oxmux Test Agent
 
 Use this skill when the user asks to run the project and see it in a browser, test the UI visually, run automated UI tests, take screenshots, or generate test reports.
 
@@ -500,13 +500,13 @@ The worker automatically mounts the worktree when starting the sandbox from a wo
 ### Run dev server
 
 \`\`\`bash
-$WEMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm run dev &"
+$OXMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm run dev &"
 \`\`\`
 
 ### Run tests
 
 \`\`\`bash
-$WEMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm test"
+$OXMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm test"
 \`\`\`
 
 ## Best Practices
@@ -518,7 +518,7 @@ $WEMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/works
 - The workspace is mounted at /home/desktop/workspace inside the sandbox.
 `
 
-const WEMUX_TEST_AGENT_COMMANDS_REFERENCE = `# Test Agent commands
+const OXMUX_TEST_AGENT_COMMANDS_REFERENCE = `# Test Agent commands
 
 Test Agent uses the same Desktop Sandbox command interface.
 
@@ -529,34 +529,34 @@ See the Desktop Sandbox \`references/commands.md\` for the full command list.
 ### Install test dependencies
 
 \`\`\`bash
-$WEMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm install"
+$OXMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm install"
 \`\`\`
 
 ### Start dev server (background)
 
 \`\`\`bash
-$WEMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm run dev &"
+$OXMUX_WORKER_LAUNCHER desktop-sandbox command --command "cd /home/desktop/workspace && npm run dev &"
 \`\`\`
 
 ### Wait for server ready
 
 \`\`\`bash
-$WEMUX_WORKER_LAUNCHER desktop-sandbox command --command "for i in $(seq 1 30); do curl -s http://localhost:3000 > /dev/null 2>&1 && break; sleep 2; done"
+$OXMUX_WORKER_LAUNCHER desktop-sandbox command --command "for i in $(seq 1 30); do curl -s http://localhost:3000 > /dev/null 2>&1 && break; sleep 2; done"
 \`\`\`
 
 ### Read test output
 
 \`\`\`bash
-$WEMUX_WORKER_LAUNCHER desktop-sandbox read-file --path /home/desktop/workspace/test-results/output.json
+$OXMUX_WORKER_LAUNCHER desktop-sandbox read-file --path /home/desktop/workspace/test-results/output.json
 \`\`\`
 `
 
-const WEMUX_MEMORY_SKILL_MARKDOWN = `---
-name: wemux-memory
+const OXMUX_MEMORY_SKILL_MARKDOWN = `---
+name: oxmux-memory
 description: 长期记忆读写纪律。个人记忆（云盘 soul.md / USER.md / MEMORY.md，fileId 见系统上下文）与项目记忆（项目根目录 AGENTS.md）。自主记录可复用的用户偏好、项目约定与踩坑。
 ---
 
-# Wemux Agent Memory
+# Oxmux Agent Memory
 
 你有两层长期记忆，跨会话保留：
 
@@ -587,12 +587,12 @@ description: 长期记忆读写纪律。个人记忆（云盘 soul.md / USER.md 
 - 不要往记忆里写密钥、token、密码等敏感凭据。
 `
 
-const WEMUX_DRIVE_WRITEBACK_SKILL_MARKDOWN = `---
-name: wemux-drive-writeback
+const OXMUX_DRIVE_WRITEBACK_SKILL_MARKDOWN = `---
+name: oxmux-drive-writeback
 description: Read and write back Drive cloud-storage file references attached to your session (kind=drive attachments carry a driveFileId). Use when a user sends a Drive file into the conversation and asks you to edit or update it.
 ---
 
-# wemux Drive 写回（Drive Writeback）
+# oxmux Drive 写回（Drive Writeback）
 
 会话中的 **Drive 引用附件**（
 kind=\`drive\`）不是上传副本：它指向云盘（Drive）里的原文件。你可以读取它，修改后用 \`drive.write_file\` **直接覆盖写回原文件**。
@@ -610,7 +610,7 @@ kind=\`drive\`）不是上传副本：它指向云盘（Drive）里的原文件�
 
 ## 读取
 
-用 wemux MCP 的 \`drive.read_file\` 读取原文件内容（Markdown / HTML / 纯文本）：
+用 oxmux MCP 的 \`drive.read_file\` 读取原文件内容（Markdown / HTML / 纯文本）：
 
 \`\`\`
 drive.read_file({ fileId: "<driveFileId>" })
@@ -641,11 +641,11 @@ drive.write_file({
 
 const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
   {
-    name: 'wemux Agent Collaboration',
-    slug: WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
-    description: 'Required collaboration protocol for every wemux Agent, including tasks, comments, workspaces, waits, and delivery.',
-    markdown: WEMUX_AGENT_OPS_SKILL_MARKDOWN,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG),
+    name: 'oxmux Agent Collaboration',
+    slug: OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
+    description: 'Required collaboration protocol for every oxmux Agent, including tasks, comments, workspaces, waits, and delivery.',
+    markdown: OXMUX_AGENT_OPS_SKILL_MARKDOWN,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG),
     enabled: true,
     sourceType: 'manual',
     visibility: 'private',
@@ -654,16 +654,16 @@ const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
     trustLevel: 'markdown_only',
     compatibility: 'compatible',
     files: {
-      'SKILL.md': buildUtf8File(WEMUX_AGENT_OPS_SKILL_MARKDOWN),
-      'references/mcp-tools-full.md': buildUtf8File(WEMUX_AGENT_OPS_MCP_REFERENCE),
+      'SKILL.md': buildUtf8File(OXMUX_AGENT_OPS_SKILL_MARKDOWN),
+      'references/mcp-tools-full.md': buildUtf8File(OXMUX_AGENT_OPS_MCP_REFERENCE),
     },
   },
   {
-    name: 'wemux YML',
-    slug: WEMUX_YML_SYSTEM_SKILL_SLUG,
-    description: 'Write or update the repo-root .wemux.yml environment template for wemux projects.',
-    markdown: WEMUX_YML_SKILL_MARKDOWN,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_YML_SYSTEM_SKILL_SLUG),
+    name: 'oxmux YML',
+    slug: OXMUX_YML_SYSTEM_SKILL_SLUG,
+    description: 'Write or update the repo-root .oxmux.yml environment template for oxmux projects.',
+    markdown: OXMUX_YML_SKILL_MARKDOWN,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_YML_SYSTEM_SKILL_SLUG),
     enabled: true,
     sourceType: 'manual',
     visibility: 'private',
@@ -672,17 +672,17 @@ const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
     trustLevel: 'markdown_only',
     compatibility: 'compatible',
     files: {
-      'SKILL.md': buildUtf8File(WEMUX_YML_SKILL_MARKDOWN),
-      'references/schema.md': buildUtf8File(WEMUX_YML_SCHEMA_REFERENCE),
-      'references/examples.md': buildUtf8File(WEMUX_YML_EXAMPLES_REFERENCE),
+      'SKILL.md': buildUtf8File(OXMUX_YML_SKILL_MARKDOWN),
+      'references/schema.md': buildUtf8File(OXMUX_YML_SCHEMA_REFERENCE),
+      'references/examples.md': buildUtf8File(OXMUX_YML_EXAMPLES_REFERENCE),
     },
   },
   {
-    name: 'wemux Desktop Sandbox',
-    slug: WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG,
-    description: 'Use the optional Desktop Sandbox from wemux worker when a task needs an isolated Linux desktop or noVNC observation.',
-    markdown: WEMUX_DESKTOP_SANDBOX_SKILL_MARKDOWN,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG),
+    name: 'oxmux Desktop Sandbox',
+    slug: OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG,
+    description: 'Use the optional Desktop Sandbox from oxmux worker when a task needs an isolated Linux desktop or noVNC observation.',
+    markdown: OXMUX_DESKTOP_SANDBOX_SKILL_MARKDOWN,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG),
     enabled: true,
     sourceType: 'manual',
     visibility: 'private',
@@ -691,16 +691,16 @@ const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
     trustLevel: 'markdown_only',
     compatibility: 'compatible',
     files: {
-      'SKILL.md': buildUtf8File(WEMUX_DESKTOP_SANDBOX_SKILL_MARKDOWN),
-      'references/commands.md': buildUtf8File(WEMUX_DESKTOP_SANDBOX_COMMANDS_REFERENCE),
+      'SKILL.md': buildUtf8File(OXMUX_DESKTOP_SANDBOX_SKILL_MARKDOWN),
+      'references/commands.md': buildUtf8File(OXMUX_DESKTOP_SANDBOX_COMMANDS_REFERENCE),
     },
   },
   {
-    name: 'wemux Test Agent',
-    slug: WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Test Agent',
+    slug: OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG,
     description: 'Run and test projects inside Desktop Sandbox with visual observation and UI automation.',
-    markdown: WEMUX_TEST_AGENT_SKILL_MARKDOWN,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG),
+    markdown: OXMUX_TEST_AGENT_SKILL_MARKDOWN,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG),
     enabled: true,
     sourceType: 'manual',
     visibility: 'private',
@@ -709,16 +709,16 @@ const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
     trustLevel: 'markdown_only',
     compatibility: 'compatible',
     files: {
-      'SKILL.md': buildUtf8File(WEMUX_TEST_AGENT_SKILL_MARKDOWN),
-      'references/commands.md': buildUtf8File(WEMUX_TEST_AGENT_COMMANDS_REFERENCE),
+      'SKILL.md': buildUtf8File(OXMUX_TEST_AGENT_SKILL_MARKDOWN),
+      'references/commands.md': buildUtf8File(OXMUX_TEST_AGENT_COMMANDS_REFERENCE),
     },
   },
   {
-    name: 'wemux Drive Writeback',
-    slug: WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Drive Writeback',
+    slug: OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG,
     description: 'Read and write back Drive cloud-storage file references attached to a session (kind=drive attachments); write_file overwrites the original file in place.',
-    markdown: WEMUX_DRIVE_WRITEBACK_SKILL_MARKDOWN,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG),
+    markdown: OXMUX_DRIVE_WRITEBACK_SKILL_MARKDOWN,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG),
     enabled: true,
     sourceType: 'manual',
     visibility: 'private',
@@ -727,15 +727,15 @@ const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
     trustLevel: 'markdown_only',
     compatibility: 'compatible',
     files: {
-      'SKILL.md': buildUtf8File(WEMUX_DRIVE_WRITEBACK_SKILL_MARKDOWN),
+      'SKILL.md': buildUtf8File(OXMUX_DRIVE_WRITEBACK_SKILL_MARKDOWN),
     },
   },
   {
-    name: 'wemux Agent Memory',
-    slug: WEMUX_MEMORY_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Agent Memory',
+    slug: OXMUX_MEMORY_SYSTEM_SKILL_SLUG,
     description: '长期记忆读写纪律：个人记忆（云盘 soul.md / USER.md / MEMORY.md）+ 项目记忆（项目 AGENTS.md）；何时写、怎么写、信任边界。',
-    markdown: WEMUX_MEMORY_SKILL_MARKDOWN,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_MEMORY_SYSTEM_SKILL_SLUG),
+    markdown: OXMUX_MEMORY_SKILL_MARKDOWN,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_MEMORY_SYSTEM_SKILL_SLUG),
     enabled: true,
     sourceType: 'manual',
     visibility: 'private',
@@ -744,46 +744,46 @@ const SYSTEM_SKILL_DEFINITIONS: SystemSkillDefinition[] = [
     trustLevel: 'markdown_only',
     compatibility: 'compatible',
     files: {
-      'SKILL.md': buildUtf8File(WEMUX_MEMORY_SKILL_MARKDOWN),
+      'SKILL.md': buildUtf8File(OXMUX_MEMORY_SKILL_MARKDOWN),
     },
   },
 ]
 
 const REQUIRED_PRIMARY_AGENT_SKILLS: SkillSelectionPolicy[] = [
   {
-    id: 'system-skill-wemux-agent-ops',
-    slug: WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
-    name: 'wemux Agent Collaboration',
-    description: 'Follow the mandatory wemux task, comment, workspace, wait, and delivery collaboration protocol.',
+    id: 'system-skill-oxmux-agent-ops',
+    slug: OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Agent Collaboration',
+    description: 'Follow the mandatory oxmux task, comment, workspace, wait, and delivery collaboration protocol.',
     enabled: true,
     scope: 'agent',
     approvalMode: 'auto',
     tags: ['system', 'vibemux', 'collaboration', 'required'],
   },
   {
-    id: 'system-skill-wemux-yml',
-    slug: WEMUX_YML_SYSTEM_SKILL_SLUG,
-    name: 'wemux YML',
-    description: 'Write or update repository-root .wemux.yml environment templates.',
+    id: 'system-skill-oxmux-yml',
+    slug: OXMUX_YML_SYSTEM_SKILL_SLUG,
+    name: 'oxmux YML',
+    description: 'Write or update repository-root .oxmux.yml environment templates.',
     enabled: true,
     scope: 'agent',
     approvalMode: 'auto',
     tags: ['system', 'vibemux', 'environment'],
   },
   {
-    id: 'system-skill-wemux-desktop-sandbox',
-    slug: WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG,
-    name: 'wemux Desktop Sandbox',
-    description: 'Use wemux worker Desktop Sandbox only for isolated Linux desktop or noVNC tasks.',
+    id: 'system-skill-oxmux-desktop-sandbox',
+    slug: OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Desktop Sandbox',
+    description: 'Use oxmux worker Desktop Sandbox only for isolated Linux desktop or noVNC tasks.',
     enabled: true,
     scope: 'agent',
     approvalMode: 'auto',
     tags: ['system', 'vibemux', 'desktop-sandbox'],
   },
   {
-    id: 'system-skill-wemux-test-agent',
-    slug: WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG,
-    name: 'wemux Test Agent',
+    id: 'system-skill-oxmux-test-agent',
+    slug: OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Test Agent',
     description: 'Run and test projects inside Desktop Sandbox with visual observation and UI automation.',
     enabled: true,
     scope: 'agent',
@@ -791,9 +791,9 @@ const REQUIRED_PRIMARY_AGENT_SKILLS: SkillSelectionPolicy[] = [
     tags: ['system', 'vibemux', 'test-agent', 'testing'],
   },
   {
-    id: 'system-skill-wemux-drive-writeback',
-    slug: WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG,
-    name: 'wemux Drive Writeback',
+    id: 'system-skill-oxmux-drive-writeback',
+    slug: OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Drive Writeback',
     description: 'Read and write back Drive cloud-storage file references attached to a session; write_file overwrites the original file.',
     enabled: true,
     scope: 'agent',
@@ -801,9 +801,9 @@ const REQUIRED_PRIMARY_AGENT_SKILLS: SkillSelectionPolicy[] = [
     tags: ['system', 'vibemux', 'drive', 'writeback'],
   },
   {
-    id: 'system-skill-wemux-memory',
-    slug: WEMUX_MEMORY_SYSTEM_SKILL_SLUG,
-    name: 'wemux Agent Memory',
+    id: 'system-skill-oxmux-memory',
+    slug: OXMUX_MEMORY_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Agent Memory',
     description: '长期记忆读写纪律：个人记忆（云盘 soul/USER/MEMORY）+ 项目记忆（AGENTS.md）；自主记录可复用偏好与约定。',
     enabled: true,
     scope: 'agent',

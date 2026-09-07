@@ -104,7 +104,7 @@ test('official connector materializes to the Vibemux proxy endpoint with workspa
     Authorization: 'Bearer runtime-token',
   })
   const materialized = materializeMcpServersForOpencode(servers, {
-    cloudUrl: 'https://wemux.example',
+    cloudUrl: 'https://oxmux.example',
     executorToken: 'executor-token',
     workspaceId: 'ws-123',
   })
@@ -114,7 +114,7 @@ test('official connector materializes to the Vibemux proxy endpoint with workspa
     headers?: Record<string, string>
   }
   assert.ok(definition)
-  assert.equal(definition.url, 'https://wemux.example/api/connector/mcp')
+  assert.equal(definition.url, 'https://oxmux.example/api/connector/mcp')
   assert.equal(definition.headers?.['Authorization'], 'Bearer runtime-token')
   assert.equal(definition.headers?.['x-vibemux-workspace'], 'ws-123')
 })
@@ -122,7 +122,7 @@ test('official connector materializes to the Vibemux proxy endpoint with workspa
 test('official connector without workspace omits the workspace header', () => {
   const servers = ensureOfficialConnectorMcpServer([], 'http://localhost:13000/mcp')
   const materialized = materializeMcpServersForOpencode(servers, {
-    cloudUrl: 'https://wemux.example',
+    cloudUrl: 'https://oxmux.example',
     executorToken: 'executor-token',
   })
 

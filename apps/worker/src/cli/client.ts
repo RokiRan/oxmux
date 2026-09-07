@@ -1,7 +1,7 @@
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 import { getEnv } from '@shared/env'
 // [INPUT]: Explicit CLI credentials/URL, persisted worker config, and packaged runtime defaults.
-// [OUTPUT]: Authenticated MCP requests to the matching wemux control plane.
+// [OUTPUT]: Authenticated MCP requests to the matching oxmux control plane.
 // [POS]: Worker CLI HTTP client; production packages must never fall back to preview endpoints.
 
 import { getWorkerDefaultCloudUrl } from '../core/app-root'
@@ -30,7 +30,7 @@ export type McpJsonRpcResponse = {
   }
 }
 
-export class WemuxClient {
+export class OxmuxClient {
   private baseUrl: string
   private executorToken: string
   private apiToken: string
@@ -39,12 +39,12 @@ export class WemuxClient {
     const config = loadWorkerConfig()
     this.baseUrl = trimTrailingSlash(params?.cloudUrl || config.cloudUrl || getWorkerDefaultCloudUrl())
     this.executorToken = params?.executorToken || config.executorToken || ''
-    this.apiToken = params?.apiToken || getEnv('WEMUX_TOKEN')?.trim() || ''
+    this.apiToken = params?.apiToken || getEnv('OXMUX_TOKEN')?.trim() || ''
   }
 
   private async request<T>(body: Record<string, unknown>): Promise<T> {
     if (!this.apiToken && !this.executorToken) {
-      throw new Error('CLI authentication is missing. Set WEMUX_TOKEN or pair this worker first.')
+      throw new Error('CLI authentication is missing. Set OXMUX_TOKEN or pair this worker first.')
     }
 
     const url = `${this.baseUrl}${this.apiToken ? '/mcp' : '/mcp/executor'}`

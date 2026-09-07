@@ -161,7 +161,7 @@ export function PageTabsBar({
     <div
       data-native-drag-region={nativeTitlebar ? 'deep' : undefined}
       className={cn(
-        'wemux-page-tabs-scroll flex min-w-0 flex-1 items-center overflow-x-hidden',
+        'oxmux-page-tabs-scroll flex min-w-0 flex-1 items-center overflow-x-hidden',
         nativeTitlebar || previewMode ? 'gap-0.5 px-0 py-1' : 'gap-1 px-1 py-1',
       )}
       data-tab-count={currentVisibleTabs.length}
@@ -179,7 +179,7 @@ export function PageTabsBar({
             key={tab.id}
             data-active={selected ? 'true' : 'false'}
             className={cn(
-              'wemux-page-tab group flex items-center gap-1.5 rounded-md border px-2 text-xs transition-colors duration-150',
+              'oxmux-page-tab group flex items-center gap-1.5 rounded-md border px-2 text-xs transition-colors duration-150',
               'h-7',
               selected
                 ? 'border-white/[0.08] bg-white/[0.09] text-zinc-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
@@ -194,7 +194,7 @@ export function PageTabsBar({
               aria-current={selected ? 'page' : undefined}
             >
               <Icon className="h-3.5 w-3.5 shrink-0" />
-              <span className="wemux-page-tab-title min-w-0 truncate">{tab.title}</span>
+              <span className="oxmux-page-tab-title min-w-0 truncate">{tab.title}</span>
             </button>
             {closable ? (
               <Button
@@ -204,7 +204,7 @@ export function PageTabsBar({
                 onClick={() => handleCloseTab(tab)}
                 data-tab-close
                 className={cn(
-                  'wemux-page-tab-close h-5 w-5 rounded text-zinc-600 hover:bg-zinc-800 hover:text-zinc-100',
+                  'oxmux-page-tab-close h-5 w-5 rounded text-zinc-600 hover:bg-zinc-800 hover:text-zinc-100',
                   selected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
                 )}
                 aria-label={t('common.close')}

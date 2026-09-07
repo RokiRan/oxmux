@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(wemux_meeting_runtime LANGUAGES C CXX)
+project(oxmux_meeting_runtime LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -68,24 +68,24 @@ set(MOSS_SOURCES
   ${moss_SOURCE_DIR}/src/moss_transcribe_capi.cpp
 )
 
-add_library(wemux_moss STATIC ${MOSS_SOURCES})
-target_include_directories(wemux_moss PUBLIC
+add_library(oxmux_moss STATIC ${MOSS_SOURCES})
+target_include_directories(oxmux_moss PUBLIC
   ${moss_SOURCE_DIR}/include
   PRIVATE ${moss_SOURCE_DIR}/src ${moss_SOURCE_DIR}/third_party
 )
-target_link_libraries(wemux_moss PUBLIC ggml)
+target_link_libraries(oxmux_moss PUBLIC ggml)
 
-add_library(wemux_meeting_runtime SHARED wemux_meeting_runtime.cpp)
-target_include_directories(wemux_meeting_runtime PRIVATE
+add_library(oxmux_meeting_runtime SHARED oxmux_meeting_runtime.cpp)
+target_include_directories(oxmux_meeting_runtime PRIVATE
   ${moss_SOURCE_DIR}/include
   ${moss_SOURCE_DIR}/src
   ${llama_SOURCE_DIR}/include
 )
-target_link_libraries(wemux_meeting_runtime PRIVATE
-  wemux_moss
+target_link_libraries(oxmux_meeting_runtime PRIVATE
+  oxmux_moss
   llama
   android
   log
 )
 
-target_compile_options(wemux_meeting_runtime PRIVATE -fvisibility=hidden)
+target_compile_options(oxmux_meeting_runtime PRIVATE -fvisibility=hidden)

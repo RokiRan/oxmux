@@ -79,7 +79,7 @@ const WINDOWS_ABSOLUTE_PATH_PATTERN = /^[A-Za-z]:[\\/]/u
 
 /** Roots that always resolve as platform context paths. */
 // 品牌迁移兼容窗口：`${{ vibemux.* }}` 是存量模板使用的引用前缀，与新前缀并存
-const PLATFORM_REFERENCE_ROOTS = new Set(['preview', 'node', 'task', 'workspaceSession', 'wemux', 'vibemux'])
+const PLATFORM_REFERENCE_ROOTS = new Set(['preview', 'node', 'task', 'workspaceSession', 'oxmux', 'vibemux'])
 /** Exact platform paths that share a prefix with user scoped refs (`project.KEY` / `workspace.KEY`). */
 const PLATFORM_REFERENCE_EXACT = new Set(['project.id', 'workspace.id'])
 
@@ -260,7 +260,7 @@ const normalizeReferencePath = (rawPath: string) => rawPath.trim()
 
 const isPlatformReferencePath = (path: string) => {
   const legacyStripped = path.startsWith('vibemux.') ? path.slice('vibemux.'.length) : path
-  const normalized = path.startsWith('wemux.') ? path.slice('wemux.'.length) : legacyStripped
+  const normalized = path.startsWith('oxmux.') ? path.slice('oxmux.'.length) : legacyStripped
   if (PLATFORM_REFERENCE_EXACT.has(normalized)) {
     return true
   }
@@ -277,10 +277,10 @@ const lookupPlatformVariable = (
   }
 
   const candidates = path.startsWith('vibemux.')
-    ? [path, path.slice('wemux.'.length)]
+    ? [path, path.slice('oxmux.'.length)]
     : path.startsWith('vibemux.')
       ? [path, path.slice('vibemux.'.length)]
-      : [path, `wemux.${path}`, `vibemux.${path}`]
+      : [path, `oxmux.${path}`, `vibemux.${path}`]
 
   for (const candidate of candidates) {
     if (!Object.prototype.hasOwnProperty.call(platformVariables, candidate)) {
@@ -301,7 +301,7 @@ const formatReferenceToken = (path: string) => `\${{ ${path} }}`
  * Expand `${{ ... }}` references across merged project/workspace entries.
  * - `${{ KEY }}` uses effective (workspace-over-project) values
  * - `${{ project.KEY }}` / `${{ workspace.KEY }}` use scoped user values
- * - `${{ preview.* }}` / `${{ node.* }}` / `${{ wemux.* }}` use platform context
+ * - `${{ preview.* }}` / `${{ node.* }}` / `${{ oxmux.* }}` use platform context
  */
 export const resolveRuntimeEnvironmentReferenceEntries = (params: {
   projectEntries: RuntimeEnvironmentVariableEntry[]

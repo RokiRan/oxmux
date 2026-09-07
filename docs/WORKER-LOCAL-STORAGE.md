@@ -2,7 +2,7 @@
 
 > 更新时间：2026-06-03
 
-这份文档记录 Wemux worker 本地存储的长期结构。目标是让同一台节点可以安全服务多个用户、多个 workspace session，并避免旧的 `workspace/`、`users/unknown`、`workspaces/unknown` 结构继续扩散。
+这份文档记录 Oxmux worker 本地存储的长期结构。目标是让同一台节点可以安全服务多个用户、多个 workspace session，并避免旧的 `workspace/`、`users/unknown`、`workspaces/unknown` 结构继续扩散。
 
 ## 1. 设计目标
 
@@ -15,7 +15,7 @@
 ## 2. 最终目录结构
 
 ```text
-~/.wemux-dev/
+~/.oxmux-dev/
 ├── node/
 │   ├── config.json
 │   ├── machine-id
@@ -37,7 +37,7 @@
         └── artifacts/
 ```
 
-生产默认根目录是 `~/.wemux`，preview 是 `~/.wemux-preview`，development 是 `~/.wemux-dev`。如果配置了自定义 `workspaceRoot`，仍应保持同一套内部结构。
+生产默认根目录是 `~/.oxmux`，preview 是 `~/.oxmux-preview`，development 是 `~/.oxmux-dev`。如果配置了自定义 `workspaceRoot`，仍应保持同一套内部结构。
 
 ## 3. Scope 规则
 
@@ -114,11 +114,11 @@ workspaces/<workspaceId>/artifacts/<artifact>
 旧路径只能用于识别、展示、迁移或 remap，不应作为新建目标：
 
 ```text
-~/.wemux-dev/workspace/projects/<project>
-~/.wemux-dev/projects/<project>
-~/.wemux-dev/repos/<repo>
-~/.wemux-dev/users/<userId>/workspaces/<workspaceId>/projects/<project>
-~/.wemux-dev/users/unknown/workspaces/unknown/projects/<project>
+~/.oxmux-dev/workspace/projects/<project>
+~/.oxmux-dev/projects/<project>
+~/.oxmux-dev/repos/<repo>
+~/.oxmux-dev/users/<userId>/workspaces/<workspaceId>/projects/<project>
+~/.oxmux-dev/users/unknown/workspaces/unknown/projects/<project>
 ```
 
 如果运行时看到 `users/unknown` 或 `workspaces/unknown`，优先检查：

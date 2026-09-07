@@ -70,7 +70,7 @@ const agentProfiles: Record<'agent-developer' | 'agent-tester' | 'agent-reviewer
     success: '96%',
     skills: ['code', 'debug-pro', 'git-essentials'],
     mcpServers: ['GitHub', 'Browser'],
-    workspaceIds: ['wemux-console', 'auth-flow-fix'],
+    workspaceIds: ['oxmux-console', 'auth-flow-fix'],
     channels: ['Agent Chat', '@mention'],
     tags: ['frontend', 'backend', 'patch'],
     runs: [

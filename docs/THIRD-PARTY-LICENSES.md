@@ -1,6 +1,6 @@
 # Third-Party Licenses
 
-Wemux 以 Apache-2.0 开源。以下为直接/传递依赖的许可证分布（2026-08-20 扫描 pnpm 虚拟 store，共 6032 个包）。
+Oxmux 以 Apache-2.0 开源。以下为直接/传递依赖的许可证分布（2026-08-20 扫描 pnpm 虚拟 store，共 6032 个包）。
 
 ## License 分布
 

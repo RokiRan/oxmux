@@ -41,13 +41,13 @@ Teams run into the same limits quickly:
 
 That is why many teams feel AI coding is simultaneously impressive and disappointing. The model can do a lot, but the work still does not land cleanly.
 
-## Wemux as delivery infrastructure
+## Oxmux as delivery infrastructure
 
-Wemux sits in the part of the stack that becomes painful once a team moves past experimentation. It is less about generating code in isolation and more about making AI work operational:
+Oxmux sits in the part of the stack that becomes painful once a team moves past experimentation. It is less about generating code in isolation and more about making AI work operational:
 
 - choose the correct worker
 - run in the real environment
 - preserve logs and branch outputs
 - let humans inspect and continue the flow
 
-That framing also creates better SEO positioning. Wemux should attract teams searching for AI delivery, AI coding workflow, AI execution infrastructure, and multi-machine coding operations, not only broad “AI code generator” traffic.
+That framing also creates better SEO positioning. Oxmux should attract teams searching for AI delivery, AI coding workflow, AI execution infrastructure, and multi-machine coding operations, not only broad “AI code generator” traffic.

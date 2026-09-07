@@ -10,11 +10,11 @@ import path from 'node:path'
 
 const SSH_DIR = path.join(os.homedir(), '.ssh')
 const DEFAULT_PUBLIC_KEY_CANDIDATES = ['id_ed25519.pub', 'id_rsa.pub', 'id_ecdsa.pub']
-const WORKER_KEY_BASENAME = 'wemux_worker_ed25519'
+const WORKER_KEY_BASENAME = 'oxmux_worker_ed25519'
 
 const generateWorkerSshKey = (privateKeyPath: string) => {
   mkdirSync(path.dirname(privateKeyPath), { recursive: true })
-  const result = spawnSync('ssh-keygen', ['-t', 'ed25519', '-C', 'wemux-worker', '-f', privateKeyPath, '-N', ''], {
+  const result = spawnSync('ssh-keygen', ['-t', 'ed25519', '-C', 'oxmux-worker', '-f', privateKeyPath, '-N', ''], {
     encoding: 'utf8',
   })
 

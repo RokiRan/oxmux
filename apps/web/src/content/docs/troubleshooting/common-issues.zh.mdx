@@ -1,11 +1,11 @@
 ---
 title: 常见问题
-description: Wemux 中常见问题的解决方案。
+description: Oxmux 中常见问题的解决方案。
 ---
 
 # 常见问题
 
-使用 Wemux 时可能遇到问题的解决方案。
+使用 Oxmux 时可能遇到问题的解决方案。
 
 ## Worker 问题
 
@@ -17,12 +17,12 @@ description: Wemux 中常见问题的解决方案。
 
 1. 检查守护进程是否正在运行：
    ```bash
-   ps aux | grep wemux-worker
+   ps aux | grep oxmux-worker
    ```
 
 2. 重启守护进程：
    ```bash
-   Wemux worker daemon
+   Oxmux worker daemon
    ```
 
 3. 检查到控制面的网络连接：
@@ -113,7 +113,7 @@ description: Wemux 中常见问题的解决方案。
 1. 检查 Worker 上的磁盘空间
 2. 清理旧的 worktree：
    ```bash
-   wemux-worker cleanup
+   oxmux-worker cleanup
    ```
 3. 检查 Git 版本是否最新
 4. 确保没有冲突的分支
@@ -127,9 +127,9 @@ description: Wemux 中常见问题的解决方案。
 **解决方案**：
 
 1. 更改后重启 Worker 守护进程
-2. 验证 env 文件位置：`~/.wemux/worker.env`
+2. 验证 env 文件位置：`~/.oxmux/worker.env`
 3. 检查文件中的语法错误
-4. 使用 `wemux worker status` 查看已加载的配置
+4. 使用 `oxmux worker status` 查看已加载的配置
 
 ### 模型不可用
 
@@ -163,7 +163,7 @@ description: Wemux 中常见问题的解决方案。
 
 - Preview tunnel 已经连通
 - 但源应用本身没有成功响应
-- 问题已经不在 Wemux 隧道，而在工作区里的开发服务器
+- 问题已经不在 Oxmux 隧道，而在工作区里的开发服务器
 
 **解决方案**：
 
@@ -229,5 +229,5 @@ Vite 开发服务器默认可能只监听 `localhost`。如果应用运行在 Do
 如果这些解决方案无法解决您的问题：
 
 1. 检查 [GitHub Issues](https://github.com/your-repo/issues)
-2. 加入 [Discord 社区](https://discord.gg/wemux)
-3. 联系 support@wemux.ai
+2. 加入 [Discord 社区](https://discord.gg/oxmux)
+3. 联系 support@oxmux.ai

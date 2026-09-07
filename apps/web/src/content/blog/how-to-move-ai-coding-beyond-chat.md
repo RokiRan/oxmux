@@ -39,9 +39,9 @@ The practical shift looks like this:
 
 That is the difference between AI help and AI delivery.
 
-## Why Wemux fits this transition
+## Why Oxmux fits this transition
 
-Wemux is built for teams that already know chat is not enough. Its value is not only that AI can generate code. Its value is that the work can move through a real delivery chain:
+Oxmux is built for teams that already know chat is not enough. Its value is not only that AI can generate code. Its value is that the work can move through a real delivery chain:
 
 - task intake
 - worker routing

@@ -77,7 +77,7 @@ const commercialWebExtensionPlugin = {
       return null
     }
     // 显式禁用开关：强制以社区版构建（`pnpm dev:oss` / `pnpm build:oss`）。
-    if (process.env.WEMUX_EXTENSION_DISABLED === '1') {
+    if (process.env.OXMUX_EXTENSION_DISABLED === '1') {
       return 'export {}'
     }
     return existsSync(commercialWebExtensionEntry)

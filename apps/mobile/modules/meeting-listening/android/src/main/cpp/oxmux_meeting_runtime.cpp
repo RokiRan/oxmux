@@ -14,7 +14,7 @@
 
 namespace {
 
-constexpr char kLogTag[] = "WemuxMeetingRuntime";
+constexpr char kLogTag[] = "OxmuxMeetingRuntime";
 
 void moss_log_callback(mt::mt_log_level level, const char *message, void *) {
     const auto priority = level == mt::MT_LOG_ERROR ? ANDROID_LOG_ERROR

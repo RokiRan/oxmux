@@ -76,11 +76,11 @@ export const resolveEasyTierPortProfile = (params: {
   }
 
   const url = `${params.publicBaseUrl ?? ''} ${params.cloudUrl ?? ''}`.toLowerCase()
-  // 兼容窗口：新旧域名都识别，后续可移除 wemux 分支
-  if (url.includes('vibemux.xyz') || url.includes('wemux.xyz')) {
+  // 兼容窗口：新旧域名都识别，后续可移除 oxmux 分支
+  if (url.includes('vibemux.xyz') || url.includes('oxmux.xyz')) {
     return 'preview'
   }
-  if (url.includes('vibemux.com') || url.includes('wemux.ai')) {
+  if (url.includes('vibemux.com') || url.includes('oxmux.ai')) {
     return 'production'
   }
 

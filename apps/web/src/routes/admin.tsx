@@ -42,8 +42,8 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 
 export const Route = createFileRoute('/admin')({
   head: () => buildNoIndexHead({
-    title: 'Wemux Admin',
-    description: 'Internal Wemux admin console.',
+    title: 'Oxmux Admin',
+    description: 'Internal Oxmux admin console.',
   }),
   component: AdminLayout,
 })
@@ -202,7 +202,7 @@ function AdminSidebar({ onNavigate }: { onNavigate?: () => void }) {
             <Settings className="h-3.5 w-3.5" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold">Wemux</span>
+            <span className="text-sm font-semibold">Oxmux</span>
             <span className="text-[11px] text-muted-foreground">{t('admin.console')}</span>
           </div>
         </Link>
@@ -319,12 +319,12 @@ function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // 服务器侧 /api/admin/* 以 user.isInternal / user.role 为权威，这里保持一致。
-  // 兼容窗口：同时接受新老域名邮箱，后续可移除 @wemux.ai / @vibemux.com
+  // 兼容窗口：同时接受新老域名邮箱，后续可移除 @oxmux.ai / @vibemux.com
   const isAdmin = Boolean(user?.isInternal)
     || user?.role === 'admin'
     || user?.role === 'owner'
-    || user?.email?.endsWith('@wemux.ai')
-    || user?.email?.endsWith('@wemux.com')
+    || user?.email?.endsWith('@oxmux.ai')
+    || user?.email?.endsWith('@oxmux.com')
 
   if (!user) {
     return <AdminAccessDenied reason="unauthenticated" />

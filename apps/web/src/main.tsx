@@ -223,7 +223,7 @@ const renderNativeUpdateToast = (state: NativeUpdateUiState) => {
         onUpdateNow={() => {
           toast.dismiss(toastId)
           void installUpdateNative().catch(() => {
-            // 下载/安装失败由 Rust 经 wemux-update error 事件派发，这里不重复提示
+            // 下载/安装失败由 Rust 经 oxmux-update error 事件派发，这里不重复提示
           })
         }}
         onRestartNow={() => {
@@ -273,7 +273,7 @@ if (isDesktopNativeClient()) {
   })
 }
 
-// native 深链：Electron / React Native 壳收到 Wemux:// 深链后导航到对应路由。
+// native 深链：Electron / React Native 壳收到 Oxmux:// 深链后导航到对应路由。
 setupNativeDeepLinkListener((route) => {
   router.history.push(route)
 })

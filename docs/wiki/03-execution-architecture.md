@@ -2,7 +2,7 @@
 
 ## 核心原则：Worker-First
 
-Wemux 的执行架构遵循 **worker-first** 原则：
+Oxmux 的执行架构遵循 **worker-first** 原则：
 
 - `server`：只负责控制面 API、调度、状态汇聚、产物登记、聊天/规划能力
 - `worker`：唯一的代码任务执行入口，负责仓库准备、worktree、OpenCode 调用、patch/branch/commit 产物

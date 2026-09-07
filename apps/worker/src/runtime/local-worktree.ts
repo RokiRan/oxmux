@@ -281,7 +281,7 @@ const deleteManagedWorktreeBranches = async (params: {
   gitIdentity?: TaskRuntimeGitIdentity
 }): Promise<Pick<ExecutorWorktreeResult, 'deletedLocalBranch' | 'deletedRemoteBranch'>> => {
   const branchName = normalizeBranchName(params.branchName ?? '')
-  if (!branchName || !(branchName.startsWith('wemux/') || branchName.startsWith('vibemux/'))) {
+  if (!branchName || !(branchName.startsWith('oxmux/') || branchName.startsWith('vibemux/'))) {
     return {}
   }
 

@@ -10,8 +10,8 @@ import { MarketingPageLayout } from '../marketing/marketing-page-layout'
 import { useTranslation } from '../../lib/i18n/react'
 
 /** 商业版下载清单（R2 分发） */
-const DOWNLOAD_MANIFEST_URL = 'https://downloads.wemux.ai/desktop/downloads.json'
-const DOWNLOAD_BASE_URL = 'https://downloads.wemux.ai/desktop'
+const DOWNLOAD_MANIFEST_URL = 'https://downloads.oxmux.ai/desktop/downloads.json'
+const DOWNLOAD_BASE_URL = 'https://downloads.oxmux.ai/desktop'
 
 export type R2DownloadFile = {
   name: string
@@ -195,11 +195,11 @@ export function DownloadPage({ manifest: fallbackManifest }: { manifest: Desktop
     <MarketingPageLayout
       description={
         language === 'zh'
-          ? '下载 Wemux 桌面客户端，支持 macOS 和 Windows。'
-          : 'Download the Wemux desktop client for macOS and Windows.'
+          ? '下载 Oxmux 桌面客户端，支持 macOS 和 Windows。'
+          : 'Download the Oxmux desktop client for macOS and Windows.'
       }
       eyebrow={language === 'zh' ? '下载' : 'Download'}
-      title={language === 'zh' ? '下载 Wemux 桌面端' : 'Download Wemux Desktop'}
+      title={language === 'zh' ? '下载 Oxmux 桌面端' : 'Download Oxmux Desktop'}
     >
       {/* Hero 区域 */}
       <section className="mb-16">
@@ -218,8 +218,8 @@ export function DownloadPage({ manifest: fallbackManifest }: { manifest: Desktop
             
             <p className="mb-8 text-sm leading-relaxed text-zinc-400 sm:text-base">
               {language === 'zh'
-                ? '商业版桌面端预配置官方云服务（wemux.ai），开箱即用。支持 macOS（Apple Silicon / Intel）与 Windows。'
-                : 'Commercial desktop app pre-configured for official cloud (wemux.ai), ready out of the box. Supports macOS (Apple Silicon / Intel) and Windows.'}
+                ? '商业版桌面端预配置官方云服务（oxmux.ai），开箱即用。支持 macOS（Apple Silicon / Intel）与 Windows。'
+                : 'Commercial desktop app pre-configured for official cloud (oxmux.ai), ready out of the box. Supports macOS (Apple Silicon / Intel) and Windows.'}
             </p>
 
             {/* 快速下载按钮 */}
@@ -285,8 +285,8 @@ export function DownloadPage({ manifest: fallbackManifest }: { manifest: Desktop
         <ul className="space-y-2 text-sm leading-relaxed text-zinc-400">
           <li>
             {language === 'zh'
-              ? '• 桌面端已锁定官方云服务（wemux.ai），无法切换其他服务器'
-              : '• Desktop app is locked to official cloud (wemux.ai), cannot switch servers'}
+              ? '• 桌面端已锁定官方云服务（oxmux.ai），无法切换其他服务器'
+              : '• Desktop app is locked to official cloud (oxmux.ai), cannot switch servers'}
           </li>
           <li>
             {language === 'zh'

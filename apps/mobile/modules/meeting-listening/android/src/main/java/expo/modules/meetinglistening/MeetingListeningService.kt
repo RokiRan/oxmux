@@ -41,9 +41,9 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-private const val ACTION_START = "com.wemux.meeting-listening.START"
-private const val ACTION_STOP = "com.wemux.meeting-listening.STOP"
-private const val CHANNEL_ID = "wemux_meeting_listening"
+private const val ACTION_START = "com.oxmux.meeting-listening.START"
+private const val ACTION_STOP = "com.oxmux.meeting-listening.STOP"
+private const val CHANNEL_ID = "oxmux_meeting_listening"
 private const val NOTIFICATION_ID = 4768
 private const val SAMPLE_RATE = 16_000
 private const val CHUNK_MS = 30_000L
@@ -72,7 +72,7 @@ private val MEETING_MODELS = listOf(
 
 /** Downloads immutable quantized artifacts into app-private storage. */
 object MeetingModelStore {
-  private const val PREFS = "wemux-meeting-models"
+  private const val PREFS = "oxmux-meeting-models"
   private const val MAX_DOWNLOAD_ATTEMPTS = 5
   private val lock = Any()
   private val activeDownloads = Collections.synchronizedSet(mutableSetOf<String>())
@@ -322,7 +322,7 @@ data class MeetingListeningConfig(
 }
 
 object MeetingListeningState {
-  private const val PREFS = "wemux-meeting-listening-state"
+  private const val PREFS = "oxmux-meeting-listening-state"
   private const val MAX_TRANSCRIPT_CHARS = 20_000
   private fun prefs(context: Context) = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
   fun begin(context: Context) = prefs(context).edit()
@@ -360,7 +360,7 @@ object MeetingListeningState {
 
 class PendingSegmentStore(private val context: Context) {
   private companion object {
-    const val KEY_ALIAS = "wemux-meeting-listening-queue-key"
+    const val KEY_ALIAS = "oxmux-meeting-listening-queue-key"
     const val TRANSFORMATION = "AES/GCM/NoPadding"
   }
   private val directory = File(context.filesDir, "meeting-listening").apply { mkdirs() }
@@ -418,8 +418,8 @@ class PendingSegmentStore(private val context: Context) {
 
 /** Keeps restart-required tokens out of cleartext preferences and Android backups. */
 object MeetingListeningConfigStore {
-  private const val PREFS = "wemux-meeting-listening-config"
-  private const val KEY_ALIAS = "wemux-meeting-listening-config-key"
+  private const val PREFS = "oxmux-meeting-listening-config"
+  private const val KEY_ALIAS = "oxmux-meeting-listening-config-key"
   private const val TRANSFORMATION = "AES/GCM/NoPadding"
 
   fun save(context: Context, config: MeetingListeningConfig) {
@@ -507,7 +507,7 @@ class MeetingListeningService : Service() {
     }
     MeetingListeningState.setError(this, null)
     processor.submit { drainQueue() }
-    captureThread = Thread(::capture, "wemux-meeting-microphone").also { it.start() }
+    captureThread = Thread(::capture, "oxmux-meeting-microphone").also { it.start() }
     return START_STICKY
   }
 
@@ -717,7 +717,7 @@ class MeetingListeningService : Service() {
     val stop = PendingIntent.getService(this, 1, Intent(this, MeetingListeningService::class.java).setAction(ACTION_STOP),
       PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Notification.Builder(this, CHANNEL_ID) else Notification.Builder(this)
-    return builder.setContentTitle("Wemux 背后听写").setContentText("正在本地录音与转写").setSmallIcon(android.R.drawable.ic_btn_speak_now)
+    return builder.setContentTitle("Oxmux 背后听写").setContentText("正在本地录音与转写").setSmallIcon(android.R.drawable.ic_btn_speak_now)
       .setOngoing(true).addAction(Notification.Action.Builder(null, "停止", stop).build()).build()
   }
   private fun startForegroundCompat(notification: Notification) {

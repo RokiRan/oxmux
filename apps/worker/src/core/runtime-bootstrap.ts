@@ -569,7 +569,7 @@ const checkUnzip = (): RuntimeCheck => {
     id: 'unzip',
     label: 'unzip',
     ok: Boolean(executable && result?.ok),
-    detail: executable && result?.ok ? `unzip 已安装：${executable}` : 'unzip 不可用，wemux Mesh 无法自动下载并解压组件。',
+    detail: executable && result?.ok ? `unzip 已安装：${executable}` : 'unzip 不可用，oxmux Mesh 无法自动下载并解压组件。',
     autoInstallable: Boolean(strategy),
     installer: strategy?.installer,
     installCommand: strategy?.commandSummary,
@@ -855,7 +855,7 @@ export const resolveWorkerRuntimeBootstrapMode = (params?: {
 }): WorkerRuntimeBootstrapMode => {
   const interactiveTerminal = params?.interactiveTerminal ?? isInteractiveTerminal()
   const autoInstallSetting = normalizeAutoInstallSetting(
-    params?.autoInstallSetting ?? getEnv('WEMUX_WORKER_AUTO_INSTALL'),
+    params?.autoInstallSetting ?? getEnv('OXMUX_WORKER_AUTO_INSTALL'),
   )
 
   if (autoInstallSetting === true) {

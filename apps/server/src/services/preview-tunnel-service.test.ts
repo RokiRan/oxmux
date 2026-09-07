@@ -56,8 +56,8 @@ test('preview tunnel service negotiates 128KB chunks and prioritizes control fra
         targetBasePath: '/',
       },
       additionalSources: [],
-      publicHost: 'priority-preview--preview-tunnel-service-priority.wemux.localtest.me:8989',
-      publicUrl: 'http://priority-preview--preview-tunnel-service-priority.wemux.localtest.me:8989/',
+      publicHost: 'priority-preview--preview-tunnel-service-priority.oxmux.localtest.me:8989',
+      publicUrl: 'http://priority-preview--preview-tunnel-service-priority.oxmux.localtest.me:8989/',
     })
 
     assert.equal(created.created, true)

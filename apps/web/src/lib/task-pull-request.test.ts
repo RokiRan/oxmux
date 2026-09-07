@@ -753,12 +753,12 @@ test('canonical task summary supports multiple pull request bindings', () => {
 
 test('workspace list resolves PR display from workspace session preview text', () => {
   const display = resolveWorkspaceSessionPreviewPullRequestDisplay({
-    text: 'PR 已创建：https://github.com/wemux-ai/wemux/pull/57',
+    text: 'PR 已创建：https://github.com/oxmux-ai/oxmux/pull/57',
     compareBranch: 'vibemux/3876-workspace-message',
   })
 
   assert.equal(display?.number, 57)
-  assert.equal(display?.url, 'https://github.com/wemux-ai/wemux/pull/57')
+  assert.equal(display?.url, 'https://github.com/oxmux-ai/oxmux/pull/57')
   assert.equal(display?.state, 'open')
   assert.equal(display?.compactLabel, 'PR')
   assert.equal(display?.compareBranch, 'vibemux/3876-workspace-message')

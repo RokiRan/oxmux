@@ -13,8 +13,8 @@ const PREVIEW_SCHEME_ENV = 'VIBEMUX_PROJECT_PREVIEW_SCHEME'
 const DOMESTIC_PREVIEW_BASE_DOMAIN_ENV = 'VIBEMUX_DOMESTIC_PREVIEW_BASE_DOMAIN'
 const DOMESTIC_REALTIME_BASE_URL_ENV = 'VIBEMUX_DOMESTIC_REALTIME_BASE_URL'
 const DOMESTIC_EXECUTOR_LABELS_ENV = 'VIBEMUX_DOMESTIC_EXECUTOR_LABELS'
-const LOCAL_PREVIEW_HOST = 'wemux.localtest.me'
-const DEFAULT_PREVIEW_HOST = 'wemux.xyz'
+const LOCAL_PREVIEW_HOST = 'oxmux.localtest.me'
+const DEFAULT_PREVIEW_HOST = 'oxmux.xyz'
 const DEFAULT_LOCAL_PREVIEW_WEB_PORT = '15173'
 const DEFAULT_LOCAL_PREVIEW_SERVER_PORT = '18989'
 const DEFAULT_DOMESTIC_EXECUTOR_LABELS = ['route:hk', 'realtime:hk']
@@ -139,7 +139,7 @@ const getConfiguredLocalPreviewWebPort = () => (
 const getConfiguredLocalPreviewServerPort = () => {
   const candidates = [
     process.env.HYBRID_SERVER_PORT,
-    getEnv('WEMUX_SERVER_PORT'),
+    getEnv('OXMUX_SERVER_PORT'),
     process.env.PORT,
   ]
 

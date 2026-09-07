@@ -68,7 +68,7 @@ const hint = detail.includes('TLS handshake timeout')
       : '当前无法准备 hybrid 所需镜像，请先确认 Docker Registry 可访问后再重试。'
 
 process.stderr.write([
-  'wemux hybrid 启动前检查失败：Docker daemon 可用，但依赖镜像未准备完成。',
+  'oxmux hybrid 启动前检查失败：Docker daemon 可用，但依赖镜像未准备完成。',
   `当前 Docker context: ${context}`,
   ...failureLines,
   hint,

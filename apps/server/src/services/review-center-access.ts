@@ -8,7 +8,7 @@ import type { MiddlewareHandler } from 'hono'
 
 export const REVIEW_CENTER_PREVIEW_ONLY_MESSAGE = 'Review Center 仅在开发环境和 preview 环境开放。'
 
-const PREVIEW_HOSTNAMES = ['vibemux.xyz', 'wemux.xyz']
+const PREVIEW_HOSTNAMES = ['vibemux.xyz', 'oxmux.xyz']
 
 const isPreviewHostname = (value: string) => {
   const normalized = value.trim().toLowerCase()
@@ -30,13 +30,13 @@ export const isReviewCenterEnabled = () => {
     return true
   }
 
-  if (getEnv('WEMUX_ENV')?.trim().toLowerCase() === 'preview') {
+  if (getEnv('OXMUX_ENV')?.trim().toLowerCase() === 'preview') {
     return true
   }
 
   return [
-    getEnv('WEMUX_CLOUD_URL'),
-    getEnv('WEMUX_PUBLIC_BASE_URL'),
+    getEnv('OXMUX_CLOUD_URL'),
+    getEnv('OXMUX_PUBLIC_BASE_URL'),
     process.env.APP_BASE_URL,
     process.env.VITE_APP_BASE_URL,
     process.env.BETTER_AUTH_URL,

@@ -8,7 +8,7 @@ import type { MiddlewareHandler } from 'hono'
 
 export const DESKTOP_SANDBOX_DEV_ONLY_MESSAGE = 'Desktop Sandbox 仅在开发环境开放。'
 
-const PREVIEW_HOSTNAMES = ['vibemux.xyz', 'wemux.xyz']
+const PREVIEW_HOSTNAMES = ['vibemux.xyz', 'oxmux.xyz']
 
 const isPreviewHostname = (value: string) => {
   const normalized = value.trim().toLowerCase()
@@ -31,8 +31,8 @@ export const isDesktopSandboxDevOnlyEnabled = () => {
   }
 
   return [
-    getEnv('WEMUX_CLOUD_URL'),
-    getEnv('WEMUX_PUBLIC_BASE_URL'),
+    getEnv('OXMUX_CLOUD_URL'),
+    getEnv('OXMUX_PUBLIC_BASE_URL'),
     process.env.APP_BASE_URL,
     process.env.VITE_APP_BASE_URL,
     process.env.BETTER_AUTH_URL,

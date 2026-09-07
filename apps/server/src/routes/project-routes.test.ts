@@ -239,7 +239,7 @@ test('delete project skips original directories instead of deleting them', async
       }
     }
 
-    assert.match(payload.message ?? '', /项目已删除。当前路径不是 wemux 托管目录，已跳过目录删除：/)
+    assert.match(payload.message ?? '', /项目已删除。当前路径不是 oxmux 托管目录，已跳过目录删除：/)
     assert.ok(!payload.state.projects.some((item) => item.id === project.id))
     assert.ok(!loadState().projects.some((item) => item.id === project.id))
   })

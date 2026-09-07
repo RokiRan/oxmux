@@ -3,27 +3,27 @@
   "generatedAt": "2026-09-03T21:11:20.284Z",
   "files": [
     {
-      "name": "Wemux-0.3.131-arm64-mac.zip",
+      "name": "Oxmux-0.3.131-arm64-mac.zip",
       "size": 163675226,
       "sha512": "YhBbJ4jJJPBKG64Cd7H0vrwm8+Ix//c6tT8DBg5OcJxHWH/sF8ueq0wmpvLuhTQGVqSBSTfcHZrfnXGNSXuy8Q=="
     },
     {
-      "name": "Wemux-0.3.131-arm64.dmg",
+      "name": "Oxmux-0.3.131-arm64.dmg",
       "size": 163940050,
       "sha512": "m4E2EdXs4rGW+1N8jsCrseEQZLJkgiWq+9qTyWmqpOJ1ShRy3DitxlKLnS/woGU1VAy2q3E262qRY6IaMqskew=="
     },
     {
-      "name": "Wemux-0.3.131-mac.zip",
+      "name": "Oxmux-0.3.131-mac.zip",
       "size": 167599983,
       "sha512": "umcECJ3NfYjsHnmUokGPAP0yzIKbOynxUNf+xFY19yUSDUt6unYWO7qv0Hr86YcMkOrPlxTwbC1ZCjFNZHOIxA=="
     },
     {
-      "name": "Wemux-0.3.131-x64-setup.exe",
+      "name": "Oxmux-0.3.131-x64-setup.exe",
       "size": 143219386,
       "sha512": "tYF4F0Y1hdEjuYS+MDJ0jPmN2u113nNPAqSI8d6rwB2JT1/4qQZnpnUwJ3iQCHPd4O0+FSiPf9PYL8mKW9y/tA=="
     },
     {
-      "name": "Wemux-0.3.131-x64.dmg",
+      "name": "Oxmux-0.3.131-x64.dmg",
       "size": 167835837,
       "sha512": "30S/n9+XIflnjUor/PQfWp/o1M6BpV1mfvJaXd0kA4B1L/F0Mvc+WY6xqM0ULifIU71NXRqFlTZh0zg6Ube/Vg=="
     }

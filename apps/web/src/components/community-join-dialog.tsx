@@ -34,7 +34,7 @@ export function CommunityJoinDialog({ language, open, onOpenChange }: CommunityJ
         <DialogHeader className="text-left">
           <DialogTitle className="flex items-center gap-2 text-base text-zinc-100">
             <MessageCircle className="h-4 w-4 text-zinc-400" />
-            {text(language, '加入 Wemux 社群', 'Join the Wemux community')}
+            {text(language, '加入 Oxmux 社群', 'Join the Oxmux community')}
           </DialogTitle>
           <DialogDescription className="text-xs leading-5 text-zinc-500">
             {text(language, '交流使用经验、获取产品动态，也可以直接反馈问题。', 'Exchange ideas, get product updates, and share feedback directly.')}
@@ -82,7 +82,7 @@ export function CommunityJoinDialog({ language, open, onOpenChange }: CommunityJ
               <div className="mt-4 flex justify-center border-t border-zinc-900 pt-4">
                 <img
                   src={wechatQrUrl}
-                  alt={text(language, 'Wemux 微信群二维码', 'Wemux WeChat group QR code')}
+                  alt={text(language, 'Oxmux 微信群二维码', 'Oxmux WeChat group QR code')}
                   className="h-44 w-44 rounded-md border border-zinc-800 bg-white object-contain p-1"
                 />
               </div>

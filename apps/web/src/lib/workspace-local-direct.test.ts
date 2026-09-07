@@ -10,7 +10,7 @@ import {
 test('isLoopbackUrl accepts localhost and loopback urls only', () => {
   assert.equal(isLoopbackUrl('http://127.0.0.1:3000/health'), true)
   assert.equal(isLoopbackUrl('http://localhost:5173/'), true)
-  assert.equal(isLoopbackUrl('https://preview.wemux.xyz/'), false)
+  assert.equal(isLoopbackUrl('https://preview.oxmux.xyz/'), false)
 })
 
 test('canUseLocalDirectWorkerScope requires executor id match', () => {
@@ -93,7 +93,7 @@ test('probeLocalEnvironmentUrl probes readable local health urls', async () => {
 
 test('probeLocalEnvironmentUrl ignores non-loopback urls', async () => {
   const result = await probeLocalEnvironmentUrl({
-    url: 'https://preview.wemux.xyz/health',
+    url: 'https://preview.oxmux.xyz/health',
     fetchImpl: async () => new Response('ok', { status: 200 }),
   })
 

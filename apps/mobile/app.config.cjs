@@ -5,23 +5,23 @@ const productPackage = JSON.parse(readFileSync(path.resolve(__dirname, '../../pa
 
 module.exports = {
   expo: {
-    name: 'Wemux',
-    slug: 'wemux',
+    name: 'Oxmux',
+    slug: 'oxmux',
     version: productPackage.version,
     platforms: ['ios', 'android'],
     orientation: 'default',
-    scheme: 'wemux',
+    scheme: 'oxmux',
     userInterfaceStyle: 'dark',
     icon: './assets/icon.png',
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.wemux.app',
+      bundleIdentifier: 'com.oxmux.app',
       infoPlist: {
-        NSMicrophoneUsageDescription: 'Wemux uses the microphone when you start meeting recording.',
+        NSMicrophoneUsageDescription: 'Oxmux uses the microphone when you start meeting recording.',
       },
     },
     android: {
-      package: 'com.wemux.app',
+      package: 'com.oxmux.app',
       adaptiveIcon: {
         foregroundImage: './assets/icon.png',
         backgroundColor: '#09090b',
@@ -34,7 +34,7 @@ module.exports = {
         {
           action: 'VIEW',
           autoVerify: false,
-          data: [{ scheme: 'wemux' }],
+          data: [{ scheme: 'oxmux' }],
           category: ['BROWSABLE', 'DEFAULT'],
         },
       ],

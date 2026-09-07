@@ -550,7 +550,7 @@ function SidebarHelpMenu({
           <span className="sr-only">{language === 'zh' ? '更多操作' : 'More actions'}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" align="end" className="wemux-sidebar-menu-surface w-48">
+      <DropdownMenuContent side="top" align="end" className="oxmux-sidebar-menu-surface w-48">
         <DropdownMenuItem onSelect={() => openSupport('chat')}>
           <MessagesSquare />
           {language === 'zh' ? '与创始人沟通' : 'Chat with founder'}
@@ -1416,7 +1416,7 @@ export function AppSidebar() {
       ) : null}
       <aside
         className={cn(
-          "wemux-shell-sidebar text-zinc-100",
+          "oxmux-shell-sidebar text-zinc-100",
           isMobile
             ? "fixed inset-y-0 left-0 z-40 flex w-[min(88vw,17.6rem)] max-w-[17.6rem] translate-x-0 border-r border-transparent bg-transparent shadow-2xl shadow-black/40 transition-transform duration-200 ease-out"
             : isMacNative
@@ -1670,7 +1670,7 @@ export function AppSidebar() {
                               }}
                               onDrop={(event) => {
                                 event.preventDefault()
-                                const droppedProjectId = event.dataTransfer.getData('application/x-wemux-project') || draggedProjectItem?.projectId
+                                const droppedProjectId = event.dataTransfer.getData('application/x-oxmux-project') || draggedProjectItem?.projectId
                                 if (!droppedProjectId) {
                                   handleProjectDragEnd()
                                   return
@@ -1700,7 +1700,7 @@ export function AppSidebar() {
                                   draggable={workspaceScopedProjects.length > 1}
                                   onDragStart={(event) => {
                                     event.dataTransfer.effectAllowed = 'move'
-                                    event.dataTransfer.setData('application/x-wemux-project', project.id)
+                                    event.dataTransfer.setData('application/x-oxmux-project', project.id)
                                     event.dataTransfer.setData('text/plain', project.id)
                                     requestAnimationFrame(() => {
                                       setDraggedProjectItem({
@@ -1803,7 +1803,7 @@ export function AppSidebar() {
                               }}
                               onDrop={(event) => {
                                 event.preventDefault()
-                                const droppedProjectId = event.dataTransfer.getData('application/x-wemux-project') || draggedProjectItem?.projectId
+                                const droppedProjectId = event.dataTransfer.getData('application/x-oxmux-project') || draggedProjectItem?.projectId
                                 if (!droppedProjectId) {
                                   handleProjectDragEnd()
                                   return
@@ -1833,7 +1833,7 @@ export function AppSidebar() {
                                   draggable={personalProjects.length > 1}
                                   onDragStart={(event) => {
                                     event.dataTransfer.effectAllowed = 'move'
-                                    event.dataTransfer.setData('application/x-wemux-project', project.id)
+                                    event.dataTransfer.setData('application/x-oxmux-project', project.id)
                                     event.dataTransfer.setData('text/plain', project.id)
                                     requestAnimationFrame(() => {
                                       setDraggedProjectItem({

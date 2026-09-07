@@ -43,13 +43,13 @@ export const getExecutorPreviewAccessDescription = (networkType: ExecutorNetwork
   networkType === 'public'
     ? tr(
         language,
-        '浏览器先访问 Wemux 预览域名，再由公网访问入口回源到这台节点的公网入口。',
-        'Browser requests land on the Wemux preview domain first, then the public-access entry proxies back to the node public ingress.',
+        '浏览器先访问 Oxmux 预览域名，再由公网访问入口回源到这台节点的公网入口。',
+        'Browser requests land on the Oxmux preview domain first, then the public-access entry proxies back to the node public ingress.',
       )
     : tr(
         language,
-        '预览继续走 Wemux 私有链路，不依赖节点公网入口。',
-        'Preview traffic stays on the Wemux private tunnel path and does not depend on a node public ingress.',
+        '预览继续走 Oxmux 私有链路，不依赖节点公网入口。',
+        'Preview traffic stays on the Oxmux private tunnel path and does not depend on a node public ingress.',
       )
 )
 

@@ -14,10 +14,10 @@ export const Route = createFileRoute('/docs/$lang')({
     return buildMarketingHead({
       description:
         locale === 'zh'
-          ? 'Wemux（AI 编程交付平台）文档：协调真实仓库、Worker、分支、日志与审核流程。'
-          : 'Wemux documentation: an AI coding delivery platform that orchestrates work across real repositories, workers, branches, logs, and review flows.',
+          ? 'Oxmux（AI 编程交付平台）文档：协调真实仓库、Worker、分支、日志与审核流程。'
+          : 'Oxmux documentation: an AI coding delivery platform that orchestrates work across real repositories, workers, branches, logs, and review flows.',
       path: buildDocsLandingUrl(locale),
-      title: locale === 'zh' ? 'Wemux 文档' : 'Wemux Docs',
+      title: locale === 'zh' ? 'Oxmux 文档' : 'Oxmux Docs',
     })
   },
   component: DocsLangLayoutRoute,

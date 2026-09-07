@@ -25,9 +25,9 @@ const pullRequestId = 'github:github.com:example-org:example-repo:89'
 test('task detail workspace cards consume canonical pull request bindings', () => {
   const project = {
     id: projectId,
-    name: 'wemux',
+    name: 'oxmux',
     color: '#34d399',
-    gitUrl: 'https://github.com/wemux-ai/wemux.git',
+    gitUrl: 'https://github.com/oxmux-ai/oxmux.git',
     defaultBranch: 'dev',
     createdAt,
     updatedAt: createdAt,
@@ -89,11 +89,11 @@ test('task detail workspace cards consume canonical pull request bindings', () =
     projectId,
     repoHost: 'github.com',
     repoOwner: 'example-org',
-    repoName: 'wemux',
-    repoFullName: 'wemux-ai/wemux',
-    repoUrl: 'https://github.com/wemux-ai/wemux.git',
+    repoName: 'oxmux',
+    repoFullName: 'oxmux-ai/oxmux',
+    repoUrl: 'https://github.com/oxmux-ai/oxmux.git',
     number: 89,
-    url: 'https://github.com/wemux-ai/wemux/pull/89',
+    url: 'https://github.com/oxmux-ai/oxmux/pull/89',
     title: '更新 PRD 到 v0.3.108',
     body: '',
     state: 'open',
@@ -149,7 +149,7 @@ test('task detail workspace cards consume canonical pull request bindings', () =
   )
 
   assert.match(html, /PRD更新v2/)
-  assert.match(html, /data-task-pull-request-url="https:\/\/github\.com\/wemux-ai\/wemux\/pull\/89"/)
+  assert.match(html, /data-task-pull-request-url="https:\/\/github\.com\/oxmux-ai\/oxmux\/pull\/89"/)
   assert.match(html, /#89/)
 })
 

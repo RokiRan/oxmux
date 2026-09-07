@@ -1,4 +1,4 @@
-# Wemux
+# Oxmux
 
 > **AI Native organization OS.**
 >
@@ -6,13 +6,13 @@
 >
 > **English**: [README.md](README.md) | **中文**: README.zh-CN.md
 
-**中文简介**：Wemux 是一个以 worker 为唯一代码执行入口的 AI 编排平台。主聊天/任务/工作区把需求派发给本地 worker，在隔离 worktree 中执行代码任务并交付可验证的结果。
+**中文简介**：Oxmux 是一个以 worker 为唯一代码执行入口的 AI 编排平台。主聊天/任务/工作区把需求派发给本地 worker，在隔离 worktree 中执行代码任务并交付可验证的结果。
 
-Wemux 是开源的 Agent 协作平台：它编排的 AI Agent 在 **worker 机器**（你的机器、你的凭据）上的隔离 Git worktree 中执行真实编码工作，全程可追溯——而不是在云端黑盒里运行。
+Oxmux 是开源的 Agent 协作平台：它编排的 AI Agent 在 **worker 机器**（你的机器、你的凭据）上的隔离 Git worktree 中执行真实编码工作，全程可追溯——而不是在云端黑盒里运行。
 
-**开源** — Apache-2.0 许可（见 [LICENSE](LICENSE)），完全可自托管，社区驱动。在 [GitHub](https://github.com/wemux-ai/wemux) 上给我们点 Star，提 [issue](https://github.com/wemux-ai/wemux/issues)，或参与讨论。欢迎贡献——见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+**开源** — Apache-2.0 许可（见 [LICENSE](LICENSE)），完全可自托管，社区驱动。在 [GitHub](https://github.com/oxmux-ai/oxmux) 上给我们点 Star，提 [issue](https://github.com/oxmux-ai/oxmux/issues)，或参与讨论。欢迎贡献——见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-> **注意** — 本仓库包含 Wemux 的开源社区版。部分平台能力——托管模型网关、按用量计费、托管云节点池与合作商系统——作为独立商业服务运营，**不包含在本仓库中**。**自托管云节点是开源的**（自带 Docker/BoxLite 宿主即可，见 [SELF-HOSTING.md § 七](docs/SELF-HOSTING.md)）。本仓库所有内容在 Apache-2.0 下免费使用。完整对照见 [开源 vs 商业托管](#开源-vs-商业托管)。
+> **注意** — 本仓库包含 Oxmux 的开源社区版。部分平台能力——托管模型网关、按用量计费、托管云节点池与合作商系统——作为独立商业服务运营，**不包含在本仓库中**。**自托管云节点是开源的**（自带 Docker/BoxLite 宿主即可，见 [SELF-HOSTING.md § 七](docs/SELF-HOSTING.md)）。本仓库所有内容在 Apache-2.0 下免费使用。完整对照见 [开源 vs 商业托管](#开源-vs-商业托管)。
 
 ## 目录
 
@@ -67,7 +67,7 @@ Wemux 是开源的 Agent 协作平台：它编排的 AI Agent 在 **worker 机�
 
 ## 工作原理
 
-Wemux 让人类始终在环，Agent 负责重活：
+Oxmux 让人类始终在环，Agent 负责重活：
 
 1. **描述** — 在主聊天、工作区看板甚至入站 IM 渠道（飞书 / Slack / …）里用自然语言创建任务。
 2. **规划** — 主 Agent 把你的话转成结构化任务，挑选 Agent 与工作区，并路由到可用的 worker。
@@ -102,8 +102,8 @@ Wemux 让人类始终在环，Agent 负责重活：
 环境要求：Node.js 20+、pnpm 10+、Docker（Postgres 用）。
 
 ```bash
-git clone https://github.com/wemux-ai/wemux.git
-cd wemux
+git clone https://github.com/oxmux-ai/oxmux.git
+cd oxmux
 pnpm install
 
 # 1. 启动基础设施（Postgres + 对象存储）
@@ -145,7 +145,7 @@ pnpm build:client && pnpm build:server && pnpm build:worker:preview-installer
 NODE_ENV=production node dist-server/apps/server/src/control-plane-entry.js
 ```
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/wemux-community)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/oxmux-community)
 
 Railway 模板会尝试预置控制面、Postgres 与对象存储 Bucket。如果通过 **New Project → Deploy from GitHub repo** 直接部署，`railway.json` 只负责构建、启动和健康检查，不会自动创建数据库或对象存储服务，需要自行添加 Railway Postgres 和 S3 兼容对象存储。
 
@@ -162,7 +162,7 @@ Railway 模板会尝试预置控制面、Postgres 与对象存储 Bucket。如�
 | `BETTER_AUTH_SECRET` | **生产必填。** 使用 `openssl rand -hex 32` 生成。 |
 | `TOKEN_SECRET` | **生产必填。** 单独使用 `openssl rand -hex 32` 生成。 |
 | `SECRET_ENCRYPTION_KEY` | **必填。** 32 字节十六进制密钥，单独使用 `openssl rand -hex 32` 生成。 |
-| `WEMUX_PUBLIC_BASE_URL` | 设置为最终公开 origin，例如 `https://your-app.up.railway.app`。 |
+| `OXMUX_PUBLIC_BASE_URL` | 设置为最终公开 origin，例如 `https://your-app.up.railway.app`。 |
 | `BETTER_AUTH_URL` | 设置为相同公开 origin，确保登录和 OAuth 回调可靠。 |
 | `HOST` | 可选，默认 `0.0.0.0`。 |
 | `PORT` | 不要固定；Railway 会注入 `PORT`，应用回退值为 `8989`。 |
@@ -174,9 +174,9 @@ Railway 模板会尝试预置控制面、Postgres 与对象存储 Bucket。如�
 
 ## 模型配置（BYOK）
 
-模型密钥在 **worker 侧**配置——你的密钥永远不会离开你的机器。在 worker 上配置运行时（OpenCode/Claude Code/Codex），然后在控制台的模型中心选择模型。Wemux 不内置任何 API 密钥。
+模型密钥在 **worker 侧**配置——你的密钥永远不会离开你的机器。在 worker 上配置运行时（OpenCode/Claude Code/Codex），然后在控制台的模型中心选择模型。Oxmux 不内置任何 API 密钥。
 
-> **运行时许可** — Wemux 平台是 Apache-2.0，但它编排的 Agent CLI 各自持有许可：[OpenCode](https://github.com/sst/opencode) 是 Apache-2.0；Claude Code 与 Codex 分别是 Anthropic 与 OpenAI 的专有工具——你用自己账户认证并遵守其条款。
+> **运行时许可** — Oxmux 平台是 Apache-2.0，但它编排的 Agent CLI 各自持有许可：[OpenCode](https://github.com/sst/opencode) 是 Apache-2.0；Claude Code 与 Codex 分别是 Anthropic 与 OpenAI 的专有工具——你用自己账户认证并遵守其条款。
 
 ## 开发
 
@@ -201,15 +201,15 @@ pnpm exec tsx --test packages/shared/src/task-workspace.test.ts
 不需要。worker 只是在本地跑 Agent CLI——模型推理发生在你的模型服务商（Anthropic、OpenAI、OpenRouter、本地模型…）。任何笔记本或服务器都能当 worker。
 
 **支持哪些 Agent 运行时与模型？**
-Wemux 编排 OpenCode、Claude Code 与 Codex 运行时，支持运行时支持的任何模型——自带密钥（BYOK）。
+Oxmux 编排 OpenCode、Claude Code 与 Codex 运行时，支持运行时支持的任何模型——自带密钥（BYOK）。
 
 **必须自托管吗？**
-不是。同一产品也以托管服务形式提供（wemux.ai），含托管云节点与计费。本仓库是可自托管的社区版。
+不是。同一产品也以托管服务形式提供（oxmux.ai），含托管云节点与计费。本仓库是可自托管的社区版。
 
 **真的免费吗？**
 是的。本仓库所有内容都是 Apache-2.0，包括自托管云节点运行时。只有独立运营的托管服务——模型网关、托管云节点池、计费、合作商系统——是商业的，而且都不在本仓库中。
 
-**Wemux 与云端 Agent 平台有什么不同？**
+**Oxmux 与云端 Agent 平台有什么不同？**
 Worker 优先执行：代码跑在你控制的机器上、隔离 worktree 中，合入前有人工审阅 diff 环节；外加多节点组网、IM 渠道集成与工作区级协作——全部可自托管。
 
 ## 遥测（匿名，可关闭）
@@ -222,16 +222,16 @@ Worker 优先执行：代码跑在你控制的机器上、隔离 worktree 中，
 用一个环境变量即可关闭：
 
 ```bash
-WEMUX_USAGE_REPORTING_DISABLED=1
+OXMUX_USAGE_REPORTING_DISABLED=1
 ```
 
 上报是尽力而为的，从不阻塞任何功能——关闭不影响任何特性。
 
 ## 社区与资源
 
-- [X（推特）](https://x.com/Wemux_ai) — 产品动态与公告
-- [GitHub Issues](https://github.com/wemux-ai/wemux/issues) — 可复现缺陷与范围明确的工程任务
-- [GitHub Discussions](https://github.com/wemux-ai/wemux/discussions) — 使用问题、想法、使用案例与路线图讨论
+- [X（推特）](https://x.com/Oxmux_ai) — 产品动态与公告
+- [GitHub Issues](https://github.com/oxmux-ai/oxmux/issues) — 可复现缺陷与范围明确的工程任务
+- [GitHub Discussions](https://github.com/oxmux-ai/oxmux/discussions) — 使用问题、想法、使用案例与路线图讨论
 - [社区治理](docs/COMMUNITY-GOVERNANCE.md) — 入口分流、Issue 标准与维护流程
 - [路线图](ROADMAP.md) — 后续计划
 - [SELF-HOSTING.md](docs/SELF-HOSTING.md) — 生产部署指南
@@ -247,4 +247,4 @@ WEMUX_USAGE_REPORTING_DISABLED=1
 
 ## 许可
 
-[Apache-2.0](LICENSE)。文档与营销素材另行授权（见 NOTICE）。"wemux" 名称与 wemux.ai 域名是商标，不随开源许可授予。
+[Apache-2.0](LICENSE)。文档与营销素材另行授权（见 NOTICE）。"oxmux" 名称与 oxmux.ai 域名是商标，不随开源许可授予。

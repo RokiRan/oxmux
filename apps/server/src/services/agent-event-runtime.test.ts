@@ -85,7 +85,7 @@ test('task-scoped Agent events require an explicit delivery report', () => {
   assert.match(prompt, /workspace\.create.*vibemux__workspace_create/)
   assert.match(prompt, /task\.execute.*vibemux__task_execute/)
   assert.match(prompt, /只复用 createdBy\.type=agent/)
-  assert.match(prompt, /~\/\.wemux/)
+  assert.match(prompt, /~\/\.oxmux/)
   assert.match(prompt, /\[Context Capsule\]/)
 })
 

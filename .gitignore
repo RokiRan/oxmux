@@ -60,7 +60,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
-# WEMUX_WORKER_HOME 传入未展开 ~ 时在 cwd 生成的错误目录
+# OXMUX_WORKER_HOME 传入未展开 ~ 时在 cwd 生成的错误目录
 /~
 
 # Other ecosystem outputs

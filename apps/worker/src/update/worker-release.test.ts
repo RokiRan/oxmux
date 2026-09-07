@@ -24,11 +24,11 @@ test('packaged worker channel overrides ambient shell channel', () => {
   }), 'preview')
   // 兼容窗口：新包名同样识别
   assert.equal(resolveWorkerReleaseChannel({
-    packageName: 'wemux-worker',
+    packageName: 'oxmux-worker',
     environmentChannel: 'preview',
   }), 'production')
   assert.equal(resolveWorkerReleaseChannel({
-    packageName: 'wemux-worker-preview',
+    packageName: 'oxmux-worker-preview',
     environmentChannel: 'production',
   }), 'preview')
 })
@@ -68,7 +68,7 @@ test('checkInstallerPackageUpdate checks installer manifest for preview packages
   }
 })
 
-test('checkInstallerPackageUpdate allows vibemux legacy package against wemux manifest in same channel', async () => {
+test('checkInstallerPackageUpdate allows vibemux legacy package against oxmux manifest in same channel', async () => {
   const originalInstallerUrl = process.env.VIBEMUX_WORKER_INSTALLER_URL
   const originalFetch = globalThis.fetch
 
@@ -77,7 +77,7 @@ test('checkInstallerPackageUpdate allows vibemux legacy package against wemux ma
     globalThis.fetch = (async (input: string | URL | Request) => {
       assert.equal(String(input), 'https://preview.example/install/worker/manifest.json')
       return new Response(JSON.stringify({
-        packageName: 'wemux-worker-preview',
+        packageName: 'oxmux-worker-preview',
         packageVersion: '0.3.114-preview.new',
       }), { status: 200 })
     }) as typeof fetch
@@ -111,7 +111,7 @@ test('checkInstallerPackageUpdate rejects cross-channel manifest package name', 
     process.env.VIBEMUX_WORKER_INSTALLER_URL = 'https://preview.example/install'
     globalThis.fetch = (async () => {
       return new Response(JSON.stringify({
-        packageName: 'wemux-worker',
+        packageName: 'oxmux-worker',
         packageVersion: '0.3.114',
       }), { status: 200 })
     }) as typeof fetch

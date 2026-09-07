@@ -4,19 +4,19 @@ import type { ExecutorConnectionRouteResponse } from '@shared/types'
 import { selectWorkerConnectionRoute, workerRouteSelectionDeps } from './route-selection'
 
 const createRoute = (overrides: Partial<ExecutorConnectionRouteResponse> = {}): ExecutorConnectionRouteResponse => ({
-  assignedCloudUrl: 'https://us.wemux.ai',
+  assignedCloudUrl: 'https://us.oxmux.ai',
   assignedLabels: ['route:us', 'realtime:us'],
   managedRoutingLabels: ['route:hk', 'realtime:hk', 'route:us', 'realtime:us'],
   matchedRouteId: 'us',
   candidates: [
     {
       id: 'us',
-      cloudUrl: 'https://us.wemux.ai',
+      cloudUrl: 'https://us.oxmux.ai',
       labels: ['route:us', 'realtime:us'],
     },
     {
       id: 'public-default',
-      cloudUrl: 'https://wemux.ai',
+      cloudUrl: 'https://oxmux.ai',
       labels: [],
     },
   ],
@@ -36,14 +36,14 @@ test('selectWorkerConnectionRoute picks the lowest-latency reachable candidate',
   })
 
   const selection = await selectWorkerConnectionRoute({
-    bootstrapCloudUrl: 'https://wemux.ai',
+    bootstrapCloudUrl: 'https://oxmux.ai',
     route: createRoute(),
   })
 
   fetchRestore.mock.restore()
   nowRestore.mock.restore()
 
-  assert.equal(selection.cloudUrl, 'https://us.wemux.ai')
+  assert.equal(selection.cloudUrl, 'https://us.oxmux.ai')
   assert.deepEqual(selection.labels, ['route:us', 'realtime:us'])
   assert.equal(selection.probeResults.length, 2)
   assert.equal(selection.selectedCandidate.id, 'us')
@@ -51,7 +51,7 @@ test('selectWorkerConnectionRoute picks the lowest-latency reachable candidate',
 
 test('selectWorkerConnectionRoute falls back to bootstrap/public candidate when assigned route is unreachable', async () => {
   const fetchRestore = test.mock.method(workerRouteSelectionDeps, 'fetch', async (input: string) => {
-    if (`${input}`.includes('us.wemux.ai')) {
+    if (`${input}`.includes('us.oxmux.ai')) {
       throw new Error('connect timeout')
     }
 
@@ -64,13 +64,13 @@ test('selectWorkerConnectionRoute falls back to bootstrap/public candidate when 
   })
 
   const selection = await selectWorkerConnectionRoute({
-    bootstrapCloudUrl: 'https://wemux.ai',
+    bootstrapCloudUrl: 'https://oxmux.ai',
     route: createRoute(),
   })
 
   fetchRestore.mock.restore()
 
-  assert.equal(selection.cloudUrl, 'https://wemux.ai')
+  assert.equal(selection.cloudUrl, 'https://oxmux.ai')
   assert.deepEqual(selection.labels, [])
   assert.equal(selection.selectedCandidate.id, 'public-default')
 })
@@ -81,13 +81,13 @@ test('selectWorkerConnectionRoute falls back to assigned route when all probes f
   })
 
   const selection = await selectWorkerConnectionRoute({
-    bootstrapCloudUrl: 'https://wemux.ai',
+    bootstrapCloudUrl: 'https://oxmux.ai',
     route: createRoute(),
   })
 
   fetchRestore.mock.restore()
 
-  assert.equal(selection.cloudUrl, 'https://us.wemux.ai')
+  assert.equal(selection.cloudUrl, 'https://us.oxmux.ai')
   assert.deepEqual(selection.labels, ['route:us', 'realtime:us'])
   assert.equal(selection.selectedCandidate.id, 'us')
 })

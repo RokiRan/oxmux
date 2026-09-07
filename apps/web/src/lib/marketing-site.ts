@@ -39,7 +39,7 @@ export function buildMarketingHead({
     { name: 'description', content: description },
     { name: 'robots', content: 'index, follow, max-image-preview:large' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:site_name', content: 'Wemux' },
+    { property: 'og:site_name', content: 'Oxmux' },
     { property: 'og:title', content: resolvedTitle },
     { property: 'og:description', content: description },
     { property: 'og:url', content: pageUrl },
@@ -53,7 +53,7 @@ export function buildMarketingHead({
     { name: 'twitter:description', content: description },
     { name: 'twitter:image', content: resolvedImageUrl },
     { name: 'twitter:image:alt', content: resolvedImageAlt },
-    { name: 'author', content: 'Wemux' },
+    { name: 'author', content: 'Oxmux' },
   ]
 
   if (structuredData) {

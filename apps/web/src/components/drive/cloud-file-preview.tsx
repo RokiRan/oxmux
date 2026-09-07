@@ -1,6 +1,6 @@
 // [INPUT]: 云节点文件条目（R2 前缀只读视图，无 DB contentType）+ 下载 key
 // [OUTPUT]: 内嵌只读预览（图片直出 / Markdown 渲染 / 代码文本高亮 / 其他下载提示）+ 来源标注
-// [POS]: Drive 云节点文件只读视图的预览栏；来源标注「Wemux 云节点（R2）· 单一权威 = 执行位置」
+// [POS]: Drive 云节点文件只读视图的预览栏；来源标注「Oxmux 云节点（R2）· 单一权威 = 执行位置」
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
 import { useEffect, useState } from 'react'
@@ -111,7 +111,7 @@ export function CloudFilePreview({
         </button>
       </div>
       <div className="flex shrink-0 items-center gap-1 border-b border-zinc-900 bg-zinc-950/60 px-4 py-1.5 text-[10px] text-zinc-500">
-        <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-zinc-300">来源：Wemux 云节点（R2）</span>
+        <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-zinc-300">来源：Oxmux 云节点（R2）</span>
         <span>单一权威 = 执行位置，本地节点执行的文件不在此显示</span>
       </div>
 

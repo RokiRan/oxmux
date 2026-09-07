@@ -97,14 +97,14 @@ export function SidebarProvider({ children, defaultCollapsed = false }: SidebarP
       <div className={cn(
         "flex h-screen overflow-hidden text-zinc-100",
         isMacNative
-          ? "wemux-native-shell wemux-desktop-shell bg-transparent md:gap-0"
+          ? "oxmux-native-shell oxmux-desktop-shell bg-transparent md:gap-0"
           : isMobile
-            ? "wemux-shell-web bg-black"
-            : "wemux-desktop-shell wemux-shell-web bg-black md:gap-0",
+            ? "oxmux-shell-web bg-black"
+            : "oxmux-desktop-shell oxmux-shell-web bg-black md:gap-0",
       )} data-sidebar-collapsed={collapsed}>
         <div className={cn(
           "flex min-h-0 min-w-0 flex-1 overflow-hidden",
-          !isMobile && "wemux-desktop-frame",
+          !isMobile && "oxmux-desktop-frame",
         )}>
           {children}
         </div>

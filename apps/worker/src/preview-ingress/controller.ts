@@ -78,7 +78,7 @@ const hasInterfaceAddress = (targetAddress: string) => {
 export const resolveWorkerMeshProxyPort = (config: Pick<WorkerConfig, 'localServerPort' | 'meshEnrollment'>) => {
   const fallbackMeshPort = deriveMeshProxyPortFromLocalServerPort(config.localServerPort)
   const configuredMeshPort = Number(config.meshEnrollment?.previewProxyPort || 0)
-  const hasExplicitMeshProxyPort = Boolean(getEnv('WEMUX_EASYTIER_PREVIEW_PROXY_PORT')?.trim())
+  const hasExplicitMeshProxyPort = Boolean(getEnv('OXMUX_EASYTIER_PREVIEW_PROXY_PORT')?.trim())
   return hasExplicitMeshProxyPort && Number.isInteger(configuredMeshPort) && configuredMeshPort > 0 && configuredMeshPort <= 65535
     ? configuredMeshPort
     : fallbackMeshPort

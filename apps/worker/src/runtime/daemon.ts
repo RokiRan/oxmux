@@ -113,7 +113,7 @@ const printWorkerBanner = (
   versionStatus: WorkerVersionStatus,
 ) => {
   const channel = versionStatus.check.channel || getWorkerReleaseChannel()
-  const title = channel === 'preview' ? 'wemux Worker Preview' : 'wemux Worker'
+  const title = channel === 'preview' ? 'oxmux Worker Preview' : 'oxmux Worker'
   const updateExitMode = resolveWorkerUpdateExitMode()
   const rows = [
     ['Mode', mode],

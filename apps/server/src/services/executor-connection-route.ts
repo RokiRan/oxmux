@@ -220,7 +220,7 @@ const resolvePublicBaseUrl = (params: {
     return requestOrigin
   }
 
-  return trimTrailingSlash(getEnv('WEMUX_PUBLIC_BASE_URL')?.trim() || '')
+  return trimTrailingSlash(getEnv('OXMUX_PUBLIC_BASE_URL')?.trim() || '')
 }
 
 const doesRouteRuleMatch = (params: {

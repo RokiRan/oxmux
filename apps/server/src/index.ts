@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { bridgeWemuxEnvToLegacy } from '@shared/env'
+import { bridgeOxmuxEnvToLegacy } from '@shared/env'
 import { serve } from '@hono/node-server'
 import { createApp } from './app'
 import { loadCommercialServerExtension } from './commercial-extension-loader'
@@ -7,7 +7,7 @@ import { ensureDevLoginAccountsReady, isDevLoginEnabled } from './services/dev-a
 import { enterpriseDevSeedInitializers } from './extension-registry'
 import { startServerBackgroundServices, stopServerBackgroundServices } from './services/server-background-services'
 
-bridgeWemuxEnvToLegacy()
+bridgeOxmuxEnvToLegacy()
 await loadCommercialServerExtension()
 
 // ---- 致命错误处理 ----
@@ -78,7 +78,7 @@ const server = serve(
     port: PORT,
   },
   (info) => {
-    console.log(`wemux server running at http://${HOST}:${info.port}`)
+    console.log(`oxmux server running at http://${HOST}:${info.port}`)
   },
 )
 

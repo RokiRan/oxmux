@@ -266,7 +266,7 @@ export const identityMethods = {
 
     const contentType = response.headers.get('content-type') ?? ''
     const fallbackMessage = response.status === 404
-      ? 'Google 登录入口未部署成功。请确认当前环境已暴露 /api/identity/*，并且 preview 使用 wemux.xyz、production 使用 wemux.ai 的域名配置后重新部署。'
+      ? 'Google 登录入口未部署成功。请确认当前环境已暴露 /api/identity/*，并且 preview 使用 oxmux.xyz、production 使用 oxmux.ai 的域名配置后重新部署。'
       : `Request failed: ${response.status}`
     const responsePayload = contentType.includes('application/json')
       ? await response.json() as BetterAuthSocialSignInResponse

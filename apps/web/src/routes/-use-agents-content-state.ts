@@ -1108,7 +1108,7 @@ export const useAgentsContentState = ({
 
     const confirmed = await confirm({
       title: '断开飞书连接？',
-      description: '将立即停止接收飞书消息，并清除 Wemux 保存的 App ID 与密钥。飞书管理后台中已创建的应用不会被删除。',
+      description: '将立即停止接收飞书消息，并清除 Oxmux 保存的 App ID 与密钥。飞书管理后台中已创建的应用不会被删除。',
       confirmText: '断开并清除',
       cancelText: '取消',
       tone: 'danger',
@@ -1144,7 +1144,7 @@ export const useAgentsContentState = ({
 
     const confirmed = await confirm({
       title: '断开微信连接？',
-      description: '将立即停止接收微信消息，并清除 Wemux 中保存的微信 iLink 凭证。扫码绑定的微信号本身不会受到影响。',
+      description: '将立即停止接收微信消息，并清除 Oxmux 中保存的微信 iLink 凭证。扫码绑定的微信号本身不会受到影响。',
       confirmText: '断开并清除',
       cancelText: '取消',
       tone: 'danger',

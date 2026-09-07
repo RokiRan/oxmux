@@ -1,6 +1,6 @@
 /**
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
- * [INPUT]: Authenticated Wemux MCP context and Agent runtime tool calls.
+ * [INPUT]: Authenticated Oxmux MCP context and Agent runtime tool calls.
  * [OUTPUT]: Agent event delivery, Inbox inspection, waits, and event-threaded idempotent comments/delivery.
  * [POS]: Product capability surface for the generic Agent event runtime.
  */
@@ -28,12 +28,12 @@ import {
   markInboxItemRead,
 } from '../../services/inbox-service'
 import { ErrorCode, McpError, type McpServer } from './sdk'
-import { requireTask, toToolResult, type WemuxMcpContext } from './wemux-mcp-context'
+import { requireTask, toToolResult, type OxmuxMcpContext } from './oxmux-mcp-context'
 
 const eventScopeSchema = z.record(z.string())
 const eventPayloadSchema = z.record(z.unknown())
 
-const requireUsableAgent = (ctx: WemuxMcpContext, agentId: string) => {
+const requireUsableAgent = (ctx: OxmuxMcpContext, agentId: string) => {
   const agent = getAgent(agentId)
   if (!agent || (agent.ownerUserId && agent.ownerUserId !== ctx.userId && agent.id !== ctx.runtimeAgentId)) {
     throw new McpError(ErrorCode.InvalidParams, 'Agent 不存在或无权使用。')
@@ -41,7 +41,7 @@ const requireUsableAgent = (ctx: WemuxMcpContext, agentId: string) => {
   return agent
 }
 
-const resolveRuntimeCommentAuthor = (ctx: WemuxMcpContext, requestedAgentId?: string) => {
+const resolveRuntimeCommentAuthor = (ctx: OxmuxMcpContext, requestedAgentId?: string) => {
   const agentId = ctx.runtimeAgentId || requestedAgentId
   if (!agentId) {
     throw new McpError(ErrorCode.InvalidParams, '需要指定 Agent。')
@@ -59,7 +59,7 @@ const resolveRuntimeCommentAuthor = (ctx: WemuxMcpContext, requestedAgentId?: st
   }
 }
 
-export const registerWemuxMcpAgentRuntimeTools = (server: McpServer, ctx: WemuxMcpContext) => {
+export const registerOxmuxMcpAgentRuntimeTools = (server: McpServer, ctx: OxmuxMcpContext) => {
   server.registerTool('agent.schedule.list', {
     title: 'List Agent Heartbeat Schedules',
     description: '读取 Agent 的定时心跳计划列表（cron 表达式 / 启停 / 上次与下次运行）。',

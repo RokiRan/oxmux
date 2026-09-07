@@ -21,7 +21,7 @@ const channel = readArg('--channel', 'production')
 const outputRoot = path.resolve(readArg('--output-dir', path.join(rootDir, '.artifacts', 'worker-fresh-docker')))
 const skipBuild = hasFlag('--skip-build')
 
-const packageName = channel === 'preview' ? 'wemux-worker-preview' : 'wemux-worker'
+const packageName = channel === 'preview' ? 'oxmux-worker-preview' : 'oxmux-worker'
 const packageOutputDir = path.join(rootDir, '.artifacts', 'worker-npm-fresh-docker')
 const packageRoot = path.join(packageOutputDir, packageName)
 
@@ -90,7 +90,7 @@ const main = async () => {
 
   const containerCommand = [
     'set -euo pipefail',
-    'export WEMUX_WORKER_HOME=/tmp/wemux-worker-home',
+    'export OXMUX_WORKER_HOME=/tmp/oxmux-worker-home',
     `npx -y --package ${packageSpec} ${workerBinary} bootstrap --target base --json > /out/bootstrap.json`,
     `npx -y --package ${packageSpec} ${workerBinary} doctor > /out/doctor.json`,
     'git --version > /out/git-version.txt',

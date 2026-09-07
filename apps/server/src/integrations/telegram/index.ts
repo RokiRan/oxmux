@@ -276,7 +276,7 @@ const processMainChat = async (chatId: number, text: string, userId?: number): P
   const msg = text.toLowerCase()
 
   if (msg === '/start' || msg === '/help') {
-    return `🤖 *wemux Bot*
+    return `🤖 *oxmux Bot*
 
 我可以帮你管理项目和任务：
 

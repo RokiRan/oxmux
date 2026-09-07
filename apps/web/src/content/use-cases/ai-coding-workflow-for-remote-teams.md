@@ -39,9 +39,9 @@ A stronger remote-team AI workflow usually looks like this:
 
 That is not just a convenience improvement. For remote teams, it is the difference between AI being useful and AI becoming operational noise.
 
-## Why Wemux fits remote teams
+## Why Oxmux fits remote teams
 
-Wemux is well aligned with remote-team reality because it is built around routed workers and persistent execution instead of single-device ownership.
+Oxmux is well aligned with remote-team reality because it is built around routed workers and persistent execution instead of single-device ownership.
 
 That helps remote teams:
 

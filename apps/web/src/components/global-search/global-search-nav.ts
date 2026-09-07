@@ -33,7 +33,7 @@ export type GlobalSearchFlatEntry = {
 }
 
 /** 侧边栏搜索按钮等外部入口触发的打开事件（window.dispatchEvent 触发，palette 监听）。 */
-export const GLOBAL_SEARCH_OPEN_EVENT = 'Wemux:global-search-open'
+export const GLOBAL_SEARCH_OPEN_EVENT = 'Oxmux:global-search-open'
 
 /** 从侧边栏按钮等入口打开面板。 */
 export const requestGlobalSearchOpen = () => {

@@ -209,11 +209,11 @@ class DuplicateWorkerError extends Error {}
 
 const formatListenError = (error: NodeJS.ErrnoException, port: number) => {
   if (error.code === 'EADDRINUSE') {
-    return `Local console port ${port} and the fallback port range are already in use. Choose another WEMUX_WORKER_PORT or stop an unused worker.`
+    return `Local console port ${port} and the fallback port range are already in use. Choose another OXMUX_WORKER_PORT or stop an unused worker.`
   }
 
   if (error.code === 'EPERM') {
-    return `The worker does not have permission to listen on local console port ${port}. Choose a different WEMUX_WORKER_PORT or check system permissions.`
+    return `The worker does not have permission to listen on local console port ${port}. Choose a different OXMUX_WORKER_PORT or check system permissions.`
   }
 
   return `Failed to start the local console: ${error.message || 'listen failed'}`
@@ -221,7 +221,7 @@ const formatListenError = (error: NodeJS.ErrnoException, port: number) => {
 
 const resolveConfiguredWorkerConsolePortCandidates = (preferredPort: number) => {
   const environment = resolveWorkerConsolePortEnvironment({
-    explicitEnvironment: getEnv('WEMUX_WORKER_PORT_PROFILE'),
+    explicitEnvironment: getEnv('OXMUX_WORKER_PORT_PROFILE'),
     nodeEnv: process.env.NODE_ENV,
     releaseChannel: getWorkerReleaseChannel(),
     cloudUrl: loadWorkerConfig().cloudUrl,

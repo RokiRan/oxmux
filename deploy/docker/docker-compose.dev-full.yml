@@ -1,20 +1,20 @@
-name: ${HYBRID_PROJECT_NAME:-wemux}
+name: ${HYBRID_PROJECT_NAME:-oxmux}
 
 services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: wemux
-      POSTGRES_USER: wemux
+      POSTGRES_DB: oxmux
+      POSTGRES_USER: oxmux
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-dev-password}
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U wemux -d wemux']
+      test: ['CMD-SHELL', 'pg_isready -U oxmux -d oxmux']
       interval: 5s
       timeout: 5s
       retries: 20
     volumes:
-      - wemux-hybrid-postgres-data:/var/lib/postgresql/data
+      - oxmux-hybrid-postgres-data:/var/lib/postgresql/data
 
   postgres-init:
     image: postgres:16-alpine
@@ -24,9 +24,9 @@ services:
     restart: 'no'
     environment:
       PGPASSWORD: ${POSTGRES_PASSWORD:-local-dev-password}
-      POSTGRES_USER: wemux
-      POSTGRES_PREVIEW_DB: wemux_preview
-      POSTGRES_PRODUCTION_DB: wemux_production
+      POSTGRES_USER: oxmux
+      POSTGRES_PREVIEW_DB: oxmux_preview
+      POSTGRES_PRODUCTION_DB: oxmux_production
     entrypoint: >-
       /bin/sh -c
       "psql -h postgres -U vibemux -d postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'vibemux_preview'\" | grep -q 1 || psql -h postgres -U vibemux -d postgres -c \"CREATE DATABASE \\\"vibemux_preview\\\"\";
@@ -49,33 +49,33 @@ services:
       HOST: 0.0.0.0
       PORT: ${HYBRID_SERVER_PORT:-18989}
       APP_URL: ${APP_URL:-http://127.0.0.1:${HYBRID_SERVER_PORT:-18989}}
-      APP_BASE_URL: ${APP_BASE_URL:-http://app.wemux.localtest.me:${HYBRID_WEB_PORT:-15173}}
-      WEMUX_PUBLIC_BASE_URL: ${WEMUX_PUBLIC_BASE_URL:-http://app.wemux.localtest.me:${HYBRID_WEB_PORT:-15173}}
-      WEMUX_CLOUD_URL: ${WEMUX_CLOUD_URL:-http://127.0.0.1:${HYBRID_SERVER_PORT:-18989}}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://app.wemux.localtest.me:${HYBRID_SERVER_PORT:-18989}}
-      BETTER_AUTH_TRUSTED_ORIGINS: ${BETTER_AUTH_TRUSTED_ORIGINS:-http://app.wemux.localtest.me:${HYBRID_WEB_PORT:-15173},http://app.wemux.localtest.me:${HYBRID_SERVER_PORT:-18989},http://127.0.0.1:${HYBRID_WEB_PORT:-15173},http://localhost:${HYBRID_WEB_PORT:-15173},http://127.0.0.1:${HYBRID_SERVER_PORT:-18989},http://localhost:${HYBRID_SERVER_PORT:-18989}}
+      APP_BASE_URL: ${APP_BASE_URL:-http://app.oxmux.localtest.me:${HYBRID_WEB_PORT:-15173}}
+      OXMUX_PUBLIC_BASE_URL: ${OXMUX_PUBLIC_BASE_URL:-http://app.oxmux.localtest.me:${HYBRID_WEB_PORT:-15173}}
+      OXMUX_CLOUD_URL: ${OXMUX_CLOUD_URL:-http://127.0.0.1:${HYBRID_SERVER_PORT:-18989}}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://app.oxmux.localtest.me:${HYBRID_SERVER_PORT:-18989}}
+      BETTER_AUTH_TRUSTED_ORIGINS: ${BETTER_AUTH_TRUSTED_ORIGINS:-http://app.oxmux.localtest.me:${HYBRID_WEB_PORT:-15173},http://app.oxmux.localtest.me:${HYBRID_SERVER_PORT:-18989},http://127.0.0.1:${HYBRID_WEB_PORT:-15173},http://localhost:${HYBRID_WEB_PORT:-15173},http://127.0.0.1:${HYBRID_SERVER_PORT:-18989},http://localhost:${HYBRID_SERVER_PORT:-18989}}
       NPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-}
-      WEMUX_RUNTIME_DIR: /data/vibemux-runtime
-      DATABASE_URL: postgres://wemux:${POSTGRES_PASSWORD:-local-dev-password}@postgres:5432/wemux
+      OXMUX_RUNTIME_DIR: /data/vibemux-runtime
+      DATABASE_URL: postgres://oxmux:${POSTGRES_PASSWORD:-local-dev-password}@postgres:5432/oxmux
       OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT:?OBJECT_STORAGE_ENDPOINT is required for dev:docker}
       OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:?OBJECT_STORAGE_BUCKET is required for dev:docker}
       OBJECT_STORAGE_ACCESS_KEY_ID: ${OBJECT_STORAGE_ACCESS_KEY_ID:?OBJECT_STORAGE_ACCESS_KEY_ID is required for dev:docker}
       OBJECT_STORAGE_SECRET_ACCESS_KEY: ${OBJECT_STORAGE_SECRET_ACCESS_KEY:?OBJECT_STORAGE_SECRET_ACCESS_KEY is required for dev:docker}
       OBJECT_STORAGE_REGION: ${OBJECT_STORAGE_REGION:-auto}
-      WEMUX_WORKER_CONSOLE_URL: http://worker:${WEMUX_WORKER_PORT:-48121}
-      WEMUX_MESH_ENABLED: ${WEMUX_MESH_ENABLED:-}
-      WEMUX_OFFICIAL_CONNECTOR_URL: ${WEMUX_OFFICIAL_CONNECTOR_URL:-}
-      WEMUX_OFFICIAL_CONNECTOR_ADMIN_TOKEN: ${WEMUX_OFFICIAL_CONNECTOR_ADMIN_TOKEN:-}
-      WEMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN: ${WEMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN:-}
-      WEMUX_EASYTIER_NETWORK_NAME: ${WEMUX_EASYTIER_NETWORK_NAME:-}
-      WEMUX_EASYTIER_NETWORK_PREFIX: ${WEMUX_EASYTIER_NETWORK_PREFIX:-}
-      WEMUX_EASYTIER_NETWORK_SECRET: ${WEMUX_EASYTIER_NETWORK_SECRET:-}
-      WEMUX_EASYTIER_PEERS: ${WEMUX_EASYTIER_PEERS:-}
-      WEMUX_EASYTIER_IPV4_PREFIX: ${WEMUX_EASYTIER_IPV4_PREFIX:-}
-      WEMUX_EASYTIER_PREVIEW_PROXY_PORT: ${WEMUX_EASYTIER_PREVIEW_PROXY_PORT:-}
-      WEMUX_EASYTIER_TERMINAL_PROXY_PORT: ${WEMUX_EASYTIER_TERMINAL_PROXY_PORT:-}
-      WEMUX_EASYTIER_SERVER_IPV4: ${WEMUX_EASYTIER_SERVER_IPV4:-}
-      WEMUX_EASYTIER_LISTEN_URLS: ${WEMUX_EASYTIER_LISTEN_URLS:-}
+      OXMUX_WORKER_CONSOLE_URL: http://worker:${OXMUX_WORKER_PORT:-48121}
+      OXMUX_MESH_ENABLED: ${OXMUX_MESH_ENABLED:-}
+      OXMUX_OFFICIAL_CONNECTOR_URL: ${OXMUX_OFFICIAL_CONNECTOR_URL:-}
+      OXMUX_OFFICIAL_CONNECTOR_ADMIN_TOKEN: ${OXMUX_OFFICIAL_CONNECTOR_ADMIN_TOKEN:-}
+      OXMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN: ${OXMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN:-}
+      OXMUX_EASYTIER_NETWORK_NAME: ${OXMUX_EASYTIER_NETWORK_NAME:-}
+      OXMUX_EASYTIER_NETWORK_PREFIX: ${OXMUX_EASYTIER_NETWORK_PREFIX:-}
+      OXMUX_EASYTIER_NETWORK_SECRET: ${OXMUX_EASYTIER_NETWORK_SECRET:-}
+      OXMUX_EASYTIER_PEERS: ${OXMUX_EASYTIER_PEERS:-}
+      OXMUX_EASYTIER_IPV4_PREFIX: ${OXMUX_EASYTIER_IPV4_PREFIX:-}
+      OXMUX_EASYTIER_PREVIEW_PROXY_PORT: ${OXMUX_EASYTIER_PREVIEW_PROXY_PORT:-}
+      OXMUX_EASYTIER_TERMINAL_PROXY_PORT: ${OXMUX_EASYTIER_TERMINAL_PROXY_PORT:-}
+      OXMUX_EASYTIER_SERVER_IPV4: ${OXMUX_EASYTIER_SERVER_IPV4:-}
+      OXMUX_EASYTIER_LISTEN_URLS: ${OXMUX_EASYTIER_LISTEN_URLS:-}
     working_dir: /app
     command:
       - /bin/sh
@@ -83,12 +83,12 @@ services:
       - node scripts/dev-ensure-deps.mjs /app && pnpm dev:server:docker
     ports:
       - '${HYBRID_BIND_HOST:-127.0.0.1}:${HYBRID_SERVER_PORT:-18989}:${HYBRID_SERVER_PORT:-18989}'
-      - '${HYBRID_EASYTIER_BIND_HOST:-0.0.0.0}:${WEMUX_EASYTIER_PUBLIC_PORT:-11010}:11010/tcp'
-      - '${HYBRID_EASYTIER_BIND_HOST:-0.0.0.0}:${WEMUX_EASYTIER_PUBLIC_PORT:-11010}:11010/udp'
+      - '${HYBRID_EASYTIER_BIND_HOST:-0.0.0.0}:${OXMUX_EASYTIER_PUBLIC_PORT:-11010}:11010/tcp'
+      - '${HYBRID_EASYTIER_BIND_HOST:-0.0.0.0}:${OXMUX_EASYTIER_PUBLIC_PORT:-11010}:11010/udp'
     volumes:
       - ../..:/app
-      - wemux-full-server-node-modules:/app/node_modules
-      - wemux-hybrid-server-runtime:/data/wemux-runtime
+      - oxmux-full-server-node-modules:/app/node_modules
+      - oxmux-hybrid-server-runtime:/data/oxmux-runtime
 
   web:
     build:
@@ -104,10 +104,10 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: ${HYBRID_WEB_PORT:-15173}
-      VITE_HMR_HOST: ${VITE_HMR_HOST:-app.wemux.localtest.me}
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://app.wemux.localtest.me:${HYBRID_WEB_PORT:-15173}}
-      VITE_APP_BASE_URL: ${VITE_APP_BASE_URL:-http://app.wemux.localtest.me:${HYBRID_WEB_PORT:-15173}}
-      VITE_BETTER_AUTH_URL: ${VITE_BETTER_AUTH_URL:-http://app.wemux.localtest.me:${HYBRID_WEB_PORT:-15173}/api/identity}
+      VITE_HMR_HOST: ${VITE_HMR_HOST:-app.oxmux.localtest.me}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://app.oxmux.localtest.me:${HYBRID_WEB_PORT:-15173}}
+      VITE_APP_BASE_URL: ${VITE_APP_BASE_URL:-http://app.oxmux.localtest.me:${HYBRID_WEB_PORT:-15173}}
+      VITE_BETTER_AUTH_URL: ${VITE_BETTER_AUTH_URL:-http://app.oxmux.localtest.me:${HYBRID_WEB_PORT:-15173}/api/identity}
       VITE_SERVER_PROXY_TARGET: ${VITE_SERVER_PROXY_TARGET:-http://server:${HYBRID_SERVER_PORT:-18989}}
       VITE_DOCS_PROXY_TARGET: ${VITE_DOCS_PROXY_TARGET:-http://host.docker.internal:${HYBRID_DOCS_PORT:-3001}}
       NPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-}
@@ -122,7 +122,7 @@ services:
       - '${HYBRID_BIND_HOST:-0.0.0.0}:${HYBRID_WEB_PORT:-15173}:${HYBRID_WEB_PORT:-15173}'
     volumes:
       - ../..:/app
-      - wemux-full-web-node-modules:/app/node_modules
+      - oxmux-full-web-node-modules:/app/node_modules
 
   worker:
     build:
@@ -142,43 +142,43 @@ services:
     environment:
       NODE_ENV: development
       DOTENV_CONFIG_PATH: .env.development.local
-      WEMUX_CLOUD_URL: http://server:${HYBRID_SERVER_PORT:-18989}
-      WEMUX_WORKER_HOST: '0.0.0.0'
-      WEMUX_WORKER_PORT: ${WEMUX_WORKER_PORT:-48121}
-      WEMUX_WORKER_HOME: /data/vibemux-worker
-      WEMUX_WORKER_AUTO_INSTALL: 'true'
-      WEMUX_WORKER_AUTO_UPDATE: '1'
-      WEMUX_WORKER_RESTART_STRATEGY: docker
-      WEMUX_WORKER_RUN_MODE: docker
-      WEMUX_WORKER_SKIP_RUNTIME_GUARD: 'true'
+      OXMUX_CLOUD_URL: http://server:${HYBRID_SERVER_PORT:-18989}
+      OXMUX_WORKER_HOST: '0.0.0.0'
+      OXMUX_WORKER_PORT: ${OXMUX_WORKER_PORT:-48121}
+      OXMUX_WORKER_HOME: /data/vibemux-worker
+      OXMUX_WORKER_AUTO_INSTALL: 'true'
+      OXMUX_WORKER_AUTO_UPDATE: '1'
+      OXMUX_WORKER_RESTART_STRATEGY: docker
+      OXMUX_WORKER_RUN_MODE: docker
+      OXMUX_WORKER_SKIP_RUNTIME_GUARD: 'true'
       NPM_CONFIG_REGISTRY: ${NPM_REGISTRY:-}
-      WEMUX_MESH_ENABLED: ${WEMUX_MESH_ENABLED:-}
-      WEMUX_EASYTIER_VERSION: ${WEMUX_EASYTIER_VERSION:-v2.6.4}
-      WEMUX_EASYTIER_DOWNLOAD_BASE_URL: ${WEMUX_EASYTIER_DOWNLOAD_BASE_URL:-https://github.com/EasyTier/EasyTier/releases/download}
-      WEMUX_EASYTIER_NETWORK_NAME: ${WEMUX_EASYTIER_NETWORK_NAME:-}
-      WEMUX_EASYTIER_NETWORK_PREFIX: ${WEMUX_EASYTIER_NETWORK_PREFIX:-}
-      WEMUX_EASYTIER_NETWORK_SECRET: ${WEMUX_EASYTIER_NETWORK_SECRET:-}
-      WEMUX_EASYTIER_PEERS: ${WEMUX_EASYTIER_PEERS:-}
-      WEMUX_EASYTIER_IPV4_PREFIX: ${WEMUX_EASYTIER_IPV4_PREFIX:-}
-      WEMUX_EASYTIER_PREVIEW_PROXY_PORT: ${WEMUX_EASYTIER_PREVIEW_PROXY_PORT:-}
-      WEMUX_EASYTIER_TERMINAL_PROXY_PORT: ${WEMUX_EASYTIER_TERMINAL_PROXY_PORT:-}
-      WEMUX_EASYTIER_AUTO_DOWNLOAD: ${WEMUX_EASYTIER_AUTO_DOWNLOAD:-}
+      OXMUX_MESH_ENABLED: ${OXMUX_MESH_ENABLED:-}
+      OXMUX_EASYTIER_VERSION: ${OXMUX_EASYTIER_VERSION:-v2.6.4}
+      OXMUX_EASYTIER_DOWNLOAD_BASE_URL: ${OXMUX_EASYTIER_DOWNLOAD_BASE_URL:-https://github.com/EasyTier/EasyTier/releases/download}
+      OXMUX_EASYTIER_NETWORK_NAME: ${OXMUX_EASYTIER_NETWORK_NAME:-}
+      OXMUX_EASYTIER_NETWORK_PREFIX: ${OXMUX_EASYTIER_NETWORK_PREFIX:-}
+      OXMUX_EASYTIER_NETWORK_SECRET: ${OXMUX_EASYTIER_NETWORK_SECRET:-}
+      OXMUX_EASYTIER_PEERS: ${OXMUX_EASYTIER_PEERS:-}
+      OXMUX_EASYTIER_IPV4_PREFIX: ${OXMUX_EASYTIER_IPV4_PREFIX:-}
+      OXMUX_EASYTIER_PREVIEW_PROXY_PORT: ${OXMUX_EASYTIER_PREVIEW_PROXY_PORT:-}
+      OXMUX_EASYTIER_TERMINAL_PROXY_PORT: ${OXMUX_EASYTIER_TERMINAL_PROXY_PORT:-}
+      OXMUX_EASYTIER_AUTO_DOWNLOAD: ${OXMUX_EASYTIER_AUTO_DOWNLOAD:-}
     working_dir: /app
     command:
       - /bin/sh
       - -lc
       - node scripts/dev-ensure-deps.mjs /app && bash ./scripts/docker-worker-auto-pair.sh
     ports:
-      - '${HYBRID_BIND_HOST:-127.0.0.1}:${WEMUX_WORKER_PORT:-48121}:${WEMUX_WORKER_PORT:-48121}'
+      - '${HYBRID_BIND_HOST:-127.0.0.1}:${OXMUX_WORKER_PORT:-48121}:${OXMUX_WORKER_PORT:-48121}'
     volumes:
       - ../..:/app
-      - wemux-full-worker-node-modules:/app/node_modules
-      - wemux-full-worker-home:/data/wemux-worker
+      - oxmux-full-worker-node-modules:/app/node_modules
+      - oxmux-full-worker-home:/data/oxmux-worker
 
 volumes:
-  wemux-hybrid-postgres-data:
-  wemux-hybrid-server-runtime:
-  wemux-full-server-node-modules:
-  wemux-full-web-node-modules:
-  wemux-full-worker-node-modules:
-  wemux-full-worker-home:
+  oxmux-hybrid-postgres-data:
+  oxmux-hybrid-server-runtime:
+  oxmux-full-server-node-modules:
+  oxmux-full-web-node-modules:
+  oxmux-full-worker-node-modules:
+  oxmux-full-worker-home:

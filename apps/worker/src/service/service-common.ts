@@ -70,14 +70,14 @@ export const pickWorkerServiceHostEnv = (source: NodeJS.ProcessEnv = process.env
 
 export const getDefaultWorkerServiceName = () => {
   const packageName = getWorkerPackageJson().name?.trim()
-  // 兼容窗口：wemux-* 新包名按自身命名服务，存量 vibemux-* 与源码模式沿用旧名
-  if (packageName === 'wemux-worker-preview' || packageName === 'vibemux-worker-preview') {
+  // 兼容窗口：oxmux-* 新包名按自身命名服务，存量 vibemux-* 与源码模式沿用旧名
+  if (packageName === 'oxmux-worker-preview' || packageName === 'vibemux-worker-preview') {
     return packageName
   }
-  if (packageName === 'wemux-worker') {
+  if (packageName === 'oxmux-worker') {
     return 'vibemux-worker'
   }
-  return 'wemux-worker'
+  return 'oxmux-worker'
 }
 
 export const getDefaultWorkerBinName = () => getDefaultWorkerServiceName()
@@ -141,7 +141,7 @@ export const getInstalledWorkerNodeWrapperPath = (
 }
 
 export const resolveWorkerInstallPrefix = (workerPath?: string) => {
-  const configured = getEnv('WEMUX_WORKER_INSTALL_PREFIX')?.trim()
+  const configured = getEnv('OXMUX_WORKER_INSTALL_PREFIX')?.trim()
   if (configured) {
     return path.resolve(configured)
   }
@@ -159,13 +159,13 @@ export const resolveWorkerInstallPrefix = (workerPath?: string) => {
 }
 
 export const resolveWorkerExecutablePath = (explicitPath?: string, installPrefix?: string) => {
-  const configured = explicitPath?.trim() || getEnv('WEMUX_WORKER_EXECUTABLE_PATH')?.trim()
+  const configured = explicitPath?.trim() || getEnv('OXMUX_WORKER_EXECUTABLE_PATH')?.trim()
   if (configured) {
     return path.resolve(configured)
   }
 
   const binName = getDefaultWorkerBinName()
-  const prefix = installPrefix?.trim() || getEnv('WEMUX_WORKER_INSTALL_PREFIX')?.trim()
+  const prefix = installPrefix?.trim() || getEnv('OXMUX_WORKER_INSTALL_PREFIX')?.trim()
   if (prefix) {
     for (const candidate of getInstalledWorkerExecutableCandidates(prefix, binName)) {
       if (existsSync(candidate)) {
@@ -226,14 +226,14 @@ export const buildWorkerServiceEnv = (params: {
     ...pickWorkerServiceHostEnv(process.env),
     PATH: process.env.PATH || '',
     HOME: os.homedir(),
-    WEMUX_WORKER_HOME: getWorkerHome(),
-    WEMUX_WORKER_RELEASE_CHANNEL: getWorkerReleaseChannel(),
-    WEMUX_WORKER_PORT_PROFILE: getWorkerServicePortEnvironment(),
-    WEMUX_WORKER_PORT: String(getWorkerConsolePortBase(getWorkerServicePortEnvironment())),
-    WEMUX_WORKER_EXECUTABLE_PATH: params.workerPath,
-    WEMUX_WORKER_INSTALL_PREFIX: installPrefix || '',
-    WEMUX_WORKER_RESTART_STRATEGY: 'system-service',
-    WEMUX_WORKER_AUTO_UPDATE: getEnv('WEMUX_WORKER_AUTO_UPDATE') || '1',
+    OXMUX_WORKER_HOME: getWorkerHome(),
+    OXMUX_WORKER_RELEASE_CHANNEL: getWorkerReleaseChannel(),
+    OXMUX_WORKER_PORT_PROFILE: getWorkerServicePortEnvironment(),
+    OXMUX_WORKER_PORT: String(getWorkerConsolePortBase(getWorkerServicePortEnvironment())),
+    OXMUX_WORKER_EXECUTABLE_PATH: params.workerPath,
+    OXMUX_WORKER_INSTALL_PREFIX: installPrefix || '',
+    OXMUX_WORKER_RESTART_STRATEGY: 'system-service',
+    OXMUX_WORKER_AUTO_UPDATE: getEnv('OXMUX_WORKER_AUTO_UPDATE') || '1',
     ...params.extraEnv,
   }
 }

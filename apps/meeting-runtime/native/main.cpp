@@ -264,7 +264,7 @@ std::string transcribe(Runtime &state, const std::string &path) {
 
 int main(int argc, char **argv) {
     if (argc != 3) {
-        std::cerr << "usage: wemux-meeting-runtime <moss.gguf> <minicpm.gguf>\n";
+        std::cerr << "usage: oxmux-meeting-runtime <moss.gguf> <minicpm.gguf>\n";
         return EXIT_FAILURE;
     }
     Runtime state;

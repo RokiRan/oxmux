@@ -49,7 +49,7 @@ await writeFile(path.join(outDir, 'index.html'), `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>wemux Worker</title>
+    <title>oxmux Worker</title>
     <link rel="stylesheet" href="/assets/app.css" />
   </head>
   <body>

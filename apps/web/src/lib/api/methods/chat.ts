@@ -84,7 +84,7 @@ export const chatMethods = {
     request<{ shares: import('@shared/types').ConversationShareRecord[] }>(`/api/conversations/${encodeURIComponent(conversationId)}/shares`),
   deleteConversationShare: (conversationId: string, shareId: string) =>
     request<{ message: string }>(`/api/conversations/${encodeURIComponent(conversationId)}/shares/${encodeURIComponent(shareId)}`, { method: 'DELETE' }),
-  // ---------- 会话多选转发 / 定向分享 / 可见性 / 搜索（wemux-session-canvas-2 功能） ----------
+  // ---------- 会话多选转发 / 定向分享 / 可见性 / 搜索（oxmux-session-canvas-2 功能） ----------
   searchSessions: (query: string, limit?: number) => {
     const search = new URLSearchParams({ query })
     if (typeof limit === 'number' && Number.isFinite(limit)) {

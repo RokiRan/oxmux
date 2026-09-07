@@ -3,7 +3,7 @@ import { VIBEMUX_READ_ONLY_MCP_TOOL_ANNOTATIONS } from '@shared/mcp'
 import { listSkills, getSkill, deleteSkill } from '../../repositories/skill'
 import { resolvePrimaryAgentSkills, resolveRuntimeSkillPackages } from '../../services/skill-service'
 import { ErrorCode, McpError, type McpServer } from './sdk'
-import { toToolResult, type WemuxMcpContext } from './wemux-mcp-context'
+import { toToolResult, type OxmuxMcpContext } from './oxmux-mcp-context'
 
 const summarizeSkill = (skill: ReturnType<typeof listSkills>[number]) => ({
   id: skill.id,
@@ -23,7 +23,7 @@ const summarizeSkill = (skill: ReturnType<typeof listSkills>[number]) => ({
   updatedAt: skill.updatedAt,
 })
 
-export const registerWemuxMcpSkillTools = (server: McpServer, ctx: WemuxMcpContext) => {
+export const registerOxmuxMcpSkillTools = (server: McpServer, ctx: OxmuxMcpContext) => {
   // ===== skill.list =====
   server.registerTool('skill.list', {
     title: 'Skill List',

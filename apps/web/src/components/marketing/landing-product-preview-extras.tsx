@@ -35,7 +35,7 @@ export function NodeTopology({ language }: { language: Language }) {
       <div className="absolute inset-0 opacity-35 [background-image:radial-gradient(circle_at_center,rgba(139,92,246,0.28),transparent_35%),linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:100%_100%,24px_24px,24px_24px]" />
       <div className="relative flex h-full min-h-56 items-center justify-center">
         <div className="z-10 rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-center shadow-[0_0_60px_rgba(255,255,255,0.1)]">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">Wemux</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">Oxmux</p>
           <p className="mt-1 text-sm font-semibold text-zinc-50">{localize({ zh: '任务调度队列', en: 'Dispatch Queue' }, language)}</p>
         </div>
         {previewNodes.map((node, index) => {

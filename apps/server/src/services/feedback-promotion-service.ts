@@ -1,5 +1,5 @@
 /**
- * [INPUT]: admin promote 请求（feedback id + scope）、env GitHub 凭据（WEMUX_FEEDBACK_PROMOTION_GITHUB_TOKEN）
+ * [INPUT]: admin promote 请求（feedback id + scope）、env GitHub 凭据（OXMUX_FEEDBACK_PROMOTION_GITHUB_TOKEN）
  * [OUTPUT]: 受限维护队列/公开仓 Issue 创建 + githubRef 写回；buildIssuePayload 纯函数可测
  * [POS]: 治理闭环 D8 的落点动作；community 域强制 consentPublic 红线，未配置凭据时显式降级（503）
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
@@ -14,7 +14,7 @@ import {
 
 export type FeedbackPromotionScope = Extract<FeedbackRoutingTarget, 'internal' | 'community'>
 
-export const DEFAULT_COMMUNITY_PROMOTION_REPO = 'wemux-ai/wemux'
+export const DEFAULT_COMMUNITY_PROMOTION_REPO = 'oxmux-ai/oxmux'
 
 export class FeedbackPromotionError extends Error {
   constructor(
@@ -26,7 +26,7 @@ export class FeedbackPromotionError extends Error {
 }
 
 const repoForScope = (scope: FeedbackPromotionScope): string => {
-  const name = scope === 'internal' ? 'WEMUX_FEEDBACK_INTERNAL_REPO' : 'WEMUX_FEEDBACK_COMMUNITY_REPO'
+  const name = scope === 'internal' ? 'OXMUX_FEEDBACK_INTERNAL_REPO' : 'OXMUX_FEEDBACK_COMMUNITY_REPO'
   const repo = getEnv(name)?.trim() || (scope === 'community' ? DEFAULT_COMMUNITY_PROMOTION_REPO : '')
   if (!repo) {
     throw new FeedbackPromotionError(503, `未配置 ${name}，无法创建 ${scope} issue`)
@@ -55,7 +55,7 @@ export const buildIssuePayload = (
 
   const meta = [
     '---',
-    `<!-- wemux-feedback:${item.id} -->`,
+    `<!-- oxmux-feedback:${item.id} -->`,
     `source: ${item.source ?? 'product'} · routing: ${scope} · consentPublic: ${item.consentPublic ? 'yes' : 'no'}`,
     `created: ${item.createdAt}`,
   ].join('\n')
@@ -100,8 +100,8 @@ export const promoteFeedbackToIssue = async (id: string, scope: FeedbackPromotio
     throw new FeedbackPromotionError(409, `分诊去向为 ${item.routing}，与目标 ${scope} 不一致；请先在管理页修正去向`)
   }
 
-  const token = getEnv('WEMUX_FEEDBACK_PROMOTION_GITHUB_TOKEN')?.trim()
-  if (!token) throw new FeedbackPromotionError(503, '未配置 WEMUX_FEEDBACK_PROMOTION_GITHUB_TOKEN，无法创建 issue')
+  const token = getEnv('OXMUX_FEEDBACK_PROMOTION_GITHUB_TOKEN')?.trim()
+  if (!token) throw new FeedbackPromotionError(503, '未配置 OXMUX_FEEDBACK_PROMOTION_GITHUB_TOKEN，无法创建 issue')
 
   const payload = buildIssuePayload(item, scope)
   const created = await createIssueViaApi(repoForScope(scope), token, payload)

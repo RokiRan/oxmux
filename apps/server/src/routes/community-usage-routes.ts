@@ -1,5 +1,5 @@
 // [INPUT]: 社区版实例的匿名使用上报 POST（公开路由，无鉴权）
-// [OUTPUT]: /api/community-usage/report 接收端点；仅当 WEMUX_COMMUNITY_USAGE_COLLECTOR_ENABLED=1 时启用
+// [OUTPUT]: /api/community-usage/report 接收端点；仅当 OXMUX_COMMUNITY_USAGE_COLLECTOR_ENABLED=1 时启用
 // [POS]: 官网 collector HTTP 协议层；zod 白名单校验 + IP 滑窗限流，自托管实例默认 404 不暴露
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 import { Hono } from 'hono'
@@ -52,7 +52,7 @@ const isRateLimited = (ip: string, now = Date.now()): boolean => {
 
 export const registerCommunityUsageRoutes = (app: Hono) => {
   app.post('/api/community-usage/report', async (c) => {
-    if (getEnv('WEMUX_COMMUNITY_USAGE_COLLECTOR_ENABLED') !== '1') {
+    if (getEnv('OXMUX_COMMUNITY_USAGE_COLLECTOR_ENABLED') !== '1') {
       return c.json({ message: 'Not found' }, 404)
     }
     const ip = c.req.header('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'

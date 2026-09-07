@@ -909,7 +909,7 @@ export function ProjectEditDialog({
                           />
                           {selectedGitHubInstallation ? (
                             <p className="text-xs text-zinc-500">
-                              {tr(language, '执行前会为该 installation 临时换取 GitHub token。仓库级选择 UI 还没补，这一步先绑定到 installation 级别。', 'Wemux will request a short-lived GitHub token for this installation before execution. Repository-level selection UI is not added yet, so binding is currently installation-level.')}
+                              {tr(language, '执行前会为该 installation 临时换取 GitHub token。仓库级选择 UI 还没补，这一步先绑定到 installation 级别。', 'Oxmux will request a short-lived GitHub token for this installation before execution. Repository-level selection UI is not added yet, so binding is currently installation-level.')}
                             </p>
                           ) : null}
                           <div className="flex flex-wrap gap-2 pt-2">
@@ -1105,7 +1105,7 @@ export function ProjectEditDialog({
                         ) : project.rootPath?.trim() ? (
                           <div className="border border-zinc-800/80 bg-zinc-950/50 p-3">
                             <p className="text-xs leading-5 text-zinc-300">
-                              {tr(language, '当前路径不是 Wemux 托管目录；删除项目时只会移除项目记录，不会删除本机目录。', 'This path is not managed by Wemux. Deleting the project removes the project record only and keeps the local directory.')}
+                              {tr(language, '当前路径不是 Oxmux 托管目录；删除项目时只会移除项目记录，不会删除本机目录。', 'This path is not managed by Oxmux. Deleting the project removes the project record only and keeps the local directory.')}
                             </p>
                             <p className="mt-2 break-all font-mono text-xs leading-5 text-zinc-500">{project.rootPath}</p>
                           </div>

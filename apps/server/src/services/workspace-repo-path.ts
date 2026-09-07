@@ -92,7 +92,7 @@ export const remapManagedWorkspaceProjectPath = (workspaceRoot: string | undefin
     return remappedParts ? `${normalizedWorkspaceRoot}/${remappedParts.join('/')}` : normalizedPath
   }
 
-  const match = normalizedForMatch.match(/(?:^|\/)\.(?:wemux|vibemux)(?:-[^/]+)?\/(.+)$/)
+  const match = normalizedForMatch.match(/(?:^|\/)\.(?:oxmux|vibemux)(?:-[^/]+)?\/(.+)$/)
   if (!match) {
     return normalizedPath
   }

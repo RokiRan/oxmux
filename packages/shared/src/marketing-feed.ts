@@ -32,7 +32,7 @@ export function buildMarketingRssXml() {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0">',
     '  <channel>',
-    '    <title>wemux Blog</title>',
+    '    <title>oxmux Blog</title>',
     `    <link>${siteOrigin}/blog</link>`,
     '    <description>Founder notes and SEO articles about AI coding delivery, persistent execution, and real workstation workflows.</description>',
     '    <language>en-us</language>',

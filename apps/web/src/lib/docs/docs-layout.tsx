@@ -38,7 +38,7 @@ export function DocsHeader({
 
       <a href={brandHref} className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <span className="flex size-5 items-center justify-center rounded-md bg-violet-600 text-[10px] font-bold text-white">w</span>
-        Wemux Docs
+        Oxmux Docs
       </a>
 
       <div className="ml-auto flex items-center gap-1.5">
@@ -211,7 +211,7 @@ export function DocsLanding({
   const zh = locale === 'zh'
   return (
     <div className="mx-auto flex w-full max-w-[900px] flex-1 flex-col px-6 py-16 text-center">
-      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-violet-500">Wemux docs</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-violet-500">Oxmux docs</p>
       <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
         {zh ? 'AI 编程交付平台文档' : 'AI Coding Delivery Platform Docs'}
       </h1>

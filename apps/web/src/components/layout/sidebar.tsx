@@ -12,10 +12,10 @@ import {
 import { cn } from '../../lib/utils'
 import { isCommunityEdition, useAppBrand } from '../../lib/app-brand'
 
-/** 侧边栏品牌名：开源社区版显示 Wemux Community，商业部署保持中性 Wemux。 */
+/** 侧边栏品牌名：开源社区版显示 Oxmux Community，商业部署保持中性 Oxmux。 */
 const SidebarBrandName = () => {
   const brand = useAppBrand()
-  return <>{isCommunityEdition(brand) ? 'Wemux Community' : 'Wemux'}</>
+  return <>{isCommunityEdition(brand) ? 'Oxmux Community' : 'Oxmux'}</>
 }
 
 const matchesSearch = (expected: Record<string, string | undefined>, currentSearchParams: URLSearchParams) => (
@@ -121,7 +121,7 @@ export const Sidebar = () => {
         ))}
       </nav>
       <div className="border-t p-4">
-        <p className="text-xs text-muted-foreground">Wemux Console v1.0</p>
+        <p className="text-xs text-muted-foreground">Oxmux Console v1.0</p>
       </div>
     </aside>
   )

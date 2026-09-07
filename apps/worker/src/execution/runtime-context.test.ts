@@ -110,7 +110,7 @@ test('prepareWorkerAgentRuntime materializes binary skill assets for Pi', async 
 
     try {
       assert.equal(runtime.promptPrefix, '')
-      const skillRoot = runtime.runtimeEnv.WEMUX_PI_SKILL_PATHS
+      const skillRoot = runtime.runtimeEnv.OXMUX_PI_SKILL_PATHS
       assert.ok(skillRoot)
       assert.equal(skillRoot.includes(path.delimiter), false)
 
@@ -151,10 +151,10 @@ test('prepareWorkerAgentRuntime materializes OpenCode skills into workspace .ope
     process.env.VIBEMUX_WORKER_HOME = path.join(tempRoot, 'worker-home')
 
     const runtimeSkillPackages: ExecutorSkillPackage[] = [{
-      name: 'wemux YML',
+      name: 'oxmux YML',
       slug: 'vibemux-yml',
       description: 'Write or update the repo-root .vibemux.yml environment template.',
-      markdown: '# wemux YML\n',
+      markdown: '# oxmux YML\n',
       sourceLocator: 'builtin://vibemux-yml',
       trustLevel: 'markdown_only',
       fileInventory: [
@@ -164,7 +164,7 @@ test('prepareWorkerAgentRuntime materializes OpenCode skills into workspace .ope
       files: {
         'SKILL.md': {
           encoding: 'utf8',
-          content: '# wemux YML\n',
+          content: '# oxmux YML\n',
         },
         'references/schema.md': {
           encoding: 'utf8',
@@ -182,8 +182,8 @@ test('prepareWorkerAgentRuntime materializes OpenCode skills into workspace .ope
     })
 
     try {
-      assert.equal(typeof runtime.runtimeEnv.VIBEMUX_WORKER_RUNNER, 'string')
-      assert.equal(typeof runtime.runtimeEnv.VIBEMUX_WORKER_ENTRY, 'string')
+      assert.equal(typeof runtime.runtimeEnv.OXMUX_WORKER_RUNNER, 'string')
+      assert.equal(typeof runtime.runtimeEnv.OXMUX_WORKER_ENTRY, 'string')
       assert.ok(runtime.runtimeEnv.HOME)
       assert.match(runtime.runtimeEnv.HOME, /users\/user-a\/runtime\/opencode-home\//)
       assert.equal(runtime.runtimeEnv.XDG_DATA_HOME, path.join(runtime.runtimeEnv.HOME, '.local', 'share'))
@@ -191,7 +191,7 @@ test('prepareWorkerAgentRuntime materializes OpenCode skills into workspace .ope
       const skillRoot = path.join(cwd, '.opencode', 'skills', 'vibemux-yml')
       assert.equal(existsSync(path.join(skillRoot, 'SKILL.md')), true)
       assert.equal(existsSync(path.join(skillRoot, 'references', 'schema.md')), true)
-      assert.equal(await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), '# wemux YML\n')
+      assert.equal(await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), '# oxmux YML\n')
     } finally {
       runtime.cleanup()
     }
@@ -256,7 +256,7 @@ test('prepareWorkerAgentRuntime does not inject Desktop Sandbox hints for previe
     const cwd = path.join(tempRoot, 'cwd')
     await mkdir(cwd, { recursive: true })
     process.env.NODE_ENV = 'development'
-    process.env.VIBEMUX_CLOUD_URL = 'https://wemux.xyz/'
+    process.env.VIBEMUX_CLOUD_URL = 'https://oxmux.xyz/'
     process.env.VIBEMUX_WORKER_HOME = path.join(tempRoot, 'worker-home')
 
     const runtime = prepareWorkerAgentRuntime({
@@ -439,9 +439,9 @@ test('prepareWorkerAgentRuntime isolates managed Codex model bindings from node-
       assert.match(configContent, /model = "gpt-5\.6-terra"/)
       assert.match(configContent, /model_provider = "blacakai"/)
       assert.match(configContent, /base_url = "https:\/\/api\.blackai\.example\/v1"/)
-      assert.match(configContent, /env_key = "VIBEMUX_MANAGED_MODEL_API_KEY"/)
+      assert.match(configContent, /env_key = "OXMUX_MANAGED_MODEL_API_KEY"/)
       assert.doesNotMatch(configContent, /node-local/)
-      assert.equal(runtime.runtimeEnv.VIBEMUX_MANAGED_MODEL_API_KEY, 'profile-api-key')
+      assert.equal(runtime.runtimeEnv.OXMUX_MANAGED_MODEL_API_KEY, 'profile-api-key')
       assert.equal(runtime.runtimeEnv.OPENAI_API_KEY, undefined)
       assert.equal(existsSync(path.join(codexHome, 'auth.json')), false)
     } finally {

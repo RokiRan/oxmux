@@ -48,13 +48,13 @@ export function LandingMotionStyles() {
   return (
     <style>
       {`
-        @keyframes wemux-scan {
+        @keyframes oxmux-scan {
           0% { transform: translateY(-18%); opacity: 0; }
           18% { opacity: 0.7; }
           100% { transform: translateY(620%); opacity: 0; }
         }
 
-        @keyframes wemux-signal {
+        @keyframes oxmux-signal {
           0%, 100% { opacity: 0; transform: translate3d(0, 5px, 0) scale(0.72); }
           18% { opacity: 0.22; }
           42% { opacity: 0.9; transform: translate3d(0, -2px, 0) scale(1); }
@@ -62,7 +62,7 @@ export function LandingMotionStyles() {
           84% { opacity: 0; transform: translate3d(0, -12px, 0) scale(0.62); }
         }
 
-        @keyframes wemux-flow {
+        @keyframes oxmux-flow {
           to { stroke-dashoffset: -22; }
         }
 
@@ -159,14 +159,14 @@ export function LandingMotionStyles() {
           animation: slide-right-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .wemux-flow-line {
-          animation: wemux-flow 3.8s linear infinite;
+        .oxmux-flow-line {
+          animation: oxmux-flow 3.8s linear infinite;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .wemux-motion,
-          .wemux-signal,
-          .wemux-flow-line,
+          .oxmux-motion,
+          .oxmux-signal,
+          .oxmux-flow-line,
           .animate-fade-up-in,
           .animate-fade-in-in,
           .animate-scale-in,
@@ -200,8 +200,8 @@ export function ConsoleMotionOverlay() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
       <div
-        className="wemux-motion absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/03 to-transparent"
-        style={{ animation: 'wemux-scan 5.8s ease-in-out infinite' }}
+        className="oxmux-motion absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/03 to-transparent"
+        style={{ animation: 'oxmux-scan 5.8s ease-in-out infinite' }}
       />
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-emerald-300/35 to-transparent" />
     </div>
@@ -231,8 +231,8 @@ function FloatingSignal({
 
   return (
     <span
-      className={`wemux-motion wemux-signal absolute h-1.5 w-1.5 rounded-full ${color}`}
-      style={{ animation: `wemux-signal ${duration} ease-in-out ${delay} infinite both`, left, top }}
+      className={`oxmux-motion oxmux-signal absolute h-1.5 w-1.5 rounded-full ${color}`}
+      style={{ animation: `oxmux-signal ${duration} ease-in-out ${delay} infinite both`, left, top }}
     />
   )
 }

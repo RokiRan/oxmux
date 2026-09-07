@@ -6,8 +6,8 @@
 /** 上报 payload 结构版本；字段变更必须升版本并在 collector 兼容处理。 */
 export const COMMUNITY_USAGE_SCHEMA_VERSION = 1
 
-/** 官网 collector 默认端点；可用 WEMUX_USAGE_REPORTING_ENDPOINT 覆盖。 */
-export const DEFAULT_COMMUNITY_USAGE_ENDPOINT = 'https://wemux.ai/api/community-usage/report'
+/** 官网 collector 默认端点；可用 OXMUX_USAGE_REPORTING_ENDPOINT 覆盖。 */
+export const DEFAULT_COMMUNITY_USAGE_ENDPOINT = 'https://oxmux.ai/api/community-usage/report'
 
 /** 聚合计数白名单：只有这五个数字会离开自托管实例，内容类数据永远进不了 payload。 */
 export interface CommunityUsageCounters {

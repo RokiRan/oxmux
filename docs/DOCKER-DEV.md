@@ -44,7 +44,7 @@ pnpm dev:docker:down     # 停止所有容器
 
 默认地址：
 
-- Web：`http://app.wemux.localtest.me:15173`
+- Web：`http://app.oxmux.localtest.me:15173`
 - Server：`http://127.0.0.1:18989`
 - Worker Console：`http://127.0.0.1:48121`
 
@@ -52,7 +52,7 @@ pnpm dev:docker:down     # 停止所有容器
 
 Worker 容器启动时会执行 `scripts/docker-worker-auto-pair.sh`：
 
-1. **检查已有凭据**：如果 `/data/wemux-worker/node/config.json` 中已有 `executorId` + `executorToken`，直接启动 daemon（容器重启场景，秒连）
+1. **检查已有凭据**：如果 `/data/oxmux-worker/node/config.json` 中已有 `executorId` + `executorToken`，直接启动 daemon（容器重启场景，秒连）
 2. **等待 server 就绪**：轮询 `server:18989/api/health`，最长等待 120 秒
 3. **调用自动配对**：`POST /api/control-plane/executors/auto-pair`，由 server 创建一个 executor 并返回凭据
 4. **保存凭据**：写入 `config.json`
@@ -81,7 +81,7 @@ node_modules 卷独立维护，避免两种模式的依赖状态互相干扰。
 - Worker 使用 `deploy/docker/Dockerfile.control-plane` 的 `worker-dev-deps` target（在 `deps` 基础上加了 git、ca-certificates、unzip）
 - 所有容器通过 Docker 内部网络通信：worker → `server:18989`，server → `worker:48121`，server → `postgres:5432`
 - Worker 容器需要 `NET_ADMIN` capability 和 `/dev/net/tun` 设备（EasyTier mesh 网络需要）
-- Worker 环境变量 `WEMUX_WORKER_RUN_MODE=docker` 会给 executor 打上 `runtime:docker` 标签
+- Worker 环境变量 `OXMUX_WORKER_RUN_MODE=docker` 会给 executor 打上 `runtime:docker` 标签
 - 源码通过 bind mount 挂载到容器内，`tsx watch` / `vite dev` 保留热更新
 
 ## 常见操作
@@ -109,11 +109,11 @@ pnpm dev:docker
 
 ```bash
 docker compose -f deploy/docker/docker-compose.dev-full.yml run --rm worker \
-  sh -c 'rm -f /data/wemux-worker/node/config.json && echo "cleared"'
+  sh -c 'rm -f /data/oxmux-worker/node/config.json && echo "cleared"'
 pnpm dev:docker
 ```
 
-如果需要改端口：编辑 `.env` 里的 `HYBRID_WEB_PORT`、`HYBRID_SERVER_PORT`、`WEMUX_WORKER_PORT`。
+如果需要改端口：编辑 `.env` 里的 `HYBRID_WEB_PORT`、`HYBRID_SERVER_PORT`、`OXMUX_WORKER_PORT`。
 
 ## 限制
 

@@ -74,12 +74,12 @@ export const buildExecutionModelId = (providerId: string, modelId: string) => {
 
 // Present only when a control-plane model binding owns the runtime credentials.
 export const MANAGED_MODEL_RUNTIME_ENV = {
-  enabled: 'WEMUX_MANAGED_MODEL_ENABLED',
-  bindingId: 'WEMUX_MANAGED_MODEL_BINDING_ID',
-  providerId: 'WEMUX_MANAGED_MODEL_PROVIDER_ID',
-  modelId: 'WEMUX_MANAGED_MODEL_ID',
-  baseUrl: 'WEMUX_MANAGED_MODEL_BASE_URL',
-  apiKey: 'WEMUX_MANAGED_MODEL_API_KEY',
+  enabled: 'OXMUX_MANAGED_MODEL_ENABLED',
+  bindingId: 'OXMUX_MANAGED_MODEL_BINDING_ID',
+  providerId: 'OXMUX_MANAGED_MODEL_PROVIDER_ID',
+  modelId: 'OXMUX_MANAGED_MODEL_ID',
+  baseUrl: 'OXMUX_MANAGED_MODEL_BASE_URL',
+  apiKey: 'OXMUX_MANAGED_MODEL_API_KEY',
 } as const
 
 export const normalizeModelProviderBaseUrl = (value?: string | null) => {

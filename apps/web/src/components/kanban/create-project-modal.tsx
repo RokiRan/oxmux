@@ -725,7 +725,7 @@ export function CreateProjectModal({
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-medium text-zinc-100">连接 GitHub 后直接选择仓库</p>
                           <p className="mt-1 text-xs text-zinc-500">
-                            授权完成后，Wemux 会在这里列出可访问仓库，不需要再去 GitHub 复制 clone URL。
+                            授权完成后，Oxmux 会在这里列出可访问仓库，不需要再去 GitHub 复制 clone URL。
                           </p>
                           {!githubAppConfigured ? (
                             <p className="mt-2 text-xs text-amber-300">GitHub App 尚未配置，请先配置 server 环境变量。</p>

@@ -1,6 +1,6 @@
-# Contributing to Wemux
+# Contributing to Oxmux
 
-感谢你考虑为 Wemux 贡献代码！English summary below.
+感谢你考虑为 Oxmux 贡献代码！English summary below.
 
 公开仓库接受基于最新 `main` 的社区贡献。部分兼容性占位模块由维护者负责维护，具体范围以 CODEOWNERS 和 PR review 结果为准。
 
@@ -10,7 +10,7 @@
 
 ## 贡献流程
 
-1. Fork `wemux-ai/wemux` 并 clone
+1. Fork `oxmux-ai/oxmux` 并 clone
 2. 创建分支：`git checkout -b fix/xxx`
 3. 修改代码，**保持改动小而聚焦**（不接受大规模重构型 PR；大改动先在 Discussions 的 Ideas 分类讨论）
 4. 运行验证：
@@ -25,7 +25,7 @@
 
 ## AI 贡献政策（AI Contribution Policy）
 
-Wemux 本身就是一个大量由 Agent 参与开发的 AI 原生项目，因此我们**负责任地接受** AI 生成的贡献，质量门槛与纯人工贡献完全一致：
+Oxmux 本身就是一个大量由 Agent 参与开发的 AI 原生项目，因此我们**负责任地接受** AI 生成的贡献，质量门槛与纯人工贡献完全一致：
 
 1. **必须披露**：PR 中包含 AI 生成或深度辅助的代码时，必须在 PR 模板中勾选披露项。
 2. **每条 PR 必须有一个人类 sponsor**：你逐行 review 过、能在评审中为它辩护、并为它签署 DCO（`git commit -s`）。「是 AI 写的」不构成对任何评审问题的回应。

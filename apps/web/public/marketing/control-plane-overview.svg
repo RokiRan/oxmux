@@ -28,7 +28,7 @@
     <g transform="translate(116 112)">
       <rect width="46" height="46" rx="16" fill="url(#accent)"/>
       <path d="M18 15L31 23L18 31V15Z" fill="white"/>
-      <text x="62" y="20" fill="white" font-family="ui-sans-serif, system-ui" font-size="18" font-weight="700">wemux</text>
+      <text x="62" y="20" fill="white" font-family="ui-sans-serif, system-ui" font-size="18" font-weight="700">oxmux</text>
       <text x="62" y="41" fill="white" fill-opacity="0.4" font-family="ui-sans-serif, system-ui" font-size="11" letter-spacing="2">CONTROL PLANE</text>
     </g>
 

@@ -546,7 +546,7 @@ const checkCodexAuth = async (): Promise<RuntimeCheck> => {
           id: initializeRequestId,
           method: 'initialize',
           params: {
-            clientInfo: { name: 'wemux-worker', version: '0.1.1' },
+            clientInfo: { name: 'oxmux-worker', version: '0.1.1' },
             capabilities: { experimentalApi: true },
           },
         })

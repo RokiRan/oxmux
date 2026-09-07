@@ -3,7 +3,7 @@
 ## 顶层结构
 
 ```
-wemux/
+oxmux/
 ├── apps/                    # 三端应用
 │   ├── web/                 # React + Vite + TanStack Start（控制台）
 │   ├── server/              # Hono 控制面 / WS / 调度 / 集成

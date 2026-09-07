@@ -42,7 +42,7 @@ export const resolveEmailProvider = (): EmailProvider => {
 
 /** 解析 EMAIL_FROM（支持 "name <address>" 或纯地址），返回 Cloudflare REST API 的 from 对象。 */
 const resolveSender = (): string | { address: string; name?: string } => {
-  const raw = process.env.EMAIL_FROM?.trim() || 'noreply@wemux.ai'
+  const raw = process.env.EMAIL_FROM?.trim() || 'noreply@oxmux.ai'
   const match = /^(.+?)\s*<([^>]+)>$/.exec(raw)
   if (match) {
     return { address: match[2].trim(), name: match[1].trim() }
@@ -116,11 +116,11 @@ export const sendEmail = async (input: SendEmailInput): Promise<{ ok: boolean; m
 }
 
 export const sendVerificationEmail = async (input: { email: string; name: string; url: string }): Promise<{ ok: boolean; message?: string }> => {
-  const subject = '验证您的 wemux 邮箱'
+  const subject = '验证您的 oxmux 邮箱'
   const text = [
     `你好 ${input.name}，`,
     '',
-    '感谢注册 wemux。请点击以下链接验证您的邮箱（1 小时内有效）：',
+    '感谢注册 oxmux。请点击以下链接验证您的邮箱（1 小时内有效）：',
     '',
     input.url,
     '',
@@ -128,8 +128,8 @@ export const sendVerificationEmail = async (input: { email: string; name: string
   ].join('\n')
   const html = [
     '<div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">',
-    `<h2>验证您的 wemux 邮箱</h2>`,
-    `<p>你好 ${escapeHtml(input.name)}，感谢注册 wemux。</p>`,
+    `<h2>验证您的 oxmux 邮箱</h2>`,
+    `<p>你好 ${escapeHtml(input.name)}，感谢注册 oxmux。</p>`,
     '<p>请点击下面的按钮验证邮箱（1 小时内有效）：</p>',
     `<p><a href="${escapeHtml(input.url)}" style="display:inline-block;padding:10px 20px;background:#10b981;color:#fff;border-radius:6px;text-decoration:none;">验证邮箱</a></p>`,
     '<p style="color:#888;">如果这不是您的操作，请忽略此邮件。</p>',
@@ -139,7 +139,7 @@ export const sendVerificationEmail = async (input: { email: string; name: string
 }
 
 export const sendResetPasswordEmail = async (input: { email: string; name: string; url: string }): Promise<{ ok: boolean; message?: string }> => {
-  const subject = '重置您的 wemux 密码'
+  const subject = '重置您的 oxmux 密码'
   const text = [
     `你好 ${input.name}，`,
     '',

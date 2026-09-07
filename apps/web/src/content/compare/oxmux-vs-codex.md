@@ -1,8 +1,8 @@
-# Wemux vs Codex for Persistent AI Coding Work
+# Oxmux vs Codex for Persistent AI Coding Work
 
 Codex is powerful as a coding runtime. It is especially strong when a developer wants a direct AI coding session that can reason about code, edit files, and work through implementation tasks in a focused environment.
 
-Wemux does not try to replace that runtime. It tries to solve what happens around it when the work becomes bigger than one session on one device.
+Oxmux does not try to replace that runtime. It tries to solve what happens around it when the work becomes bigger than one session on one device.
 
 ## Where Codex is strong
 
@@ -15,9 +15,9 @@ Codex is strong at the agent-runtime layer:
 
 If your main need is “I want a strong coding agent to work through the code with me,” Codex is a strong fit.
 
-## Where Wemux is different
+## Where Oxmux is different
 
-Wemux is built around the delivery workflow that surrounds runtimes like Codex:
+Oxmux is built around the delivery workflow that surrounds runtimes like Codex:
 
 - route the task to the correct worker
 - execute where the real environment already exists
@@ -29,7 +29,7 @@ That difference matters because many AI coding tasks are not blocked by intellig
 
 ## Side-by-side
 
-| Dimension | Codex | Wemux |
+| Dimension | Codex | Oxmux |
 | --- | --- | --- |
 | Product shape | Coding agent runtime | Worker-routed AI delivery platform |
 | Best fit | A developer directly driving one agent session | Teams or operators managing execution across real machines |
@@ -42,13 +42,13 @@ That difference matters because many AI coding tasks are not blocked by intellig
 
 Choose Codex if your main problem is selecting a strong coding runtime for individual work.
 
-Choose Wemux if your main problem is making AI coding durable and operational across workers, environments, and delivery workflows.
+Choose Oxmux if your main problem is making AI coding durable and operational across workers, environments, and delivery workflows.
 
 ## Why this is an important comparison
 
 This is not really “runtime versus runtime.” It is “runtime versus delivery layer.”
 
-Codex can be the engine. Wemux is the system around the engine when you need:
+Codex can be the engine. Oxmux is the system around the engine when you need:
 
 - task routing
 - worker ownership
@@ -56,4 +56,4 @@ Codex can be the engine. Wemux is the system around the engine when you need:
 - machine transfer
 - human review context
 
-That is why Wemux fits teams who no longer just want AI coding sessions. They want AI coding work that can keep moving after the first session ends.
+That is why Oxmux fits teams who no longer just want AI coding sessions. They want AI coding work that can keep moving after the first session ends.

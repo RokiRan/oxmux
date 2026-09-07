@@ -19,12 +19,12 @@ import {
 
 const prepareIsolatedWorkerHome = () => {
   const workerHome = mkdtempSync(path.join(tmpdir(), 'codex-oauth-test-'))
-  process.env.WEMUX_WORKER_HOME = workerHome
+  process.env.OXMUX_WORKER_HOME = workerHome
   return workerHome
 }
 
 const cleanupWorkerHome = (workerHome: string) => {
-  delete process.env.WEMUX_WORKER_HOME
+  delete process.env.OXMUX_WORKER_HOME
   rmSync(workerHome, { recursive: true, force: true })
 }
 

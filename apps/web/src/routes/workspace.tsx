@@ -1431,7 +1431,7 @@ function WorkspaceRoute() {
         candidateCwds: terminalCandidateCwds,
         target,
         customCommand: state.config.workspaceOpenSettings.customCommand,
-        debugPrefix: '[Wemux][Workspace Open][/workspace]',
+        debugPrefix: '[Oxmux][Workspace Open][/workspace]',
         t,
       })
       if (opened) {

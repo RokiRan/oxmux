@@ -28,7 +28,7 @@ const createExecutor = (overrides: Partial<ExecutorDescriptor> = {}): ExecutorDe
 const createNode = (overrides: Partial<ClusterNode> = {}): ClusterNode => ({
   nodeId: 'us-node-1',
   name: 'US Node 1',
-  url: 'https://us.wemux.ai',
+  url: 'https://us.oxmux.ai',
   relayUrl: 'https://relay.example.com',
   status: 'online',
   capabilities: ['code-execution'],
@@ -152,7 +152,7 @@ test('resolveExecutorRequestTarget falls back to node public url when relay url 
     async () => createNode({
       nodeId: 'eu-node-1',
       relayUrl: undefined,
-      url: 'https://eu.wemux.ai',
+      url: 'https://eu.oxmux.ai',
     }),
   )
 
@@ -169,7 +169,7 @@ test('resolveExecutorRequestTarget falls back to node public url when relay url 
       connectedNodeId: 'eu-node-1',
     }),
     nodeId: 'eu-node-1',
-    relayUrl: 'https://eu.wemux.ai',
+    relayUrl: 'https://eu.oxmux.ai',
   })
 })
 

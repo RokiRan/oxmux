@@ -18,7 +18,7 @@ import { loadWorkerRuntimeConfig } from '../core/runtime-cloud-url'
 import { buildAgentRuntimeWorkerCommandEnvironment } from './agent-runtime-env'
 import { ensureCodexProviderEnvKeyInConfig, ensureCodexProviderNameInConfig, hasCodexAuthDotJsonContent, hasLegacyCodexAccessTokenContent, parseCodexCredentialEnvironment, resolveCodexProviderConfig } from './codex-models'
 
-const MANAGED_SKILL_INDEX = '.wemux-managed.json'
+const MANAGED_SKILL_INDEX = '.oxmux-managed.json'
 const TASK_RUNTIME_MARKER = 'vibemux-task-runtime-'
 const CLAUDE_CREDENTIAL_FILES = ['.credentials.json']
 const VIBEMUX_MCP_EXECUTOR_TOKEN_ENV = 'VIBEMUX_MCP_EXECUTOR_TOKEN'
@@ -502,9 +502,9 @@ const buildCodexMcpConfig = (config: WorkerConfig, existingConfigContent = '', a
       continue
     }
 
-    const isManagedWemuxServer = server.target === VIBEMUX_MCP_TARGET
+    const isManagedOxmuxServer = server.target === VIBEMUX_MCP_TARGET
     const isOfficialConnectorServer = server.id === OFFICIAL_CONNECTOR_MCP_SERVER_ID
-    if (isManagedWemuxServer || isOfficialConnectorServer) {
+    if (isManagedOxmuxServer || isOfficialConnectorServer) {
       const oldKey = legacyRuntimeConfigKey(server.id || server.name)
       baseConfig = removeTomlTable(baseConfig, ['mcp_servers', key])
       baseConfig = removeTomlTable(baseConfig, ['mcp_servers', key, 'env'])
@@ -532,15 +532,15 @@ const buildCodexMcpConfig = (config: WorkerConfig, existingConfigContent = '', a
       continue
     }
 
-    if (isManagedWemuxServer) {
+    if (isManagedOxmuxServer) {
       if (!config.executorToken?.trim()) {
         continue
       }
 
-      const shell = workerCommandEnv.WEMUX_WORKER_LAUNCHER
-        ? { command: workerCommandEnv.WEMUX_WORKER_LAUNCHER, args: ['mcp-stdio'] }
-        : workerCommandEnv.WEMUX_WORKER_RUNNER && workerCommandEnv.WEMUX_WORKER_ENTRY
-          ? { command: workerCommandEnv.WEMUX_WORKER_RUNNER, args: [workerCommandEnv.WEMUX_WORKER_ENTRY, 'mcp-stdio'] }
+      const shell = workerCommandEnv.OXMUX_WORKER_LAUNCHER
+        ? { command: workerCommandEnv.OXMUX_WORKER_LAUNCHER, args: ['mcp-stdio'] }
+        : workerCommandEnv.OXMUX_WORKER_RUNNER && workerCommandEnv.OXMUX_WORKER_ENTRY
+          ? { command: workerCommandEnv.OXMUX_WORKER_RUNNER, args: [workerCommandEnv.OXMUX_WORKER_ENTRY, 'mcp-stdio'] }
           : null
 
       if (!shell) {
@@ -571,7 +571,7 @@ const buildCodexMcpConfig = (config: WorkerConfig, existingConfigContent = '', a
       continue
     }
 
-    // 官方连接器：Codex 远程 MCP 不支持自定义 headers，经本地 stdio 桥转发到 Wemux 代理（携带 workspace 上下文与 runtime token）
+    // 官方连接器：Codex 远程 MCP 不支持自定义 headers，经本地 stdio 桥转发到 Oxmux 代理（携带 workspace 上下文与 runtime token）
     if (isOfficialConnectorServer) {
       const connectorToken = extractBearerToken(server.headers)
       const normalizedWorkspaceId = workspaceId?.trim()
@@ -579,10 +579,10 @@ const buildCodexMcpConfig = (config: WorkerConfig, existingConfigContent = '', a
         continue
       }
 
-      const shell = workerCommandEnv.WEMUX_WORKER_LAUNCHER
-        ? { command: workerCommandEnv.WEMUX_WORKER_LAUNCHER, args: ['mcp-connector-stdio'] }
-        : workerCommandEnv.WEMUX_WORKER_RUNNER && workerCommandEnv.WEMUX_WORKER_ENTRY
-          ? { command: workerCommandEnv.WEMUX_WORKER_RUNNER, args: [workerCommandEnv.WEMUX_WORKER_ENTRY, 'mcp-connector-stdio'] }
+      const shell = workerCommandEnv.OXMUX_WORKER_LAUNCHER
+        ? { command: workerCommandEnv.OXMUX_WORKER_LAUNCHER, args: ['mcp-connector-stdio'] }
+        : workerCommandEnv.OXMUX_WORKER_RUNNER && workerCommandEnv.OXMUX_WORKER_ENTRY
+          ? { command: workerCommandEnv.OXMUX_WORKER_RUNNER, args: [workerCommandEnv.OXMUX_WORKER_ENTRY, 'mcp-connector-stdio'] }
           : null
 
       if (!shell) {
@@ -951,8 +951,8 @@ const createPiRuntimePreparation = (params: RuntimePreparationParams): RuntimePr
   return {
     promptPrefix: params.promptPrefix,
     runtimeEnv: {
-      WEMUX_PI_AGENT_DIR: configuredAgentDir,
-      ...(skillPath ? { WEMUX_PI_SKILL_PATHS: skillPath.split('\n').join(path.delimiter) } : {}),
+      OXMUX_PI_AGENT_DIR: configuredAgentDir,
+      ...(skillPath ? { OXMUX_PI_SKILL_PATHS: skillPath.split('\n').join(path.delimiter) } : {}),
     },
     runtimeArgs: [],
     cleanup: () => {

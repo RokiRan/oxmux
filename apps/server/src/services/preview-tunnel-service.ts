@@ -122,9 +122,9 @@ const pendingTunnelLatencyPings = new Map<string, {
   sentAtMs: number
 }>()
 const tunnelLatencyIntervals = new Map<string, ReturnType<typeof setInterval>>()
-const previewTunnelResponseDebugEnabled = getEnv('WEMUX_PREVIEW_TUNNEL_DEBUG') === '1'
+const previewTunnelResponseDebugEnabled = getEnv('OXMUX_PREVIEW_TUNNEL_DEBUG') === '1'
 const previewTunnelResponseLogSampleRate = (() => {
-  const raw = Number(getEnv('WEMUX_PREVIEW_TUNNEL_RESPONSE_LOG_SAMPLE_RATE') ?? '0')
+  const raw = Number(getEnv('OXMUX_PREVIEW_TUNNEL_RESPONSE_LOG_SAMPLE_RATE') ?? '0')
   if (!Number.isFinite(raw)) {
     return 0
   }
@@ -462,7 +462,7 @@ const normalizeRequestHeaders = (request: Request, previewSessionId: string) => 
   const requestUrl = new URL(request.url)
   headers.push(['x-forwarded-host', requestUrl.host])
   headers.push(['x-forwarded-proto', requestUrl.protocol.replace(':', '')])
-  headers.push(['x-wemux-preview-id', previewSessionId])
+  headers.push(['x-oxmux-preview-id', previewSessionId])
   return headers
 }
 

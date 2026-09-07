@@ -28,8 +28,8 @@ export const normalizeDesktopSandboxProvider = (value?: string): WorkspaceDeskto
 
 export const resolveDesktopSandboxProvider = (): WorkspaceDesktopSandboxProvider => (
   normalizeDesktopSandboxProvider(
-    getEnv('WEMUX_DESKTOP_SANDBOX_PROVIDER')
-      || getEnv('WEMUX_SANDBOX_DESKTOP_PROVIDER')
+    getEnv('OXMUX_DESKTOP_SANDBOX_PROVIDER')
+      || getEnv('OXMUX_SANDBOX_DESKTOP_PROVIDER')
       || process.env.DESKTOP_SANDBOX_PROVIDER,
   )
 )

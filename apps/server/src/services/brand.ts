@@ -12,8 +12,8 @@ export type AppBrand = {
 }
 
 const defaultBrand: AppBrand = {
-  name: 'wemux',
-  site: 'https://wemux.ai',
+  name: 'oxmux',
+  site: 'https://oxmux.ai',
   edition: 'open-source',
 }
 

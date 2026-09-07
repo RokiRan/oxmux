@@ -89,7 +89,7 @@ type AndroidMeetingListeningModule = {
 }
 
 const androidMeetingListening = Platform.OS === 'android'
-  ? requireOptionalNativeModule<AndroidMeetingListeningModule>('WemuxMeetingListening')
+  ? requireOptionalNativeModule<AndroidMeetingListeningModule>('OxmuxMeetingListening')
   : undefined
 
 const requireAndroidMeetingListening = () => {
@@ -162,8 +162,8 @@ const asMeetingRuntimeConfig = (args: Record<string, unknown>): MeetingRuntimeCo
   const workspaceId = typeof args.workspaceId === 'string' ? args.workspaceId.trim() : ''
   if ((!runtimeUrl && Platform.OS !== 'android') || !apiUrl || !accessToken) {
     throw new Error(Platform.OS === 'android'
-      ? '移动端背后听写需要 Wemux API 地址和登录凭据，并先下载两个端侧模型'
-      : '移动端背后听写需要 MOSS Runtime、Wemux API 地址和登录凭据')
+      ? '移动端背后听写需要 Oxmux API 地址和登录凭据，并先下载两个端侧模型'
+      : '移动端背后听写需要 MOSS Runtime、Oxmux API 地址和登录凭据')
   }
   return { runtimeUrl, runtimeToken, apiUrl, accessToken, brainContext, workspaceId }
 }
@@ -240,7 +240,7 @@ const processRecordingUri = async (
     body.append('audio', {
       uri,
       type: 'audio/m4a',
-      name: `wemux-meeting-${startedAtMs}.m4a`,
+      name: `oxmux-meeting-${startedAtMs}.m4a`,
     } as unknown as Blob)
     body.append('startedAt', new Date(startedAtMs).toISOString())
     body.append('endedAt', new Date(endedAtMs).toISOString())
@@ -248,7 +248,7 @@ const processRecordingUri = async (
     if (brainContext) body.append('brainContext', brainContext)
     const response = await fetch(`${runtime.runtimeUrl}/v1/meeting/transcribe`, {
       method: 'POST',
-      headers: runtime.runtimeToken ? { 'X-Wemux-Meeting-Key': runtime.runtimeToken } : undefined,
+      headers: runtime.runtimeToken ? { 'X-Oxmux-Meeting-Key': runtime.runtimeToken } : undefined,
       body,
     })
     if (!response.ok) throw new Error(`MOSS Runtime 不可用（${response.status}）`)
@@ -338,7 +338,7 @@ const showNotification = async (args: Record<string, unknown>) => {
   if (!permission.granted) throw new Error('notification permission was denied')
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: typeof args.title === 'string' ? args.title.slice(0, 160) : 'Wemux',
+      title: typeof args.title === 'string' ? args.title.slice(0, 160) : 'Oxmux',
       body: typeof args.body === 'string' ? args.body.slice(0, 2000) : '',
     },
     trigger: null,

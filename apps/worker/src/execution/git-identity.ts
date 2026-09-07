@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process'
 import path from 'node:path'
 import type { TaskRuntimeGitIdentity } from '@shared/types'
 import { createGitAuthContext } from '@shared/git-auth'
-import { resolveWemuxAutomatedCommitAuthor } from '@shared/git-commit-message'
+import { resolveOxmuxAutomatedCommitAuthor } from '@shared/git-commit-message'
 import { getWorkerNodeDir } from '../core/config'
 
 const runGit = (worktreePath: string, args: string[], env?: NodeJS.ProcessEnv) => {
@@ -32,7 +32,7 @@ const tryRunGit = (worktreePath: string, args: string[], env?: NodeJS.ProcessEnv
 }
 
 export const resolveTaskGitCommitIdentityEnv = (identity: TaskRuntimeGitIdentity): Record<string, string> => {
-  const commitAuthor = resolveWemuxAutomatedCommitAuthor(identity)
+  const commitAuthor = resolveOxmuxAutomatedCommitAuthor(identity)
   const name = commitAuthor?.name
   const email = commitAuthor?.email
   if (!name || !email) {
@@ -80,7 +80,7 @@ export const createTaskGitAuthContext = (params: {
     tempDir: context.tempDir,
     configureRepo(worktreePath: string) {
       if (params.identity.name && params.identity.email) {
-        const commitAuthor = resolveWemuxAutomatedCommitAuthor(params.identity)
+        const commitAuthor = resolveOxmuxAutomatedCommitAuthor(params.identity)
         runGit(worktreePath, ['config', '--local', 'user.name', commitAuthor?.name ?? params.identity.name], context.env)
         runGit(worktreePath, ['config', '--local', 'user.email', commitAuthor?.email ?? params.identity.email], context.env)
       }

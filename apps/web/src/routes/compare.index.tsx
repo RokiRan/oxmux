@@ -21,9 +21,9 @@ export const Route = createFileRoute('/compare/')({
       description: 'Comparison pages that explain the difference between AI chat interfaces and accountable AI delivery systems.',
       documents: compareDocuments,
       path: '/compare',
-      title: 'Wemux Compare Pages',
+      title: 'Oxmux Compare Pages',
     }),
-    title: 'Wemux Compare Pages',
+    title: 'Oxmux Compare Pages',
   }),
   component: CompareIndexRoute,
 })
@@ -31,9 +31,9 @@ export const Route = createFileRoute('/compare/')({
 function CompareIndexRoute() {
   return (
     <MarketingPageLayout
-      description="Comparison pages make the positioning explicit: where chat helps, where delivery becomes the real problem, and why Wemux focuses on execution."
+      description="Comparison pages make the positioning explicit: where chat helps, where delivery becomes the real problem, and why Oxmux focuses on execution."
       eyebrow="Library"
-      title="Wemux compare pages"
+      title="Oxmux compare pages"
     >
       <MarketingFeaturedContent documents={featuredCompareDocuments} title="Featured comparisons" />
       <MarketingContentIndex collectionLabel="Compare" documents={compareDocuments} />

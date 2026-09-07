@@ -29,8 +29,8 @@ test('buildClusterPreviewGatewayRelayWebSocketUrl upgrades node url to websocket
 test('buildPreviewBootstrapRedirectUrl keeps the current binding host for additional preview ports', () => {
   assert.equal(
     buildPreviewBootstrapRedirectUrl({
-      publicUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/',
-    } as any, 'http://mastra-shopping--preview--b5dfdk-4111.wemux.localtest.me:18989/?vmx_viewer_token=token-4111&tab=playground#top'),
-    'http://mastra-shopping--preview--b5dfdk-4111.wemux.localtest.me:18989/?tab=playground#top',
+      publicUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/',
+    } as any, 'http://mastra-shopping--preview--b5dfdk-4111.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111&tab=playground#top'),
+    'http://mastra-shopping--preview--b5dfdk-4111.oxmux.localtest.me:18989/?tab=playground#top',
   )
 })

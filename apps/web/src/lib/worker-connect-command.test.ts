@@ -82,7 +82,7 @@ test('buildWorkerDockerConnectCommand uses a curl installer that can run from an
 })
 
 test('buildWorkerDockerConnectCommand sends localtest curl to the server port', () => {
-  const restore = installWindowOrigin('http://app.wemux.localtest.me:15173')
+  const restore = installWindowOrigin('http://app.oxmux.localtest.me:15173')
 
   try {
     const command = buildWorkerDockerConnectCommand('LOCAL123')

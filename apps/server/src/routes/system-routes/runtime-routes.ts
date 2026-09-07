@@ -932,7 +932,7 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
       client_id: CLAUDE_OAUTH_CLIENT_ID,
       redirect_uri: CLAUDE_OAUTH_REDIRECT_URI,
       response_type: 'code',
-      state: `wemux-${Math.random().toString(36).slice(2, 10)}`,
+      state: `oxmux-${Math.random().toString(36).slice(2, 10)}`,
     })
     return c.json({ authorizeUrl: `${CLAUDE_PLATFORM_BASE}/oauth/authorize?${search.toString()}` })
   })
@@ -1561,12 +1561,12 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
   })
 
   // ---- AI 运维诊断端点（/api/health/detailed）----
-  // 设计：给 AI/自动化运维使用。配置 WEMUX_HEALTH_TOKEN 后，请求需带 x-health-token 或 ?token= 返回完整诊断；
+  // 设计：给 AI/自动化运维使用。配置 OXMUX_HEALTH_TOKEN 后，请求需带 x-health-token 或 ?token= 返回完整诊断；
   // 未配置 token 时同样返回完整信息（自托管默认）。信息分 meta/brand/database/node/resources/security/checks 七块，
   // checks 为扁平检查项列表，AI 可直接逐项判断 ok/warning/error。
   app.get('/api/health/detailed', async (c) => {
     const token = c.req.header('x-health-token') || c.req.query('token')
-    const expected = getEnv('WEMUX_HEALTH_TOKEN')?.trim()
+    const expected = getEnv('OXMUX_HEALTH_TOKEN')?.trim()
     if (expected && token !== expected) {
       return c.json({ ok: false, message: 'unauthorized: missing or invalid x-health-token' }, 401)
     }
@@ -1617,13 +1617,13 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
       warningCount: warnCount,
       summary: degraded ? 'degraded' : warnCount > 0 ? 'warning' : 'healthy',
       meta: {
-        name: 'wemux',
+        name: 'oxmux',
         version: resolveAppVersion(),
         environment: process.env.NODE_ENV?.trim() || 'development',
         nodeVersion: process.version,
         platform: `${process.platform}/${process.arch}`,
         uptimeMs: Math.round(process.uptime() * 1000),
-        publicBaseUrl: getEnv('WEMUX_PUBLIC_BASE_URL')?.trim() || '',
+        publicBaseUrl: getEnv('OXMUX_PUBLIC_BASE_URL')?.trim() || '',
       },
       brand: resolveAppBrand(),
       database: {

@@ -7,7 +7,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { simpleGit } from 'simple-git'
-import { buildWemuxAgentCommitMessage } from '@shared/git-commit-message'
+import { buildOxmuxAgentCommitMessage } from '@shared/git-commit-message'
 import { rewriteGitCredentialError } from '@shared/git-auth'
 import type {
   ExecutorGitBaselineDiffResult,
@@ -157,10 +157,10 @@ const syncTaskBranchBeforePush = async (git: ReturnType<typeof simpleGit>, branc
 
 const buildCommitMessageFromReply = (
   reply: string,
-  fallback = 'wemux: workspace auto commit',
+  fallback = 'oxmux: workspace auto commit',
   identity?: TaskRuntimeGitIdentity,
 ) => (
-  buildWemuxAgentCommitMessage({
+  buildOxmuxAgentCommitMessage({
     reply,
     fallback,
     agentIdentity: {
@@ -1589,7 +1589,7 @@ export const createLocalTaskPullRequest = async (params: {
             Accept: 'application/vnd.github+json',
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'User-Agent': 'wemux-Worker',
+            'User-Agent': 'oxmux-Worker',
             'X-GitHub-Api-Version': '2022-11-28',
           },
           body: JSON.stringify({

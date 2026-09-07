@@ -45,4 +45,4 @@ That review step is not bureaucracy. It is the boundary that keeps AI useful in 
 
 Teams searching for “AI coding workflow,” “AI coding in real repositories,” or “AI agent code review workflow” are usually not looking for another chatbot. They are trying to solve the messy last mile between generated code and shipped code.
 
-That is where Wemux fits. It gives the team a routing and execution layer around real workers, real repos, and real review loops. The value is not just that an agent can write code. The value is that the work can be tracked, reproduced, reviewed, and continued on the right machine.
+That is where Oxmux fits. It gives the team a routing and execution layer around real workers, real repos, and real review loops. The value is not just that an agent can write code. The value is that the work can be tracked, reproduced, reviewed, and continued on the right machine.

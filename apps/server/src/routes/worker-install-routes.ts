@@ -77,7 +77,7 @@ const buildServerUrl = (requestUrl: string, headers: Headers) => {
 }
 
 export const buildWorkerDockerInstallScript = (serverUrl: string, manifest?: WorkerInstallerManifest | null) => {
-  const previewPackage = manifest?.packageName === 'wemux-worker-preview' || manifest?.packageName === 'vibemux-worker-preview'
+  const previewPackage = manifest?.packageName === 'oxmux-worker-preview' || manifest?.packageName === 'vibemux-worker-preview'
   const workerPort = previewPackage ? 48123 : 48100
   const releaseChannel = previewPackage ? 'preview' : 'production'
   return `#!/usr/bin/env bash
@@ -157,7 +157,7 @@ Usage:
 
 Options:
   --name <NAME>             Worker display name
-  --server-url <URL>        wemux server URL, default: current server
+  --server-url <URL>        oxmux server URL, default: current server
   --container-name <NAME>   Docker container name
   --volume-name <NAME>      Docker volume name
   --worker-port <PORT>      Worker console port inside the container
@@ -212,7 +212,7 @@ if [[ -z "$VOLUME_NAME" ]]; then
   VOLUME_NAME="vibemux-worker-home-$RESOURCE_SUFFIX"
 fi
 
-say2 "$C_CYAN" "Starting wemux worker Docker container: $CONTAINER_NAME"
+say2 "$C_CYAN" "Starting oxmux worker Docker container: $CONTAINER_NAME"
 docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
 
 docker_args=(
@@ -265,10 +265,10 @@ docker "\${docker_args[@]}"
 echo "" >&2
 if [[ -n "$C_RESET" ]]; then
   printf '%s%s%s\\n' "$C_GREEN" "════════════════════════════════════════════════════════════" "$C_RESET" >&2
-  printf '%s%s%s\\n' "$C_BOLD$C_GREEN" "  ✨  wemux worker Docker 容器已启动 · Container started  ✨" "$C_RESET" >&2
+  printf '%s%s%s\\n' "$C_BOLD$C_GREEN" "  ✨  oxmux worker Docker 容器已启动 · Container started  ✨" "$C_RESET" >&2
   printf '%s%s%s\\n' "$C_GREEN" "════════════════════════════════════════════════════════════" "$C_RESET" >&2
 fi
-say2 "$C_GREEN" "wemux worker container started: $CONTAINER_NAME"
+say2 "$C_GREEN" "oxmux worker container started: $CONTAINER_NAME"
 say2 "$C_CYAN" "Logs: docker logs -f $CONTAINER_NAME"
 echo "" >&2
 say2 "$C_BOLD$C_GREEN" "  ▶ 下一步 · Next steps"
@@ -283,15 +283,15 @@ export const buildWorkerInstallBootstrapScript = (serverUrl: string, manifest: W
 set -euo pipefail
 
 if [[ -t 2 && -z "\${NO_COLOR:-}" && "\${TERM:-}" != "dumb" ]]; then
-  printf '\\033[36m%s\\033[0m\\n' "wemux worker installer bootstrap (${manifest.packageName}@${manifest.packageVersion})" >&2
+  printf '\\033[36m%s\\033[0m\\n' "oxmux worker installer bootstrap (${manifest.packageName}@${manifest.packageVersion})" >&2
   ${manifest.commitSha ? `printf '\\033[2m%s\\033[0m\\n' "Installer commit: ${manifest.commitSha}" >&2` : ''}
 else
-  echo "wemux worker installer bootstrap (${manifest.packageName}@${manifest.packageVersion})" >&2
+  echo "oxmux worker installer bootstrap (${manifest.packageName}@${manifest.packageVersion})" >&2
   ${manifest.commitSha ? `echo "Installer commit: ${manifest.commitSha}" >&2` : ''}
 fi
 echo "" >&2
 
-TMP_SCRIPT="$(mktemp "\${TMPDIR:-/tmp}/wemux-worker-install.XXXXXX")"
+TMP_SCRIPT="$(mktemp "\${TMPDIR:-/tmp}/oxmux-worker-install.XXXXXX")"
 cleanup() {
   rm -f "$TMP_SCRIPT"
 }
@@ -398,10 +398,10 @@ Recommended quick fix:
   throw $message
 }
 
-Write-Host "wemux worker installer${manifest ? ` (${manifest.packageName}@${manifest.packageVersion})` : ''}" -ForegroundColor Cyan
+Write-Host "oxmux worker installer${manifest ? ` (${manifest.packageName}@${manifest.packageVersion})` : ''}" -ForegroundColor Cyan
 ${manifest?.commitSha ? `Write-Host "Installer commit: ${manifest.commitSha}" -ForegroundColor Cyan` : ''}
 Write-Host "Install mode: $InstallMode (runs as current Windows user: $env:USERNAME; admin not required)."
-Write-Host "Preparing this machine for wemux. This may take a few minutes on the first run." -ForegroundColor Cyan
+Write-Host "Preparing this machine for oxmux. This may take a few minutes on the first run." -ForegroundColor Cyan
 Write-Host ""
 
 Write-Step "Checking Node.js runtime..."
@@ -410,7 +410,7 @@ $nodeCommand = Get-CommandPath @("node.exe", "node")
 Write-Host ("Using Node.js {0}." -f (& $nodeCommand -v)) -ForegroundColor Green
 
 Write-Step "Preparing installer workspace..."
-$tmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("wemux-worker-" + [guid]::NewGuid().ToString("N"))
+$tmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("oxmux-worker-" + [guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Force -Path $tmpDir | Out-Null
 
 try {
@@ -426,26 +426,26 @@ try {
   Invoke-WebRequest -UseBasicParsing -Uri $packageUrl -OutFile $packagePath
 
   $manifest = Get-Content -Path $manifestPath -Raw | ConvertFrom-Json
-  $packageName = if ($manifest.packageName) { [string]$manifest.packageName } else { "wemux-worker-preview" }
-  $binName = if ($manifest.binName) { [string]$manifest.binName } elseif ($manifest.packageName) { [string]$manifest.packageName } else { "wemux-worker-preview" }
+  $packageName = if ($manifest.packageName) { [string]$manifest.packageName } else { "oxmux-worker-preview" }
+  $binName = if ($manifest.binName) { [string]$manifest.binName } elseif ($manifest.packageName) { [string]$manifest.packageName } else { "oxmux-worker-preview" }
   if (-not $ServiceName) {
     $ServiceName = $binName
   }
 
   if (-not $InstallDir) {
-    $isPreviewPackage = ($packageName -eq "vibemux-worker-preview" -or $packageName -eq "wemux-worker-preview")
+    $isPreviewPackage = ($packageName -eq "vibemux-worker-preview" -or $packageName -eq "oxmux-worker-preview")
     if ($isPreviewPackage) {
-      $InstallDir = Join-Path $HOME ".wemux-preview-worker"
+      $InstallDir = Join-Path $HOME ".oxmux-preview-worker"
     } else {
-      $InstallDir = Join-Path $HOME ".wemux-worker"
+      $InstallDir = Join-Path $HOME ".oxmux-worker"
     }
   }
 
-  if ($packageName -eq "vibemux-worker-preview" -or $packageName -eq "wemux-worker-preview") {
-    $env:VIBEMUX_WORKER_HOME = Join-Path $HOME ".wemux-preview"
+  if ($packageName -eq "vibemux-worker-preview" -or $packageName -eq "oxmux-worker-preview") {
+    $env:VIBEMUX_WORKER_HOME = Join-Path $HOME ".oxmux-preview"
     $env:VIBEMUX_WORKER_RELEASE_CHANNEL = "preview"
   } else {
-    $env:VIBEMUX_WORKER_HOME = Join-Path $HOME ".wemux"
+    $env:VIBEMUX_WORKER_HOME = Join-Path $HOME ".oxmux"
     $env:VIBEMUX_WORKER_RELEASE_CHANNEL = "production"
   }
 
@@ -516,16 +516,16 @@ call "$nodeCommand" "$packageDir\\bin\\cli.mjs" %*
 @echo off
 call "$workerBin" %*
 "@ | Set-Content -Path $ShimPath -Encoding Ascii
-  # wemux 是品牌规范命令（与 web 控制台 / 文档一致）；长名 shim 保留用于兼容
-  $WemuxShimPath = Join-Path $ShimDir "wemux.cmd"
+  # oxmux 是品牌规范命令（与 web 控制台 / 文档一致）；长名 shim 保留用于兼容
+  $OxmuxShimPath = Join-Path $ShimDir "oxmux.cmd"
   @"
 @echo off
 call "$workerBin" %*
-"@ | Set-Content -Path $WemuxShimPath -Encoding Ascii
+"@ | Set-Content -Path $OxmuxShimPath -Encoding Ascii
 
   $pathEntries = ($env:Path -split ";") | Where-Object { $_ }
   $CommandBin = if ($pathEntries -contains $ShimDir) { $binName } else { $ShimPath }
-  $WemuxCommandBin = if ($pathEntries -contains $ShimDir) { "wemux" } else { $WemuxShimPath }
+  $OxmuxCommandBin = if ($pathEntries -contains $ShimDir) { "oxmux" } else { $OxmuxShimPath }
 
   Write-Step "Bootstrapping Git and agent runtimes..."
   $workerBinDir = Split-Path $workerBin -Parent
@@ -571,7 +571,7 @@ call "$workerBin" %*
 
   Write-Host ""
   Write-Host ("════════════════════════════════════════════════════════════") -ForegroundColor Green
-  Write-Host ("  ✨  wemux Worker 安装完成 · Install complete  ✨") -ForegroundColor Green
+  Write-Host ("  ✨  oxmux Worker 安装完成 · Install complete  ✨") -ForegroundColor Green
   Write-Host ("════════════════════════════════════════════════════════════") -ForegroundColor Green
   Write-Host ("Installed {0} into {1}" -f $packageName, $InstallDir) -ForegroundColor Green
   Write-Host ("Installed and started current-user worker startup: {0}" -f $ServiceName) -ForegroundColor Green
@@ -581,20 +581,20 @@ call "$workerBin" %*
   Write-Host ("Log directory: {0}" -f $LogDir)
   Write-Host ""
   Write-Host ("Command shim: {0}" -f $ShimPath)
-  Write-Host ("wemux command: {0}" -f $WemuxCommandBin)
+  Write-Host ("oxmux command: {0}" -f $OxmuxCommandBin)
   if ($CommandBin -eq $ShimPath) {
     Write-Host "Tip: add $HOME\\AppData\\Local\\Vibemux\\bin to PATH to run the worker from any shell."
   }
   Write-Host ""
   Write-Host ("▶ 接下来 · Next steps") -ForegroundColor Cyan
   Write-Host ("  1. 打开执行中心，这台机器已经在线：{0}/execution" -f $ServerUrl)
-  Write-Host ("  2. 常用命令（wemux）：") -ForegroundColor Cyan
-  Write-Host ('     ' + $WemuxCommandBin + ' worker service status --name "' + $ServiceName + '"')
-  Write-Host ('     ' + $WemuxCommandBin + ' worker service logs --name "' + $ServiceName + '" --follow')
-  Write-Host ('     ' + $WemuxCommandBin + ' worker update --check')
+  Write-Host ("  2. 常用命令（oxmux）：") -ForegroundColor Cyan
+  Write-Host ('     ' + $OxmuxCommandBin + ' worker service status --name "' + $ServiceName + '"')
+  Write-Host ('     ' + $OxmuxCommandBin + ' worker service logs --name "' + $ServiceName + '" --follow')
+  Write-Host ('     ' + $OxmuxCommandBin + ' worker update --check')
   Write-Host ""
   Write-Host ("  3. 在本机打开 worker 控制台：") -ForegroundColor Cyan
-  Write-Host ('     ' + $WemuxCommandBin + ' worker open')
+  Write-Host ('     ' + $OxmuxCommandBin + ' worker open')
   Write-Host ""
   Write-Host "Useful commands:"
   Write-Host ('  ' + $CommandBin + ' service status --name "' + $ServiceName + '"')
@@ -727,10 +727,10 @@ download_file() {
 }
 
 print_rule_err
-say_err "$C_BOLD$C_CYAN" "wemux worker installer${manifest ? ` (${manifest.packageName}@${manifest.packageVersion})` : ''}"
+say_err "$C_BOLD$C_CYAN" "oxmux worker installer${manifest ? ` (${manifest.packageName}@${manifest.packageVersion})` : ''}"
 ${manifest?.commitSha ? `say_err "$C_CYAN" "Installer commit: ${manifest.commitSha}"` : ''}
 print_rule_err
-say_err "$C_CYAN" "Preparing this machine for wemux. This may take a few minutes on the first run."
+say_err "$C_CYAN" "Preparing this machine for oxmux. This may take a few minutes on the first run."
 echo "" >&2
 
 while [[ $# -gt 0 ]]; do
@@ -770,8 +770,8 @@ Usage:
 
 Options:
   --name <NAME>             Worker display name
-  --install-dir <DIR>       Install prefix, default: ~/.wemux-worker or ~/.wemux-preview-worker
-  --server-url <URL>        wemux server URL
+  --install-dir <DIR>       Install prefix, default: ~/.oxmux-worker or ~/.oxmux-preview-worker
+  --server-url <URL>        oxmux server URL
   --log-dir <DIR>           Service log directory
   --service-name <NAME>     Service name, default: package name
   --foreground              Run in foreground instead of installing a service
@@ -830,8 +830,8 @@ run_installer_command() {
 
 print_unzip_failure() {
   local log_path="$1"
-  say_err "$C_RED" "unzip is required for wemux Mesh auto-download."
-  echo "自动准备失败：缺少 unzip，wemux Mesh 无法自动下载并解压组件。" >&2
+  say_err "$C_RED" "unzip is required for oxmux Mesh auto-download."
+  echo "自动准备失败：缺少 unzip，oxmux Mesh 无法自动下载并解压组件。" >&2
   if [[ -s "$log_path" ]]; then
     echo "" >&2
     echo "Installer output:" >&2
@@ -932,11 +932,11 @@ install_global_shim() {
 
   run_installer_command mkdir -p "$GLOBAL_SHIM_DIR"
   run_installer_command ln -sfn "$WORKER_WRAPPER" "$GLOBAL_SHIM_PATH"
-  run_installer_command ln -sfn "$INSTALL_DIR/bin/wemux" "$GLOBAL_SHIM_DIR/wemux"
+  run_installer_command ln -sfn "$INSTALL_DIR/bin/oxmux" "$GLOBAL_SHIM_DIR/oxmux"
 }
 
 worker_console_base_port() {
-  if [[ "$PACKAGE_NAME" == "vibemux-worker-preview" || "$PACKAGE_NAME" == "wemux-worker-preview" ]]; then
+  if [[ "$PACKAGE_NAME" == "vibemux-worker-preview" || "$PACKAGE_NAME" == "oxmux-worker-preview" ]]; then
     echo "48123"
     return 0
   fi
@@ -1082,22 +1082,22 @@ download_file "$MANIFEST_URL" "$MANIFEST_PATH"
 print_step "Downloading worker package..."
 download_file "$PACKAGE_URL" "$PACKAGE_PATH"
 
-PACKAGE_NAME="$(node -e "const fs=require('fs');const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));process.stdout.write(data.packageName||'wemux-worker-preview')" "$MANIFEST_PATH")"
-BIN_NAME="$(node -e "const fs=require('fs');const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));process.stdout.write(data.binName||data.packageName||'wemux-worker-preview')" "$MANIFEST_PATH")"
+PACKAGE_NAME="$(node -e "const fs=require('fs');const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));process.stdout.write(data.packageName||'oxmux-worker-preview')" "$MANIFEST_PATH")"
+BIN_NAME="$(node -e "const fs=require('fs');const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));process.stdout.write(data.binName||data.packageName||'oxmux-worker-preview')" "$MANIFEST_PATH")"
 
-if [[ "$PACKAGE_NAME" == "vibemux-worker-preview" || "$PACKAGE_NAME" == "wemux-worker-preview" ]]; then
-  WORKER_HOME="\${HOME}/.wemux-preview"
+if [[ "$PACKAGE_NAME" == "vibemux-worker-preview" || "$PACKAGE_NAME" == "oxmux-worker-preview" ]]; then
+  WORKER_HOME="\${HOME}/.oxmux-preview"
   RELEASE_CHANNEL="preview"
 else
-  WORKER_HOME="\${HOME}/.wemux"
+  WORKER_HOME="\${HOME}/.oxmux"
   RELEASE_CHANNEL="production"
 fi
 
 if [[ -z "$INSTALL_DIR" ]]; then
   if [[ "$RELEASE_CHANNEL" == "preview" ]]; then
-    INSTALL_DIR="\${HOME}/.wemux-preview-worker"
+    INSTALL_DIR="\${HOME}/.oxmux-preview-worker"
   else
-    INSTALL_DIR="\${HOME}/.wemux-worker"
+    INSTALL_DIR="\${HOME}/.oxmux-worker"
   fi
 fi
 
@@ -1122,7 +1122,7 @@ mkdir -p "$INSTALL_DIR/bin"
 for entry in \
   "vbx:vbx.mjs" \
   "vibemux:vibemux.mjs" \
-  "wemux:wemux.mjs" \
+  "oxmux:oxmux.mjs" \
   "$BIN_NAME:cli.mjs"; do
   shim_name="\${entry%%:*}"
   target_name="\${entry#*:}"
@@ -1161,8 +1161,8 @@ print_step "Creating user command shim..."
 mkdir -p "$SHIM_DIR"
 SHIM_PATH="$SHIM_DIR/$BIN_NAME"
 ln -sfn "$WORKER_WRAPPER" "$SHIM_PATH"
-# wemux 是品牌规范命令（与 web 控制台 / 文档一致）；长名 shim 保留用于兼容
-ln -sfn "$INSTALL_DIR/bin/wemux" "$SHIM_DIR/wemux"
+# oxmux 是品牌规范命令（与 web 控制台 / 文档一致）；长名 shim 保留用于兼容
+ln -sfn "$INSTALL_DIR/bin/oxmux" "$SHIM_DIR/oxmux"
 if install_global_shim; then
   COMMAND_BIN="$GLOBAL_SHIM_PATH"
 else
@@ -1175,13 +1175,13 @@ else
   esac
 fi
 
-# 教程与提示统一使用 wemux 命令：优先 PATH 上的 wemux，否则给出完整路径
-WEMUX_CMD="$INSTALL_DIR/bin/wemux"
-if [[ -e "$GLOBAL_SHIM_DIR/wemux" ]]; then
-  WEMUX_CMD="wemux"
-elif [[ -e "$SHIM_DIR/wemux" ]]; then
+# 教程与提示统一使用 oxmux 命令：优先 PATH 上的 oxmux，否则给出完整路径
+OXMUX_CMD="$INSTALL_DIR/bin/oxmux"
+if [[ -e "$GLOBAL_SHIM_DIR/oxmux" ]]; then
+  OXMUX_CMD="oxmux"
+elif [[ -e "$SHIM_DIR/oxmux" ]]; then
   case ":\${PATH}:" in
-    *":$SHIM_DIR:"*) WEMUX_CMD="wemux" ;;
+    *":$SHIM_DIR:"*) OXMUX_CMD="oxmux" ;;
   esac
 fi
 
@@ -1189,7 +1189,7 @@ print_step "Bootstrapping Git and agent runtimes..."
 # Runtime bootstrap 是增强步骤：失败不阻断安装，worker 主体仍可配对并运行。
 if ! "$WORKER_WRAPPER" bootstrap --target base; then
   say_err "$C_YELLOW" "Runtime bootstrap failed; continuing installation. The worker can still run."
-  say_err "$C_YELLOW" "Fix agent runtimes later with: $WEMUX_CMD worker doctor"
+  say_err "$C_YELLOW" "Fix agent runtimes later with: $OXMUX_CMD worker doctor"
 fi
 
 if [[ "$FOREGROUND" == "1" ]]; then
@@ -1218,7 +1218,7 @@ run_pairing() {
 
 print_step "Pairing worker..."
 if ! run_pairing; then
-  print_failure_banner "配对失败 · Worker pairing failed" "配对码可能已过期，或无法访问 $SERVER_URL。请重新获取配对码后再次运行安装命令；也可以运行 $WEMUX_CMD worker doctor 排查。"
+  print_failure_banner "配对失败 · Worker pairing failed" "配对码可能已过期，或无法访问 $SERVER_URL。请重新获取配对码后再次运行安装命令；也可以运行 $OXMUX_CMD worker doctor 排查。"
   exit 1
 fi
 
@@ -1229,16 +1229,16 @@ fi
 
 print_step "Installing and starting worker service..."
 if ! "$WORKER_WRAPPER" service install --name "$SERVICE_NAME" --worker-path "$WORKER_WRAPPER" --install-prefix "$INSTALL_DIR" --log-dir "$LOG_DIR"; then
-  print_failure_banner "服务安装失败 · Service install failed" "请查看上面的错误信息，然后重新运行安装命令；也可以运行 $WEMUX_CMD worker doctor 排查。"
+  print_failure_banner "服务安装失败 · Service install failed" "请查看上面的错误信息，然后重新运行安装命令；也可以运行 $OXMUX_CMD worker doctor 排查。"
   exit 1
 fi
 wait_for_worker_cloud_connection
 
 echo ""
 echo "════════════════════════════════════════════════════════════"
-say_out "$C_BOLD$C_GREEN" "  ✨  wemux Worker 安装完成 · Install complete  ✨"
+say_out "$C_BOLD$C_GREEN" "  ✨  oxmux Worker 安装完成 · Install complete  ✨"
 echo "════════════════════════════════════════════════════════════"
-say_out "$C_GREEN" "wemux Worker is installed, paired, and connected."
+say_out "$C_GREEN" "oxmux Worker is installed, paired, and connected."
 say_out "$C_GREEN" "Cloud connection: connected to $SERVER_URL"
 say_out "$C_GREEN" "Worker service: $SERVICE_NAME"
 say_out "$C_GREEN" "Installed $PACKAGE_NAME into $INSTALL_DIR"
@@ -1249,7 +1249,7 @@ say_out "$C_CYAN" "Command shim: $SHIM_PATH"
 if [[ -n "$GLOBAL_SHIM_PATH" && -e "$GLOBAL_SHIM_PATH" ]]; then
   say_out "$C_CYAN" "Global command: $GLOBAL_SHIM_PATH"
 fi
-say_out "$C_CYAN" "wemux command: $WEMUX_CMD"
+say_out "$C_CYAN" "oxmux command: $OXMUX_CMD"
 if [[ "$COMMAND_BIN" == "$SHIM_PATH" ]]; then
   echo "Tip: add ~/.local/bin to PATH to run '$BIN_NAME' from any shell:"
   echo '  export PATH="$HOME/.local/bin:$PATH"'
@@ -1261,13 +1261,13 @@ echo "════════════════════════�
 say_out "$C_CYAN" "  1. 打开执行中心，这台机器已经在线，可以直接派发任务："
 say_out "$C_CYAN" "     $SERVER_URL/execution"
 echo ""
-say_out "$C_CYAN" "  2. 常用命令（wemux）："
-say_out "$C_CYAN" "     $WEMUX_CMD worker service status --name \"$SERVICE_NAME\""
-say_out "$C_CYAN" "     $WEMUX_CMD worker service logs --name \"$SERVICE_NAME\" --follow"
-say_out "$C_CYAN" "     $WEMUX_CMD worker update --check"
+say_out "$C_CYAN" "  2. 常用命令（oxmux）："
+say_out "$C_CYAN" "     $OXMUX_CMD worker service status --name \"$SERVICE_NAME\""
+say_out "$C_CYAN" "     $OXMUX_CMD worker service logs --name \"$SERVICE_NAME\" --follow"
+say_out "$C_CYAN" "     $OXMUX_CMD worker update --check"
 echo ""
 say_out "$C_CYAN" "  3. 在本机打开 worker 控制台："
-say_out "$C_CYAN" "     $WEMUX_CMD worker open"
+say_out "$C_CYAN" "     $OXMUX_CMD worker open"
 echo ""
 echo "Useful commands:"
 echo "  $COMMAND_BIN service status --name \"$SERVICE_NAME\""

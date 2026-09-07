@@ -596,8 +596,8 @@ export const listNodes = (): ClusterNode[] => {
 }
 
 // 集群节点心跳窗口：每个节点每 15s 持久化一次自身心跳，存活节点的心跳不会超过该窗口。
-// 生产默认 120s；E2E/故障演练可经 WEMUX_CLUSTER_NODE_STALE_TIMEOUT_MS 缩短以加速验证。
-export const CLUSTER_NODE_STALE_TIMEOUT_MS = Number(getEnv('WEMUX_CLUSTER_NODE_STALE_TIMEOUT_MS') || 120_000)
+// 生产默认 120s；E2E/故障演练可经 OXMUX_CLUSTER_NODE_STALE_TIMEOUT_MS 缩短以加速验证。
+export const CLUSTER_NODE_STALE_TIMEOUT_MS = Number(getEnv('OXMUX_CLUSTER_NODE_STALE_TIMEOUT_MS') || 120_000)
 
 // 本节点心跳落库节流：liveness 循环 15s 一次，120s 心跳窗口内
 // 30s 落库一次即可维持节点在线状态，避免每轮循环无条件写库。

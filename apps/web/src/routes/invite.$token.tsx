@@ -15,8 +15,8 @@ import { buildNoIndexHead } from '../lib/marketing-site'
 
 export const Route = createFileRoute('/invite.$token' as never)({
   head: () => buildNoIndexHead({
-    title: 'Wemux Team Invitation',
-    description: 'Accept a private Wemux workspace invitation. Invitation pages are not meant to appear in search results.',
+    title: 'Oxmux Team Invitation',
+    description: 'Accept a private Oxmux workspace invitation. Invitation pages are not meant to appear in search results.',
   }),
   component: InviteRoute,
 })

@@ -39,7 +39,7 @@ const hasWorkerPackageJson = (targetPath: string) => {
 }
 
 const resolveWorkerAppRoot = () => {
-  const configuredRoot = getEnv('WEMUX_RUNTIME_ROOT')?.trim()
+  const configuredRoot = getEnv('OXMUX_RUNTIME_ROOT')?.trim()
   if (configuredRoot) {
     const resolvedConfiguredRoot = path.resolve(configuredRoot)
     const currentModulePath = fileURLToPath(import.meta.url)
@@ -95,19 +95,19 @@ export const getWorkerRuntimeMetadata = () => {
 
 export const getWorkerDefaultCloudUrl = () => {
   const packageName = getWorkerPackageJson().name
-  // 兼容窗口：新老包名都识别；后续移除 wemux-* 分支
-  if (packageName === 'vibemux-worker-preview' || packageName === 'wemux-worker-preview') {
-    return 'https://wemux.xyz'
+  // 兼容窗口：新老包名都识别；后续移除 oxmux-* 分支
+  if (packageName === 'vibemux-worker-preview' || packageName === 'oxmux-worker-preview') {
+    return 'https://oxmux.xyz'
   }
-  if (packageName === 'vibemux-worker' || packageName === 'wemux-worker') {
-    return 'https://wemux.ai'
+  if (packageName === 'vibemux-worker' || packageName === 'oxmux-worker') {
+    return 'https://oxmux.ai'
   }
 
   const configured = getWorkerRuntimeMetadata().defaultCloudUrl?.trim()
   if (configured) {
     return configured
   }
-  return 'https://wemux.ai'
+  return 'https://oxmux.ai'
 }
 
 export const getWorkerVersion = () => {
@@ -150,7 +150,7 @@ export const resolveNpmWorkerInstallPrefixFromAppRoot = (appRoot: string, packag
 }
 
 export const getWorkerNpmInstallPrefix = () => {
-  const configuredPrefix = getEnv('WEMUX_WORKER_INSTALL_PREFIX')?.trim()
+  const configuredPrefix = getEnv('OXMUX_WORKER_INSTALL_PREFIX')?.trim()
   if (configuredPrefix) {
     return path.resolve(configuredPrefix)
   }

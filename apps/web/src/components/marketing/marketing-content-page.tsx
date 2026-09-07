@@ -226,7 +226,7 @@ export function MarketingTopicIndex({
 }) {
   return (
     <MarketingSection
-      description="Topic hubs create a stronger internal linking structure than isolated articles. They help readers and crawlers understand the product narrative around Wemux."
+      description="Topic hubs create a stronger internal linking structure than isolated articles. They help readers and crawlers understand the product narrative around Oxmux."
       title="Topic clusters"
     >
       <div className="grid gap-4 md:grid-cols-2">

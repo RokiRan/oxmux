@@ -28,9 +28,9 @@ But teams eventually need more:
 - long-running continuity
 - clearer handoff and review
 
-## Why Wemux is a better team alternative
+## Why Oxmux is a better team alternative
 
-Wemux is stronger for teams because it focuses on what happens beyond the editor:
+Oxmux is stronger for teams because it focuses on what happens beyond the editor:
 
 - route AI tasks to the right worker
 - preserve real execution evidence
@@ -38,7 +38,7 @@ Wemux is stronger for teams because it focuses on what happens beyond the editor
 - let AI work continue across workers and hosts
 - support team-oriented delivery instead of only personal coding acceleration
 
-That makes Wemux a better Cursor alternative when the bottleneck is operational rather than purely editorial.
+That makes Oxmux a better Cursor alternative when the bottleneck is operational rather than purely editorial.
 
 ## Side-by-side thinking
 
@@ -46,7 +46,7 @@ Use Cursor when the main question is:
 
 “How do I make one developer faster inside the editor?”
 
-Use Wemux when the main question is:
+Use Oxmux when the main question is:
 
 “How do we make AI coding work survive real team delivery conditions?”
 
@@ -54,4 +54,4 @@ Use Wemux when the main question is:
 
 The best Cursor alternative for teams is not necessarily another editor. It is the platform that helps AI work move through routing, execution, review, and continuation without getting trapped in one person's local session.
 
-That is the lane Wemux is built for.
+That is the lane Oxmux is built for.

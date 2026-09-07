@@ -19,7 +19,7 @@ const formatUrlHost = (host: string) => {
 }
 
 export const getLocalWorkerConsoleListenHost = () => {
-  return getEnv('WEMUX_WORKER_HOST')?.trim() || DEFAULT_LOCAL_CONSOLE_HOST
+  return getEnv('OXMUX_WORKER_HOST')?.trim() || DEFAULT_LOCAL_CONSOLE_HOST
 }
 
 export const getLocalWorkerConsoleUrl = (port: number) => {

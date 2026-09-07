@@ -18,7 +18,7 @@ import {
 import os from 'node:os'
 import path from 'node:path'
 import { getEnv } from './env'
-import { resolveWemuxHomeDir } from './wemux-home'
+import { resolveOxmuxHomeDir } from './oxmux-home'
 import type {
   AgentWorkdirStatus,
   ExecutorAgentWorkdirReadResult,
@@ -55,7 +55,7 @@ const MAX_PREVIEW_BYTES = 200 * 1024
 
 export const resolveAgentWorkdirHome = (baseHome?: string) => {
   const normalizedBase = baseHome?.trim()
-  return normalizedBase || getEnv('WEMUX_AGENT_HOME')?.trim() || resolveWemuxHomeDir('production')
+  return normalizedBase || getEnv('OXMUX_AGENT_HOME')?.trim() || resolveOxmuxHomeDir('production')
 }
 
 export const normalizePortablePath = (value: string) => {

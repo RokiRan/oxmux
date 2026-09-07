@@ -23,7 +23,7 @@ test('resolveExecutorRealtimeBaseUrl prefers connected node public url instead o
   const getNodeRestore = test.mock.method(executorRealtimeRoutingDeps, 'getNode', () => ({
     nodeId: 'us-node-1',
     name: 'US Node 1',
-    url: 'https://us.wemux.ai',
+    url: 'https://us.oxmux.ai',
     relayUrl: 'https://relay.example.com',
     status: 'online',
     capabilities: [],
@@ -39,7 +39,7 @@ test('resolveExecutorRealtimeBaseUrl prefers connected node public url instead o
 
   getNodeRestore.mock.restore()
 
-  assert.equal(baseUrl, 'https://us.wemux.ai')
+  assert.equal(baseUrl, 'https://us.oxmux.ai')
 })
 
 test('resolveExecutorRealtimeBaseUrl falls back when the owning node heartbeat is stale', () => {
@@ -47,7 +47,7 @@ test('resolveExecutorRealtimeBaseUrl falls back when the owning node heartbeat i
   process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON = JSON.stringify([
     {
       id: 'us',
-      cloudUrl: 'https://us.wemux.ai',
+      cloudUrl: 'https://us.oxmux.ai',
       labels: ['route:us', 'realtime:us'],
       continents: ['NA'],
     },
@@ -70,7 +70,7 @@ test('resolveExecutorRealtimeBaseUrl falls back when the owning node heartbeat i
       labels: ['route:us'],
     }))
 
-    assert.equal(baseUrl, 'https://us.wemux.ai')
+    assert.equal(baseUrl, 'https://us.oxmux.ai')
   } finally {
     getNodeRestore.mock.restore()
     if (previousRules === undefined) {
@@ -86,7 +86,7 @@ test('resolveExecutorRealtimeBaseUrl falls back to region rule labels when node 
   process.env.VIBEMUX_EXECUTOR_ROUTE_RULES_JSON = JSON.stringify([
     {
       id: 'us',
-      cloudUrl: 'https://us.wemux.ai',
+      cloudUrl: 'https://us.oxmux.ai',
       labels: ['route:us', 'realtime:us'],
       continents: ['NA'],
     },
@@ -98,7 +98,7 @@ test('resolveExecutorRealtimeBaseUrl falls back to region rule labels when node 
       labels: ['route:us'],
     }))
 
-    assert.equal(baseUrl, 'https://us.wemux.ai')
+    assert.equal(baseUrl, 'https://us.oxmux.ai')
   } finally {
     getNodeRestore.mock.restore()
     if (previousRules === undefined) {

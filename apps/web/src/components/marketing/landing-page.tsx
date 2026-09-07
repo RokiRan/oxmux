@@ -76,7 +76,7 @@ function LandingHeader({ language, text }: { language: Language; text: LandingTe
       <div className="mx-auto flex h-11 max-w-[1440px] items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-8">
           <a className="text-[11px] font-black uppercase tracking-[0.18em] text-white" href="#top">
-            Wemux
+            Oxmux
           </a>
           <nav className="hidden items-center gap-7 lg:flex">
             {navItems.map((item) => (
@@ -172,7 +172,7 @@ function HeroSection({ language, text }: { language: Language; text: LandingText
           </a>
           <a
             className="inline-flex items-center gap-2 text-base font-medium text-zinc-300 transition hover:text-white"
-            href="https://github.com/wemux-ai/wemux"
+            href="https://github.com/oxmux-ai/oxmux"
             target="_blank"
             rel="noreferrer"
           >
@@ -474,14 +474,14 @@ function OpenSourceSection({ language }: { language: Language }) {
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-balance text-sm leading-7 text-zinc-400 sm:text-base">
               {t(
-                'Wemux 以 Apache-2.0 协议开源。核心编排、执行节点、工作区、聊天与渠道集成全部可自托管；模型密钥留在你自己的机器上，代码在你自己的仓库里执行。',
-                'Wemux is open source under the Apache-2.0 license. The control plane, execution nodes, workspaces, chat and channel integrations are fully self-hostable — your model keys stay on your machines, and code runs in your own repositories.',
+                'Oxmux 以 Apache-2.0 协议开源。核心编排、执行节点、工作区、聊天与渠道集成全部可自托管；模型密钥留在你自己的机器上，代码在你自己的仓库里执行。',
+                'Oxmux is open source under the Apache-2.0 license. The control plane, execution nodes, workspaces, chat and channel integrations are fully self-hostable — your model keys stay on your machines, and code runs in your own repositories.',
               )}
             </p>
             <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row">
               <a
                 className="rounded-lg bg-white px-7 py-3 text-xs font-bold text-black transition hover:bg-zinc-200"
-                href="https://github.com/wemux-ai/wemux"
+                href="https://github.com/oxmux-ai/oxmux"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -489,7 +489,7 @@ function OpenSourceSection({ language }: { language: Language }) {
               </a>
               <a
                 className="rounded-lg border border-white/[0.14] bg-white/[0.03] px-7 py-3 text-xs font-bold text-white transition hover:border-white/25 hover:bg-white/[0.07]"
-                href="https://github.com/wemux-ai/wemux#readme"
+                href="https://github.com/oxmux-ai/oxmux#readme"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -638,7 +638,7 @@ function FinalCtaSection({ language, text }: { language: Language; text: Landing
                 </a>
                 <a
                   className="inline-flex items-center gap-2 text-sm font-medium text-zinc-300 transition hover:text-white"
-                  href="https://github.com/wemux-ai/wemux"
+                  href="https://github.com/oxmux-ai/oxmux"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -676,7 +676,7 @@ function SiteFooter({ language, text }: { language: Language; text: LandingText 
           <div className="max-w-sm">
             <a className="inline-flex items-center gap-3 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" href="#top">
               <img src="/logo.svg" alt="" className="h-8 w-8 shrink-0" />
-              <span className="text-lg font-semibold tracking-[-0.04em]">Wemux</span>
+              <span className="text-lg font-semibold tracking-[-0.04em]">Oxmux</span>
             </a>
             <p className="mt-5 text-sm leading-7 text-zinc-400">{text.footer.summary}</p>
             <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600">
@@ -700,7 +700,7 @@ function SiteFooter({ language, text }: { language: Language; text: LandingText 
           </FooterLinkGroup>
 
           <FooterLinkGroup title={localize({ zh: '开放生态', en: 'Open ecosystem' }, language)}>
-            <a className={footerLinkClass} href="https://github.com/wemux-ai/wemux" rel="noreferrer" target="_blank">GitHub</a>
+            <a className={footerLinkClass} href="https://github.com/oxmux-ai/oxmux" rel="noreferrer" target="_blank">GitHub</a>
             <CommunityLinkList language={language} className={footerLinkClass} />
           </FooterLinkGroup>
         </div>
@@ -758,7 +758,7 @@ function WorkerTopology({ language, text }: { language: Language; text: LandingT
       <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 max-sm:static max-sm:mb-4 max-sm:translate-x-0 max-sm:translate-y-0">
         <div className="flex h-28 w-28 flex-col items-center justify-center rounded-full border border-white/20 bg-white/5 shadow-[0_0_60px_rgba(255,255,255,0.1)] backdrop-blur transition duration-300 hover:scale-105 hover:border-white/30">
           <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.7)] animate-pulse" />
-          <span className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white">Wemux</span>
+          <span className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white">Oxmux</span>
           <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-500">{text.workers.controlNode}</span>
         </div>
       </div>
@@ -772,11 +772,11 @@ function WorkerTopology({ language, text }: { language: Language; text: LandingT
 function MeshConnections() {
   return (
     <svg aria-hidden="true" className="absolute inset-0 h-full w-full text-zinc-400/25 max-sm:hidden" preserveAspectRatio="none" viewBox="0 0 100 100">
-      <line className="wemux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="18" y1="50" y2="20" />
-      <line className="wemux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="82" y1="50" y2="22" />
-      <line className="wemux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="18" y1="50" y2="78" />
-      <line className="wemux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="82" y1="50" y2="78" />
-      <line className="wemux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="50" y1="50" y2="90" />
+      <line className="oxmux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="18" y1="50" y2="20" />
+      <line className="oxmux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="82" y1="50" y2="22" />
+      <line className="oxmux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="18" y1="50" y2="78" />
+      <line className="oxmux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="82" y1="50" y2="78" />
+      <line className="oxmux-flow-line" stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.5" vectorEffect="non-scaling-stroke" x1="50" x2="50" y1="50" y2="90" />
       <circle cx="50" cy="50" fill="currentColor" r="1.2" />
     </svg>
   )

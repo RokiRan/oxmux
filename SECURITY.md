@@ -4,7 +4,7 @@
 
 Please **do not open a public issue** for security vulnerabilities.
 
-Report privately via **GitHub private vulnerability reporting** (Security → Report a vulnerability) or email **security@wemux.ai**.
+Report privately via **GitHub private vulnerability reporting** (Security → Report a vulnerability) or email **security@oxmux.ai**.
 
 Please include:
 - Affected component and version

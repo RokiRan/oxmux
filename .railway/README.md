@@ -8,7 +8,7 @@ This repository defines its Railway infrastructure in code:
 
 The file describes the community-edition stack: the `control-plane` service
 (build / start / healthcheck included), a `Postgres` database, and a
-`wemux-object-storage` bucket. `DATABASE_URL` is wired to the database
+`oxmux-object-storage` bucket. `DATABASE_URL` is wired to the database
 automatically.
 
 Install the Railway TypeScript SDK from the repository root before running the

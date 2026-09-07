@@ -1,5 +1,5 @@
 /**
- * [INPUT]: 反馈条目（admin 手动触发或 ingest 后异步）、env 模型配置（WEMUX_FEEDBACK_NORMALIZATION_*）
+ * [INPUT]: 反馈条目（admin 手动触发或 ingest 后异步）、env 模型配置（OXMUX_FEEDBACK_NORMALIZATION_*）
  * [OUTPUT]: FeedbackNormalized 写入（rule 规则兜底 / llm 大模型增强）
  * [POS]: AI 加工层——口语反馈 → 结构化迷你 PRD；分类/查重/草稿；无模型配置时降级纯规则（自托管友好）
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
@@ -19,11 +19,11 @@ export type NormalizationModelConfig = {
 
 /** 模型配置：独立 env 优先，回退到调度大脑的 DEEPSEEK_* 变量；baseUrl 可指向任意 OpenAI 兼容端点（插拔）。 */
 export const resolveNormalizationModelConfig = (): NormalizationModelConfig => {
-  const apiKey = getEnv('WEMUX_FEEDBACK_NORMALIZATION_API_KEY')?.trim()
+  const apiKey = getEnv('OXMUX_FEEDBACK_NORMALIZATION_API_KEY')?.trim()
     || process.env.DEEPSEEK_API_KEY?.trim() || ''
-  const model = getEnv('WEMUX_FEEDBACK_NORMALIZATION_MODEL')?.trim()
+  const model = getEnv('OXMUX_FEEDBACK_NORMALIZATION_MODEL')?.trim()
     || process.env.DEEPSEEK_SCHEDULING_BRAIN_MODEL?.trim() || DEFAULT_NORMALIZATION_MODEL
-  const baseUrl = getEnv('WEMUX_FEEDBACK_NORMALIZATION_BASE_URL')?.trim() || DEFAULT_NORMALIZATION_BASE_URL
+  const baseUrl = getEnv('OXMUX_FEEDBACK_NORMALIZATION_BASE_URL')?.trim() || DEFAULT_NORMALIZATION_BASE_URL
   return { apiKey, model, baseUrl }
 }
 
@@ -80,7 +80,7 @@ export const parseNormalizationResult = (raw: string): ParsedNormalization | nul
 const buildNormalizationPrompt = (item: Pick<FeedbackItem, 'title' | 'body'>): string => {
   const acceptanceLines = ['能明确验收的行为，用 - [ ] 列出；无则给空数组']
   return [
-    '你是 Wemux 社区反馈规范化器。把一条用户反馈整理成结构化迷你 PRD，只输出一个 JSON 对象，不要输出其他任何内容。',
+    '你是 Oxmux 社区反馈规范化器。把一条用户反馈整理成结构化迷你 PRD，只输出一个 JSON 对象，不要输出其他任何内容。',
     '格式：{"type":"bug|feature|chat","draft":{"background":"背景","scenario":"使用场景","expectation":"期望行为","acceptance":["验收1"]},"duplicateOfId":null}',
     '规则：',
     '- background/scenario/expectation 每项不超过 80 字；acceptance 最多 5 条，每条不超过 40 字；',

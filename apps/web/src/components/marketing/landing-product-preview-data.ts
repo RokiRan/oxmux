@@ -117,14 +117,14 @@ export const toneClassNames: Record<Tone, { dot: string; text: string; border: s
 export const previewProjects: PreviewProject[] = [
   {
     viewId: 'project-product',
-    name: 'Wemux Console',
+    name: 'Oxmux Console',
     meta: { zh: '12 tasks', en: '12 tasks' },
     color: '#8b5cf6',
     runtime: { zh: '运行中', en: 'Running' },
   },
   {
     viewId: 'project-docs',
-    name: 'Wemux Docs',
+    name: 'Oxmux Docs',
     meta: { zh: '4 tasks', en: '4 tasks' },
     color: '#38bdf8',
     runtime: { zh: '待审核', en: 'Review' },
@@ -147,8 +147,8 @@ export const previewAgents: PreviewAgent[] = [
 export const previewProjectBoards = {
   'project-product': {
     projectId: 'project-product',
-    repo: 'github.com/wemux-ai/wemux',
-    headline: { zh: 'Wemux Console · 开发任务全链路同步', en: 'Wemux Console · Development workflow in sync' },
+    repo: 'github.com/oxmux-ai/oxmux',
+    headline: { zh: 'Oxmux Console · 开发任务全链路同步', en: 'Oxmux Console · Development workflow in sync' },
     description: { zh: '需求、Bug、测试与评审在同一个 Agent 看板里推进。', en: 'Features, bugs, tests, and reviews move through one agent board.' },
     stats: [
       { value: '5', label: { zh: 'Agent 在线', en: 'Agents Online' }, tone: 'violet' },
@@ -280,8 +280,8 @@ export const previewProjectBoards = {
   },
   'project-docs': {
     projectId: 'project-docs',
-    repo: 'github.com/wemux-ai/wemux',
-    headline: { zh: 'Wemux Docs · 文档生产与审核流水线', en: 'Wemux Docs · Documentation production pipeline' },
+    repo: 'github.com/oxmux-ai/oxmux',
+    headline: { zh: 'Oxmux Docs · 文档生产与审核流水线', en: 'Oxmux Docs · Documentation production pipeline' },
     description: { zh: '发布说明、教程、README 和知识库由专属 Agent 分工处理。', en: 'Release notes, guides, READMEs, and knowledge base work are delegated to dedicated agents.' },
     stats: [
       { value: '3', label: { zh: '写作 Agent 在线', en: 'Writing Agents' }, tone: 'sky' },
@@ -413,7 +413,7 @@ export const previewProjectBoards = {
   },
   'project-growth': {
     projectId: 'project-growth',
-    repo: 'github.com/wemux-ai/wemux',
+    repo: 'github.com/oxmux-ai/oxmux',
     headline: { zh: 'Community Operations · 社区协作', en: 'Community Operations · Community collaboration' },
     description: { zh: '反馈整理、文档检查和协作复盘持续异步推进。', en: 'Feedback triage, documentation checks, and collaboration reviews keep moving asynchronously.' },
     stats: [

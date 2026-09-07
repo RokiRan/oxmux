@@ -11,12 +11,12 @@ test('resolveOmpProfile prefers explicitly configured profile', () => {
 })
 
 test('resolveOmpProfile derives isolated profile from actingUserId when not configured', () => {
-  assert.equal(resolveOmpProfile({ _runtime: 'Omp', defaultModel: '' }, 'user-abc-123'), 'wemux-user-abc-123')
-  assert.equal(resolveOmpProfile(undefined, 'user-abc-123'), 'wemux-user-abc-123')
+  assert.equal(resolveOmpProfile({ _runtime: 'Omp', defaultModel: '' }, 'user-abc-123'), 'oxmux-user-abc-123')
+  assert.equal(resolveOmpProfile(undefined, 'user-abc-123'), 'oxmux-user-abc-123')
 })
 
 test('resolveOmpProfile sanitizes unsafe characters in actingUserId', () => {
-  assert.equal(resolveOmpProfile(undefined, 'user/with space@example.com'), 'wemux-user-with-space-example-com')
+  assert.equal(resolveOmpProfile(undefined, 'user/with space@example.com'), 'oxmux-user-with-space-example-com')
 })
 
 test('resolveOmpProfile returns empty when neither configured nor derivable', () => {

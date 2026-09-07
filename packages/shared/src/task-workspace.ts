@@ -351,7 +351,7 @@ export const buildTaskBranchName = (worktreeId: string, title: string) => {
   const worktreeKey = worktreeId.slice(0, 4)
   const slug = makeSlug(title) || 'task'
 
-  return `wemux/${worktreeKey}-${slug}`
+  return `oxmux/${worktreeKey}-${slug}`
 }
 
 export const buildWorkspaceCodeBranchName = (params: {
@@ -365,10 +365,10 @@ export const buildWorkspaceCodeBranchName = (params: {
   return suffix ? `${baseBranchName}-${suffix}` : baseBranchName
 }
 
-// 兼容窗口：新旧品牌前缀都识别为托管分支，后续可移除 wemux/ 分支
-const isWemuxManagedBranchName = (branchName?: string | null) => {
+// 兼容窗口：新旧品牌前缀都识别为托管分支，后续可移除 oxmux/ 分支
+const isOxmuxManagedBranchName = (branchName?: string | null) => {
   const normalized = branchName?.trim() || ''
-  return normalized.startsWith('wemux/') || normalized.startsWith('vibemux/')
+  return normalized.startsWith('oxmux/') || normalized.startsWith('vibemux/')
 }
 
 export const resolveWorkspaceSessionBranchName = (params: {
@@ -383,7 +383,7 @@ export const resolveWorkspaceSessionBranchName = (params: {
   const branchNameTitle = params.workspaceName?.trim() || params.task?.title || params.title?.trim() || '工作区'
   const normalizedCurrentBranchName = params.currentBranchName?.trim() || ''
   if (params.workingDirectoryMode === 'original-dir') {
-    if (normalizedCurrentBranchName && !isWemuxManagedBranchName(normalizedCurrentBranchName)) {
+    if (normalizedCurrentBranchName && !isOxmuxManagedBranchName(normalizedCurrentBranchName)) {
       return normalizedCurrentBranchName
     }
 

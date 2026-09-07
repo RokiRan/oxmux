@@ -25,7 +25,7 @@ export type ReplyReviewContext = {
 
 const TIME_PROMISE_HINTS = ['马上', '今天就', '明天就', '这周', '下周', '尽快', '立刻', '很快', '随后就', '稍后', 'asap', 'soon', 'today', 'tomorrow', 'next week', 'shortly']
 // 内部域名拼接（避免泄漏闸门误报：这是识别「外部消息泄露内部链接」的提示词，非真实内部地址）
-const INTERNAL_LEAK_HINTS = ['vibemux.xyz', `connector.${'wemux.xyz'}`, 'internal', '商业版', '付费', '价格', 'roadmap 内部', '内部讨论', '密钥', 'token=', 'password=']
+const INTERNAL_LEAK_HINTS = ['vibemux.xyz', `connector.${'oxmux.xyz'}`, 'internal', '商业版', '付费', '价格', 'roadmap 内部', '内部讨论', '密钥', 'token=', 'password=']
 const TONE_HINTS = ['傻', '蠢', '滚', '白痴', 'stupid', 'idiot', 'shut up']
 /** 回复内容超出此长度视为过度冗长（medium）。 */
 const REPLY_MAX_LENGTH = 2000
@@ -58,7 +58,7 @@ export const buildReplyDraftPrompt = (context: ReplyReviewContext): string => {
     ? history.map((m) => `- [${m.role}] ${m.senderName ?? ''}：${m.content.slice(0, 200)}`).join('\n')
     : '（无历史消息）'
   return [
-    '你是 Wemux 创始人团队的客服助手。基于反馈内容起草一条给用户的回复。',
+    '你是 Oxmux 创始人团队的客服助手。基于反馈内容起草一条给用户的回复。',
     '要求：',
     '- 语气友善、简洁，中文，不超过 200 字；',
     '- 承认反馈并说明会跟进，但**不要承诺具体时间线/版本/修复日期**；',
@@ -127,7 +127,7 @@ export const reviewOutboundReply = async (content: string, context?: ReplyReview
       {
         role: 'system',
         content: [
-          '你是 Wemux 客服回复审查器。审查一条即将发送给用户的回复，输出 JSON：{"risk":"low|medium|high","reasons":["..."]}',
+          '你是 Oxmux 客服回复审查器。审查一条即将发送给用户的回复，输出 JSON：{"risk":"low|medium|high","reasons":["..."]}',
           '判定标准：承诺时间线/修复日期=high；泄露内部信息或商业细节=high；语气不当=high；过长或信息不足=medium；正常=low。',
           '只输出 JSON，不要其他内容。',
         ].join('\n'),

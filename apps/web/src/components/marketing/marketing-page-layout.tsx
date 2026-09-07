@@ -35,7 +35,7 @@ export function MarketingPageLayout({ children, description, eyebrow, title }: M
         <header className="border-b border-white/[0.08] bg-black/70 backdrop-blur-xl">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-4 sm:px-6">
             <a className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white" href="/">
-              Wemux
+              Oxmux
             </a>
             <nav className="flex flex-wrap items-center justify-end gap-4 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
               {marketingLinks.map((link) => (
@@ -73,7 +73,7 @@ export function MarketingPageLayout({ children, description, eyebrow, title }: M
                 zijiekyro.com
               </a>
             </span>
-            <span>Contact Wemux for support and compliance questions.</span>
+            <span>Contact Oxmux for support and compliance questions.</span>
             <SupportEmailText className="text-zinc-200" />
           </div>
         </footer>
@@ -87,7 +87,7 @@ export function SupportEmailText({ className }: { className?: string }) {
     <span className={className}>
       <span>support</span>
       <span>@</span>
-      <span>wemux.ai</span>
+      <span>oxmux.ai</span>
     </span>
   )
 }

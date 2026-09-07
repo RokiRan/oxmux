@@ -813,7 +813,7 @@ export const buildAgentEventPrompt = (task: AgentTask, event: PersistedAgentEven
     agentGroupId
       ? `你是 Squad「${agentGroupTitle || agentGroupId}」的明确负责人，本轮由你接单并协调交付；不要根据成员顺序推断或改派负责人。`
       : '',
-    '你被一个产品事件唤醒。请基于目标和现有上下文自行判断下一步，可调用 Wemux 工具完成操作。',
+    '你被一个产品事件唤醒。请基于目标和现有上下文自行判断下一步，可调用 Oxmux 工具完成操作。',
     '需要等待外部结果时，把 agent.wait 作为本轮最后一个工具调用。已经可交付时，使用对应产品工具写回结果，然后结束本轮。',
     event.scope.taskId
       ? `这是刚收到的任务 ${event.scope.taskId}。优先处理本次新任务事件；先用 task.get 读取完整上下文，并在开始推进时用 task.update_status 标记为 in_progress。`
@@ -824,7 +824,7 @@ export const buildAgentEventPrompt = (task: AgentTask, event: PersistedAgentEven
           `只要涉及仓库、代码、文档、配置、Git、测试或产物，先用 workspace.list（Pi 实际工具名 vibemux__workspace_list）按 projectId 查找工作区。用户明确指定工作区时遵循用户；否则只复用 createdBy.type=agent 且 createdBy.id=${task.agentId} 的工作区，优先选择已绑定当前任务的自建工作区。`,
           '当前已经是 Task 事件，不要再创建影子 Task。没有当前 Agent 自己创建的可用工作区时，用 workspace.create（vibemux__workspace_create）新建。',
           '只有用户在当前消息中明确要求直接创建工作区时，普通对话才允许跳过 Task 创建；Agent 自己认为方便不算用户指定。',
-          '需要实际编辑或执行时，优先使用 task.execute（vibemux__task_execute）指向该项目工作区，让 Coding Agent 在工作区的 canonical cwd 中完成；不要在项目原目录或 ~/.wemux* / ~/.vibemux* 历史工作区目录中扫描、修改或执行。派发失败时优先重试或如实说明原因，不要静默换个位置执行后当作已交付。',
+          '需要实际编辑或执行时，优先使用 task.execute（vibemux__task_execute）指向该项目工作区，让 Coding Agent 在工作区的 canonical cwd 中完成；不要在项目原目录或 ~/.oxmux* / ~/.vibemux* 历史工作区目录中扫描、修改或执行。派发失败时优先重试或如实说明原因，不要静默换个位置执行后当作已交付。',
           '只有纯评论、状态查询、等待外部事件，或没有项目/仓库的任务，才可以不创建工作区。',
         ].join('\n')
       : '',
@@ -841,7 +841,7 @@ export const buildAgentEventPrompt = (task: AgentTask, event: PersistedAgentEven
           '先用 agent.inbox.list 检查收件箱，按需查看渠道消息与任务进度。',
           '只处理已指派/已提及/已到达你收件箱的事项；不要主动寻找未被分配的工作。',
           '有需要处理的事项就按既有上下文处理；没有时简短汇报当前状态即可（保持低成本）。',
-          '如配置了记忆维护约定（wemux-memory），可按需更新记忆文件。',
+          '如配置了记忆维护约定（oxmux-memory），可按需更新记忆文件。',
           '不要为心跳创建影子任务，不要重复处理已在进行的任务；本轮没有外部等待时直接结束。',
         ].join('\n')
       : '',

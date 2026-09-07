@@ -166,7 +166,7 @@ export const getCustomAgentAvailabilityReport = (
   if (!resolveAgentTypeForRuntimeId(profile.preferredRuntime)) {
     blockers.push({
       code: 'runtime_unavailable',
-      message: `${getRuntimeDescriptor(profile.preferredRuntime).label} 还没有接入当前 Wemux worker，暂时不能调用这个 Agent。`,
+      message: `${getRuntimeDescriptor(profile.preferredRuntime).label} 还没有接入当前 Oxmux worker，暂时不能调用这个 Agent。`,
     })
   }
   if (!profile.allowedModes.includes(params.mode)) {

@@ -79,7 +79,7 @@ const createSession = (overrides: Partial<WorkspaceSession> = {}): WorkspaceSess
 const createProject = () => ({
   id: 'project-1',
   name: 'Vibemux',
-  gitUrl: 'https://github.com/wemux-ai/wemux.git',
+  gitUrl: 'https://github.com/oxmux-ai/oxmux.git',
   defaultBranch: 'main',
   createdAt: '2026-05-10T00:00:00.000Z',
   updatedAt: '2026-05-10T00:00:00.000Z',
@@ -301,14 +301,14 @@ test('markAgentCreatedPullRequestResult records agent-created pull request deliv
     }),
     result: {
       ok: true,
-      output: 'PR 已创建：https://github.com/wemux-ai/wemux/pull/57',
+      output: 'PR 已创建：https://github.com/oxmux-ai/oxmux/pull/57',
       turnId: 'turn-1',
       agentRunningStatus: 'complete',
       currentStep: '工作区对话已完成',
     },
   })
 
-  assert.equal(marked.result.delivery?.pullRequest?.url, 'https://github.com/wemux-ai/wemux/pull/57')
+  assert.equal(marked.result.delivery?.pullRequest?.url, 'https://github.com/oxmux-ai/oxmux/pull/57')
   assert.equal(marked.result.delivery?.pullRequest?.number, 57)
   assert.equal(marked.result.delivery?.pullRequest?.compareBranch, 'vibemux/3876-workspace-message')
   assert.equal(marked.deliverySummary?.pullRequest?.workspaceSessionId, 'session-1')

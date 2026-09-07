@@ -10,20 +10,20 @@ import { buildMarketingHead, buildPageUrl, marketingSite } from '../lib/marketin
 
 const faqItems = [
   {
-    answer: 'No. Wemux does not try to replace your existing models or agent runtimes. It gives teams a control surface to route work into real repositories and real workstations, then bring back logs, branches, commits, and reviewable results.',
-    question: 'Is Wemux just another AI chat tool?',
+    answer: 'No. Oxmux does not try to replace your existing models or agent runtimes. It gives teams a control surface to route work into real repositories and real workstations, then bring back logs, branches, commits, and reviewable results.',
+    question: 'Is Oxmux just another AI chat tool?',
   },
   {
-    answer: 'Teams using AI coding in production usually hit the same last-mile issues: tasks stay in chats, the wrong machine owns the environment, Git identity becomes messy, and nobody can review what actually happened. Wemux is built for that execution layer.',
-    question: 'Who is Wemux for?',
+    answer: 'Teams using AI coding in production usually hit the same last-mile issues: tasks stay in chats, the wrong machine owns the environment, Git identity becomes messy, and nobody can review what actually happened. Oxmux is built for that execution layer.',
+    question: 'Who is Oxmux for?',
   },
   {
     answer: 'Workers can run on local Macs, Linux boxes, shared office machines, or cloud VMs. The point is not where the agent thinks. The point is where the work can safely execute with the right repository, environment, and permissions.',
     question: 'Where do workers run?',
   },
   {
-    answer: 'Wemux keeps humans in charge. Agents can execute, retry, and report, but final confirmation, takeover, and approval stay with the team. It is an orchestration and delivery console, not an autonomy fantasy.',
-    question: 'Does Wemux fully automate software delivery?',
+    answer: 'Oxmux keeps humans in charge. Agents can execute, retry, and report, but final confirmation, takeover, and approval stay with the team. It is an orchestration and delivery console, not an autonomy fantasy.',
+    question: 'Does Oxmux fully automate software delivery?',
   },
   {
     answer: 'Because teams need more than a text reply. They need task routing, isolated workspaces, execution logs, branch outputs, and a review path that fits real engineering workflows.',
@@ -31,7 +31,7 @@ const faqItems = [
   },
   {
     answer: 'No. Software delivery is the first wedge, but the same control plane can run research, QA, documentation, launch checklists, and recurring operations work that needs traceable execution.',
-    question: 'Is Wemux only for coding?',
+    question: 'Is Oxmux only for coding?',
   },
 ]
 
@@ -88,7 +88,7 @@ function FaqRoute() {
   return (
     <MarketingPageLayout
       description="This page answers the first questions engineering teams ask when they move from AI demos to a real delivery workflow."
-      eyebrow="Wemux FAQ"
+      eyebrow="Oxmux FAQ"
       title="Questions teams ask before they trust AI coding in a real repo."
     >
       <MarketingSection

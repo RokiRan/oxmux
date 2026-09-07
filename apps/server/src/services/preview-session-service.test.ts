@@ -24,8 +24,8 @@ test('createOrReuseSession keeps the original preview host for a reused session'
         targetBasePath: '/',
       },
       additionalSources: [],
-      publicHost: 'alpha-preview--preview-session-original.wemux.localtest.me:8989',
-      publicUrl: 'http://alpha-preview--preview-session-original.wemux.localtest.me:8989/',
+      publicHost: 'alpha-preview--preview-session-original.oxmux.localtest.me:8989',
+      publicUrl: 'http://alpha-preview--preview-session-original.oxmux.localtest.me:8989/',
     })
 
     assert.equal(created.created, true)
@@ -46,8 +46,8 @@ test('createOrReuseSession keeps the original preview host for a reused session'
         targetBasePath: '/',
       },
       additionalSources: [],
-      publicHost: 'beta-preview--preview-session-replacement.wemux.localtest.me:8989',
-      publicUrl: 'http://beta-preview--preview-session-replacement.wemux.localtest.me:8989/',
+      publicHost: 'beta-preview--preview-session-replacement.oxmux.localtest.me:8989',
+      publicUrl: 'http://beta-preview--preview-session-replacement.oxmux.localtest.me:8989/',
     })
 
     assert.equal(reused.created, false)
@@ -59,7 +59,7 @@ test('createOrReuseSession keeps the original preview host for a reused session'
       created.session.id,
     )
     assert.equal(
-      previewSessionService.getSessionByHost('beta-preview--preview-session-replacement.wemux.localtest.me:8989'),
+      previewSessionService.getSessionByHost('beta-preview--preview-session-replacement.oxmux.localtest.me:8989'),
       null,
     )
 
@@ -86,8 +86,8 @@ test('createOrReuseSession reuses a running preview across workspace sessions in
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'scope-preview--preview-workspace-scope-original.wemux.localtest.me:8989',
-    publicUrl: 'http://scope-preview--preview-workspace-scope-original.wemux.localtest.me:8989/',
+    publicHost: 'scope-preview--preview-workspace-scope-original.oxmux.localtest.me:8989',
+    publicUrl: 'http://scope-preview--preview-workspace-scope-original.oxmux.localtest.me:8989/',
   })
 
   assert.equal(created.created, true)
@@ -108,8 +108,8 @@ test('createOrReuseSession reuses a running preview across workspace sessions in
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'scope-preview--preview-workspace-scope-replacement.wemux.localtest.me:8989',
-    publicUrl: 'http://scope-preview--preview-workspace-scope-replacement.wemux.localtest.me:8989/',
+    publicHost: 'scope-preview--preview-workspace-scope-replacement.oxmux.localtest.me:8989',
+    publicUrl: 'http://scope-preview--preview-workspace-scope-replacement.oxmux.localtest.me:8989/',
   })
 
   assert.equal(reused.created, false)
@@ -142,8 +142,8 @@ test('createOrReuseSession does not reuse a preview when access mode changes', (
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'access-mode-tunnel-preview--preview-access-mode-tunnel.wemux.localtest.me:8989',
-    publicUrl: 'http://access-mode-tunnel-preview--preview-access-mode-tunnel.wemux.localtest.me:8989/',
+    publicHost: 'access-mode-tunnel-preview--preview-access-mode-tunnel.oxmux.localtest.me:8989',
+    publicUrl: 'http://access-mode-tunnel-preview--preview-access-mode-tunnel.oxmux.localtest.me:8989/',
     accessMode: 'tunnel',
   })
 
@@ -167,8 +167,8 @@ test('createOrReuseSession does not reuse a preview when access mode changes', (
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'access-mode-public-preview--preview-access-mode-public.wemux.localtest.me:8989',
-    publicUrl: 'http://access-mode-public-preview--preview-access-mode-public.wemux.localtest.me:8989/',
+    publicHost: 'access-mode-public-preview--preview-access-mode-public.oxmux.localtest.me:8989',
+    publicUrl: 'http://access-mode-public-preview--preview-access-mode-public.oxmux.localtest.me:8989/',
     accessMode: 'public-proxy',
   })
 
@@ -194,8 +194,8 @@ test('getOwnerSessionForTaskWorkspace filters current previews by executor', () 
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'executor-filter-old-preview--preview-executor-filter-old.wemux.localtest.me:8989',
-    publicUrl: 'http://executor-filter-old-preview--preview-executor-filter-old.wemux.localtest.me:8989/',
+    publicHost: 'executor-filter-old-preview--preview-executor-filter-old.oxmux.localtest.me:8989',
+    publicUrl: 'http://executor-filter-old-preview--preview-executor-filter-old.oxmux.localtest.me:8989/',
   })
 
   assert.equal(oldExecutorPreview.created, true)
@@ -225,8 +225,8 @@ test('getOwnerSessionForTaskWorkspace filters current previews by executor', () 
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'executor-filter-new-preview--preview-executor-filter-new.wemux.localtest.me:8989',
-    publicUrl: 'http://executor-filter-new-preview--preview-executor-filter-new.wemux.localtest.me:8989/',
+    publicHost: 'executor-filter-new-preview--preview-executor-filter-new.oxmux.localtest.me:8989',
+    publicUrl: 'http://executor-filter-new-preview--preview-executor-filter-new.oxmux.localtest.me:8989/',
   })
 
   assert.equal(newExecutorPreview.created, true)
@@ -267,8 +267,8 @@ test('createOrReuseSession keeps app and desktop previews separate for the same 
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'purpose-app-preview--preview-purpose-app.wemux.localtest.me:8989',
-    publicUrl: 'http://purpose-app-preview--preview-purpose-app.wemux.localtest.me:8989/',
+    publicHost: 'purpose-app-preview--preview-purpose-app.oxmux.localtest.me:8989',
+    publicUrl: 'http://purpose-app-preview--preview-purpose-app.oxmux.localtest.me:8989/',
   })
 
   const desktopPreview = previewSessionService.createOrReuseSession({
@@ -288,8 +288,8 @@ test('createOrReuseSession keeps app and desktop previews separate for the same 
       targetBasePath: '/proxy/6080/',
     },
     additionalSources: [],
-    publicHost: 'purpose-desktop-preview--preview-purpose-desktop.wemux.localtest.me:8989',
-    publicUrl: 'http://purpose-desktop-preview--preview-purpose-desktop.wemux.localtest.me:8989/',
+    publicHost: 'purpose-desktop-preview--preview-purpose-desktop.oxmux.localtest.me:8989',
+    publicUrl: 'http://purpose-desktop-preview--preview-purpose-desktop.oxmux.localtest.me:8989/',
   })
 
   assert.equal(appPreview.created, true)
@@ -333,8 +333,8 @@ test('createOrReuseSession normalizes duplicate preview bindings for the same po
     sourceBinding: {
       id: 'primary-preview',
       appUrl: 'http://127.0.0.1:3005/',
-      publicHost: 'preview-3005-primary.wemux.xyz',
-      publicUrl: 'https://preview-3005-primary.wemux.xyz/',
+      publicHost: 'preview-3005-primary.oxmux.xyz',
+      publicUrl: 'https://preview-3005-primary.oxmux.xyz/',
       port: 3005,
     },
     additionalSources: [{
@@ -347,14 +347,14 @@ test('createOrReuseSession normalizes duplicate preview bindings for the same po
     additionalSourceBindings: [{
       id: 'duplicate-preview',
       appUrl: 'http://localhost:3005/',
-      publicHost: 'preview-3005-duplicate.wemux.xyz',
-      publicUrl: 'https://preview-3005-duplicate.wemux.xyz/',
+      publicHost: 'preview-3005-duplicate.oxmux.xyz',
+      publicUrl: 'https://preview-3005-duplicate.oxmux.xyz/',
       port: 3005,
       note: 'Preview',
       domainType: 'generated',
     }],
-    publicHost: 'preview-3005-primary.wemux.xyz',
-    publicUrl: 'https://preview-3005-primary.wemux.xyz/',
+    publicHost: 'preview-3005-primary.oxmux.xyz',
+    publicUrl: 'https://preview-3005-primary.oxmux.xyz/',
   })
 
   assert.equal(created.created, true)
@@ -392,14 +392,14 @@ test('createOrReuseSession cleans duplicate preview bindings when reusing an exi
     additionalSourceBindings: [{
       id: 'duplicate-preview-reuse',
       appUrl: 'http://localhost:3005/',
-      publicHost: 'preview-3005-reuse-duplicate.wemux.xyz',
-      publicUrl: 'https://preview-3005-reuse-duplicate.wemux.xyz/',
+      publicHost: 'preview-3005-reuse-duplicate.oxmux.xyz',
+      publicUrl: 'https://preview-3005-reuse-duplicate.oxmux.xyz/',
       port: 3005,
       note: 'Preview',
       domainType: 'generated',
     }],
-    publicHost: 'preview-3005-reuse-primary.wemux.xyz',
-    publicUrl: 'https://preview-3005-reuse-primary.wemux.xyz/',
+    publicHost: 'preview-3005-reuse-primary.oxmux.xyz',
+    publicUrl: 'https://preview-3005-reuse-primary.oxmux.xyz/',
   })
 
   assert.equal(created.created, true)
@@ -429,14 +429,14 @@ test('createOrReuseSession cleans duplicate preview bindings when reusing an exi
     additionalSourceBindings: [{
       id: 'mastra',
       appUrl: 'http://127.0.0.1:4111/',
-      publicHost: 'preview-4111-reuse.wemux.xyz',
-      publicUrl: 'https://preview-4111-reuse.wemux.xyz/',
+      publicHost: 'preview-4111-reuse.oxmux.xyz',
+      publicUrl: 'https://preview-4111-reuse.oxmux.xyz/',
       port: 4111,
       note: 'mastra',
       domainType: 'custom',
     }],
-    publicHost: 'preview-3005-reuse-primary-next.wemux.xyz',
-    publicUrl: 'https://preview-3005-reuse-primary-next.wemux.xyz/',
+    publicHost: 'preview-3005-reuse-primary-next.oxmux.xyz',
+    publicUrl: 'https://preview-3005-reuse-primary-next.oxmux.xyz/',
   })
 
   assert.equal(reused.created, false)
@@ -484,8 +484,8 @@ test('toDto keeps only unique preview domain bindings per port', () => {
       {
         id: 'duplicate-3005',
         appUrl: 'http://localhost:3005/',
-        publicHost: 'preview-3005-dto-duplicate.wemux.xyz',
-        publicUrl: 'https://preview-3005-dto-duplicate.wemux.xyz/',
+        publicHost: 'preview-3005-dto-duplicate.oxmux.xyz',
+        publicUrl: 'https://preview-3005-dto-duplicate.oxmux.xyz/',
         port: 3005,
         note: 'Preview',
         domainType: 'generated',
@@ -493,15 +493,15 @@ test('toDto keeps only unique preview domain bindings per port', () => {
       {
         id: 'mastra-4111',
         appUrl: 'http://127.0.0.1:4111/',
-        publicHost: 'preview-4111-dto.wemux.xyz',
-        publicUrl: 'https://preview-4111-dto.wemux.xyz/',
+        publicHost: 'preview-4111-dto.oxmux.xyz',
+        publicUrl: 'https://preview-4111-dto.oxmux.xyz/',
         port: 4111,
         note: 'mastra',
         domainType: 'custom',
       },
     ],
-    publicHost: 'preview-3005-dto-primary.wemux.xyz',
-    publicUrl: 'https://preview-3005-dto-primary.wemux.xyz/',
+    publicHost: 'preview-3005-dto-primary.oxmux.xyz',
+    publicUrl: 'https://preview-3005-dto-primary.oxmux.xyz/',
   })
 
   const dto = previewSessionService.toDto(created.session)
@@ -535,19 +535,19 @@ test('createOrReuseSession indexes additional source domain bindings', () => {
     additionalSourceBindings: [{
       id: 'api-domain',
       appUrl: 'http://127.0.0.1:3001/',
-      publicHost: 'app-3001-preview--preview-additional-domain-bindings.wemux.xyz',
-      publicUrl: 'https://app-3001-preview--preview-additional-domain-bindings.wemux.xyz/',
+      publicHost: 'app-3001-preview--preview-additional-domain-bindings.oxmux.xyz',
+      publicUrl: 'https://app-3001-preview--preview-additional-domain-bindings.oxmux.xyz/',
       port: 3001,
       note: 'API',
       domainType: 'generated',
     }],
-    publicHost: 'app-preview--preview-additional-domain-bindings.wemux.xyz',
-    publicUrl: 'https://app-preview--preview-additional-domain-bindings.wemux.xyz/',
+    publicHost: 'app-preview--preview-additional-domain-bindings.oxmux.xyz',
+    publicUrl: 'https://app-preview--preview-additional-domain-bindings.oxmux.xyz/',
   })
 
   assert.equal(created.created, true)
   assert.equal(
-    previewSessionService.getSessionByHost('app-3001-preview--preview-additional-domain-bindings.wemux.xyz')?.id,
+    previewSessionService.getSessionByHost('app-3001-preview--preview-additional-domain-bindings.oxmux.xyz')?.id,
     created.session.id,
   )
 
@@ -555,8 +555,8 @@ test('createOrReuseSession indexes additional source domain bindings', () => {
   assert.deepEqual(dto.additionalSourceAppUrls, [{
     appUrl: 'http://127.0.0.1:3001/',
     healthUrl: undefined,
-    publicUrl: 'https://app-3001-preview--preview-additional-domain-bindings.wemux.xyz/',
-    previewHost: 'app-3001-preview--preview-additional-domain-bindings.wemux.xyz',
+    publicUrl: 'https://app-3001-preview--preview-additional-domain-bindings.oxmux.xyz/',
+    previewHost: 'app-3001-preview--preview-additional-domain-bindings.oxmux.xyz',
     port: 3001,
     note: 'API',
     domainType: 'generated',
@@ -564,8 +564,8 @@ test('createOrReuseSession indexes additional source domain bindings', () => {
   assert.deepEqual(dto.domainBindings?.[1], {
     id: 'api-domain',
     appUrl: 'http://127.0.0.1:3001/',
-    publicUrl: 'https://app-3001-preview--preview-additional-domain-bindings.wemux.xyz/',
-    previewHost: 'app-3001-preview--preview-additional-domain-bindings.wemux.xyz',
+    publicUrl: 'https://app-3001-preview--preview-additional-domain-bindings.oxmux.xyz/',
+    previewHost: 'app-3001-preview--preview-additional-domain-bindings.oxmux.xyz',
     port: 3001,
     note: 'API',
     domainType: 'generated',
@@ -574,7 +574,7 @@ test('createOrReuseSession indexes additional source domain bindings', () => {
 
   const access = previewSessionService.issueViewerAccess(created.session.id)
   assert.ok(access)
-  assert.equal(access.additionalSourceAccess?.[0]?.publicUrl, 'https://app-3001-preview--preview-additional-domain-bindings.wemux.xyz/')
+  assert.equal(access.additionalSourceAccess?.[0]?.publicUrl, 'https://app-3001-preview--preview-additional-domain-bindings.oxmux.xyz/')
   assert.equal(access.additionalSourceAccess?.[0]?.note, 'API')
   assert.match(access.additionalSourceAccess?.[0]?.iframeUrl ?? '', /vmx_viewer_token=/)
 })
@@ -582,26 +582,26 @@ test('createOrReuseSession indexes additional source domain bindings', () => {
 test('normalizePreviewPublicUrl repairs malformed persisted preview urls', () => {
   assert.equal(
     normalizePreviewPublicUrl({
-      publicHost: 'vibemux-preview--abc.wemux.localtest.me:18989',
-      publicUrl: 'http//vibemux-preview--abc.wemux.localtest.me:18989/',
+      publicHost: 'vibemux-preview--abc.oxmux.localtest.me:18989',
+      publicUrl: 'http//vibemux-preview--abc.oxmux.localtest.me:18989/',
       fallbackScheme: 'http',
     }),
-    'http://vibemux-preview--abc.wemux.localtest.me:18989/',
+    'http://vibemux-preview--abc.oxmux.localtest.me:18989/',
   )
   assert.equal(
     normalizePreviewPublicUrl({
-      publicHost: 'vibemux-preview--abc.wemux.localtest.me:18989',
+      publicHost: 'vibemux-preview--abc.oxmux.localtest.me:18989',
       publicUrl: '',
       fallbackScheme: 'http',
     }),
-    'http://vibemux-preview--abc.wemux.localtest.me:18989/',
+    'http://vibemux-preview--abc.oxmux.localtest.me:18989/',
   )
   assert.equal(
     normalizePreviewPublicUrl({
-      publicHost: 'shopping-agent-preview--abc.wemux.xyz',
-      publicUrl: 'http//shopping-agent-preview--abc.wemux.xyz/',
+      publicHost: 'shopping-agent-preview--abc.oxmux.xyz',
+      publicUrl: 'http//shopping-agent-preview--abc.oxmux.xyz/',
     }),
-    'https://shopping-agent-preview--abc.wemux.xyz/',
+    'https://shopping-agent-preview--abc.oxmux.xyz/',
   )
 })
 
@@ -622,8 +622,8 @@ test('updateTunnelLatency surfaces the latest preview tunnel RTT and clears it a
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'latency-preview--preview-latency-session.wemux.localtest.me:8989',
-    publicUrl: 'http://latency-preview--preview-latency-session.wemux.localtest.me:8989/',
+    publicHost: 'latency-preview--preview-latency-session.oxmux.localtest.me:8989',
+    publicUrl: 'http://latency-preview--preview-latency-session.oxmux.localtest.me:8989/',
   })
 
   assert.equal(created.created, true)
@@ -666,8 +666,8 @@ test('exchangeBootstrapToken keeps viewer bootstrap usable across repeated ifram
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'bootstrap-preview--preview-bootstrap-token-repeat.wemux.localtest.me:8989',
-    publicUrl: 'http://bootstrap-preview--preview-bootstrap-token-repeat.wemux.localtest.me:8989/',
+    publicHost: 'bootstrap-preview--preview-bootstrap-token-repeat.oxmux.localtest.me:8989',
+    publicUrl: 'http://bootstrap-preview--preview-bootstrap-token-repeat.oxmux.localtest.me:8989/',
   })
 
   assert.equal(created.created, true)
@@ -705,8 +705,8 @@ test('close revokes viewer and share access for preview sessions', () => {
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'close-preview--preview-close-revoke-access.wemux.localtest.me:8989',
-    publicUrl: 'http://close-preview--preview-close-revoke-access.wemux.localtest.me:8989/',
+    publicHost: 'close-preview--preview-close-revoke-access.oxmux.localtest.me:8989',
+    publicUrl: 'http://close-preview--preview-close-revoke-access.oxmux.localtest.me:8989/',
   })
 
   const viewer = previewSessionService.issueViewerAccess(created.session.id)
@@ -741,8 +741,8 @@ test('revokeShare invalidates previously issued share access tokens', () => {
       targetBasePath: '/',
     },
     additionalSources: [],
-    publicHost: 'share-revoke-preview--preview-share-access-revoke.wemux.localtest.me:8989',
-    publicUrl: 'http://share-revoke-preview--preview-share-access-revoke.wemux.localtest.me:8989/',
+    publicHost: 'share-revoke-preview--preview-share-access-revoke.oxmux.localtest.me:8989',
+    publicUrl: 'http://share-revoke-preview--preview-share-access-revoke.oxmux.localtest.me:8989/',
   })
 
   const share = previewSessionService.createShare(created.session.id, 60)

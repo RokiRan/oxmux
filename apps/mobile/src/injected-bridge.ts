@@ -1,7 +1,7 @@
 // Runs inside react-native-webview and exposes the same narrow contract as Electron preload.
 export const buildInjectedNativeBridge = (platform: string) => `
 (() => {
-  if (window.__WEMUX_MOBILE__) return true;
+  if (window.__OXMUX_MOBILE__) return true;
 
   let requestSequence = 0;
   const pendingRequests = new Map();
@@ -9,7 +9,7 @@ export const buildInjectedNativeBridge = (platform: string) => `
   const updateListeners = new Set();
   const queuedDeepLinks = [];
 
-  window.addEventListener('wemux-mobile-response', (event) => {
+  window.addEventListener('oxmux-mobile-response', (event) => {
     const detail = event.detail || {};
     const pending = pendingRequests.get(detail.id);
     if (!pending) return;
@@ -19,7 +19,7 @@ export const buildInjectedNativeBridge = (platform: string) => `
     else pending.resolve(detail.result);
   });
 
-  window.__WEMUX_MOBILE_DISPATCH_DEEP_LINK__ = (urls) => {
+  window.__OXMUX_MOBILE_DISPATCH_DEEP_LINK__ = (urls) => {
     const normalized = Array.isArray(urls) ? urls.filter((url) => typeof url === 'string') : [];
     if (deepLinkListeners.size === 0) {
       queuedDeepLinks.push(...normalized);
@@ -28,11 +28,11 @@ export const buildInjectedNativeBridge = (platform: string) => `
     deepLinkListeners.forEach((listener) => listener(normalized));
   };
 
-  window.__WEMUX_MOBILE_DISPATCH_UPDATE__ = (payload) => {
+  window.__OXMUX_MOBILE_DISPATCH_UPDATE__ = (payload) => {
     updateListeners.forEach((listener) => listener(payload));
   };
 
-  window.__WEMUX_MOBILE__ = Object.freeze({
+  window.__OXMUX_MOBILE__ = Object.freeze({
     platform: ${JSON.stringify(platform)},
     invoke(command, args) {
       return new Promise((resolve, reject) => {
@@ -63,7 +63,7 @@ export const buildInjectedNativeBridge = (platform: string) => `
     },
   });
 
-  document.documentElement.classList.add('wemux-react-native-window');
+  document.documentElement.classList.add('oxmux-react-native-window');
   return true;
 })();
 true;

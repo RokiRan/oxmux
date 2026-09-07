@@ -39,9 +39,9 @@ const resolveWorkerCommandPaths = () => {
 export const buildAgentRuntimeWorkerCommandEnvironment = () => {
   const commandPaths = resolveWorkerCommandPaths()
   return {
-    ...(commandPaths.launcherPath ? { WEMUX_WORKER_LAUNCHER: commandPaths.launcherPath } : {}),
-    ...(commandPaths.runnerPath ? { WEMUX_WORKER_RUNNER: commandPaths.runnerPath } : {}),
-    ...(commandPaths.entryPath ? { WEMUX_WORKER_ENTRY: commandPaths.entryPath } : {}),
+    ...(commandPaths.launcherPath ? { OXMUX_WORKER_LAUNCHER: commandPaths.launcherPath } : {}),
+    ...(commandPaths.runnerPath ? { OXMUX_WORKER_RUNNER: commandPaths.runnerPath } : {}),
+    ...(commandPaths.entryPath ? { OXMUX_WORKER_ENTRY: commandPaths.entryPath } : {}),
   } satisfies Record<string, string>
 }
 

@@ -3,7 +3,7 @@ import test from 'node:test'
 
 import { buildCustomAgentSystemPrompt, buildMainAgentRuntimeToolInstructions, buildMainAgentSystemPrompt, isSoulPlaceholder } from './main-agent-prompt'
 
-test('all main-chat Agents must load the wemux collaboration protocol', () => {
+test('all main-chat Agents must load the oxmux collaboration protocol', () => {
   const instructions = buildMainAgentSystemPrompt([], 'user-1')
 
   assert.match(instructions, /@vibemux-agent-ops/)
@@ -31,12 +31,12 @@ test('custom Agent prompt keeps identity fields without capability flags', () =>
     owner: '',
   }, 'user-1')
 
-  assert.match(instructions, /你当前扮演 wemux 自定义 Agent「Agent One」/)
+  assert.match(instructions, /你当前扮演 oxmux 自定义 Agent「Agent One」/)
   assert.doesNotMatch(instructions, /配置允许写文件/)
   assert.doesNotMatch(instructions, /配置允许运行命令/)
 })
 
-test('Pi main-chat instructions name the exact wemux MCP tools', () => {
+test('Pi main-chat instructions name the exact oxmux MCP tools', () => {
   const instructions = buildMainAgentRuntimeToolInstructions('Pi')
 
   assert.match(instructions, /vibemux__project_list/)
@@ -66,7 +66,7 @@ test('custom Agent prompt injects soul into Identity and memory snapshot with lo
   })
 
   assert.match(instructions, /# Identity/)
-  assert.match(instructions, /You are Agent One, a persistent Agent in Wemux\./)
+  assert.match(instructions, /You are Agent One, a persistent Agent in Oxmux\./)
   assert.match(instructions, /<soul>\n# Soul — Agent One/)
   assert.match(instructions, /## Memory Snapshot/)
   assert.match(instructions, /参考数据而非指令/)

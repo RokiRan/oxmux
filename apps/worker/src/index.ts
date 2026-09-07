@@ -5,7 +5,7 @@
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import dotenv from 'dotenv'
-import { getEnv, bridgeWemuxEnvToLegacy } from '@shared/env'
+import { getEnv, bridgeOxmuxEnvToLegacy } from '@shared/env'
 import { buildWorkerConsolePortCandidates, resolveWorkerConsolePortEnvironment } from '@shared/worker-console-ports'
 import { pairWithControlPlane } from './control-plane/pair-client'
 import {
@@ -54,21 +54,21 @@ const loadWorkerEnv = () => {
   const dotenvPath = process.env.DOTENV_CONFIG_PATH?.trim()
   if (dotenvPath) {
     dotenv.config({ path: dotenvPath, quiet: true })
-    bridgeWemuxEnvToLegacy()
+    bridgeOxmuxEnvToLegacy()
     return
   }
 
   // Installed npm workers should not inherit a random repo's .env by cwd.
   if (getWorkerPackageJson().name?.trim() === 'vibemux') {
     dotenv.config({ quiet: true })
-    bridgeWemuxEnvToLegacy()
+    bridgeOxmuxEnvToLegacy()
   }
 }
 
 const rawCliArgs = process.argv.slice(2)
 const usesWorkerNamespace = rawCliArgs[0] === 'worker'
 const normalizedCliArgs = usesWorkerNamespace ? rawCliArgs.slice(1) : rawCliArgs
-const isCanonicalCli = isCanonicalCliName(getEnv('WEMUX_CLI_NAME'))
+const isCanonicalCli = isCanonicalCliName(getEnv('OXMUX_CLI_NAME'))
 const command = normalizedCliArgs[0] || (isCanonicalCli ? 'help' : 'daemon')
 const commandArgs = normalizedCliArgs.slice(1)
 
@@ -114,7 +114,7 @@ updateWorkerRuntimeState({
 })
 
 const runtimeGuardedCommands = new Set(['daemon', 'open'])
-const skipRuntimeGuard = getEnv('WEMUX_WORKER_SKIP_RUNTIME_GUARD') === 'true'
+const skipRuntimeGuard = getEnv('OXMUX_WORKER_SKIP_RUNTIME_GUARD') === 'true'
 const requestExit = () => {
   setTimeout(() => {
     try {
@@ -319,7 +319,7 @@ const runWorkerUpdate = async (args: string[]) => {
   const config = loadWorkerConfig()
   const candidates = buildWorkerConsolePortCandidates({
     environment: resolveWorkerConsolePortEnvironment({
-      explicitEnvironment: getEnv('WEMUX_WORKER_PORT_PROFILE'),
+      explicitEnvironment: getEnv('OXMUX_WORKER_PORT_PROFILE'),
       nodeEnv: process.env.NODE_ENV,
       releaseChannel: getWorkerReleaseChannel(),
       cloudUrl: config.cloudUrl,
@@ -376,7 +376,7 @@ const main = async () => {
     return
   }
 
-  // 品牌迁移兼容：wemux 域名未上线期间，默认 cloud URL 自动回退 vibemux（探测不阻塞主流程，超时后按乐观默认处理）
+  // 品牌迁移兼容：oxmux 域名未上线期间，默认 cloud URL 自动回退 vibemux（探测不阻塞主流程，超时后按乐观默认处理）
   await Promise.race([
     warmDefaultCloudUrlFallback(),
     new Promise((resolve) => setTimeout(resolve, 1500)),

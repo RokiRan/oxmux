@@ -19,7 +19,7 @@ const withWorkerEnv = async (
     VIBEMUX_WORKER_RELEASE_CHANNEL: process.env.VIBEMUX_WORKER_RELEASE_CHANNEL,
     VIBEMUX_WORKER_HOME: process.env.VIBEMUX_WORKER_HOME,
     VIBEMUX_HOME: process.env.VIBEMUX_HOME,
-    WEMUX_HOME: process.env.WEMUX_HOME,
+    OXMUX_HOME: process.env.OXMUX_HOME,
   }
 
   Object.assign(process.env, env)
@@ -44,8 +44,8 @@ const withWorkerEnv = async (
   }
 }
 
-test('getWorkerHome uses ~/.wemux-dev for local development worker', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-dev-'))
+test('getWorkerHome uses ~/.oxmux-dev for local development worker', async () => {
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-dev-'))
 
   try {
     await withWorkerEnv({
@@ -54,7 +54,7 @@ test('getWorkerHome uses ~/.wemux-dev for local development worker', async () =>
       VIBEMUX_CLOUD_URL: 'http://127.0.0.1:8989',
     }, async () => {
       const { getWorkerHome } = await importConfigModule()
-      assert.equal(getWorkerHome(), path.join(tempHome, '.wemux-dev'))
+      assert.equal(getWorkerHome(), path.join(tempHome, '.oxmux-dev'))
     })
   } finally {
     rmSync(tempHome, { recursive: true, force: true })
@@ -62,7 +62,7 @@ test('getWorkerHome uses ~/.wemux-dev for local development worker', async () =>
 })
 
 test('getWorkerHome keeps using an existing legacy ~/.vibemux-dev home', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-legacy-dev-'))
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-legacy-dev-'))
   const legacyHome = path.join(tempHome, '.vibemux-dev')
   mkdirSync(path.join(legacyHome, 'node'), { recursive: true })
 
@@ -80,35 +80,35 @@ test('getWorkerHome keeps using an existing legacy ~/.vibemux-dev home', async (
   }
 })
 
-test('getWorkerHome uses ~/.wemux-preview for preview worker even during local development', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-preview-'))
+test('getWorkerHome uses ~/.oxmux-preview for preview worker even during local development', async () => {
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-preview-'))
 
   try {
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'development',
-      VIBEMUX_CLOUD_URL: 'https://wemux.xyz/',
+      VIBEMUX_CLOUD_URL: 'https://oxmux.xyz/',
     }, async () => {
       const { getWorkerHome } = await importConfigModule()
-      assert.equal(getWorkerHome(), path.join(tempHome, '.wemux-preview'))
+      assert.equal(getWorkerHome(), path.join(tempHome, '.oxmux-preview'))
     })
   } finally {
     rmSync(tempHome, { recursive: true, force: true })
   }
 })
 
-test('getWorkerHome uses ~/.wemux for production worker', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-production-'))
+test('getWorkerHome uses ~/.oxmux for production worker', async () => {
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-production-'))
 
   try {
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'production',
-      VIBEMUX_CLOUD_URL: 'https://wemux.ai/',
+      VIBEMUX_CLOUD_URL: 'https://oxmux.ai/',
       VIBEMUX_WORKER_RELEASE_CHANNEL: 'production',
     }, async () => {
       const { getWorkerHome } = await importConfigModule()
-      assert.equal(getWorkerHome(), path.join(tempHome, '.wemux'))
+      assert.equal(getWorkerHome(), path.join(tempHome, '.oxmux'))
     })
   } finally {
     rmSync(tempHome, { recursive: true, force: true })
@@ -118,7 +118,7 @@ test('getWorkerHome uses ~/.wemux for production worker', async () => {
 test('packaged production environment ignores an ambient preview cloud URL', async () => {
   const { resolveWorkerEnvironmentFromRuntime } = await importConfigModule()
   assert.equal(resolveWorkerEnvironmentFromRuntime({
-    cloudUrl: 'https://wemux.xyz',
+    cloudUrl: 'https://oxmux.xyz',
     releaseChannel: 'production',
     packagedReleaseChannel: 'production',
     nodeEnv: 'production',
@@ -132,30 +132,30 @@ test('getWorkerHome does not inherit another release channel default home', asyn
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'production',
-      VIBEMUX_CLOUD_URL: 'https://wemux.ai/',
+      VIBEMUX_CLOUD_URL: 'https://oxmux.ai/',
       VIBEMUX_WORKER_RELEASE_CHANNEL: 'production',
       VIBEMUX_WORKER_HOME: path.join(tempHome, '.vibemux-preview'),
     }, async () => {
       const { getWorkerHome } = await importConfigModule()
-      assert.equal(getWorkerHome(), path.join(tempHome, '.wemux'))
+      assert.equal(getWorkerHome(), path.join(tempHome, '.oxmux'))
     })
 
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'production',
-      VIBEMUX_CLOUD_URL: 'https://wemux.xyz/',
+      VIBEMUX_CLOUD_URL: 'https://oxmux.xyz/',
       VIBEMUX_WORKER_RELEASE_CHANNEL: 'preview',
       VIBEMUX_WORKER_HOME: path.join(tempHome, '.vibemux'),
     }, async () => {
       const { getWorkerHome } = await importConfigModule()
-      assert.equal(getWorkerHome(), path.join(tempHome, '.wemux-preview'))
+      assert.equal(getWorkerHome(), path.join(tempHome, '.oxmux-preview'))
     })
   } finally {
     rmSync(tempHome, { recursive: true, force: true })
   }
 })
 
-test('getWorkerHome expands an unexpanded ~ prefix in WEMUX_WORKER_HOME and WEMUX_HOME', async () => {
+test('getWorkerHome expands an unexpanded ~ prefix in OXMUX_WORKER_HOME and OXMUX_HOME', async () => {
   const tempHome = mkdtempSync(path.join(os.tmpdir(), 'vibemux-worker-home-tilde-'))
 
   try {
@@ -171,10 +171,10 @@ test('getWorkerHome expands an unexpanded ~ prefix in WEMUX_WORKER_HOME and WEMU
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'development',
-      WEMUX_HOME: '~/wemux-home',
+      OXMUX_HOME: '~/oxmux-home',
     }, async () => {
       const { getWorkerHome } = await importConfigModule()
-      assert.equal(getWorkerHome(), path.join(tempHome, 'wemux-home', 'worker'))
+      assert.equal(getWorkerHome(), path.join(tempHome, 'oxmux-home', 'worker'))
     })
   } finally {
     rmSync(tempHome, { recursive: true, force: true })
@@ -189,7 +189,7 @@ test('getWorkerHome preserves an explicit custom home across release channels', 
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'production',
-      VIBEMUX_CLOUD_URL: 'https://wemux.ai/',
+      VIBEMUX_CLOUD_URL: 'https://oxmux.ai/',
       VIBEMUX_WORKER_RELEASE_CHANNEL: 'production',
       VIBEMUX_WORKER_HOME: customWorkerHome,
     }, async () => {
@@ -202,8 +202,8 @@ test('getWorkerHome preserves an explicit custom home across release channels', 
 })
 
 test('loadWorkerConfig rewrites obsolete workspaceRoot suffix inside the current worker home', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-normalize-root-'))
-  const workerHome = path.join(tempHome, '.wemux-dev')
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-normalize-root-'))
+  const workerHome = path.join(tempHome, '.oxmux-dev')
 
   try {
     const nodeDir = path.join(workerHome, 'node')
@@ -241,15 +241,15 @@ test('loadWorkerConfig rewrites obsolete workspaceRoot suffix inside the current
 })
 
 test('loadWorkerConfig does not migrate legacy preview worker state into the current home', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-no-migrate-'))
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-no-migrate-'))
   const legacyHome = path.join(tempHome, '.vibemux', 'worker-dev-preview')
-  const targetHome = path.join(tempHome, '.wemux-preview')
+  const targetHome = path.join(tempHome, '.oxmux-preview')
 
   try {
     mkdirSync(path.join(legacyHome, 'workspace'), { recursive: true })
     writeFileSync(path.join(legacyHome, 'machine-id'), 'legacy-machine-id\n', 'utf8')
     writeFileSync(path.join(legacyHome, 'config.json'), `${JSON.stringify({
-      cloudUrl: 'https://wemux.xyz/',
+      cloudUrl: 'https://oxmux.xyz/',
       machineId: 'legacy-machine-id',
       machineName: 'legacy-worker',
       workspaceRoot: path.join(legacyHome, 'workspace'),
@@ -264,7 +264,7 @@ test('loadWorkerConfig does not migrate legacy preview worker state into the cur
     await withWorkerEnv({
       HOME: tempHome,
       NODE_ENV: 'development',
-      VIBEMUX_CLOUD_URL: 'https://wemux.xyz/',
+      VIBEMUX_CLOUD_URL: 'https://oxmux.xyz/',
     }, async () => {
       const { getWorkerHome, loadWorkerConfig } = await importConfigModule()
       const config = loadWorkerConfig()
@@ -280,8 +280,8 @@ test('loadWorkerConfig does not migrate legacy preview worker state into the cur
 })
 
 test('loadWorkerConfig keeps a remote preview cloudUrl instead of replacing it with the packaged default', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-remote-preview-'))
-  const workerHome = path.join(tempHome, '.wemux-preview')
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-remote-preview-'))
+  const workerHome = path.join(tempHome, '.oxmux-preview')
 
   try {
     const nodeDir = path.join(workerHome, 'node')
@@ -316,8 +316,8 @@ test('loadWorkerConfig keeps a remote preview cloudUrl instead of replacing it w
 })
 
 test('loadWorkerConfig keeps paired local dev cloudUrl for preview worker', async () => {
-  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-home-paired-local-preview-'))
-  const workerHome = path.join(tempHome, '.wemux-preview')
+  const tempHome = mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-home-paired-local-preview-'))
+  const workerHome = path.join(tempHome, '.oxmux-preview')
 
   try {
     const nodeDir = path.join(workerHome, 'node')

@@ -899,7 +899,7 @@ function CloudFilesPanel({
             <div className="flex flex-1 items-center justify-center p-6">
               <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-zinc-800 bg-zinc-950/70 px-6 py-8 text-center text-xs text-zinc-500">
                 <FolderOpen className="h-8 w-8 text-zinc-700" />
-                暂无云节点文件——在 Wemux 云节点执行的任务/工作区文件会显示在这里（只读）。
+                暂无云节点文件——在 Oxmux 云节点执行的任务/工作区文件会显示在这里（只读）。
               </div>
             </div>
           ) : (

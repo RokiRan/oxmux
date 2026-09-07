@@ -28,7 +28,7 @@ test('community 域已同意公开时正常构建，正文含原始反馈引用�
   assert.ok(payload.title.startsWith('[feedback] 希望支持日历视图'))
   assert.ok(payload.body.includes('## 原始反馈'))
   assert.ok(payload.body.includes('> 第一行\n> 第二行'))
-  assert.ok(payload.body.includes('<!-- wemux-feedback:feedback:abc-123 -->'))
+  assert.ok(payload.body.includes('<!-- oxmux-feedback:feedback:abc-123 -->'))
   assert.ok(payload.body.includes('consentPublic: yes'))
   assert.ok(payload.body.includes('routing: community'))
 })

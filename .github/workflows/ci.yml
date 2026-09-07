@@ -55,7 +55,7 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: wemux_test
+          POSTGRES_DB: oxmux_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
@@ -66,7 +66,7 @@ jobs:
           --health-interval 5s --health-timeout 5s --health-retries 10
         command: "postgres -c max_connections=300"
     env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/wemux_test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/oxmux_test
       # 测试会加密敏感凭证（project env 同步等）；CI 用固定测试值即可
       SECRET_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
     steps:
@@ -108,7 +108,7 @@ jobs:
           find apps/web/src -name '*.test.ts' -o -name '*.test.tsx' | xargs pnpm exec tsx --test
 
       - name: Public source boundary（受限实现和材料不得进入公开仓）
-        if: github.repository == 'wemux-ai/wemux'
+        if: github.repository == 'oxmux-ai/oxmux'
         run: |
           set -e
           node scripts/open-core/public-boundary.mjs --tree HEAD

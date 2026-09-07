@@ -85,7 +85,7 @@ export function buildMarketingContentStructuredData(document: MarketingStructure
         },
         publisher: {
           '@type': 'Organization',
-          name: 'wemux',
+          name: 'oxmux',
           url: buildPageUrl('/'),
         },
         dateModified: document.updatedAt,
@@ -165,8 +165,8 @@ export function buildMarketingTopicDirectoryStructuredData(topics: MarketingTopi
     '@graph': [
       {
         '@type': 'CollectionPage',
-        description: 'Topic clusters that connect wemux blog posts, use cases, and compare pages into reusable SEO hubs.',
-        name: 'wemux SEO Topics',
+        description: 'Topic clusters that connect oxmux blog posts, use cases, and compare pages into reusable SEO hubs.',
+        name: 'oxmux SEO Topics',
         url: buildPageUrl('/topics'),
         mainEntity: {
           '@type': 'ItemList',

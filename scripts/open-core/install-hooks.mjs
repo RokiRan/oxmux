@@ -5,4 +5,4 @@
 import { execFileSync } from 'node:child_process'
 
 execFileSync('git', ['config', 'core.hooksPath', '.githooks'], { stdio: 'inherit' })
-console.log('Installed Wemux Open Core hooks at .githooks')
+console.log('Installed Oxmux Open Core hooks at .githooks')

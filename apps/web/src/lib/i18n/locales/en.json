@@ -73,10 +73,10 @@
     "rememberMe": "Remember me"
   },
   "app": {
-    "title": "Wemux",
+    "title": "Oxmux",
     "tagline": "Let the agent system handle requirements, break work down automatically, and dispatch to real workstations for execution.",
     "guest": "Guest",
-    "consoleVersion": "Wemux Console v{{version}}",
+    "consoleVersion": "Oxmux Console v{{version}}",
     "engineeringConsole": "Engineering Console",
     "online": "Online",
     "offline": "Offline",
@@ -264,7 +264,7 @@
         "description": "This also removes the local isolated directory and unbinds related tasks from the workspace.",
         "confirm": "Delete Workspace",
         "deleteLocalBranch": "Also delete the local working branch",
-        "deleteLocalBranchHint": "Only Wemux-managed worktree branches will be removed.",
+        "deleteLocalBranchHint": "Only Oxmux-managed worktree branches will be removed.",
         "deleteRemoteBranch": "Also delete the remote working branch",
         "deleteRemoteBranchHint": "This removes the matching origin branch and will also delete the local branch."
       },
@@ -299,7 +299,7 @@
       "title": "Create Workspace",
       "aiEntryBadge": "AI Workspace",
       "heroTitle": "Tell AI what to work on",
-      "heroDescription": "Create a workspace like starting a conversation. Wemux names it from the first message and drops that message into the new session composer once ready.",
+      "heroDescription": "Create a workspace like starting a conversation. Oxmux names it from the first message and drops that message into the new session composer once ready.",
       "agentModelHint": "This becomes the default runtime setup for the first session in the new workspace.",
       "runtimeChoiceLabel": "Coding Agent",
       "setupLabel": "Workspace Setup",
@@ -311,7 +311,7 @@
       "connectGitHubApp": "Connect GitHub App",
       "githubImportUnavailable": "GitHub App is not configured or connected yet, so authorized repositories cannot be imported right now.",
       "githubInstallationRequired": "Select a GitHub App installation first.",
-      "githubRepositoryHint": "Choose a repository from {{account}}. Wemux will clone it as a project, then continue creating the workspace.",
+      "githubRepositoryHint": "Choose a repository from {{account}}. Oxmux will clone it as a project, then continue creating the workspace.",
       "githubRepositoryMissingDefaultBranch": "This repository has no default branch metadata, so the system default branch will be used during creation.",
       "loadingGitHubRepositories": "Loading GitHub repositories...",
       "loadingBranches": "Loading branches...",
@@ -386,7 +386,7 @@
       },
       "branchMessages": {
         "originalDirDirect": "Original directory mode uses the current directory branch directly.",
-        "nonGitProject": "This is a non-Git project, so Wemux uses the workspace directory directly.",
+        "nonGitProject": "This is a non-Git project, so Oxmux uses the workspace directory directly.",
         "executorConnectionLost": "The executor connection just dropped, so branches cannot be loaded right now. Wait for auto refresh or reselect this executor."
       },
       "cloneBlock": {
@@ -473,7 +473,7 @@
         "withTerminalTitle": "This workspace has no AI chat yet",
         "noTaskTitle": "This workspace has no AI chat yet",
         "withTerminalDescription": "You can still use the terminal below to work with the environment, repository, and directories, or create the default AI chat now.",
-        "noTaskDescription": "Create an AI chat and Wemux will prepare the default session for this workspace."
+        "noTaskDescription": "Create an AI chat and Oxmux will prepare the default session for this workspace."
       },
       "pinSession": "Pin session",
       "unpinSession": "Unpin session",
@@ -1247,7 +1247,7 @@
     }
   },
   "login": {
-    "title": "Sign in to Wemux",
+    "title": "Sign in to Oxmux",
     "subtitle": "Enter your credentials to access your organization",
     "submit": "Sign in",
     "noAccount": "Don't have an account?",
@@ -1266,7 +1266,7 @@
     "registerNow": "Register now",
     "loginNow": "Login now",
     "emailAlreadyRegistered": "This email is already registered, just login.",
-    "workspaceBadge": "Wemux Organization",
+    "workspaceBadge": "Oxmux Organization",
     "authGateway": "Auth Gateway",
     "emailPlaceholder": "name@example.com",
     "featureProjectsTitle": "Projects",
@@ -1414,7 +1414,7 @@
   },
   "landing": {
     "hero": {
-      "title": "Wemux",
+      "title": "Oxmux",
       "subtitle": "Let the agent system handle requirements, break work down automatically, and dispatch to real workstations for execution."
     },
     "features": {
@@ -1561,7 +1561,7 @@
       "gitNone": "Git not enabled",
       "gitRemoteDesc": "Connected to remote repository, supports branch, worktree, push and PR full Git workflow.",
       "gitLocalDesc": "Local Git repository detected. Supports local branch, diff, graph, rebase and worktree; no remote means PR is not directly supported.",
-      "gitNoneDesc": "Managed by Wemux but not initialized as a Git repository yet. Git diff / rebase / PR are unavailable until Git is initialized."
+      "gitNoneDesc": "Managed by Oxmux but not initialized as a Git repository yet. Git diff / rebase / PR are unavailable until Git is initialized."
     },
     "sourceDisplay": {
       "noRemoteRepoSet": "Remote repo not set",
@@ -1963,15 +1963,15 @@
           "loading": "Scanning the local workdir...",
           "empty": "No files indexed in this agent workdir yet.",
           "boundaryTitle": "Boundary",
-          "boundaryDescription": "Keep the agent-facing workdir separate from Wemux system metadata so the next multi-node version can sync only what matters.",
+          "boundaryDescription": "Keep the agent-facing workdir separate from Oxmux system metadata so the next multi-node version can sync only what matters.",
           "boundaryLabels": {
             "workdir": "Agent-Visible Area",
             "system": "System Metadata",
             "compatibility": "Sync Compatibility"
           },
           "boundaryItems": {
-            "workdir": "Only ~/.wemux/agents/{agentId}/workdir is the default writable area for the agent.",
-            "system": "Hidden .system metadata stays outside the default agent surface and is managed by Wemux.",
+            "workdir": "Only ~/.oxmux/agents/{agentId}/workdir is the default writable area for the agent.",
+            "system": "Hidden .system metadata stays outside the default agent surface and is managed by Oxmux.",
             "compatibility": "Snapshot metadata uses relative paths so a later multi-node sync layer can reuse it directly."
           },
           "summary": {
@@ -1993,7 +1993,7 @@
         "hints": {
           "avatarStorageConfigured": "Supports JPG, PNG, WebP, and GIF. Single-file size limit is {{size}}MB. During draft creation you can fill a URL first and upload after saving.",
           "avatarStorageMissing": "Object storage is not configured yet, so you can only fill an external image URL manually for now.",
-          "piSkillSnapshot": "Pi injects mounted skills through `WEMUX_PI_SKILL_PATHS`; edits apply as a fresh snapshot on the next run.",
+          "piSkillSnapshot": "Pi injects mounted skills through `OXMUX_PI_SKILL_PATHS`; edits apply as a fresh snapshot on the next run.",
           "unresolvedSkillWarning": "This mounted entry does not resolve to a matching record in the current skill registry and should be checked before migration or execution.",
           "piMountSnapshot": "Pi injects this mount as a snapshot on the next run.",
           "mountPolicySaved": "This mount policy is saved with the agent config.",
@@ -2587,13 +2587,13 @@
         "systemMcp": "Built-in MCP",
         "healthCheckLater": "Health checks can be added later.",
         "removeMcp": "This only affects the agent mount list and does not remove the external MCP service.",
-        "systemMcpRemoveDisabled": "The built-in Wemux MCP cannot be removed, but it can be disabled.",
+        "systemMcpRemoveDisabled": "The built-in Oxmux MCP cannot be removed, but it can be disabled.",
         "advancedRawConfig": "Keep the raw JSON entry for compatibility. Use the Skills and MCP panels for normal maintenance.",
         "mcpAccess": "System-level MCP entries are maintained in Settings / Global MCP."
       },
       "vibemuxMcp": {
-        "title": "Wemux MCP",
-        "description": "Expose Wemux control-plane resources to the agent."
+        "title": "Oxmux MCP",
+        "description": "Expose Oxmux control-plane resources to the agent."
       },
       "status": {
         "enabled": "Enabled",
@@ -2945,7 +2945,7 @@
         },
         "executor": {
           "title": "Connect a worker first",
-          "description": "Wemux can only execute work inside a real repository after a real worker is connected. Start with that critical step."
+          "description": "Oxmux can only execute work inside a real repository after a real worker is connected. Start with that critical step."
         },
         "runtime": {
           "title": "Confirm your coding agent",
@@ -2953,7 +2953,7 @@
         },
         "project": {
           "title": "Bring in your first project",
-          "description": "The worker is online. Now just tell Wemux which repository it should work in so you can continue into the workspace."
+          "description": "The worker is online. Now just tell Oxmux which repository it should work in so you can continue into the workspace."
         },
         "firstTask": {
           "title": "Open the workspace",
@@ -2961,7 +2961,7 @@
         },
         "done": {
           "title": "Your first-run flow is complete",
-          "description": "From here, Wemux enters normal working mode. You can keep sending tasks in real projects, track execution, and refine settings.",
+          "description": "From here, Oxmux enters normal working mode. You can keep sending tasks in real projects, track execution, and refine settings.",
           "nextLabel": "Open kanban"
         }
       }
@@ -2976,7 +2976,7 @@
     },
     "executor": {
       "title": "Connect a worker first",
-      "description": "Wemux does not pretend work is done in a chat box. It dispatches work to real workers, so the first step is to pair one successfully.",
+      "description": "Oxmux does not pretend work is done in a chat box. It dispatches work to real workers, so the first step is to pair one successfully.",
       "connectedNode": "connected worker",
       "readyTitle": "Worker is ready",
       "readyDescription": "{{name}} is ready for the next step: adding a project.",
@@ -3022,19 +3022,19 @@
       "localProjectTitle": "Connect local project",
       "localProjectDescription": "If the repository directory already exists on the worker, just pick that folder.",
       "cloneProjectTitle": "Clone repository",
-      "cloneProjectDescription": "Let the Worker clone the repository first, then bind it as a Wemux project.",
+      "cloneProjectDescription": "Let the Worker clone the repository first, then bind it as a Oxmux project.",
       "note": "Prefer bringing in a real repository first so the workspace opens with the current project context."
     },
     "firstTask": {
       "title": "Open the workspace",
-      "description": "Your project is connected. Enter the workspace to start using Wemux directly.",
+      "description": "Your project is connected. Enter the workspace to start using Oxmux directly.",
       "currentProject": "Current project: ",
       "noProject": "No project selected",
       "detectedTasks": "Existing tasks detected."
     },
     "done": {
       "title": "You have completed the first flow",
-      "description": "You have finished the critical first-run path: worker, project, and first task. From here, just keep using Wemux in the real workflow.",
+      "description": "You have finished the critical first-run path: worker, project, and first task. From here, just keep using Oxmux in the real workflow.",
       "goKanban": "Go to kanban",
       "goExecution": "Go to execution",
       "goSettings": "Go to settings"
@@ -3912,12 +3912,12 @@
     "title": "Feedback",
     "subtitle": "Report a bug or suggest a feature — we read everything.",
     "dialogTitle": "Feedback",
-    "dialogSubtitle": "Spotted a problem, or have an idea to make Wemux better?",
+    "dialogSubtitle": "Spotted a problem, or have an idea to make Oxmux better?",
     "successHint": "We review each submission and update the status here.",
     "bug": "Bug report",
     "bugDesc": "Something is broken or not working as expected.",
     "feature": "Feature suggestion",
-    "featureDesc": "An idea to make Wemux better.",
+    "featureDesc": "An idea to make Oxmux better.",
     "titleLabel": "Title",
     "titlePlaceholder": "Short summary, e.g. “Worker pairing fails with invalid code”",
     "bodyLabel": "Details",
@@ -3940,7 +3940,7 @@
     "normalizedDuplicate": "Merged into",
     "draftReply": "AI draft",
     "draftReplyHint": "Draft a reply from the feedback and history (no timeline promises, no internal info)",
-    "draftReplyNoModel": "No model configured; write manually or set WEMUX_FEEDBACK_NORMALIZATION_API_KEY",
+    "draftReplyNoModel": "No model configured; write manually or set OXMUX_FEEDBACK_NORMALIZATION_API_KEY",
     "draftReplyFailed": "AI draft failed",
     "reviewHighRisk": "Reply blocked by review — high-risk content",
     "reviewForceSend": "Send anyway? (force-send is recorded as reviewed)",

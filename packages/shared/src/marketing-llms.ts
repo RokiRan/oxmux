@@ -22,11 +22,11 @@ export function buildMarketingLlmsTxt() {
   const blogEntries = listPublishedMarketingContentEntriesByCollection('blog')
 
   const lines = [
-    '# wemux',
+    '# oxmux',
     '',
-    '> wemux is an AI coding delivery platform for real repositories, real workstations, and persistent execution.',
+    '> oxmux is an AI coding delivery platform for real repositories, real workstations, and persistent execution.',
     '',
-    'wemux helps teams route AI coding work onto the right machine, keep execution visible, and bring back reviewable outputs such as logs, branches, and commits.',
+    'oxmux helps teams route AI coding work onto the right machine, keep execution visible, and bring back reviewable outputs such as logs, branches, and commits.',
     '',
     '## Recommended pages',
     ...featuredEntries.map(formatEntry),

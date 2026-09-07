@@ -37,10 +37,10 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-active: oklch(0.95 0 0);
     --sidebar-active-foreground: oklch(0.145 0 0);
-    --wemux-glass-opacity: 68%;
-    --wemux-glass-blur: 36px;
-    --wemux-glass-saturation: 125%;
-    --wemux-glass-border-opacity: 8%;
+    --oxmux-glass-opacity: 68%;
+    --oxmux-glass-blur: 36px;
+    --oxmux-glass-saturation: 125%;
+    --oxmux-glass-border-opacity: 8%;
   }
   .dark {
     --background: oklch(0.145 0 0);
@@ -94,14 +94,14 @@
 /* The product predates the shared tokens and uses zinc utilities extensively.
    Keep those utilities coherent in light mode so individual screens do not
    become a dark shell around a white canvas. */
-.light .wemux-app-frame,
-.light .wemux-app-content,
-.light .wemux-page-outer-frame {
+.light .oxmux-app-frame,
+.light .oxmux-app-content,
+.light .oxmux-page-outer-frame {
   background-color: oklch(0.975 0.004 95) !important;
   color: oklch(0.23 0.01 260) !important;
 }
-.light .wemux-shell-sidebar,
-.light .wemux-shell-header {
+.light .oxmux-shell-sidebar,
+.light .oxmux-shell-header {
   background-color: oklch(0.965 0.006 95 / 0.96) !important;
   color: oklch(0.25 0.01 260) !important;
   border-color: oklch(0.86 0.008 260) !important;
@@ -196,22 +196,22 @@ body,
   background: var(--background);
 }
 
-html.wemux-native-window,
-html.wemux-native-window body,
-html.wemux-native-window #root {
+html.oxmux-native-window,
+html.oxmux-native-window body,
+html.oxmux-native-window #root {
   background: transparent;
 }
 
-html.wemux-electron-window [data-native-drag-region] {
+html.oxmux-electron-window [data-native-drag-region] {
   -webkit-app-region: drag;
 }
 
-html.wemux-electron-window button,
-html.wemux-electron-window a,
-html.wemux-electron-window input,
-html.wemux-electron-window textarea,
-html.wemux-electron-window select,
-html.wemux-electron-window [role="button"] {
+html.oxmux-electron-window button,
+html.oxmux-electron-window a,
+html.oxmux-electron-window input,
+html.oxmux-electron-window textarea,
+html.oxmux-electron-window select,
+html.oxmux-electron-window [role="button"] {
   -webkit-app-region: no-drag;
 }
 
@@ -238,7 +238,7 @@ textarea {
 }
 
 /* Admin 独立深浅主题：与全局 ThemeProvider 解耦，避免 documentElement 的 .dark 串扰。 */
-.wemux-admin-dark {
+.oxmux-admin-dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -270,7 +270,7 @@ textarea {
   --sidebar-active-foreground: oklch(0.985 0 0);
 }
 
-.wemux-admin-light {
+.oxmux-admin-light {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -363,7 +363,7 @@ textarea {
   }
 }
 
-html.wemux-react-native-window {
+html.oxmux-react-native-window {
   --mobile-bottom-nav-safe-area: max(env(safe-area-inset-bottom, 0px), 1rem);
 }
 
@@ -397,50 +397,50 @@ html.wemux-react-native-window {
 }
 
 /* WKWebView can render macOS's always-visible scrollbar track as an opaque strip. */
-.wemux-desktop-shell {
+.oxmux-desktop-shell {
   color-scheme: dark;
   /* LobeHub-style dark shell: black canvas, lifted container, quiet edges. */
-  --wemux-desktop-canvas: rgb(0 0 0);
-  --wemux-desktop-container: rgb(13 13 13);
-  --wemux-desktop-elevated: rgb(26 26 26);
-  --wemux-desktop-divider: rgb(26 26 26);
-  --wemux-desktop-border: rgb(32 32 32);
-  --wemux-desktop-glass-border: rgb(255 255 255 / var(--wemux-glass-border-opacity));
-  --wemux-desktop-glass-highlight: rgb(255 255 255 / calc(var(--wemux-glass-border-opacity) * 0.375));
-  --wemux-desktop-glass-tint: rgb(13 13 13 / calc(var(--wemux-glass-opacity) * 0.56));
-  --wemux-desktop-glass-surface: rgb(7 7 7 / var(--wemux-glass-opacity));
-  --wemux-desktop-menu-surface: rgb(9 9 11 / 98%);
-  --border: var(--wemux-desktop-border);
-  --input: var(--wemux-desktop-border);
-  background-color: var(--wemux-desktop-canvas);
+  --oxmux-desktop-canvas: rgb(0 0 0);
+  --oxmux-desktop-container: rgb(13 13 13);
+  --oxmux-desktop-elevated: rgb(26 26 26);
+  --oxmux-desktop-divider: rgb(26 26 26);
+  --oxmux-desktop-border: rgb(32 32 32);
+  --oxmux-desktop-glass-border: rgb(255 255 255 / var(--oxmux-glass-border-opacity));
+  --oxmux-desktop-glass-highlight: rgb(255 255 255 / calc(var(--oxmux-glass-border-opacity) * 0.375));
+  --oxmux-desktop-glass-tint: rgb(13 13 13 / calc(var(--oxmux-glass-opacity) * 0.56));
+  --oxmux-desktop-glass-surface: rgb(7 7 7 / var(--oxmux-glass-opacity));
+  --oxmux-desktop-menu-surface: rgb(9 9 11 / 98%);
+  --border: var(--oxmux-desktop-border);
+  --input: var(--oxmux-desktop-border);
+  background-color: var(--oxmux-desktop-canvas);
 }
 
-.wemux-native-window .wemux-desktop-shell {
+.oxmux-native-window .oxmux-desktop-shell {
   background-color: transparent;
 }
 
-.wemux-native-window .wemux-desktop-shell .wemux-desktop-frame {
-  border-color: var(--wemux-desktop-glass-border);
-  background-color: var(--wemux-desktop-glass-tint);
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+.oxmux-native-window .oxmux-desktop-shell .oxmux-desktop-frame {
+  border-color: var(--oxmux-desktop-glass-border);
+  background-color: var(--oxmux-desktop-glass-tint);
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
   box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
 }
 
-.wemux-desktop-shell .wemux-desktop-frame {
+.oxmux-desktop-shell .oxmux-desktop-frame {
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  border: 0.5px solid var(--wemux-desktop-glass-border);
+  border: 0.5px solid var(--oxmux-desktop-glass-border);
   border-radius: 8px;
-  background-color: var(--wemux-desktop-glass-tint);
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+  background-color: var(--oxmux-desktop-glass-tint);
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
   box-shadow: none;
 }
 
 /* The titlebar/header stays transparent so it shares the frame's glass. */
-.wemux-desktop-shell .wemux-shell-header {
+.oxmux-desktop-shell .oxmux-shell-header {
   background-color: transparent;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -449,181 +449,181 @@ html.wemux-react-native-window {
 /* Match the app-frame glass so the sidebar's traffic-light row and the
    page-tabs strip composite identically and read as one continuous surface
    (mirrors the native vibrancy treatment). */
-.wemux-desktop-shell .wemux-shell-sidebar {
-  background-color: var(--wemux-desktop-glass-tint);
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+.oxmux-desktop-shell .oxmux-shell-sidebar {
+  background-color: var(--oxmux-desktop-glass-tint);
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
 }
 
 /* Match the composited glass tone without blurring the full content frame. */
-.wemux-desktop-shell .wemux-app-frame {
-  background-color: var(--wemux-desktop-glass-tint);
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+.oxmux-desktop-shell .oxmux-app-frame {
+  background-color: var(--oxmux-desktop-glass-tint);
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
 }
 
-.wemux-desktop-shell .wemux-shell-header {
+.oxmux-desktop-shell .oxmux-shell-header {
   border-bottom-color: transparent;
 }
 
-.wemux-desktop-shell .wemux-shell-sidebar {
+.oxmux-desktop-shell .oxmux-shell-sidebar {
   border-right: 0;
 }
 
 /* Sidebar menus sit above the native vibrancy layer. Keep the surface readable
    while retaining a restrained glass edge and blur. */
-.wemux-desktop-shell .wemux-sidebar-menu-surface {
-  background-color: var(--wemux-desktop-menu-surface);
+.oxmux-desktop-shell .oxmux-sidebar-menu-surface {
+  background-color: var(--oxmux-desktop-menu-surface);
   border-color: rgb(255 255 255 / 12%);
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
   box-shadow:
-    inset 0 1px 0 var(--wemux-desktop-glass-highlight),
+    inset 0 1px 0 var(--oxmux-desktop-glass-highlight),
     0 18px 48px rgb(0 0 0 / 48%),
     0 4px 12px rgb(0 0 0 / 26%);
 }
 
 /* Radix portals render menu content under body, outside the shell subtree.
    Keep these surfaces opaque in both Electron and the browser. */
-.wemux-sidebar-menu-surface {
+.oxmux-sidebar-menu-surface {
   isolation: isolate;
   background-color: rgb(9 9 11 / 98%) !important;
   background-image: none !important;
   border-color: rgb(255 255 255 / 12%) !important;
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur, 24px)) saturate(var(--wemux-glass-saturation, 125%));
-  backdrop-filter: blur(var(--wemux-glass-blur, 24px)) saturate(var(--wemux-glass-saturation, 125%));
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur, 24px)) saturate(var(--oxmux-glass-saturation, 125%));
+  backdrop-filter: blur(var(--oxmux-glass-blur, 24px)) saturate(var(--oxmux-glass-saturation, 125%));
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 3%),
     0 18px 48px rgb(0 0 0 / 52%),
     0 4px 12px rgb(0 0 0 / 30%);
 }
 
-.wemux-native-window .wemux-desktop-shell .wemux-app-frame {
-  background-color: var(--wemux-desktop-glass-tint);
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+.oxmux-native-window .oxmux-desktop-shell .oxmux-app-frame {
+  background-color: var(--oxmux-desktop-glass-tint);
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
 }
 
 /* Native surfaces use hairline, low-emission structure instead of web card outlines. */
-.wemux-desktop-shell .border {
+.oxmux-desktop-shell .border {
   border-width: 0.5px;
 }
 
-.wemux-desktop-shell .border-t:not(.border-t-0) {
+.oxmux-desktop-shell .border-t:not(.border-t-0) {
   border-top-width: 0.5px;
 }
 
-.wemux-desktop-shell .border-r:not(.border-r-0) {
+.oxmux-desktop-shell .border-r:not(.border-r-0) {
   border-right-width: 0.5px;
 }
 
-.wemux-desktop-shell .border-b:not(.border-b-0) {
+.oxmux-desktop-shell .border-b:not(.border-b-0) {
   border-bottom-width: 0.5px;
 }
 
-.wemux-desktop-shell .border-l:not(.border-l-0) {
+.oxmux-desktop-shell .border-l:not(.border-l-0) {
   border-left-width: 0.5px;
 }
 
-.wemux-desktop-shell .border-x {
+.oxmux-desktop-shell .border-x {
   border-left-width: 0.5px;
   border-right-width: 0.5px;
 }
 
-.wemux-desktop-shell .border-y {
+.oxmux-desktop-shell .border-y {
   border-top-width: 0.5px;
   border-bottom-width: 0.5px;
 }
 
-.wemux-desktop-shell :is(
+.oxmux-desktop-shell :is(
   [class~="border-zinc-900"],
   [class~="border-zinc-900/80"]
 ) {
-  border-color: var(--wemux-desktop-divider);
+  border-color: var(--oxmux-desktop-divider);
 }
 
-.wemux-desktop-shell :is(
+.oxmux-desktop-shell :is(
   [class~="border-zinc-800"],
   [class~="border-zinc-800/80"],
   [class~="border-zinc-800/90"]
 ) {
-  border-color: var(--wemux-desktop-border);
+  border-color: var(--oxmux-desktop-border);
 }
 
-.wemux-desktop-shell :is(
+.oxmux-desktop-shell :is(
   [class~="border-white/10"],
   [class~="border-white/25"],
   [class~="border-white/30"]
 ) {
-  border-color: var(--wemux-desktop-border);
+  border-color: var(--oxmux-desktop-border);
 }
 
-.wemux-desktop-shell .divide-x > :not([hidden]) ~ :not([hidden]) {
+.oxmux-desktop-shell .divide-x > :not([hidden]) ~ :not([hidden]) {
   border-inline-start-width: 0.5px;
 }
 
-.wemux-desktop-shell .divide-y > :not([hidden]) ~ :not([hidden]) {
+.oxmux-desktop-shell .divide-y > :not([hidden]) ~ :not([hidden]) {
   border-top-width: 0.5px;
 }
 
-.wemux-desktop-shell .divide-zinc-800 > :not([hidden]) ~ :not([hidden]) {
-  border-color: var(--wemux-desktop-border);
+.oxmux-desktop-shell .divide-zinc-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--oxmux-desktop-border);
 }
 
-.wemux-desktop-shell .divide-zinc-900 > :not([hidden]) ~ :not([hidden]) {
-  border-color: var(--wemux-desktop-divider);
+.oxmux-desktop-shell .divide-zinc-900 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--oxmux-desktop-divider);
 }
 
-.wemux-desktop-shell .wemux-app-content {
+.oxmux-desktop-shell .oxmux-app-content {
   margin-right: 8px;
   margin-bottom: 8px;
-  border-top: 1px solid var(--wemux-desktop-border);
-  border-right: 1px solid var(--wemux-desktop-border);
-  border-bottom: 1px solid var(--wemux-desktop-border);
+  border-top: 1px solid var(--oxmux-desktop-border);
+  border-right: 1px solid var(--oxmux-desktop-border);
+  border-bottom: 1px solid var(--oxmux-desktop-border);
   border-left: 0;
   border-radius: 8px;
-  background-color: var(--wemux-desktop-container);
+  background-color: var(--oxmux-desktop-container);
 }
 
-.wemux-native-window .wemux-desktop-shell .wemux-app-content {
-  border-top-color: var(--wemux-desktop-glass-border);
-  border-right-color: var(--wemux-desktop-glass-border);
-  border-bottom-color: var(--wemux-desktop-glass-border);
-  background-color: var(--wemux-desktop-glass-surface);
+.oxmux-native-window .oxmux-desktop-shell .oxmux-app-content {
+  border-top-color: var(--oxmux-desktop-glass-border);
+  border-right-color: var(--oxmux-desktop-glass-border);
+  border-bottom-color: var(--oxmux-desktop-glass-border);
+  background-color: var(--oxmux-desktop-glass-surface);
   background-clip: padding-box;
-  -webkit-backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
-  backdrop-filter: blur(var(--wemux-glass-blur)) saturate(var(--wemux-glass-saturation));
+  -webkit-backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
+  backdrop-filter: blur(var(--oxmux-glass-blur)) saturate(var(--oxmux-glass-saturation));
   box-shadow:
-    inset 0 1px 0 var(--wemux-desktop-glass-highlight),
+    inset 0 1px 0 var(--oxmux-desktop-glass-highlight),
     inset -1px 0 0 rgb(255 255 255 / 1.5%),
     0 8px 24px rgb(0 0 0 / 18%);
 }
 
-.wemux-native-shell .scrollbar-subtle {
+.oxmux-native-shell .scrollbar-subtle {
   scrollbar-width: none;
 }
 
-.wemux-native-shell .scrollbar-subtle::-webkit-scrollbar {
+.oxmux-native-shell .scrollbar-subtle::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
 }
 
 /* Browser-like tabs: share the available titlebar width, then compress in place. */
-.wemux-page-tabs-scroll {
+.oxmux-page-tabs-scroll {
   background-color: transparent;
   border-radius: 0;
   scrollbar-width: none;
   overscroll-behavior-x: none;
 }
 
-.wemux-page-tabs-scroll::-webkit-scrollbar {
+.oxmux-page-tabs-scroll::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
 }
 
-.wemux-page-tab {
+.oxmux-page-tab {
   container-type: inline-size;
   flex: 1 1 0;
   min-width: 32px;
@@ -632,17 +632,17 @@ html.wemux-react-native-window {
   overflow: hidden;
 }
 
-.wemux-page-tab[data-active="true"] {
+.oxmux-page-tab[data-active="true"] {
   border-color: transparent;
   background-color: rgb(255 255 255 / 4%);
   box-shadow: none;
 }
 
-.wemux-page-tabs-scroll[data-tab-density="crowded"] .wemux-page-tab[data-active="true"] {
+.oxmux-page-tabs-scroll[data-tab-density="crowded"] .oxmux-page-tab[data-active="true"] {
   flex-grow: 1.35;
 }
 
-.wemux-page-tab-title {
+.oxmux-page-tab-title {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -651,17 +651,17 @@ html.wemux-react-native-window {
 
 /* The icon remains the stable affordance at the narrowest browser-tab size. */
 @container (max-width: 96px) {
-  .wemux-page-tab-title {
+  .oxmux-page-tab-title {
     max-width: 5ch;
   }
 }
 
 @container (max-width: 68px) {
-  .wemux-page-tab-title {
+  .oxmux-page-tab-title {
     display: none;
   }
 
-  .wemux-page-tab > button:first-child {
+  .oxmux-page-tab > button:first-child {
     justify-content: center;
   }
 }
@@ -670,11 +670,11 @@ html.wemux-react-native-window {
    overlay the close button on the icon while hovering instead of hiding it.
    (Container queries measure the content box: icon 14 + gap 6 + close 20 = 40.) */
 @container (max-width: 42px) {
-  .wemux-page-tab {
+  .oxmux-page-tab {
     position: relative;
   }
 
-  .wemux-page-tab .wemux-page-tab-close {
+  .oxmux-page-tab .oxmux-page-tab-close {
     position: absolute;
     inset: 0;
     margin: auto;
@@ -683,18 +683,18 @@ html.wemux-react-native-window {
     display: none;
   }
 
-  .wemux-page-tab:hover .wemux-page-tab-close {
+  .oxmux-page-tab:hover .oxmux-page-tab-close {
     display: inline-flex;
     opacity: 1;
   }
 }
 
-.wemux-desktop-shell .wemux-page-outer-frame {
+.oxmux-desktop-shell .oxmux-page-outer-frame {
   border: 0;
   box-shadow: none;
 }
 
-.wemux-desktop-shell .wemux-page-leading-panel {
+.oxmux-desktop-shell .oxmux-page-leading-panel {
   border-top: 0;
   border-bottom: 0;
   border-left: 0;

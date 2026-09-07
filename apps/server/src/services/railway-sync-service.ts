@@ -402,7 +402,7 @@ export const countRailwayProjects = async (): Promise<number> => {
   return rows.length
 }
 
-/** 校验 deployment 资源是否属于某 wemux 项目（resourceId 尾段为 deployment id）。 */
+/** 校验 deployment 资源是否属于某 oxmux 项目（resourceId 尾段为 deployment id）。 */
 export const hasRailwayProjectResource = async (params: {
   resourceId: string
   projectId: string

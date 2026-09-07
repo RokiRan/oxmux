@@ -31,7 +31,7 @@ export const PROJECT_ENVIRONMENT_TEMPLATE_FIELD_KEYS = [
 
 export type ProjectEnvironmentTemplateFieldKey = (typeof PROJECT_ENVIRONMENT_TEMPLATE_FIELD_KEYS)[number]
 
-const WEMUX_YML_IMPORTED_FIELD_KEYS = [
+const OXMUX_YML_IMPORTED_FIELD_KEYS = [
   'installCommand',
   'startCommandTemplate',
   'stopCommandTemplate',
@@ -41,7 +41,7 @@ const WEMUX_YML_IMPORTED_FIELD_KEYS = [
   'ports',
 ] as const
 
-type WemuxYmlImportedFieldKey = (typeof WEMUX_YML_IMPORTED_FIELD_KEYS)[number]
+type OxmuxYmlImportedFieldKey = (typeof OXMUX_YML_IMPORTED_FIELD_KEYS)[number]
 
 const slugifyTemplateIdentifier = (value: string) => {
   return value
@@ -303,7 +303,7 @@ const normalizeTemplateValue = (value?: string) => normalizeTemplateString(value
 
 export const isProjectEnvironmentTemplateFieldOverridden = (
   template: Pick<ProjectEnvironmentTemplate, 'source' | 'imported'> & Partial<ProjectEnvironmentTemplate>,
-  key: WemuxYmlImportedFieldKey,
+  key: OxmuxYmlImportedFieldKey,
 ) => {
   if (template.source !== 'vibemux-yml' || !template.imported) {
     return false
@@ -323,7 +323,7 @@ export const countProjectEnvironmentTemplateOverrides = (template?: ProjectEnvir
     return 0
   }
 
-  return WEMUX_YML_IMPORTED_FIELD_KEYS.reduce((count, key) => (
+  return OXMUX_YML_IMPORTED_FIELD_KEYS.reduce((count, key) => (
     isProjectEnvironmentTemplateFieldOverridden(template, key) ? count + 1 : count
   ), 0)
 }
@@ -402,7 +402,7 @@ export const mergeImportedProjectEnvironmentTemplate = (params: {
 
   const previousImported = current.imported
   const merged: ProjectEnvironmentTemplate = {
-    source: 'wemux-yml',
+    source: 'oxmux-yml',
     buildCommand: current.buildCommand,
     testCommand: current.testCommand,
     lintCommand: current.lintCommand,
@@ -413,7 +413,7 @@ export const mergeImportedProjectEnvironmentTemplate = (params: {
     imported: nextImported,
   }
 
-  for (const key of WEMUX_YML_IMPORTED_FIELD_KEYS) {
+  for (const key of OXMUX_YML_IMPORTED_FIELD_KEYS) {
     if (key === 'ports') {
       const currentValue = current.ports
       const importedValue = nextImported.ports

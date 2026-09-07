@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { getEnv } from '@shared/env'
 
-const runtimeRoot = getEnv('WEMUX_RUNTIME_DIR')?.trim() || join(tmpdir(), 'vibemux-runtime')
+const runtimeRoot = getEnv('OXMUX_RUNTIME_DIR')?.trim() || join(tmpdir(), 'vibemux-runtime')
 
 export const getRuntimeRoot = () => runtimeRoot
 

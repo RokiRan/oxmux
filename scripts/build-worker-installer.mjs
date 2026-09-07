@@ -31,7 +31,7 @@ const disableNpmUpdateCheck = readArg(
   '--disable-update-check',
   explicitPackageVersion || shortSha ? '0' : '1',
 )
-const packageName = channel === 'preview' ? 'wemux-worker-preview' : 'wemux-worker'
+const packageName = channel === 'preview' ? 'oxmux-worker-preview' : 'oxmux-worker'
 const tempOutputDir = path.join(rootDir, '.artifacts', `worker-${channel}-installer-build`)
 const packageRoot = path.join(tempOutputDir, packageName)
 const installerOutputDir = path.resolve(

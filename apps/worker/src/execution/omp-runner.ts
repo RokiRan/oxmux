@@ -69,7 +69,7 @@ export const resolveOmpProfile = (settings: OmpAgentSettings | undefined, acting
   }
 
   const userId = actingUserId?.trim()
-  return userId ? `wemux-${sanitizeOmpProfileComponent(userId)}` : ''
+  return userId ? `oxmux-${sanitizeOmpProfileComponent(userId)}` : ''
 }
 
 const extractOmpUsage = (usage: OmpMessageUsage | undefined): ModelTokenUsage | undefined => {

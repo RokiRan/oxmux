@@ -39,9 +39,9 @@ A serious Codex Handoff alternative should handle six things well:
 
 If the user still needs to manually recreate the environment, re-explain the task, and guess what state was lost, the system is not really solving the handoff problem.
 
-## Codex Handoff vs Wemux
+## Codex Handoff vs Oxmux
 
-| Dimension | Codex Handoff | Wemux |
+| Dimension | Codex Handoff | Oxmux |
 | --- | --- | --- |
 | Main concept | Move an active coding thread to another connected host | Transfer the AI task to another worker and continue delivery work |
 | Strength | Strong signal for cross-host session continuity | Stronger operational continuity across workers, repos, and delivery workflows |
@@ -50,9 +50,9 @@ If the user still needs to manually recreate the environment, re-explain the tas
 | Team visibility | Primarily helpful to the current operator | Better fit for shared execution visibility and handoff across people |
 | Delivery continuity | Improves thread mobility | Improves workload continuity |
 
-## Why Wemux is a strong alternative
+## Why Oxmux is a strong alternative
 
-Wemux treats cross-machine continuation as a delivery problem, not just a chat problem.
+Oxmux treats cross-machine continuation as a delivery problem, not just a chat problem.
 
 That is why it fits teams that need:
 
@@ -87,4 +87,4 @@ You likely need something broader than Codex Handoff if:
 
 The best Codex Handoff alternative is the system that keeps the task alive, not just the thread alive.
 
-For teams that need persistent AI coding across real machines, real repositories, and real delivery workflows, Wemux is the stronger fit.
+For teams that need persistent AI coding across real machines, real repositories, and real delivery workflows, Oxmux is the stronger fit.

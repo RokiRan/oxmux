@@ -1,8 +1,8 @@
-# Wemux vs Replit for AI-Powered Software Delivery
+# Oxmux vs Replit for AI-Powered Software Delivery
 
 Replit is strong when teams or individuals want an online environment where code can be created, run, and shared quickly. Its cloud-native setup makes it appealing for fast iteration, demos, and lightweight full-stack development without managing much infrastructure.
 
-Wemux is solving a different problem.
+Oxmux is solving a different problem.
 
 ## Where Replit is strong
 
@@ -15,9 +15,9 @@ Replit is strong for:
 
 That is especially attractive when a team wants speed without dealing with local environment complexity.
 
-## Where Wemux is different
+## Where Oxmux is different
 
-Wemux is more relevant when the important environment is not a generic cloud sandbox, but a real machine that already owns the repository, credentials, runtime, or internal network access.
+Oxmux is more relevant when the important environment is not a generic cloud sandbox, but a real machine that already owns the repository, credentials, runtime, or internal network access.
 
 That changes the problem significantly:
 
@@ -26,11 +26,11 @@ That changes the problem significantly:
 - work must continue across nodes and devices
 - teams need delivery evidence, not only a cloud editing surface
 
-Wemux is designed around those realities. It is less about “spin up a convenient coding environment online” and more about “route AI work to the right execution surface and keep it operational.”
+Oxmux is designed around those realities. It is less about “spin up a convenient coding environment online” and more about “route AI work to the right execution surface and keep it operational.”
 
 ## Side-by-side
 
-| Dimension | Replit | Wemux |
+| Dimension | Replit | Oxmux |
 | --- | --- | --- |
 | Product shape | Cloud-native coding and runtime environment | Worker-routed AI delivery control plane |
 | Best fit | Fast prototyping and cloud-based iteration | Teams routing AI work to real machines and environments |
@@ -43,7 +43,7 @@ Wemux is designed around those realities. It is less about “spin up a convenie
 
 Choose Replit if your main priority is rapid cloud-based development and easy online runtime access.
 
-Choose Wemux if your main priority is making AI work run in the right environment, on the right machine, with a clearer delivery and review path.
+Choose Oxmux if your main priority is making AI work run in the right environment, on the right machine, with a clearer delivery and review path.
 
 ## Why this matters for AI coding
 
@@ -54,4 +54,4 @@ The market often assumes the future is one universal cloud sandbox. In practice,
 - machine-specific credentials
 - hybrid execution paths
 
-That is why Wemux takes a worker-first approach. The task should go to the machine that can do the work correctly, not force the whole workflow into a generic environment that may not match reality.
+That is why Oxmux takes a worker-first approach. The task should go to the machine that can do the work correctly, not force the whole workflow into a generic environment that may not match reality.

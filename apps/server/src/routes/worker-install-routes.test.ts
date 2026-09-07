@@ -15,7 +15,7 @@ import {
 } from './worker-install-routes'
 
 test('buildWorkerInstallScript installs production workers into the production prefix by default', () => {
-  const script = buildWorkerInstallScript('https://wemux.ai', {
+  const script = buildWorkerInstallScript('https://oxmux.ai', {
     packageName: 'vibemux-worker',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker',
@@ -24,14 +24,14 @@ test('buildWorkerInstallScript installs production workers into the production p
     commitSha: 'abcdef1234567890',
   })
 
-  assert.match(script, /wemux worker installer \(vibemux-worker@0\.3\.30\)/)
+  assert.match(script, /oxmux worker installer \(vibemux-worker@0\.3\.30\)/)
   assert.match(script, /Installer commit: abcdef1234567890/)
   assert.match(script, /PACKAGE_NAME="\$\(node -e /)
-  assert.match(script, /INSTALL_DIR="\$\{HOME\}\/\.wemux-worker"/)
+  assert.match(script, /INSTALL_DIR="\$\{HOME\}\/\.oxmux-worker"/)
   assert.match(script, /WORKER_WRAPPER="\$INSTALL_DIR\/bin\/\$BIN_NAME-node-wrapper"/)
   assert.match(script, /export VIBEMUX_WORKER_EXECUTABLE_PATH="__VIBEMUX_WORKER_BIN__"/)
   assert.match(script, /export VIBEMUX_WORKER_INSTALL_PREFIX="__VIBEMUX_INSTALL_DIR__"/)
-  assert.match(script, /WORKER_HOME="\$\{HOME\}\/\.wemux"/)
+  assert.match(script, /WORKER_HOME="\$\{HOME\}\/\.oxmux"/)
   assert.match(script, /RELEASE_CHANNEL="production"/)
   assert.doesNotMatch(script, /\.vibemux-worker"/)
   assert.doesNotMatch(script, /\.vibemux"/)
@@ -51,7 +51,7 @@ test('buildWorkerInstallScript installs production workers into the production p
   assert.match(script, /ensure_unzip\(\)/)
   assert.match(script, /print_step "Checking unzip dependency\.\.\."/)
   assert.match(script, /run_installer_command apt-get update >>"\$log_path" 2>&1 &&\n    run_installer_command apt-get install -y unzip/)
-  assert.match(script, /unzip is required for wemux Mesh auto-download\./)
+  assert.match(script, /unzip is required for oxmux Mesh auto-download\./)
   assert.match(script, /Debian\/Ubuntu: apt-get update && apt-get install -y unzip/)
   assert.ok(script.indexOf('print_step "Checking unzip dependency..."') < script.indexOf('print_step "Bootstrapping Git and agent runtimes..."'))
   assert.match(script, /connect --pairing-code "\$PAIRING_CODE" --server-url "\$SERVER_URL" --no-start/)
@@ -62,12 +62,12 @@ test('buildWorkerInstallScript installs production workers into the production p
   assert.match(script, /Recent service logs:/)
   assert.match(script, /Most common causes: disk full, inode exhaustion, or an unwritable temporary directory\./)
   assert.match(script, /df -h "\$output_dir"/)
-  assert.match(script, /wemux Worker is installed, paired, and connected\./)
+  assert.match(script, /oxmux Worker is installed, paired, and connected\./)
   assert.doesNotMatch(script, /nohup/)
 })
 
 test('buildWorkerInstallScript keeps the preview prefix for preview packages', () => {
-  const script = buildWorkerInstallScript('https://wemux.xyz', {
+  const script = buildWorkerInstallScript('https://oxmux.xyz', {
     packageName: 'vibemux-worker-preview',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker-preview',
@@ -75,16 +75,16 @@ test('buildWorkerInstallScript keeps the preview prefix for preview packages', (
     builtAt: '2026-06-27T00:00:00.000Z',
   })
 
-  assert.match(script, /if \[\[ "\$PACKAGE_NAME" == "vibemux-worker-preview" \|\| "\$PACKAGE_NAME" == "wemux-worker-preview" \]\]/)
-  assert.match(script, /INSTALL_DIR="\$\{HOME\}\/\.wemux-preview-worker"/)
-  assert.match(script, /WORKER_HOME="\$\{HOME\}\/\.wemux-preview"/)
+  assert.match(script, /if \[\[ "\$PACKAGE_NAME" == "vibemux-worker-preview" \|\| "\$PACKAGE_NAME" == "oxmux-worker-preview" \]\]/)
+  assert.match(script, /INSTALL_DIR="\$\{HOME\}\/\.oxmux-preview-worker"/)
+  assert.match(script, /WORKER_HOME="\$\{HOME\}\/\.oxmux-preview"/)
   assert.match(script, /RELEASE_CHANNEL="preview"/)
   assert.doesNotMatch(script, /\.vibemux-preview-worker/)
   assert.doesNotMatch(script, /\.vibemux-preview"/)
 })
 
 test('buildWorkerInstallScript installs and loads nvm when Node.js is missing', () => {
-  const script = buildWorkerInstallScript('https://wemux.xyz', {
+  const script = buildWorkerInstallScript('https://oxmux.xyz', {
     packageName: 'vibemux-worker-preview',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker-preview',
@@ -103,7 +103,7 @@ test('buildWorkerInstallScript installs and loads nvm when Node.js is missing', 
 })
 
 test('buildWorkerInstallBootstrapScript downloads the real installer before executing it', () => {
-  const script = buildWorkerInstallBootstrapScript('https://wemux.xyz', {
+  const script = buildWorkerInstallBootstrapScript('https://oxmux.xyz', {
     packageName: 'vibemux-worker-preview',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker-preview',
@@ -112,15 +112,15 @@ test('buildWorkerInstallBootstrapScript downloads the real installer before exec
     commitSha: 'bootstrapsha123',
   })
 
-  assert.match(script, /wemux worker installer bootstrap \(vibemux-worker-preview@0\.3\.30\)/)
+  assert.match(script, /oxmux worker installer bootstrap \(vibemux-worker-preview@0\.3\.30\)/)
   assert.match(script, /Installer commit: bootstrapsha123/)
-  assert.match(script, /mktemp "\$\{TMPDIR:-\/tmp\}\/wemux-worker-install\.XXXXXX"/)
-  assert.match(script, /curl -fsSL "https:\/\/wemux\.xyz\/install\/worker\.sh" -o "\$TMP_SCRIPT"/)
+  assert.match(script, /mktemp "\$\{TMPDIR:-\/tmp\}\/oxmux-worker-install\.XXXXXX"/)
+  assert.match(script, /curl -fsSL "https:\/\/oxmux\.xyz\/install\/worker\.sh" -o "\$TMP_SCRIPT"/)
   assert.match(script, /exec bash "\$TMP_SCRIPT" "\$@"/)
 })
 
 test('buildWorkerInstallPowerShellScript installs Windows workers in current-user mode', () => {
-  const script = buildWorkerInstallPowerShellScript('https://wemux.ai', {
+  const script = buildWorkerInstallPowerShellScript('https://oxmux.ai', {
     packageName: 'vibemux-worker',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker',
@@ -129,7 +129,7 @@ test('buildWorkerInstallPowerShellScript installs Windows workers in current-use
     commitSha: 'powershellsha123',
   })
 
-  assert.match(script, /wemux worker installer \(vibemux-worker@0\.3\.30\)/)
+  assert.match(script, /oxmux worker installer \(vibemux-worker@0\.3\.30\)/)
   assert.match(script, /Installer commit: powershellsha123/)
   assert.match(script, /param\(/)
   assert.match(script, /\[ValidateSet\("CurrentUser", "Foreground"\)\]/)
@@ -148,8 +148,8 @@ test('buildWorkerInstallPowerShellScript installs Windows workers in current-use
   assert.doesNotMatch(script, /npm is required/)
   assert.match(script, /tar is required to extract the self-contained worker package/)
   assert.match(script, /\$env:VIBEMUX_WORKER_INSTALL_PREFIX = \$InstallDir/)
-  assert.match(script, /\$env:VIBEMUX_WORKER_HOME = Join-Path \$HOME "\.wemux"/)
-  assert.match(script, /\$InstallDir = Join-Path \$HOME "\.wemux-preview-worker"/)
+  assert.match(script, /\$env:VIBEMUX_WORKER_HOME = Join-Path \$HOME "\.oxmux"/)
+  assert.match(script, /\$InstallDir = Join-Path \$HOME "\.oxmux-preview-worker"/)
   assert.doesNotMatch(script, /legacyWorkerHome/)
   assert.doesNotMatch(script, /legacyInstallDir/)
   assert.doesNotMatch(script, /\.vibemux-preview-worker/)
@@ -165,7 +165,7 @@ test('buildWorkerInstallPowerShellScript installs Windows workers in current-use
 })
 
 test('buildWorkerDockerInstallScript starts a self-contained Docker worker', () => {
-  const script = buildWorkerDockerInstallScript('https://wemux.ai', {
+  const script = buildWorkerDockerInstallScript('https://oxmux.ai', {
     packageName: 'vibemux-worker',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker',
@@ -200,7 +200,7 @@ test('buildWorkerDockerInstallScript starts a self-contained Docker worker', () 
 })
 
 test('buildWorkerDockerInstallScript keeps preview channel and port isolated', () => {
-  const script = buildWorkerDockerInstallScript('https://wemux.xyz', {
+  const script = buildWorkerDockerInstallScript('https://oxmux.xyz', {
     packageName: 'vibemux-worker-preview',
     packageVersion: '0.3.30',
     binName: 'vibemux-worker-preview',
@@ -230,11 +230,11 @@ test('registerWorkerInstallRoutes serves the short install alias', async () => {
     const app = new Hono()
     registerWorkerInstallRoutes(app)
 
-    const response = await app.request('https://wemux.ai/install')
+    const response = await app.request('https://oxmux.ai/install')
     assert.equal(response.status, 200)
     assert.equal(response.headers.get('content-type')?.includes('text/x-shellscript'), true)
     const script = await response.text()
-    assert.match(script, /curl -fsSL "https:\/\/wemux\.ai\/install\/worker\.sh" -o "\$TMP_SCRIPT"/)
+    assert.match(script, /curl -fsSL "https:\/\/oxmux\.ai\/install\/worker\.sh" -o "\$TMP_SCRIPT"/)
     assert.doesNotMatch(script, /Node\.js 22 or newer is required/)
   } finally {
     if (previousInstallerDir === undefined) {
@@ -264,11 +264,11 @@ test('registerWorkerInstallRoutes serves the direct worker installer script', as
     const app = new Hono()
     registerWorkerInstallRoutes(app)
 
-    const response = await app.request('https://wemux.ai/install/worker.sh')
+    const response = await app.request('https://oxmux.ai/install/worker.sh')
     assert.equal(response.status, 200)
     assert.equal(response.headers.get('content-type')?.includes('text/x-shellscript'), true)
     const script = await response.text()
-    assert.match(script, /wemux worker installer \(vibemux-worker@0\.2\.70\)/)
+    assert.match(script, /oxmux worker installer \(vibemux-worker@0\.2\.70\)/)
     assert.match(script, /Node\.js 22 or newer is required/)
   } finally {
     if (previousInstallerDir === undefined) {
@@ -298,10 +298,10 @@ test('registerWorkerInstallRoutes serves the powershell install alias', async ()
     const app = new Hono()
     registerWorkerInstallRoutes(app)
 
-    const response = await app.request('https://wemux.ai/install.ps1')
+    const response = await app.request('https://oxmux.ai/install.ps1')
     assert.equal(response.status, 200)
     assert.equal(response.headers.get('content-type')?.includes('text/plain'), true)
-    assert.match(await response.text(), /ServerUrl = "https:\/\/wemux\.ai"/)
+    assert.match(await response.text(), /ServerUrl = "https:\/\/oxmux\.ai"/)
   } finally {
     if (previousInstallerDir === undefined) {
       delete process.env.VIBEMUX_WORKER_INSTALLER_DIR
@@ -330,11 +330,11 @@ test('registerWorkerInstallRoutes serves the docker install alias', async () => 
     const app = new Hono()
     registerWorkerInstallRoutes(app)
 
-    const response = await app.request('https://wemux.ai/install/docker')
+    const response = await app.request('https://oxmux.ai/install/docker')
     assert.equal(response.status, 200)
     assert.equal(response.headers.get('content-type')?.includes('text/x-shellscript'), true)
     const script = await response.text()
-    assert.match(script, /SERVER_URL="https:\/\/wemux.ai"/)
+    assert.match(script, /SERVER_URL="https:\/\/oxmux.ai"/)
     assert.match(script, /docker "\$\{docker_args\[@\]\}"/)
     assert.match(script, /VIBEMUX_WORKER_AUTO_UPDATE=1/)
   } finally {
@@ -411,7 +411,7 @@ appendFileSync(process.env.FAKE_WORKER_LOG, JSON.stringify(process.argv.slice(2)
     await chmod(path.join(packageBinDir, 'cli.mjs'), 0o755)
     await writeFile(path.join(packageBinDir, 'vbx.mjs'), '#!/usr/bin/env node\n')
     await writeFile(path.join(packageBinDir, 'vibemux.mjs'), '#!/usr/bin/env node\n')
-    await writeFile(path.join(packageBinDir, 'wemux.mjs'), '#!/usr/bin/env node\n')
+    await writeFile(path.join(packageBinDir, 'oxmux.mjs'), '#!/usr/bin/env node\n')
     await writeFile(path.join(packageBinDir, 'node-wrapper.mjs'), '#!/usr/bin/env node\n')
 
     const packedFileName = `${packageName}-0.0.0-smoke.tgz`
@@ -456,13 +456,13 @@ appendFileSync(process.env.FAKE_WORKER_LOG, JSON.stringify(process.argv.slice(2)
     })
 
     assert.equal(install.status, 0, `${install.stdout}\n${install.stderr}`)
-    assert.match(install.stderr, /^wemux worker installer \(vibemux-worker-preview@0\.0\.0-smoke\)\nPreparing this machine for wemux\. This may take a few minutes on the first run\.\n\n/)
+    assert.match(install.stderr, /^oxmux worker installer \(vibemux-worker-preview@0\.0\.0-smoke\)\nPreparing this machine for oxmux\. This may take a few minutes on the first run\.\n\n/)
     assert.match(install.stderr, /\[1\/10\] Checking Node\.js runtime/)
     assert.match(install.stderr, /\[2\/10\] Checking unzip dependency/)
     assert.match(install.stderr, /\[10\/10\] Installing and starting worker service/)
     assert.doesNotMatch(`${install.stdout}\n${install.stderr}`, /npm install/)
     assert.match(install.stderr, /Worker cloud connection verification skipped\./)
-    assert.match(install.stdout, /wemux Worker is installed, paired, and connected\./)
+    assert.match(install.stdout, /oxmux Worker is installed, paired, and connected\./)
     assert.match(install.stdout, /Cloud connection: connected to file:\/\//)
     assert.match(install.stdout, /Worker service: fake-vibemux-worker/)
     assert.match(install.stdout, new RegExp(`Command shim: ${fakeShimPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`))
@@ -533,7 +533,7 @@ if (process.env.FAKE_WORKER_BOOTSTRAP_EXIT && process.argv[2] === 'bootstrap') {
     await chmod(path.join(packageBinDir, 'cli.mjs'), 0o755)
     await writeFile(path.join(packageBinDir, 'vbx.mjs'), '#!/usr/bin/env node\n')
     await writeFile(path.join(packageBinDir, 'vibemux.mjs'), '#!/usr/bin/env node\n')
-    await writeFile(path.join(packageBinDir, 'wemux.mjs'), '#!/usr/bin/env node\n')
+    await writeFile(path.join(packageBinDir, 'oxmux.mjs'), '#!/usr/bin/env node\n')
     await writeFile(path.join(packageBinDir, 'node-wrapper.mjs'), '#!/usr/bin/env node\n')
 
     const packedFileName = `${packageName}-0.0.0-smoke.tgz`
@@ -584,7 +584,7 @@ if (process.env.FAKE_WORKER_BOOTSTRAP_EXIT && process.argv[2] === 'bootstrap') {
     assert.match(install.stderr, /\[8\/10\] Bootstrapping Git and agent runtimes/)
     assert.match(install.stderr, /\[9\/10\] Pairing worker/)
     assert.match(install.stderr, /\[10\/10\] Installing and starting worker service/)
-    assert.match(install.stdout, /wemux Worker is installed, paired, and connected\./)
+    assert.match(install.stdout, /oxmux Worker is installed, paired, and connected\./)
 
     const invocations = (await readFile(workerLogPath, 'utf8'))
       .trim()

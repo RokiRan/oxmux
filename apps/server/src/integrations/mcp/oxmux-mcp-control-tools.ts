@@ -1,4 +1,4 @@
-// [INPUT]: Authenticated Wemux MCP control requests and scoped control-plane state.
+// [INPUT]: Authenticated Oxmux MCP control requests and scoped control-plane state.
 // [OUTPUT]: Project, workspace, executor, conversation, and channel control tools.
 // [POS]: MCP control-plane adapter; workspace creation consumes configured execution defaults.
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
@@ -53,8 +53,8 @@ import {
   summarizeProject,
   summarizeTask,
   toToolResult,
-  type WemuxMcpContext,
-} from './wemux-mcp-context'
+  type OxmuxMcpContext,
+} from './oxmux-mcp-context'
 
 export const sortWorkspacesForRuntimeAgent = <T extends Pick<WorkspaceRecord, 'createdBy'>>(
   workspaces: T[],
@@ -105,7 +105,7 @@ const projectUpdateSchema = z.object({
       type: z.enum(['generated', 'custom']).optional(),
     })).optional(),
     configPath: z.string().trim().optional(),
-    source: z.enum(['manual', 'wemux-yml']).optional(),
+    source: z.enum(['manual', 'oxmux-yml']).optional(),
     imported: z.object({
       installCommand: z.string().trim().optional(),
       buildCommand: z.string().trim().optional(),
@@ -215,7 +215,7 @@ const normalizeEnvironmentTemplateInput = (
   }
 }
 
-const findVisibleWorkspace = (ctx: WemuxMcpContext, workspaceId: string) => {
+const findVisibleWorkspace = (ctx: OxmuxMcpContext, workspaceId: string) => {
   const state = ctx.getState()
   for (const project of state.projects) {
     const workspace = getScopedWorkspaceForProject(ctx.userId, project, workspaceId)
@@ -237,7 +237,7 @@ const requireSession = (state: AppState, sessionId: string, userId: string) => {
   return { mainState, session }
 }
 
-export const registerWemuxMcpControlTools = (server: McpServer, ctx: WemuxMcpContext) => {
+export const registerOxmuxMcpControlTools = (server: McpServer, ctx: OxmuxMcpContext) => {
   server.registerTool('executor.list', {
     title: 'Executor List',
     description: '列出当前用户可见的执行节点',

@@ -116,7 +116,7 @@ const DEFAULT_DEV_LOGIN_ACCOUNTS: DevLoginAccountConfig[] = [
 ]
 
 export const getConfiguredDevLoginAccounts = (): DevLoginAccountConfig[] => {
-  const raw = getEnv('WEMUX_DEV_LOGIN_ACCOUNTS')?.trim()
+  const raw = getEnv('OXMUX_DEV_LOGIN_ACCOUNTS')?.trim()
   if (!raw) {
     return DEFAULT_DEV_LOGIN_ACCOUNTS
   }
@@ -160,7 +160,7 @@ export const getConfiguredDevLoginAccounts = (): DevLoginAccountConfig[] => {
 
     return accounts.length > 0 ? accounts : DEFAULT_DEV_LOGIN_ACCOUNTS
   } catch (error) {
-    console.warn('[dev-auth] Failed to parse WEMUX_DEV_LOGIN_ACCOUNTS, falling back to defaults.', error)
+    console.warn('[dev-auth] Failed to parse OXMUX_DEV_LOGIN_ACCOUNTS, falling back to defaults.', error)
     return DEFAULT_DEV_LOGIN_ACCOUNTS
   }
 }
@@ -179,8 +179,8 @@ const resolveAccountUserInput = (account: DevLoginAccountConfig) => {
   }
 }
 
-export const isDevLoginEnabled = () => getEnv('WEMUX_ENABLE_DEV_LOGIN') === 'true'
-  || (process.env.NODE_ENV !== 'production' && getEnv('WEMUX_ENABLE_DEV_LOGIN') !== 'false')
+export const isDevLoginEnabled = () => getEnv('OXMUX_ENABLE_DEV_LOGIN') === 'true'
+  || (process.env.NODE_ENV !== 'production' && getEnv('OXMUX_ENABLE_DEV_LOGIN') !== 'false')
 
 export const getDevLoginAccounts = (): DevLoginAccountSummary[] => {
   if (!isDevLoginEnabled()) {

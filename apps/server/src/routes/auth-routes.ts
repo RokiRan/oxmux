@@ -314,11 +314,11 @@ export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
       })
     }
 
-    const wemuxUser = getUserByEmail(sessionUser.email ?? '')
-    if (wemuxUser) {
+    const oxmuxUser = getUserByEmail(sessionUser.email ?? '')
+    if (oxmuxUser) {
       recordAuthEvent({
-        userId: wemuxUser.id,
-        email: wemuxUser.email,
+        userId: oxmuxUser.id,
+        email: oxmuxUser.email,
         eventType: existingRows.length > 0 ? 'password_updated' : 'password_bound',
         provider: 'password',
         result: 'success',
@@ -347,9 +347,9 @@ export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
     await db
       .delete(betterAuthAccounts)
       .where(and(eq(betterAuthAccounts.userId, sessionUser.id), eq(betterAuthAccounts.providerId, 'credential')))
-    const wemuxUser = getUserByEmail(sessionUser.email ?? '')
-    if (wemuxUser) {
-      recordAuthEvent({ userId: wemuxUser.id, email: wemuxUser.email, eventType: 'password_unbound', provider: 'password', result: 'success' })
+    const oxmuxUser = getUserByEmail(sessionUser.email ?? '')
+    if (oxmuxUser) {
+      recordAuthEvent({ userId: oxmuxUser.id, email: oxmuxUser.email, eventType: 'password_unbound', provider: 'password', result: 'success' })
     }
     return c.json({ ok: true })
   })
@@ -379,7 +379,7 @@ export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
     }
 
     const billingAccess = await getCommercialGate().resolveUserBillingAccess(user.id, 'execute_task')
-    // env 白名单（WEMUX_ADMIN_EMAILS）→ 视为 owner（超级管理员），与 admin 接口准入保持一致；
+    // env 白名单（OXMUX_ADMIN_EMAILS）→ 视为 owner（超级管理员），与 admin 接口准入保持一致；
     // 否则前端 /admin 只认 DB role/isInternal，会出现“服务端放行、页面仍无权”的判定不一致。
     const isEnvAdmin = resolveEnvAdminEmails().has(user.email?.trim().toLowerCase() ?? '')
     return c.json({
@@ -588,9 +588,9 @@ export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
     const { sent, removed } = await sendPushToUser({
       userId,
       payload: {
-        title: 'wemux 测试推送',
+        title: 'oxmux 测试推送',
         body: 'Web Push 通道工作正常。',
-        tag: 'wemux-push-test',
+        tag: 'oxmux-push-test',
         url: '/',
       },
     })
@@ -619,7 +619,7 @@ export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
 
     const result = await sendFeishuMessageToWebhook(
       webhookUrl,
-      'wemux 测试通知\n这是一条手动触发的飞书测试消息。',
+      'oxmux 测试通知\n这是一条手动触发的飞书测试消息。',
     )
     if (!result.ok) {
       return c.json({ ok: false, message: result.message || '测试飞书通知失败。' }, 400)

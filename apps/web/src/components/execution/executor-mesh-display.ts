@@ -47,7 +47,7 @@ export const getExecutorMeshDisplayState = (
       label: tr(language, 'Mesh 就绪', 'Mesh Ready'),
       detailLabel: tr(language, '就绪', 'Ready'),
       tone: 'success',
-      description: tr(language, '已加入 Wemux Mesh，并发现可用的私有网络节点。', 'Joined Wemux Mesh and found reachable private network peers.'),
+      description: tr(language, '已加入 Oxmux Mesh，并发现可用的私有网络节点。', 'Joined Oxmux Mesh and found reachable private network peers.'),
       peerCountLabel: tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`),
       remotePeerCount,
     }
@@ -58,7 +58,7 @@ export const getExecutorMeshDisplayState = (
       label: tr(language, 'Mesh 配置待应用', 'Mesh Update Needed'),
       detailLabel: tr(language, '待应用', 'Update Needed'),
       tone: 'warning',
-      description: tr(language, '这台节点已加入 Wemux Mesh，但本机 helper 还在使用旧的 Mesh 配置。按提示刷新 helper 后会切到当前工作区网段。', 'This node has joined Wemux Mesh, but its local helper is still using old mesh settings. Refresh the helper to move it into the current workspace subnet.'),
+      description: tr(language, '这台节点已加入 Oxmux Mesh，但本机 helper 还在使用旧的 Mesh 配置。按提示刷新 helper 后会切到当前工作区网段。', 'This node has joined Oxmux Mesh, but its local helper is still using old mesh settings. Refresh the helper to move it into the current workspace subnet.'),
       peerCountLabel: tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`),
       remotePeerCount,
     }
@@ -69,7 +69,7 @@ export const getExecutorMeshDisplayState = (
       label: tr(language, 'Mesh 异常', 'Mesh Error'),
       detailLabel: tr(language, '异常', 'Error'),
       tone: 'danger',
-      description: tr(language, 'Wemux Mesh 启动或探测失败，需要处理下方错误后才能加入私有网络。', 'Wemux Mesh failed to start or probe; fix the error below before it can join the private network.'),
+      description: tr(language, 'Oxmux Mesh 启动或探测失败，需要处理下方错误后才能加入私有网络。', 'Oxmux Mesh failed to start or probe; fix the error below before it can join the private network.'),
       peerCountLabel: tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`),
       remotePeerCount,
     }
@@ -83,8 +83,8 @@ export const getExecutorMeshDisplayState = (
       detailLabel: tr(language, '已入网', 'Joined'),
       tone: remotePeerCount > 0 ? 'success' : 'info',
       description: remotePeerCount > 0
-        ? tr(language, '已加入 Wemux Mesh，正在等待私有网络路由稳定。', 'Joined Wemux Mesh and is waiting for private routing to settle.')
-        : tr(language, '这台节点已加入 Wemux Mesh。当前同一网络里暂时没有其它可用节点，所以还不会显示直连。', 'This node has joined Wemux Mesh. There are no other reachable nodes in the same network yet, so direct routing is not shown.'),
+        ? tr(language, '已加入 Oxmux Mesh，正在等待私有网络路由稳定。', 'Joined Oxmux Mesh and is waiting for private routing to settle.')
+        : tr(language, '这台节点已加入 Oxmux Mesh。当前同一网络里暂时没有其它可用节点，所以还不会显示直连。', 'This node has joined Oxmux Mesh. There are no other reachable nodes in the same network yet, so direct routing is not shown.'),
       peerCountLabel: remotePeerCount > 0
         ? tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`)
         : tr(language, '等待其它节点', 'Waiting for peers'),
@@ -101,7 +101,7 @@ export const getExecutorMeshDisplayState = (
         ? tr(language, '安装中', 'Installing')
         : tr(language, '建立中', 'Connecting'),
       tone: 'warning',
-      description: tr(language, 'Wemux Mesh 正在启动，还没有拿到 Mesh IP。', 'Wemux Mesh is starting and has not reported a Mesh IP yet.'),
+      description: tr(language, 'Oxmux Mesh 正在启动，还没有拿到 Mesh IP。', 'Oxmux Mesh is starting and has not reported a Mesh IP yet.'),
       peerCountLabel: tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`),
       remotePeerCount,
     }
@@ -112,7 +112,7 @@ export const getExecutorMeshDisplayState = (
       label: tr(language, 'Mesh 已关闭', 'Mesh Disabled'),
       detailLabel: tr(language, '已关闭', 'Disabled'),
       tone: 'muted',
-      description: tr(language, '这台节点没有启用 Wemux Mesh。', 'Wemux Mesh is not enabled on this node.'),
+      description: tr(language, '这台节点没有启用 Oxmux Mesh。', 'Oxmux Mesh is not enabled on this node.'),
       peerCountLabel: tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`),
       remotePeerCount,
     }
@@ -122,7 +122,7 @@ export const getExecutorMeshDisplayState = (
     label: tr(language, 'Mesh 未知', 'Mesh Unknown'),
     detailLabel: tr(language, '未知', 'Unknown'),
     tone: 'muted',
-    description: tr(language, '还没有收到这台节点的 Wemux Mesh 状态。', 'No Wemux Mesh status has been reported for this node yet.'),
+    description: tr(language, '还没有收到这台节点的 Oxmux Mesh 状态。', 'No Oxmux Mesh status has been reported for this node yet.'),
     peerCountLabel: tr(language, `${remotePeerCount} 个远端节点`, `${remotePeerCount} remote peer${remotePeerCount === 1 ? '' : 's'}`),
     remotePeerCount,
   }

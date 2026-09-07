@@ -40,7 +40,7 @@ const auditQuerySchema = z.object({
 })
 
 /** 管理员准入：role(owner/admin) 为权威，isInternal 为兼容位（老内部账号）。
- * env 白名单：`WEMUX_ADMIN_EMAILS`（逗号分隔邮箱）→ 视为 owner（超级管理员），
+ * env 白名单：`OXMUX_ADMIN_EMAILS`（逗号分隔邮箱）→ 视为 owner（超级管理员），
  * 无需改数据库即可在部署层指定超管；空列表则按既有 role/isInternal 判定。 */
 export const resolveAdminAccess = (user: { role?: UserRole; isInternal?: boolean; email?: string | null } | null | undefined) => {
   if (!user) {
@@ -52,9 +52,9 @@ export const resolveAdminAccess = (user: { role?: UserRole; isInternal?: boolean
   return { allowed: role !== 'user', role }
 }
 
-/** 解析 WEMUX_ADMIN_EMAILS（逗号分隔邮箱）为小写 Set；空/未配置返回空集。 */
+/** 解析 OXMUX_ADMIN_EMAILS（逗号分隔邮箱）为小写 Set；空/未配置返回空集。 */
 export const resolveEnvAdminEmails = (): Set<string> => {
-  const raw = (process.env.VIBEMUX_ADMIN_EMAILS || getEnv('WEMUX_ADMIN_EMAILS') || '').trim()
+  const raw = (process.env.VIBEMUX_ADMIN_EMAILS || getEnv('OXMUX_ADMIN_EMAILS') || '').trim()
   if (!raw) {
     return new Set()
   }
@@ -368,7 +368,7 @@ export const registerAdminRoutes = (app: Hono, requireAuth: MiddlewareHandler) =
     }
 
     if (payload.status !== 'active') {
-      // 封禁/停用：强制下线（清 better-auth 会话），wemux token 由 requireAuth 状态阻断兜底
+      // 封禁/停用：强制下线（清 better-auth 会话），oxmux token 由 requireAuth 状态阻断兜底
       await revokeAllUserSessions(targetUserId)
     }
     adminAudit(actorId, `admin_user_${payload.status}`, { targetUserId, reason: payload.reason, suspendedUntil: payload.suspendedUntil })

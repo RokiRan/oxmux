@@ -15,15 +15,15 @@ const featuredUseCaseDocuments = listFeaturedMarketingContentDocumentsByCollecti
 
 export const Route = createFileRoute('/use-cases/')({
   head: () => buildMarketingHead({
-    description: 'Browse Wemux use-case pages for AI coding delivery, small engineering teams, and multi-agent orchestration.',
+    description: 'Browse Oxmux use-case pages for AI coding delivery, small engineering teams, and multi-agent orchestration.',
     path: '/use-cases',
     structuredData: buildMarketingCollectionStructuredData({
-      description: 'Browse Wemux use-case pages for AI coding delivery, small engineering teams, and multi-agent orchestration.',
+      description: 'Browse Oxmux use-case pages for AI coding delivery, small engineering teams, and multi-agent orchestration.',
       documents: useCaseDocuments,
       path: '/use-cases',
-      title: 'Wemux Use Cases',
+      title: 'Oxmux Use Cases',
     }),
-    title: 'Wemux Use Cases',
+    title: 'Oxmux Use Cases',
   }),
   component: UseCasesIndexRoute,
 })
@@ -31,9 +31,9 @@ export const Route = createFileRoute('/use-cases/')({
 function UseCasesIndexRoute() {
   return (
     <MarketingPageLayout
-      description="Use-case pages explain where Wemux fits best in real engineering teams and AI delivery workflows."
+      description="Use-case pages explain where Oxmux fits best in real engineering teams and AI delivery workflows."
       eyebrow="Library"
-      title="Wemux use cases"
+      title="Oxmux use cases"
     >
       <MarketingFeaturedContent documents={featuredUseCaseDocuments} title="Featured use cases" />
       <MarketingContentIndex collectionLabel="Use cases" documents={useCaseDocuments} />

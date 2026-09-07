@@ -13,15 +13,15 @@ const seoPage = requireIndexedMarketingPage('/terms')
 
 const sections: Array<{ body: ReactNode; title: string }> = [
   {
-    body: 'By accessing Wemux you agree to use the service in accordance with applicable law and these terms. Wemux is intended for legitimate software delivery, workflow coordination, and related team operations.',
+    body: 'By accessing Oxmux you agree to use the service in accordance with applicable law and these terms. Oxmux is intended for legitimate software delivery, workflow coordination, and related team operations.',
     title: '1. Acceptance and permitted use',
   },
   {
-    body: 'You are responsible for the accounts, repositories, workers, credentials, and environments you connect to Wemux. You must have the right to use the code, infrastructure, and data you route through the platform.',
+    body: 'You are responsible for the accounts, repositories, workers, credentials, and environments you connect to Oxmux. You must have the right to use the code, infrastructure, and data you route through the platform.',
     title: '2. Your responsibilities',
   },
   {
-    body: 'You may not use Wemux for fraud, abuse, malware, credential theft, harassment, deceptive behavior, or any workflow that violates third-party rights or applicable law. We may suspend access where misuse, security risk, or policy violations are detected.',
+    body: 'You may not use Oxmux for fraud, abuse, malware, credential theft, harassment, deceptive behavior, or any workflow that violates third-party rights or applicable law. We may suspend access where misuse, security risk, or policy violations are detected.',
     title: '3. Prohibited conduct',
   },
   {
@@ -29,19 +29,19 @@ const sections: Array<{ body: ReactNode; title: string }> = [
     title: '4. Billing and subscriptions',
   },
   {
-    body: 'Wemux may still be evolving, including beta or rapidly changing features. Availability, features, routing logic, and interfaces may change over time. We may modify, limit, or discontinue features when required for product, security, or operational reasons.',
+    body: 'Oxmux may still be evolving, including beta or rapidly changing features. Availability, features, routing logic, and interfaces may change over time. We may modify, limit, or discontinue features when required for product, security, or operational reasons.',
     title: '5. Beta and service changes',
   },
   {
-    body: 'To the extent permitted by law, Wemux is provided on an as-is and as-available basis. You remain responsible for reviewing outputs, code changes, worker execution, and any downstream actions before relying on them in production.',
+    body: 'To the extent permitted by law, Oxmux is provided on an as-is and as-available basis. You remain responsible for reviewing outputs, code changes, worker execution, and any downstream actions before relying on them in production.',
     title: '6. Warranty and review responsibility',
   },
   {
     body: (
       <>
-        If you have questions about commercial use or these terms, contact Wemux at <span>support</span>
+        If you have questions about commercial use or these terms, contact Oxmux at <span>support</span>
         <span>@</span>
-        <span>wemux.ai</span>.
+        <span>oxmux.ai</span>.
       </>
     ),
     title: '7. Contact',
@@ -92,9 +92,9 @@ export const Route = createFileRoute('/terms')({
 function TermsRoute() {
   return (
     <MarketingPageLayout
-      description="This page provides a public summary of the terms that govern access to Wemux, including platform use, billing, acceptable behavior, and review responsibility."
+      description="This page provides a public summary of the terms that govern access to Oxmux, including platform use, billing, acceptable behavior, and review responsibility."
       eyebrow="Terms of Service"
-      title="Public terms for using Wemux."
+      title="Public terms for using Oxmux."
     >
       <MarketingSection
         description="This public version is intended to make the platform's baseline commercial and acceptable-use framing visible before signup or payment."

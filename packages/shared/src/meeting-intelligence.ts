@@ -74,7 +74,7 @@ export interface MeetingSegmentUpload {
   segmentId: string
   /** 归属会议 ID（端侧判定已构成会议时携带） */
   meetingId?: string
-  /** 设备 ID（wemux 安装实例） */
+  /** 设备 ID（oxmux 安装实例） */
   deviceId: string
   /** 会议室标识（可选；如无则为设备名） */
   roomId?: string

@@ -775,7 +775,7 @@ export function WorkspaceShell({
   return (
     <>
       <main className={cn(
-        'wemux-page-outer-frame flex h-full min-h-0 flex-1 flex-col overflow-hidden border border-zinc-900 bg-[#09090b] text-zinc-100',
+        'oxmux-page-outer-frame flex h-full min-h-0 flex-1 flex-col overflow-hidden border border-zinc-900 bg-[#09090b] text-zinc-100',
         isMobile
           ? 'border-0'
           : connectedToLeadingPanel

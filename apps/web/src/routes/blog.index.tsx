@@ -15,15 +15,15 @@ const featuredBlogDocuments = listFeaturedMarketingContentDocumentsByCollection(
 
 export const Route = createFileRoute('/blog/')({
   head: () => buildMarketingHead({
-    description: 'Wemux founder notes and SEO blog articles about AI coding delivery, persistent execution, and real workstation workflows.',
+    description: 'Oxmux founder notes and SEO blog articles about AI coding delivery, persistent execution, and real workstation workflows.',
     path: '/blog',
     structuredData: buildMarketingCollectionStructuredData({
-      description: 'Wemux founder notes and SEO blog articles about AI coding delivery, persistent execution, and real workstation workflows.',
+      description: 'Oxmux founder notes and SEO blog articles about AI coding delivery, persistent execution, and real workstation workflows.',
       documents: blogDocuments,
       path: '/blog',
-      title: 'Wemux Blog',
+      title: 'Oxmux Blog',
     }),
-    title: 'Wemux Blog',
+    title: 'Oxmux Blog',
   }),
   component: BlogIndexRoute,
 })
@@ -33,7 +33,7 @@ function BlogIndexRoute() {
     <MarketingPageLayout
       description="A growing content library for product thinking, market framing, and persistent AI coding workflows."
       eyebrow="Library"
-      title="Wemux blog"
+      title="Oxmux blog"
     >
       <MarketingFeaturedContent documents={featuredBlogDocuments} title="Featured blog posts" />
       <MarketingContentIndex collectionLabel="Blog" documents={blogDocuments} />

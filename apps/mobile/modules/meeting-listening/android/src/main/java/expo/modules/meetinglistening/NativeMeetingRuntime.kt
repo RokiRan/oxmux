@@ -7,7 +7,7 @@ object NativeMeetingRuntime {
 
   init {
     try {
-      System.loadLibrary("wemux_meeting_runtime")
+      System.loadLibrary("oxmux_meeting_runtime")
       libraryLoaded = true
     } catch (_: UnsatisfiedLinkError) {
       libraryLoaded = false

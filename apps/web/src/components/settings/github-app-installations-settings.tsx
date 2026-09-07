@@ -174,7 +174,7 @@ export function GitHubAppInstallationsSettings({ onSummaryChange }: GitHubAppIns
       <div className="flex flex-col gap-3 border-b border-zinc-800 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm font-medium text-zinc-100">GitHub App</p>
-          <p className="mt-1 text-xs text-zinc-500">连接 GitHub 账号或组织后，Wemux 会用 installation 权限访问仓库。</p>
+          <p className="mt-1 text-xs text-zinc-500">连接 GitHub 账号或组织后，Oxmux 会用 installation 权限访问仓库。</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button type="button" variant="outline" size="sm" className="border-zinc-800 bg-zinc-950 text-zinc-200" onClick={() => void handleRefresh()} disabled={busy}>

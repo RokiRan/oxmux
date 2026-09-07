@@ -2,12 +2,12 @@ import { getWorkerConsolePortBase } from '@shared/worker-console-ports'
 import { getApiBaseUrl, getAppBaseUrl, getBetterAuthBaseUrl, isDevEnvironment, resolveAbsoluteApiUrl } from './runtime-config'
 
 const trimTrailingSlash = (value: string) => value.replace(/\/+$/, '')
-const PREVIEW_HOSTNAMES = ['vibemux.xyz', 'wemux.xyz']
+const PREVIEW_HOSTNAMES = ['vibemux.xyz', 'oxmux.xyz']
 const RAILWAY_PREVIEW_HOST_SUFFIX = '.up.railway.app'
-const PREVIEW_WORKER_PACKAGE_NAME = 'wemux-worker-preview'
-const PRODUCTION_WORKER_PACKAGE_NAME = 'wemux-worker'
-const PREVIEW_WORKER_INSTALL_PREFIX = '$HOME/.wemux-preview-worker'
-const PRODUCTION_WORKER_INSTALL_PREFIX = '$HOME/.wemux-worker'
+const PREVIEW_WORKER_PACKAGE_NAME = 'oxmux-worker-preview'
+const PRODUCTION_WORKER_PACKAGE_NAME = 'oxmux-worker'
+const PREVIEW_WORKER_INSTALL_PREFIX = '$HOME/.oxmux-preview-worker'
+const PRODUCTION_WORKER_INSTALL_PREFIX = '$HOME/.oxmux-worker'
 
 export type WorkerRunMode = 'local' | 'docker'
 export type WorkerLocalInstallTarget = 'unix' | 'windows'
@@ -51,7 +51,7 @@ export const getWorkerInstallPrefix = () => {
 }
 
 export const getWorkerBinaryCommand = () => {
-  return `${getWorkerInstallPrefix()}/bin/wemux`
+  return `${getWorkerInstallPrefix()}/bin/oxmux`
 }
 
 export const isWorkerInstallerEnvironment = () => {
@@ -93,7 +93,7 @@ const resolveWorkerInstallerUrl = (path: string) => {
 
   try {
     const url = new URL(installerUrl)
-    if ((url.hostname.endsWith('.vibemux.localtest.me') || url.hostname.endsWith('.wemux.localtest.me')) && url.port === '15173') {
+    if ((url.hostname.endsWith('.vibemux.localtest.me') || url.hostname.endsWith('.oxmux.localtest.me')) && url.port === '15173') {
       url.hostname = '127.0.0.1'
       url.port = '18989'
       return trimTrailingSlash(url.toString())
@@ -163,7 +163,7 @@ const resolveWorkerDockerCloudUrl = () => {
       return trimTrailingSlash(url.toString())
     }
 
-    if ((hostname.endsWith('.vibemux.localtest.me') || hostname.endsWith('.wemux.localtest.me')) && url.port === '15173') {
+    if ((hostname.endsWith('.vibemux.localtest.me') || hostname.endsWith('.oxmux.localtest.me')) && url.port === '15173') {
       url.hostname = 'host.docker.internal'
       url.port = '18989'
       return trimTrailingSlash(url.toString())

@@ -1,4 +1,4 @@
-# wemux Agent 角色图鉴
+# oxmux Agent 角色图鉴
 
 > 20 个内置品牌 Agent（agent-04 无头像文件）。2头身 Q 版三视图：正面/左侧面/背面，带主色轮廓光。
 

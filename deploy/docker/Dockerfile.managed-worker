@@ -33,13 +33,13 @@ RUN pnpm build:worker:npm
 FROM base AS runtime
 
 ENV NODE_ENV=production
-ENV WEMUX_WORKER_HOME=/var/lib/wemux-worker
-ENV WEMUX_WORKER_PORT=48100
-ENV WEMUX_WORKER_INSTALL_PREFIX=/opt/wemux-worker
-ENV WEMUX_WORKER_RESTART_STRATEGY=docker
-ENV WEMUX_WORKER_AUTO_UPDATE=1
-ENV WEMUX_WORKER_RELEASE_CHANNEL=production
-ENV PATH=/opt/wemux-worker/bin:$PATH
+ENV OXMUX_WORKER_HOME=/var/lib/oxmux-worker
+ENV OXMUX_WORKER_PORT=48100
+ENV OXMUX_WORKER_INSTALL_PREFIX=/opt/oxmux-worker
+ENV OXMUX_WORKER_RESTART_STRATEGY=docker
+ENV OXMUX_WORKER_AUTO_UPDATE=1
+ENV OXMUX_WORKER_RELEASE_CHANNEL=production
+ENV PATH=/opt/oxmux-worker/bin:$PATH
 
 WORKDIR /app
 
@@ -57,17 +57,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # opencode 平台二进制已从 package.tgz 剔除（P0 包瘦身），镜像内显式安装以兑底 linux 云端 worker
 RUN npm install -g @openai/codex @anthropic-ai/claude-code opencode-ai
 
-RUN groupadd --system --gid 10001 wemux \
-  && useradd --system --uid 10001 --gid 10001 --home-dir /var/lib/wemux-worker --shell /usr/sbin/nologin wemux
+RUN groupadd --system --gid 10001 oxmux \
+  && useradd --system --uid 10001 --gid 10001 --home-dir /var/lib/oxmux-worker --shell /usr/sbin/nologin oxmux
 
-COPY --from=build /app/dist-server/worker-installer/package.tgz /tmp/wemux-worker-package.tgz
+COPY --from=build /app/dist-server/worker-installer/package.tgz /tmp/oxmux-worker-package.tgz
 
-RUN mkdir -p /var/lib/wemux-worker /opt/wemux-worker \
-  && npm install --no-fund --no-audit -g --prefix /opt/wemux-worker /tmp/wemux-worker-package.tgz \
-  && rm -f /tmp/wemux-worker-package.tgz \
-  && chown -R 10001:10001 /var/lib/wemux-worker /opt/wemux-worker
+RUN mkdir -p /var/lib/oxmux-worker /opt/oxmux-worker \
+  && npm install --no-fund --no-audit -g --prefix /opt/oxmux-worker /tmp/oxmux-worker-package.tgz \
+  && rm -f /tmp/oxmux-worker-package.tgz \
+  && chown -R 10001:10001 /var/lib/oxmux-worker /opt/oxmux-worker
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:' + (process.env.WEMUX_WORKER_PORT || '48100') + '/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+  CMD node -e "fetch('http://127.0.0.1:' + (process.env.OXMUX_WORKER_PORT || '48100') + '/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
 
 CMD ["vibemux-worker", "daemon"]

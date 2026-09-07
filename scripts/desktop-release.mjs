@@ -24,7 +24,7 @@ const usage = `desktop-release.mjs manifest [flags]
   --bundles-dir <path>   Directory containing Electron artifacts
   --manifest <path>      Download manifest template
   --out-dir <path>       Output directory (downloads.json + notes.txt)
-  --repo <owner/repo>    GitHub repository (default: GITHUB_REPOSITORY or wemux-ai/wemux)
+  --repo <owner/repo>    GitHub repository (default: GITHUB_REPOSITORY or oxmux-ai/oxmux)
 `
 
 if (args.includes('--help') || args.includes('-h') || args[0] !== 'manifest') {
@@ -38,7 +38,7 @@ const manifestPath = path.resolve(
   readFlag('--manifest') || path.join(repoRoot, 'apps/web/src/data/desktop-downloads.json'),
 )
 const outDir = path.resolve(readFlag('--out-dir') || 'release-out')
-const repo = readFlag('--repo') || process.env.GITHUB_REPOSITORY?.trim() || 'wemux-ai/wemux'
+const repo = readFlag('--repo') || process.env.GITHUB_REPOSITORY?.trim() || 'oxmux-ai/oxmux'
 
 if (!version) throw new Error('manifest requires --version')
 
@@ -49,10 +49,10 @@ const collectFiles = (directory) => readdirSync(directory, { withFileTypes: true
 
 const files = collectFiles(bundlesDir)
 const expectedArtifacts = {
-  'darwin-aarch64': `Wemux-${version}-arm64.dmg`,
-  'darwin-x86_64': `Wemux-${version}-x64.dmg`,
-  'windows-x86_64': `Wemux-${version}-x64-setup.exe`,
-  'linux-x86_64': `Wemux-${version}-x86_64.AppImage`,
+  'darwin-aarch64': `Oxmux-${version}-arm64.dmg`,
+  'darwin-x86_64': `Oxmux-${version}-x64.dmg`,
+  'windows-x86_64': `Oxmux-${version}-x64-setup.exe`,
+  'linux-x86_64': `Oxmux-${version}-x86_64.AppImage`,
 }
 
 const sha256File = (filePath) => {
@@ -65,7 +65,7 @@ const template = JSON.parse(readFileSync(manifestPath, 'utf8'))
 const manifest = structuredClone(template)
 manifest.version = version
 manifest.publishedAt = new Date().toISOString()
-manifest.notes = `Wemux Electron desktop v${version}`
+manifest.notes = `Oxmux Electron desktop v${version}`
 
 for (const platform of manifest.platforms) {
   const expectedName = expectedArtifacts[platform.id]

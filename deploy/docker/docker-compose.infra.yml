@@ -1,45 +1,45 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: wemux-postgres
+    container_name: oxmux-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: wemux
-      POSTGRES_USER: wemux
+      POSTGRES_DB: oxmux
+      POSTGRES_USER: oxmux
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-dev-password}
     ports:
       - '5434:5432'
     volumes:
-      - wemux-postgres-data:/var/lib/postgresql/data
+      - oxmux-postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U wemux -d wemux']
+      test: ['CMD-SHELL', 'pg_isready -U oxmux -d oxmux']
       interval: 5s
       timeout: 5s
       retries: 20
 
   postgres-init:
     image: postgres:16-alpine
-    container_name: wemux-postgres-init
+    container_name: oxmux-postgres-init
     depends_on:
       - postgres
     restart: 'no'
     environment:
       PGPASSWORD: ${POSTGRES_PASSWORD:-local-dev-password}
-      POSTGRES_USER: wemux
-      POSTGRES_PREVIEW_DB: wemux_preview
-      POSTGRES_PRODUCTION_DB: wemux_production
+      POSTGRES_USER: oxmux
+      POSTGRES_PREVIEW_DB: oxmux_preview
+      POSTGRES_PRODUCTION_DB: oxmux_production
     entrypoint: >-
       /bin/sh -c
-      "until pg_isready -h postgres -U wemux -d wemux; do sleep 2; done;
+      "until pg_isready -h postgres -U oxmux -d oxmux; do sleep 2; done;
       psql -h postgres -U vibemux -d postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'vibemux_preview'\" | grep -q 1 || psql -h postgres -U vibemux -d postgres -c \"CREATE DATABASE \\\"vibemux_preview\\\"\";
       psql -h postgres -U vibemux -d postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'vibemux_production'\" | grep -q 1 || psql -h postgres -U vibemux -d postgres -c \"CREATE DATABASE \\\"vibemux_production\\\"\""
 
   rustfs:
     image: rustfs/rustfs:latest
-    container_name: wemux-rustfs
+    container_name: oxmux-rustfs
     restart: unless-stopped
     environment:
-      RUSTFS_ACCESS_KEY: wemux
+      RUSTFS_ACCESS_KEY: oxmux
       RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:-local-dev-secret}
       RUSTFS_CONSOLE_ENABLE: 'true'
       RUSTFS_ADDRESS: 0.0.0.0:9000
@@ -50,19 +50,19 @@ services:
       - '9100:9000'
       - '9101:9001'
     volumes:
-      - wemux-rustfs-data:/data
+      - oxmux-rustfs-data:/data
 
   rustfs-init:
     image: minio/mc:latest
-    container_name: wemux-rustfs-init
+    container_name: oxmux-rustfs-init
     depends_on:
       - rustfs
     restart: 'no'
     entrypoint: >-
       /bin/sh -c
-      "until mc alias set local http://rustfs:9000 wemux ${RUSTFS_SECRET_KEY:-local-dev-secret}; do sleep 2; done &&
-      mc mb --ignore-existing local/wemux"
+      "until mc alias set local http://rustfs:9000 oxmux ${RUSTFS_SECRET_KEY:-local-dev-secret}; do sleep 2; done &&
+      mc mb --ignore-existing local/oxmux"
 
 volumes:
-  wemux-postgres-data:
-  wemux-rustfs-data:
+  oxmux-postgres-data:
+  oxmux-rustfs-data:

@@ -27,7 +27,7 @@ const hint = detail.includes('EOF')
     : '当前 Docker daemon 不可用，请先确认 OrbStack / Docker Desktop 已正常运行。'
 
 process.stderr.write([
-  'wemux hybrid 启动前检查失败：无法连接 Docker daemon。',
+  'oxmux hybrid 启动前检查失败：无法连接 Docker daemon。',
   `当前 Docker context: ${context}`,
   `原始错误: ${detail}`,
   hint,

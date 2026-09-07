@@ -617,8 +617,8 @@ export function ExecutorDetailDialog({
               </DetailSection>
 
               <DetailSection
-                title={tr(language, 'Wemux Mesh', 'Wemux Mesh')}
-                description={tr(language, '这里展示节点当前的 Wemux Mesh 组网状态，用来判断节点之间是否已经具备私有网络连接能力。', 'Shows the current Wemux Mesh state so you can tell whether nodes are ready for private network connectivity.')}
+                title={tr(language, 'Oxmux Mesh', 'Oxmux Mesh')}
+                description={tr(language, '这里展示节点当前的 Oxmux Mesh 组网状态，用来判断节点之间是否已经具备私有网络连接能力。', 'Shows the current Oxmux Mesh state so you can tell whether nodes are ready for private network connectivity.')}
                 icon={<Workflow className="h-4 w-4" />}
               >
                 <div className="flex flex-wrap items-center gap-2">
@@ -661,7 +661,7 @@ export function ExecutorDetailDialog({
                 ) : null}
                 {executor.presence?.mesh?.errorMessage ? (
                   <div className="mt-3 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-3 text-sm text-rose-100">
-                    {executor.presence.mesh.errorMessage.replace(/EasyTier/g, 'Wemux Mesh')}
+                    {executor.presence.mesh.errorMessage.replace(/EasyTier/g, 'Oxmux Mesh')}
                   </div>
                 ) : null}
                 {meshRemediation ? (

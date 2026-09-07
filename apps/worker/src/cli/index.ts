@@ -8,7 +8,7 @@
  */
 
 import { getWorkerVersion } from '../core/app-root'
-import { WemuxClient } from './client'
+import { OxmuxClient } from './client'
 import { runAgentCommand } from './commands/agent'
 import { runChatCommand } from './commands/chat'
 import { runDriveCommand } from './commands/drive'
@@ -29,7 +29,7 @@ import {
   renderTopicHelp,
 } from './help'
 
-export const runCli = async (args = process.argv.slice(2), client?: WemuxClient) => {
+export const runCli = async (args = process.argv.slice(2), client?: OxmuxClient) => {
   const cliName = getCliName()
   const version = getWorkerVersion()
   const [first, second] = args
@@ -62,7 +62,7 @@ export const runCli = async (args = process.argv.slice(2), client?: WemuxClient)
 
   const subcommand = second || 'list'
   const rest = args.slice(2)
-  const api = client || new WemuxClient()
+  const api = client || new OxmuxClient()
 
   switch (first) {
     case 'project':

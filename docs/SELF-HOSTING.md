@@ -1,4 +1,4 @@
-# Wemux 自托管部署指南（Self-Hosting）
+# Oxmux 自托管部署指南（Self-Hosting）
 
 > 覆盖：生产部署（docker compose）、worker 安装与配对、模型配置、常见问题。
 
@@ -11,7 +11,7 @@
 │  ├─ Postgres 16                       │
 │  └─ MinIO（S3 兼容对象存储）           │
 └──────────────┬───────────────────────┘
-               │ WEMUX_NODE_URL / 配对码
+               │ OXMUX_NODE_URL / 配对码
 ┌──────────────▼───────────────────────┐
 │ worker（你的电脑/任意机器，可多台）      │
 │  ├─ 仓库准备 + 隔离 worktree           │
@@ -26,7 +26,7 @@
 
 适合不想维护 VPS 的用户。正式模板入口：
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/wemux-community)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/oxmux-community)
 
 #### 1. 创建项目与服务
 
@@ -35,7 +35,7 @@
   一条命令即可创建 Postgres、对象存储 Bucket，以及配置好构建/启动/健康检查的 control-plane 服务：
 
   ```bash
-  git clone https://github.com/wemux-ai/wemux.git && cd wemux
+  git clone https://github.com/oxmux-ai/oxmux.git && cd oxmux
   pnpm install          # 安装依赖（含 .railway/railway.ts 所需的 railway SDK）
   railway login
   railway init          # 新建项目；或用 railway link 关联已有项目
@@ -81,8 +81,8 @@ healthcheck: /api/ready
 | `BETTER_AUTH_SECRET` | 生产必填 | 运行 `openssl rand -hex 32` 生成。 |
 | `TOKEN_SECRET` | 生产必填 | 另运行一次 `openssl rand -hex 32` 生成，不要与其他 secret 共用。 |
 | `SECRET_ENCRYPTION_KEY` | 必填 | 32 字节十六进制密钥；另运行一次 `openssl rand -hex 32` 生成。 |
-| `WEMUX_PUBLIC_BASE_URL` | 推荐必填 | 最终公开 origin，例如 `https://wemux-production.up.railway.app`，不要带末尾 `/`。 |
-| `BETTER_AUTH_URL` | 推荐必填 | 与 `WEMUX_PUBLIC_BASE_URL` 相同，用于登录/OAuth 回调。 |
+| `OXMUX_PUBLIC_BASE_URL` | 推荐必填 | 最终公开 origin，例如 `https://oxmux-production.up.railway.app`，不要带末尾 `/`。 |
+| `BETTER_AUTH_URL` | 推荐必填 | 与 `OXMUX_PUBLIC_BASE_URL` 相同，用于登录/OAuth 回调。 |
 | `HOST` | 可选 | 默认 `0.0.0.0`。 |
 | `PORT` | 不要设置 | Railway 自动注入；应用在非 Railway 环境的回退值为 `8989`。 |
 | `NODE_ENV` | 不要设置 | `railway.json` 的 start command 已设为 `production`。 |
@@ -94,7 +94,7 @@ healthcheck: /api/ready
 #### 3. 配置域名并验证
 
 1. 打开 control-plane 服务的 **Settings → Networking**，点击 **Generate Domain** 获取 `*.up.railway.app` HTTPS 域名。
-2. 把 `WEMUX_PUBLIC_BASE_URL` 和 `BETTER_AUTH_URL` 都设为该完整 origin，然后 Redeploy。
+2. 把 `OXMUX_PUBLIC_BASE_URL` 和 `BETTER_AUTH_URL` 都设为该完整 origin，然后 Redeploy。
 3. 验证 readiness：
 
    ```bash
@@ -134,14 +134,14 @@ healthcheck: /api/ready
 前置：Docker + Docker Compose、域名（可选，也可直接用 IP）。
 
 ```bash
-git clone https://github.com/wemux-ai/wemux.git
-cd wemux
+git clone https://github.com/oxmux-ai/oxmux.git
+cd oxmux
 
 cp .env.production.example .env.production
 # 编辑 .env.production：
 #   - 设置强密码（POSTGRES_PASSWORD / OBJECT_STORAGE_SECRET_ACCESS_KEY）
 #   - openssl rand -hex 32 生成三个 secret
-#   - WEMUX_PUBLIC_BASE_URL 填你的域名或 IP
+#   - OXMUX_PUBLIC_BASE_URL 填你的域名或 IP
 
 docker compose -f deploy/docker/docker-compose.production.yml --env-file .env.production up -d --build
 ```
@@ -150,7 +150,7 @@ docker compose -f deploy/docker/docker-compose.production.yml --env-file .env.pr
 验证：`curl http://localhost:8989/api/health` 应返回 `{"ok":true,...}`。
 
 > HTTPS：建议在控制面前放 Caddy / Nginx / Cloudflare Tunnel 做 TLS 终止，
-> 并把 `WEMUX_PUBLIC_BASE_URL` 设为 https 地址。
+> 并把 `OXMUX_PUBLIC_BASE_URL` 设为 https 地址。
 
 ## 二、安装并配对 worker
 
@@ -187,8 +187,8 @@ pnpm install && pnpm dev:worker
 
 ## 匿名使用上报（可关闭）
 
-自托管实例默认开启匿名使用上报：每天一次向 wemux.ai 发送聚合计数（版本 / OS / 用户·组织·任务·会话·Agent 启动的累计数），
-**不包含任何内容类数据与身份信息**。设 `WEMUX_USAGE_REPORTING_DISABLED=1` 即可关闭；完整字段清单见 [docs/TELEMETRY.md](./TELEMETRY.md)。
+自托管实例默认开启匿名使用上报：每天一次向 oxmux.ai 发送聚合计数（版本 / OS / 用户·组织·任务·会话·Agent 启动的累计数），
+**不包含任何内容类数据与身份信息**。设 `OXMUX_USAGE_REPORTING_DISABLED=1` 即可关闭；完整字段清单见 [docs/TELEMETRY.md](./TELEMETRY.md)。
 
 ## 三、模型配置（BYOK）
 
@@ -199,7 +199,7 @@ pnpm install && pnpm dev:worker
    - **Claude Code**：`claude` CLI 登录（`ANTHROPIC_API_KEY`）
    - **Codex**：`codex` CLI 登录
 
-> **运行时许可边界**：Wemux 平台以 Apache-2.0 开源，但它调度的 agent CLI 各自有独立许可——OpenCode 为 Apache-2.0 开源；Claude Code 与 Codex 分别是 Anthropic / OpenAI 的专有工具，需使用你自己的账号登录并遵守其服务条款。
+> **运行时许可边界**：Oxmux 平台以 Apache-2.0 开源，但它调度的 agent CLI 各自有独立许可——OpenCode 为 Apache-2.0 开源；Claude Code 与 Codex 分别是 Anthropic / OpenAI 的专有工具，需使用你自己的账号登录并遵守其服务条款。
 2. 控制面「模型中心」会从 worker 读取运行时模型列表，选择默认模型即可
 3. 任务/聊天执行时自动使用该模型的密钥
 
@@ -228,7 +228,7 @@ docker compose -f deploy/docker/docker-compose.production.yml --env-file .env.pr
 - `GET /api/health`：基础健康（Postgres/存储/节点/心跳），无需鉴权
 - `GET /api/health/detailed`：**完整诊断端点**，为 AI/自动化运维设计，返回结构化信息：
   - `meta`：版本 / 环境 / Node 版本 / 运行时长 / 平台
-  - `brand`：wemux / 官网 / edition
+  - `brand`：oxmux / 官网 / edition
   - `database`：Postgres 连接与连接池、存储变更监听延迟
   - `node`：节点 ID / 心跳新鲜度 / 已连接执行器数
   - `resources`：内存占用 / 系统负载
@@ -239,12 +239,12 @@ docker compose -f deploy/docker/docker-compose.production.yml --env-file .env.pr
 用法：
 
 ```bash
-# 未配置 WEMUX_HEALTH_TOKEN 时：直接访问（自托管默认开放）
+# 未配置 OXMUX_HEALTH_TOKEN 时：直接访问（自托管默认开放）
 curl https://your-domain/api/health/detailed
 
-# 配置 WEMUX_HEALTH_TOKEN 后：需带 token
-curl -H "x-health-token: $WEMUX_HEALTH_TOKEN" https://your-domain/api/health/detailed
-curl "https://your-domain/api/health/detailed?token=$WEMUX_HEALTH_TOKEN"
+# 配置 OXMUX_HEALTH_TOKEN 后：需带 token
+curl -H "x-health-token: $OXMUX_HEALTH_TOKEN" https://your-domain/api/health/detailed
+curl "https://your-domain/api/health/detailed?token=$OXMUX_HEALTH_TOKEN"
 ```
 
 检查失败时返回 503（HTTP 状态可被监控直接告警）。
@@ -254,7 +254,7 @@ curl "https://your-domain/api/health/detailed?token=$WEMUX_HEALTH_TOKEN"
 | 现象 | 处理 |
 |---|---|
 | `/api/health` 不通 | 看 `docker compose logs server`；常见为 DATABASE_URL 或迁移失败 |
-| worker 显示离线 | 检查 worker 与服务器网络（同网/公网可达）；确认 WEMUX_NODE_URL 配置 |
+| worker 显示离线 | 检查 worker 与服务器网络（同网/公网可达）；确认 OXMUX_NODE_URL 配置 |
 | 任务卡「无执行节点」 | 确认 worker 已配对在线；OpenCode 任务需要 worker 上配置了模型 |
 | 上传头像/图片失败 | 确认 MinIO 健康且 `OBJECT_STORAGE_*` 与 compose 内一致 |
 | 想换 R2/S3 | 把 compose 的 MinIO 换成任意 S3 兼容服务，改 `OBJECT_STORAGE_ENDPOINT` 等环境变量 |
@@ -262,9 +262,9 @@ curl "https://your-domain/api/health/detailed?token=$WEMUX_HEALTH_TOKEN"
 
 ## 七、社区版能力边界
 
-本仓库是 Wemux 的社区版，包含以下能力：本地 worker 执行、BYOK 模型、主聊天/任务/工作区编排、渠道集成（飞书/Slack/钉钉/企微/微信/WhatsApp）、多节点组网（easytier）、**自托管云节点**（docker-cli / boxlite / ascii-box / cloudflare-sandbox 底座）、桌面与移动客户端、对象存储（S3 兼容，含 Railway Bucket / MinIO / R2）。
+本仓库是 Oxmux 的社区版，包含以下能力：本地 worker 执行、BYOK 模型、主聊天/任务/工作区编排、渠道集成（飞书/Slack/钉钉/企微/微信/WhatsApp）、多节点组网（easytier）、**自托管云节点**（docker-cli / boxlite / ascii-box / cloudflare-sandbox 底座）、桌面与移动客户端、对象存储（S3 兼容，含 Railway Bucket / MinIO / R2）。
 
-以下平台能力**不包含在本仓库中**（作为独立的商业服务运营）：平台托管模型网关与用量计费、订阅计费、合作商系统、官方托管云节点池（wemux.ai 的沙箱 worker）。社区版以**本地 worker + 自托管云节点 + BYOK** 为执行核心，上述边界不影响核心编排/执行/协作功能。
+以下平台能力**不包含在本仓库中**（作为独立的商业服务运营）：平台托管模型网关与用量计费、订阅计费、合作商系统、官方托管云节点池（oxmux.ai 的沙箱 worker）。社区版以**本地 worker + 自托管云节点 + BYOK** 为执行核心，上述边界不影响核心编排/执行/协作功能。
 
 ### 自托管云节点（配置后可用，不配置不可用）
 
@@ -272,21 +272,21 @@ curl "https://your-domain/api/health/detailed?token=$WEMUX_HEALTH_TOKEN"
 
 ```bash
 # 1. 开启云节点准入（production 默认关闭，显式开启）
-WEMUX_MANAGED_CLOUD_ENABLED=1
+OXMUX_MANAGED_CLOUD_ENABLED=1
 
 # 2. 选择底座（任选其一）
-WEMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=docker-cli        # 本机/远程 Docker
-# WEMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=boxlite-cli     # BoxLite
-# WEMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=ascii-box-cli   # ASCII Box
-# WEMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=unsafe-local-process  # 本机进程（仅开发）
+OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=docker-cli        # 本机/远程 Docker
+# OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=boxlite-cli     # BoxLite
+# OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=ascii-box-cli   # ASCII Box
+# OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=unsafe-local-process  # 本机进程（仅开发）
 
 # 3. 按底座配置（Docker 示例）
-WEMUX_MANAGED_CLOUD_DOCKER_HOST=tcp://10.0.0.5:2375    # 远程 Docker 宿主（可选，默认本机）
-WEMUX_MANAGED_CLOUD_DOCKER_IMAGE=wemux/worker:latest
-WEMUX_MANAGED_CLOUD_DOCKER_CPUS=2
-WEMUX_MANAGED_CLOUD_DOCKER_MEMORY=4g
+OXMUX_MANAGED_CLOUD_DOCKER_HOST=tcp://10.0.0.5:2375    # 远程 Docker 宿主（可选，默认本机）
+OXMUX_MANAGED_CLOUD_DOCKER_IMAGE=oxmux/worker:latest
+OXMUX_MANAGED_CLOUD_DOCKER_CPUS=2
+OXMUX_MANAGED_CLOUD_DOCKER_MEMORY=4g
 ```
 
-配置完成后，控制面「执行中心」会显示云节点面板，任务可派发到云节点执行（worker 在容器内运行，隔离工作区）。不配置 `WEMUX_MANAGED_CLOUD_ENABLED` 时云节点面板显示「不可用」，不影响本地 worker。
+配置完成后，控制面「执行中心」会显示云节点面板，任务可派发到云节点执行（worker 在容器内运行，隔离工作区）。不配置 `OXMUX_MANAGED_CLOUD_ENABLED` 时云节点面板显示「不可用」，不影响本地 worker。
 
-> 云节点运行时镜像需包含 wemux worker。不同运行时的具体参数以对应自托管环境文档为准。
+> 云节点运行时镜像需包含 oxmux worker。不同运行时的具体参数以对应自托管环境文档为准。

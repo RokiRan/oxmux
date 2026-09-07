@@ -106,7 +106,7 @@ const getPiSessionRoots = () => {
   return Array.from(new Set([
     configuredRoot,
     path.join(agentDir, 'sessions'),
-    path.join(agentDir, 'sessions-wemux'),
+    path.join(agentDir, 'sessions-oxmux'),
   ]))
 }
 

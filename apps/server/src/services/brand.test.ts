@@ -8,17 +8,17 @@ import { registerAppBrand, resolveAppBrand } from './brand'
 
 test('default brand is the open-source edition', () => {
   const brand = resolveAppBrand()
-  assert.equal(brand.name, 'wemux')
+  assert.equal(brand.name, 'oxmux')
   assert.equal(brand.edition, 'open-source')
-  assert.equal(brand.site, 'https://wemux.ai')
+  assert.equal(brand.site, 'https://oxmux.ai')
 })
 
 test('registerAppBrand overrides the edition for commercial deployments', () => {
   try {
-    registerAppBrand({ name: 'wemux', site: 'https://wemux.ai', edition: 'cloud' })
+    registerAppBrand({ name: 'oxmux', site: 'https://oxmux.ai', edition: 'cloud' })
     assert.equal(resolveAppBrand().edition, 'cloud')
   } finally {
-    registerAppBrand({ name: 'wemux', site: 'https://wemux.ai', edition: 'open-source' })
+    registerAppBrand({ name: 'oxmux', site: 'https://oxmux.ai', edition: 'open-source' })
   }
   assert.equal(resolveAppBrand().edition, 'open-source')
 })

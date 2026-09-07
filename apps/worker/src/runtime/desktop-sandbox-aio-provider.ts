@@ -75,14 +75,14 @@ const readEnvBoolean = (name: string, fallback = false) => {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 const getStatePath = () => path.join(getWorkerNodeDir(), 'runtime', 'desktop-sandbox-aio.json')
-const resolveAioImage = () => readEnv('WEMUX_AIO_SANDBOX_IMAGE') || readEnv('AIO_SANDBOX_IMAGE') || DEFAULT_AIO_IMAGE
-const resolveAioPlatform = () => readEnv('WEMUX_AIO_SANDBOX_PLATFORM') || readEnv('AIO_SANDBOX_PLATFORM') || DEFAULT_AIO_PLATFORM
-const resolveAioContainerName = () => readEnv('WEMUX_AIO_SANDBOX_CONTAINER_NAME') || DEFAULT_AIO_CONTAINER_NAME
-const resolveAioHostPort = () => readEnvNumber('WEMUX_AIO_SANDBOX_PORT', DEFAULT_AIO_HOST_PORT)
-const resolveAioBaseUrl = () => readEnv('WEMUX_AIO_SANDBOX_BASE_URL') || `http://127.0.0.1:${resolveAioHostPort()}`
-const resolveAioPullTimeoutMs = () => readEnvNumber('WEMUX_AIO_SANDBOX_PULL_TIMEOUT_MS', DEFAULT_AIO_PULL_TIMEOUT_MS)
-const resolveAioStartTimeoutMs = () => readEnvNumber('WEMUX_AIO_SANDBOX_START_TIMEOUT_MS', DEFAULT_AIO_START_TIMEOUT_MS)
-const resolveAioCommandTimeoutMs = () => readEnvNumber('WEMUX_AIO_SANDBOX_COMMAND_TIMEOUT_MS', DEFAULT_AIO_COMMAND_TIMEOUT_MS)
+const resolveAioImage = () => readEnv('OXMUX_AIO_SANDBOX_IMAGE') || readEnv('AIO_SANDBOX_IMAGE') || DEFAULT_AIO_IMAGE
+const resolveAioPlatform = () => readEnv('OXMUX_AIO_SANDBOX_PLATFORM') || readEnv('AIO_SANDBOX_PLATFORM') || DEFAULT_AIO_PLATFORM
+const resolveAioContainerName = () => readEnv('OXMUX_AIO_SANDBOX_CONTAINER_NAME') || DEFAULT_AIO_CONTAINER_NAME
+const resolveAioHostPort = () => readEnvNumber('OXMUX_AIO_SANDBOX_PORT', DEFAULT_AIO_HOST_PORT)
+const resolveAioBaseUrl = () => readEnv('OXMUX_AIO_SANDBOX_BASE_URL') || `http://127.0.0.1:${resolveAioHostPort()}`
+const resolveAioPullTimeoutMs = () => readEnvNumber('OXMUX_AIO_SANDBOX_PULL_TIMEOUT_MS', DEFAULT_AIO_PULL_TIMEOUT_MS)
+const resolveAioStartTimeoutMs = () => readEnvNumber('OXMUX_AIO_SANDBOX_START_TIMEOUT_MS', DEFAULT_AIO_START_TIMEOUT_MS)
+const resolveAioCommandTimeoutMs = () => readEnvNumber('OXMUX_AIO_SANDBOX_COMMAND_TIMEOUT_MS', DEFAULT_AIO_COMMAND_TIMEOUT_MS)
 const resolveAioCommandTimeoutSeconds = () => Math.ceil(resolveAioCommandTimeoutMs() / 1000)
 
 export const buildAioVncUrl = () => {
@@ -178,7 +178,7 @@ const describeDockerError = (error: unknown, fallback: string) => {
   if (message.includes('no matching manifest') && message.includes('linux/arm64')) {
     return [
       'AIO Sandbox 镜像没有可用的 linux/arm64 manifest。',
-      `wemux 已按 ${resolveAioPlatform()} 启动；如果仍失败，请确认 Docker Desktop 已启用 amd64 emulation，或设置 VIBEMUX_AIO_SANDBOX_PLATFORM 指向可用平台。`,
+      `oxmux 已按 ${resolveAioPlatform()} 启动；如果仍失败，请确认 Docker Desktop 已启用 amd64 emulation，或设置 VIBEMUX_AIO_SANDBOX_PLATFORM 指向可用平台。`,
       message,
     ].join(' ')
   }
@@ -186,7 +186,7 @@ const describeDockerError = (error: unknown, fallback: string) => {
     return [
       'AIO Sandbox Docker 操作超时。',
       `首次启动可能需要拉取较大的镜像；当前拉取超时为 ${Math.round(resolveAioPullTimeoutMs() / 1000)} 秒。`,
-      '可以稍后重试，或通过 WEMUX_AIO_SANDBOX_PULL_TIMEOUT_MS 调大超时。',
+      '可以稍后重试，或通过 OXMUX_AIO_SANDBOX_PULL_TIMEOUT_MS 调大超时。',
       message,
     ].join(' ')
   }
@@ -331,7 +331,7 @@ const prepareAioEnvironment = async (): Promise<WorkspaceDesktopSandboxStatus> =
   state.hostPort = resolveAioHostPort()
   state.error = undefined
 
-  if (readEnv('WEMUX_AIO_SANDBOX_BASE_URL')) {
+  if (readEnv('OXMUX_AIO_SANDBOX_BASE_URL')) {
     state.phase = 'starting'
     state.message = `Checking external AIO Sandbox at ${resolveAioBaseUrl()}.`
     state.streamUrl = buildAioVncUrl()
@@ -411,7 +411,7 @@ const resolveMountArgs = (cwd?: string) => {
     '-v',
     `${resolvedCwd}:/home/gem/workspace`,
     '-e',
-    'WEMUX_WORKSPACE_DIR=/home/gem/workspace',
+    'OXMUX_WORKSPACE_DIR=/home/gem/workspace',
     '-e',
     'WORKSPACE=/home/gem/workspace',
   ]
@@ -434,7 +434,7 @@ const startAioContainer = async (request?: Pick<WorkspaceDesktopSandboxRequest, 
   state.error = undefined
   writePersistedState()
 
-  if (!readEnv('WEMUX_AIO_SANDBOX_BASE_URL')) {
+  if (!readEnv('OXMUX_AIO_SANDBOX_BASE_URL')) {
     const containerName = resolveAioContainerName()
     const requestedMountCwd = resolveMountCwd(request?.cwd)
     const currentMountCwd = normalizeMountCwd(state.mountedCwd)
@@ -445,7 +445,7 @@ const startAioContainer = async (request?: Pick<WorkspaceDesktopSandboxRequest, 
     if (!containerRunning || shouldRecreateForMount) {
       await runDocker(['rm', '-f', containerName], 10_000).catch(() => undefined)
       const mountArgs = resolveMountArgs(requestedMountCwd)
-      const extraArgs = readEnvBoolean('WEMUX_AIO_SANDBOX_PRIVILEGED')
+      const extraArgs = readEnvBoolean('OXMUX_AIO_SANDBOX_PRIVILEGED')
         ? ['--privileged']
         : ['--security-opt', 'seccomp=unconfined']
       if (await shouldPullAioImage()) {
@@ -500,7 +500,7 @@ const startAioContainer = async (request?: Pick<WorkspaceDesktopSandboxRequest, 
 
 const stopAioContainer = async () => {
   hydratePersistedState()
-  if (!readEnv('WEMUX_AIO_SANDBOX_BASE_URL')) {
+  if (!readEnv('OXMUX_AIO_SANDBOX_BASE_URL')) {
     await runDocker(['rm', '-f', resolveAioContainerName()], 10_000).catch(() => undefined)
   }
 
@@ -556,7 +556,7 @@ const runAioAction = async (action: WorkspaceDesktopSandboxAction) => {
     'file-manager': buildOpenAioBrowserUrlCommand('http://127.0.0.1:8080/code-server/'),
     note: [
       'mkdir -p /home/gem/Desktop',
-      "printf 'Hello from AIO Sandbox\\nThis file was created by wemux.\\n' > /home/gem/Desktop/aio-demo.txt",
+      "printf 'Hello from AIO Sandbox\\nThis file was created by oxmux.\\n' > /home/gem/Desktop/aio-demo.txt",
       buildOpenAioBrowserUrlCommand('file:///home/gem/Desktop/aio-demo.txt'),
     ].join(' && '),
     'demo-window': [
@@ -584,7 +584,7 @@ export const aioDesktopProvider = {
   async status(): Promise<WorkspaceDesktopSandboxResult> {
     const running = await isContainerRunning().catch(() => false)
     const status = getStatusSnapshot()
-    const usesExternalBaseUrl = Boolean(readEnv('WEMUX_AIO_SANDBOX_BASE_URL'))
+    const usesExternalBaseUrl = Boolean(readEnv('OXMUX_AIO_SANDBOX_BASE_URL'))
     if (!usesExternalBaseUrl && !running && ['creating', 'starting', 'ready'].includes(status.phase)) {
       state.phase = 'stopped'
       state.message = 'AIO Sandbox Desktop is not running.'

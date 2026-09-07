@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="wemux-simple-title">
-  <title id="wemux-simple-title">wemux Simple</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="oxmux-simple-title">
+  <title id="oxmux-simple-title">oxmux Simple</title>
   <defs>
     <linearGradient id="simple-bg" x1="96" x2="420" y1="72" y2="440" gradientUnits="userSpaceOnUse">
       <stop stop-color="#141417" />

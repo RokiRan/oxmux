@@ -87,7 +87,7 @@ export const cleanupWorkspaceWorktrees = async (params: {
     const normalizedBranchName = session.branchName?.trim() || ''
     const canDeleteManagedBranch = (
       workingDirectoryMode === 'worktree'
-      && (normalizedBranchName.startsWith('wemux/') || normalizedBranchName.startsWith('vibemux/'))
+      && (normalizedBranchName.startsWith('oxmux/') || normalizedBranchName.startsWith('vibemux/'))
     )
     const branchCleanupKey = canDeleteManagedBranch ? `${worktreePath}:${normalizedBranchName}` : ''
     const allowBranchCleanup = Boolean(

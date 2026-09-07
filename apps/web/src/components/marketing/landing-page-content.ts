@@ -236,12 +236,12 @@ export const nodeStatusClasses: Record<WorkerNode['status'], string> = {
 
 export const landingMeta: Record<Language, { title: string; description: string }> = {
   zh: {
-    title: 'Wemux - AI 原生组织的操作系统',
-    description: 'Wemux 是 AI 原生组织的操作系统：团队与 Agent 在同一个系统中协作，任务、Agent 会话、文档与上下文共享，跨团队、跨组织的项目都能放进同一条流程。',
+    title: 'Oxmux - AI 原生组织的操作系统',
+    description: 'Oxmux 是 AI 原生组织的操作系统：团队与 Agent 在同一个系统中协作，任务、Agent 会话、文档与上下文共享，跨团队、跨组织的项目都能放进同一条流程。',
   },
   en: {
-    title: 'Wemux - The AI-Native Operating System for Your Organization',
-    description: 'Wemux is the AI-native operating system for your organization: teams and agents collaborate in one system where tasks, agent sessions, documents, and context are shared across teams, projects, and organizations.',
+    title: 'Oxmux - The AI-Native Operating System for Your Organization',
+    description: 'Oxmux is the AI-native operating system for your organization: teams and agents collaborate in one system where tasks, agent sessions, documents, and context are shared across teams, projects, and organizations.',
   },
 }
 
@@ -297,7 +297,7 @@ export const landingText: Record<Language, LandingText> = {
           },
           {
             title: '人工最后确认',
-            description: '所有代码交付都需要在 Wemux 控制台进行人工 Review。确认无误后，一键合并至主分支。',
+            description: '所有代码交付都需要在 Oxmux 控制台进行人工 Review。确认无误后，一键合并至主分支。',
           },
         ],
         flowLabel: '工作流',
@@ -319,7 +319,7 @@ export const landingText: Record<Language, LandingText> = {
     workers: {
       eyebrow: '04 / 分布式执行',
       title: '让所有在线机器成为执行能力',
-      description: '你不需要守着一台电脑等任务跑完。把 worker 部署到不同地方，Wemux 会把任务派发给合适的在线节点。',
+      description: '你不需要守着一台电脑等任务跑完。把 worker 部署到不同地方，Oxmux 会把任务派发给合适的在线节点。',
       secondaryDescription: '云端机器跑长任务，本地机器处理私有仓库，团队机器共享执行能力。',
       controlNode: '控制台',
       memoryLabel: '内存',
@@ -337,8 +337,8 @@ export const landingText: Record<Language, LandingText> = {
       title: '你可能会先问这些',
       items: [
         {
-          question: 'Wemux 是替代现有 AI 工具吗？',
-          answer: '不是。Wemux 是 AI 原生组织的操作系统，把任务、Agent、worker、日志和审核组织到一条流程里。你仍然可以接入不同 Agent 或模型。',
+          question: 'Oxmux 是替代现有 AI 工具吗？',
+          answer: '不是。Oxmux 是 AI 原生组织的操作系统，把任务、Agent、worker、日志和审核组织到一条流程里。你仍然可以接入不同 Agent 或模型。',
         },
         {
           question: '任务只能是开发任务吗？',
@@ -366,7 +366,7 @@ export const landingText: Record<Language, LandingText> = {
       downloadCta: '下载桌面端',
     },
     footer: {
-      summary: 'Wemux 是 AI 原生组织的操作系统。',
+      summary: 'Oxmux 是 AI 原生组织的操作系统。',
     },
   },
   en: {
@@ -412,7 +412,7 @@ export const landingText: Record<Language, LandingText> = {
           },
           {
             title: 'Final Human Approval',
-            description: 'Every code delivery still goes through human review inside Wemux before a one-click merge back to the main branch.',
+            description: 'Every code delivery still goes through human review inside Oxmux before a one-click merge back to the main branch.',
           },
         ],
         flowLabel: 'Workflow',
@@ -434,7 +434,7 @@ export const landingText: Record<Language, LandingText> = {
     workers: {
       eyebrow: '04 / Distributed Execution',
       title: 'Turn every online machine into execution capacity.',
-      description: 'You do not need to watch one computer until a task finishes. Deploy workers anywhere and Wemux routes work to the right online node.',
+      description: 'You do not need to watch one computer until a task finishes. Deploy workers anywhere and Oxmux routes work to the right online node.',
       secondaryDescription: 'Run long jobs on cloud machines, private repos on local hardware, and shared tasks on team workers.',
       controlNode: 'Control',
       memoryLabel: 'Memory',
@@ -452,8 +452,8 @@ export const landingText: Record<Language, LandingText> = {
       title: 'Questions teams usually ask first.',
       items: [
         {
-          question: 'Does Wemux replace existing AI tools?',
-          answer: 'No. Wemux is the operating system for AI-native organizations. It organizes tasks, agents, workers, logs, and approvals into one workflow while still letting you connect different agents or models.',
+          question: 'Does Oxmux replace existing AI tools?',
+          answer: 'No. Oxmux is the operating system for AI-native organizations. It organizes tasks, agents, workers, logs, and approvals into one workflow while still letting you connect different agents or models.',
         },
         {
           question: 'Is it only for software development?',
@@ -481,7 +481,7 @@ export const landingText: Record<Language, LandingText> = {
       downloadCta: 'Download the desktop app',
     },
     footer: {
-      summary: 'Wemux is the operating system for AI-native organizations.',
+      summary: 'Oxmux is the operating system for AI-native organizations.',
     },
   },
 }

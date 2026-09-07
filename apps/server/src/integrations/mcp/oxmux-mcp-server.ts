@@ -1,10 +1,10 @@
 import type { AppState } from '@shared/types'
 import { listConversationsByScope } from '../../control-plane/conversation-service'
 import { McpServer, ResourceTemplate } from './sdk'
-import { registerWemuxMcpResources } from './wemux-mcp-resources'
-import { registerWemuxMcpTools } from './wemux-mcp-tools'
+import { registerOxmuxMcpResources } from './oxmux-mcp-resources'
+import { registerOxmuxMcpTools } from './oxmux-mcp-tools'
 
-export const createWemuxMcpServer = (params: { userId: string; runtimeAgentId?: string; getState: () => AppState }) => {
+export const createOxmuxMcpServer = (params: { userId: string; runtimeAgentId?: string; getState: () => AppState }) => {
   const ctx = {
     userId: params.userId,
     runtimeAgentId: params.runtimeAgentId?.trim() || undefined,
@@ -19,12 +19,12 @@ export const createWemuxMcpServer = (params: { userId: string; runtimeAgentId?: 
   }
 
   const server = new McpServer({
-    name: 'wemux-control-plane',
+    name: 'oxmux-control-plane',
     version: '0.2.2',
   })
 
-  registerWemuxMcpResources(server, ctx, ResourceTemplate)
-  registerWemuxMcpTools(server, ctx)
+  registerOxmuxMcpResources(server, ctx, ResourceTemplate)
+  registerOxmuxMcpTools(server, ctx)
 
   return server
 }

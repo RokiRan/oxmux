@@ -32,7 +32,7 @@ function DocsLangLandingRoute() {
       langHref={langHref}
       currentUrl={buildDocsLandingUrl(locale)}
       indexUrl={indexUrl}
-      indexLabel={locale === 'zh' ? '欢迎使用 Wemux' : 'Welcome to Wemux'}
+      indexLabel={locale === 'zh' ? '欢迎使用 Oxmux' : 'Welcome to Oxmux'}
       sections={model.sections}
       content={<DocsLanding locale={locale} sections={model.sections} indexUrl={indexUrl} />}
       toc={null}

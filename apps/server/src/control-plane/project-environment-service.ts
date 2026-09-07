@@ -11,8 +11,8 @@ import type { ProjectEnvironmentTemplate, ProjectEnvironmentTemplateSource } fro
 import { executorWsService } from './executor-ws-service'
 
 const CONFIG_FILENAMES = [
-  '.wemux.yml',
-  '.Wemux.yml',
+  '.oxmux.yml',
+  '.Oxmux.yml',
   // 品牌迁移兼容窗口：存量仓库可能仍用旧名模板文件
   '.vibemux.yml',
   '.Vibemux.yml',
@@ -54,7 +54,7 @@ const loadProjectEnvironmentTemplateFromExecutor = async (executorId: string, re
 }
 
 const templateSourceForFilename = (filename: string): ProjectEnvironmentTemplateSource =>
-  filename.toLowerCase().includes('vibemux') ? 'vibemux-yml' : 'wemux-yml'
+  filename.toLowerCase().includes('vibemux') ? 'vibemux-yml' : 'oxmux-yml'
 
 const loadProjectEnvironmentTemplateFromLocalPath = (rootPath: string) => {
   const normalizedRootPath = path.resolve(rootPath)

@@ -120,7 +120,7 @@ export function ApiTokensPanel() {
   return (
     <div className="space-y-5">
       <p className="max-w-2xl text-xs leading-5 text-zinc-500">
-        创建和管理个人访问令牌，用于外部 Agent（如 Hermes、OpenClaw）通过 MCP 协议访问 Wemux。
+        创建和管理个人访问令牌，用于外部 Agent（如 Hermes、OpenClaw）通过 MCP 协议访问 Oxmux。
       </p>
 
       {createdToken && (
@@ -176,7 +176,7 @@ export function ApiTokensPanel() {
           <div className="mb-4 flex items-center justify-between gap-3 border-b border-zinc-800 pb-3">
             <div>
               <h3 className="text-sm font-semibold text-zinc-100">创建新令牌</h3>
-              <p className="mt-1 text-xs text-zinc-500">为连接到 Wemux 的外部 Agent 命名此令牌。</p>
+              <p className="mt-1 text-xs text-zinc-500">为连接到 Oxmux 的外部 Agent 命名此令牌。</p>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -243,7 +243,7 @@ export function ApiTokensPanel() {
           </div>
           <h3 className="mt-3 text-sm font-semibold text-zinc-100">还没有 API 令牌</h3>
           <p className="mt-1.5 max-w-md text-xs leading-5 text-zinc-500">
-            创建令牌以允许外部 Agent 通过 MCP 访问 Wemux
+            创建令牌以允许外部 Agent 通过 MCP 访问 Oxmux
           </p>
         </div>
       ) : (
@@ -304,8 +304,8 @@ export function ApiTokensPanel() {
         <pre className="overflow-x-auto border border-zinc-800 bg-zinc-950 p-3 text-xs leading-5 text-zinc-300">
 {`{
   "mcpServers": {
-    "Wemux": {
-      "url": "https://your-wemux-host/mcp",
+    "Oxmux": {
+      "url": "https://your-oxmux-host/mcp",
       "headers": {
         "Authorization": "Bearer vbx-your-token-here"
       }

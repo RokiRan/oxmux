@@ -1,6 +1,6 @@
 /**
  * [INPUT]: Canonical GitHub resource identities and local resource bindings.
- * [OUTPUT]: Shared contracts for linking pull requests, issues, and workflow runs to Wemux context.
+ * [OUTPUT]: Shared contracts for linking pull requests, issues, and workflow runs to Oxmux context.
  * [POS]: Pure cross-app domain boundary; remote resource facts remain in their provider-specific records.
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */

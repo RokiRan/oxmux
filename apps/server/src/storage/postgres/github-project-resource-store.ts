@@ -1,5 +1,5 @@
 /**
- * [INPUT]: Canonical GitHub resource identity and wemux project scope.
+ * [INPUT]: Canonical GitHub resource identity and oxmux project scope.
  * [OUTPUT]: Idempotent project-resource links and scoped resource projections.
  * [POS]: Project membership authority for globally unique GitHub resources.
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md

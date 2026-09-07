@@ -376,7 +376,7 @@ export function SettingsPage({
   }
 
   return (
-    <div className="wemux-page-outer-frame flex h-full min-h-0 flex-col overflow-hidden">
+    <div className="oxmux-page-outer-frame flex h-full min-h-0 flex-col overflow-hidden">
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="grid min-h-0 flex-1 gap-0 xl:grid-cols-[15rem_minmax(0,1fr)]">
           {showMenuList ? (
@@ -563,7 +563,7 @@ export function SettingsPage({
                       <li>{language === 'zh' ? '点击 Request Access。' : 'Click Request Access.'}</li>
                       <li>{language === 'zh' ? '浏览器弹出 Local Network Access 权限框时选择允许。' : 'Choose Allow in the browser Local Network Access prompt.'}</li>
                       <li>{language === 'zh' ? '如果已经是 denied，请打开下面的站点设置链接，手动允许 Local Network Access。' : 'If it is already denied, open the site settings link below and allow Local Network Access manually.'}</li>
-                      <li>{language === 'zh' ? '回到 Wemux 后刷新整个页面，再点 Refresh Status 或测试本机节点。' : 'Return to Wemux, reload the page, then click Refresh Status or test the local worker.'}</li>
+                      <li>{language === 'zh' ? '回到 Oxmux 后刷新整个页面，再点 Refresh Status 或测试本机节点。' : 'Return to Oxmux, reload the page, then click Refresh Status or test the local worker.'}</li>
                     </ol>
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       <a
@@ -619,8 +619,8 @@ export function SettingsPage({
                     <p className="font-medium">{language === 'zh' ? '浏览器已经拒绝本地网络访问' : 'Local Network Access is denied'}</p>
                     <p className="mt-1">
                       {language === 'zh'
-                        ? '页面无法重新弹出权限框。请打开站点设置，在权限列表里把“本地网络”改为允许；如果你已经改过了，请刷新整个 Wemux 页面让 Chrome 重新加载权限状态。'
-                        : 'This page cannot reopen the permission prompt. Open site settings and change Local Network Access to Allow. If you already changed it, reload the Wemux page so Chrome reloads the permission state.'}
+                        ? '页面无法重新弹出权限框。请打开站点设置，在权限列表里把“本地网络”改为允许；如果你已经改过了，请刷新整个 Oxmux 页面让 Chrome 重新加载权限状态。'
+                        : 'This page cannot reopen the permission prompt. Open site settings and change Local Network Access to Allow. If you already changed it, reload the Oxmux page so Chrome reloads the permission state.'}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <Button
@@ -631,7 +631,7 @@ export function SettingsPage({
                         className="h-7 border-amber-400/30 bg-amber-400/10 px-2 text-[11px] text-amber-50 hover:bg-amber-400/20 hover:text-amber-50"
                       >
                         <RotateCcw className="mr-1 h-3.5 w-3.5" />
-                        {language === 'zh' ? '刷新 Wemux 页面' : 'Reload Wemux'}
+                        {language === 'zh' ? '刷新 Oxmux 页面' : 'Reload Oxmux'}
                       </Button>
                       <a
                         href={localWorkerHealthUrl}
@@ -693,8 +693,8 @@ export function SettingsPage({
                       <p className="text-sm font-medium text-zinc-100">{language === 'zh' ? '开机自启动' : 'Launch at login'}</p>
                       <p className="mt-1 text-xs leading-5 text-zinc-500">
                         {language === 'zh'
-                          ? '登录系统后自动在后台启动 Wemux（托盘常驻）。'
-                          : 'Start Wemux automatically in the background after login.'}
+                          ? '登录系统后自动在后台启动 Oxmux（托盘常驻）。'
+                          : 'Start Oxmux automatically in the background after login.'}
                       </p>
                     </div>
                     {!isDesktopNativeClient() ? (

@@ -1,11 +1,11 @@
 // [INPUT]: Incoming request URL and Host header.
-// [OUTPUT]: Canonical wemux URL for legacy vibemux domains, or null.
+// [OUTPUT]: Canonical oxmux URL for legacy vibemux domains, or null.
 // [POS]: Control-plane host migration compatibility at the HTTP boundary.
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
 const LEGACY_DOMAIN_TARGETS = [
-  { source: 'vibemux.xyz', target: 'wemux.xyz' },
-  { source: 'vibemux.com', target: 'wemux.ai' },
+  { source: 'vibemux.xyz', target: 'oxmux.xyz' },
+  { source: 'vibemux.com', target: 'oxmux.ai' },
 ] as const
 
 const normalizeHost = (host: string) => {

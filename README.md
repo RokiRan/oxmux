@@ -1,4 +1,4 @@
-# Wemux
+# Oxmux
 
 > **AI Native organization OS.**
 >
@@ -6,17 +6,17 @@
 >
 > **English**: README.md | **中文**: [README.zh-CN.md](README.zh-CN.md)
 
-[![CI](https://github.com/wemux-ai/wemux/actions/workflows/ci.yml/badge.svg)](https://github.com/wemux-ai/wemux/actions/workflows/ci.yml)
+[![CI](https://github.com/oxmux-ai/oxmux/actions/workflows/ci.yml/badge.svg)](https://github.com/oxmux-ai/oxmux/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![Self-hosted](https://img.shields.io/badge/Self--hosted-✔-brightgreen.svg)](docs/SELF-HOSTING.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![X (Twitter)](https://img.shields.io/badge/X-@Wemux__ai-black?logo=x&logoColor=white)](https://x.com/Wemux_ai)
+[![X (Twitter)](https://img.shields.io/badge/X-@Oxmux__ai-black?logo=x&logoColor=white)](https://x.com/Oxmux_ai)
 
-Wemux is an open-source agent collaboration platform. It orchestrates AI agents that execute real coding work on **worker machines** (your machines, your credentials), in isolated Git worktrees, with full traceability — not in a black box in the cloud. A control plane handles planning, routing and review; the actual work always runs on workers you own.
+Oxmux is an open-source agent collaboration platform. It orchestrates AI agents that execute real coding work on **worker machines** (your machines, your credentials), in isolated Git worktrees, with full traceability — not in a black box in the cloud. A control plane handles planning, routing and review; the actual work always runs on workers you own.
 
-**Open source** — Apache-2.0 licensed (see [LICENSE](LICENSE)), fully self-hostable, community driven. Star us on [GitHub](https://github.com/wemux-ai/wemux), open an [issue](https://github.com/wemux-ai/wemux/issues), or join the discussion. Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+**Open source** — Apache-2.0 licensed (see [LICENSE](LICENSE)), fully self-hostable, community driven. Star us on [GitHub](https://github.com/oxmux-ai/oxmux), open an [issue](https://github.com/oxmux-ai/oxmux/issues), or join the discussion. Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-> **Note** — This repository contains the open-source community edition of Wemux. Some platform capabilities — hosted model gateway, usage-based billing, hosted cloud-node pool, and partner systems — are operated as separate commercial services and are **not part of this repository**. **Self-hosted cloud nodes are open source** (bring your own Docker/BoxLite hosts — see [SELF-HOSTING.md § 七](docs/SELF-HOSTING.md)). Everything in this repo is free to use under Apache-2.0. See [Open source vs hosted](#open-source-vs-hosted-services) for the full breakdown.
+> **Note** — This repository contains the open-source community edition of Oxmux. Some platform capabilities — hosted model gateway, usage-based billing, hosted cloud-node pool, and partner systems — are operated as separate commercial services and are **not part of this repository**. **Self-hosted cloud nodes are open source** (bring your own Docker/BoxLite hosts — see [SELF-HOSTING.md § 七](docs/SELF-HOSTING.md)). Everything in this repo is free to use under Apache-2.0. See [Open source vs hosted](#open-source-vs-hosted-services) for the full breakdown.
 
 ## Contents
 
@@ -71,7 +71,7 @@ The community edition is fully self-contained around **local workers + BYOK mode
 
 ## How it works
 
-Wemux keeps humans in the loop while agents do the heavy lifting:
+Oxmux keeps humans in the loop while agents do the heavy lifting:
 
 1. **Describe** — create a task in natural language from the main chat, a workspace kanban, or even an inbound IM channel (Feishu / Slack / …).
 2. **Plan** — a main agent turns your words into a structured task, picks an agent and a workspace, and routes it to an available worker.
@@ -114,8 +114,8 @@ Storage: PostgreSQL (Drizzle migrations) + S3-compatible object storage (R2/MinI
 Requirements: Node.js 20+, pnpm 10+, Docker (for Postgres).
 
 ```bash
-git clone https://github.com/wemux-ai/wemux.git
-cd wemux
+git clone https://github.com/oxmux-ai/oxmux.git
+cd oxmux
 pnpm install
 
 # 1. Start infrastructure (Postgres + object storage)
@@ -153,7 +153,7 @@ For production-style deployment see [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md)
 Deploy your own instance without managing a VPS. The repository ships `.railway/railway.ts` (Railway Infrastructure as Code) that provisions the control plane, Postgres, and an object-storage Bucket with build/start/healthcheck preconfigured:
 
 ```bash
-git clone https://github.com/wemux-ai/wemux.git && cd wemux
+git clone https://github.com/oxmux-ai/oxmux.git && cd oxmux
 pnpm install
 railway login
 railway init          # or `railway link` for an existing project
@@ -169,7 +169,7 @@ NODE_ENV=production node dist-server/apps/server/src/control-plane-entry.js
 healthcheck: /api/ready
 ```
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/wemux-community)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/oxmux-community)
 
 > **Heads-up:** Railway deprecated Config-as-Code (`railway.json`) — new services no longer read it. A bare **New Project → Deploy from GitHub repo** misdetects this repository as a TanStack Start app and crashes at start (`srvx: command not found`). Use the IaC flow above, the official template, or set the build/start/healthcheck commands on the service manually. The root `railway.json` only keeps serving pre-existing (legacy) services until 2026-12-01.
 
@@ -186,7 +186,7 @@ Set these variables on the control-plane service before deploying:
 | `BETTER_AUTH_SECRET` | **Required in production.** Generate with `openssl rand -hex 32`. |
 | `TOKEN_SECRET` | **Required in production.** Generate separately with `openssl rand -hex 32`. |
 | `SECRET_ENCRYPTION_KEY` | **Required.** A 32-byte hex key; generate separately with `openssl rand -hex 32`. |
-| `WEMUX_PUBLIC_BASE_URL` | Set to the final public origin, for example `https://your-app.up.railway.app`. |
+| `OXMUX_PUBLIC_BASE_URL` | Set to the final public origin, for example `https://your-app.up.railway.app`. |
 | `BETTER_AUTH_URL` | Set to the same public origin; required for reliable login/OAuth callbacks. |
 | `HOST` | Optional; defaults to `0.0.0.0`. |
 | `PORT` | Do not pin it. Railway injects `PORT`; the application fallback is `8989`. |
@@ -198,9 +198,9 @@ Full setup, custom-domain, worker-pairing, and upgrade instructions: [SELF-HOSTI
 
 ## Model configuration (BYOK)
 
-Model keys are configured **on the worker side** — your keys never leave your machine. Configure your runtime (OpenCode/Claude Code/Codex) on the worker, then select models in the console's model center. No built-in API keys are shipped with Wemux.
+Model keys are configured **on the worker side** — your keys never leave your machine. Configure your runtime (OpenCode/Claude Code/Codex) on the worker, then select models in the console's model center. No built-in API keys are shipped with Oxmux.
 
-> **Runtime licenses** — the Wemux platform is Apache-2.0, but the agent CLIs it orchestrates carry their own licenses: [OpenCode](https://github.com/sst/opencode) is Apache-2.0; Claude Code and Codex are proprietary tools of Anthropic and OpenAI respectively — you authenticate with your own accounts and are subject to their terms.
+> **Runtime licenses** — the Oxmux platform is Apache-2.0, but the agent CLIs it orchestrates carry their own licenses: [OpenCode](https://github.com/sst/opencode) is Apache-2.0; Claude Code and Codex are proprietary tools of Anthropic and OpenAI respectively — you authenticate with your own accounts and are subject to their terms.
 
 ## Development
 
@@ -225,15 +225,15 @@ No. Tasks execute on your workers in isolated Git worktrees; only diffs, logs an
 No. The worker just runs the agent CLI locally — model inference happens at your model provider (Anthropic, OpenAI, OpenRouter, local models, …). Any laptop or server can be a worker.
 
 **Which agent runtimes and models can I use?**
-Wemux orchestrates OpenCode, Claude Code and Codex runtimes, with any model your runtime supports — bring your own keys (BYOK).
+Oxmux orchestrates OpenCode, Claude Code and Codex runtimes, with any model your runtime supports — bring your own keys (BYOK).
 
 **Do I have to self-host?**
-No. The same product is offered as a hosted service (wemux.ai) with managed cloud nodes and billing. This repository is the self-hostable community edition.
+No. The same product is offered as a hosted service (oxmux.ai) with managed cloud nodes and billing. This repository is the self-hostable community edition.
 
 **Is it really free?**
 Yes. Everything in this repository is Apache-2.0, including the self-hosted cloud-node runtime. Only separately operated hosted services — model gateway, hosted cloud-node pool, billing, partner systems — are commercial, and none of them is part of this repo.
 
-**How is Wemux different from cloud agent platforms?**
+**How is Oxmux different from cloud agent platforms?**
 Worker-first execution: code runs on machines you control, in isolated worktrees, with human-in-the-loop diff review before merge. Plus multi-node mesh, IM channel integrations, and workspace-level collaboration — all self-hostable.
 
 ## Telemetry (anonymous, opt-out)
@@ -246,16 +246,16 @@ Self-hosted instances report **anonymous aggregate usage** once a day to help us
 Turn it off with a single environment variable:
 
 ```bash
-WEMUX_USAGE_REPORTING_DISABLED=1
+OXMUX_USAGE_REPORTING_DISABLED=1
 ```
 
 Reporting is best-effort and never blocks anything — disabling it does not affect any feature.
 
 ## Community & resources
 
-- [X (Twitter)](https://x.com/Wemux_ai) — product updates and announcements
-- [GitHub Issues](https://github.com/wemux-ai/wemux/issues) — reproducible bugs and clearly scoped engineering tasks
-- [GitHub Discussions](https://github.com/wemux-ai/wemux/discussions) — usage questions, ideas, use cases and roadmap discussion
+- [X (Twitter)](https://x.com/Oxmux_ai) — product updates and announcements
+- [GitHub Issues](https://github.com/oxmux-ai/oxmux/issues) — reproducible bugs and clearly scoped engineering tasks
+- [GitHub Discussions](https://github.com/oxmux-ai/oxmux/discussions) — usage questions, ideas, use cases and roadmap discussion
 - [Community governance](docs/COMMUNITY-GOVERNANCE.md) — channel rules, Issue quality bar and maintainer workflow
 - [Roadmap](ROADMAP.md) — what's planned next
 - [SELF-HOSTING.md](docs/SELF-HOSTING.md) — production deployment guide
@@ -271,4 +271,4 @@ Found a vulnerability? See [SECURITY.md](SECURITY.md) — please report privatel
 
 ## License
 
-[Apache-2.0](LICENSE). Documentation and marketing assets are licensed separately (see NOTICE). "wemux" and the wemux.ai domain are trademarks and are not granted by the open-source license.
+[Apache-2.0](LICENSE). Documentation and marketing assets are licensed separately (see NOTICE). "oxmux" and the oxmux.ai domain are trademarks and are not granted by the open-source license.

@@ -1,6 +1,6 @@
 # What changes when teams move beyond demos
 
-Wemux does not attack chat. It fills the gap between a promising answer and a traceable result that a team can inspect, merge, and operate.
+Oxmux does not attack chat. It fills the gap between a promising answer and a traceable result that a team can inspect, merge, and operate.
 
 ## Where chat still works well
 
@@ -29,5 +29,5 @@ Teams do not need to choose one forever. They need a cleaner contract between ge
 
 Use chat to think faster. Use a delivery console to route, execute, review, and ship real work.
 
-That is the position behind Wemux: not another assistant tab, but a system for turning AI output into accountable team execution.
+That is the position behind Oxmux: not another assistant tab, but a system for turning AI output into accountable team execution.
 

@@ -66,7 +66,7 @@ const readPositiveIntegerEnv = (name: string, fallback: number) => {
 }
 
 const resolveCodexStartupRpcTimeoutMs = () => readPositiveIntegerEnv(
-  'WEMUX_CODEX_STARTUP_RPC_TIMEOUT_MS',
+  'OXMUX_CODEX_STARTUP_RPC_TIMEOUT_MS',
   DEFAULT_CODEX_STARTUP_RPC_TIMEOUT_MS,
 )
 
@@ -107,7 +107,7 @@ const TRUSTED_VIBEMUX_MCP_SERVER_NAMES = new Set(['mcp_vibemux', 'vibemux'])
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-const paramsMentionReadOnlyWemuxTool = (params: unknown) => {
+const paramsMentionReadOnlyOxmuxTool = (params: unknown) => {
   let serialized = ''
   try {
     const encoded = JSON.stringify(params)
@@ -134,7 +134,7 @@ export const resolveCodexElicitationResponse = (method: string, params?: unknown
   const serverName = typeof payload.serverName === 'string' ? payload.serverName.trim().toLowerCase() : ''
   const acceptsTrustedRead = payload.mode === 'form'
     && TRUSTED_VIBEMUX_MCP_SERVER_NAMES.has(serverName)
-    && paramsMentionReadOnlyWemuxTool(params)
+    && paramsMentionReadOnlyOxmuxTool(params)
 
   return acceptsTrustedRead
     ? { action: 'accept' as const, content: {}, _meta: null }
@@ -1453,7 +1453,7 @@ const runCodexPromptWithTransport = async (
     codexHomePresent: Boolean(runtimeEnv.CODEX_HOME?.trim()),
     runtimeArgCount: (params.runtimeArgs ?? []).length,
     runtimeEnvKeys: Object.keys(params.runtimeEnv ?? {})
-      .filter((key) => key.startsWith('OPENAI_') || key.startsWith('CODEX_') || key.startsWith('WEMUX_CODEX_'))
+      .filter((key) => key.startsWith('OPENAI_') || key.startsWith('CODEX_') || key.startsWith('OXMUX_CODEX_'))
       .sort(),
     runtimeHasOpenAiApiKey: Boolean(runtimeEnv.OPENAI_API_KEY?.trim()),
     runtimeOpenAiBaseUrl: runtimeEnv.OPENAI_BASE_URL || '',
@@ -1986,7 +1986,7 @@ const runCodexPromptWithTransport = async (
       try {
         await request('initialize', {
           clientInfo: {
-            name: 'wemux-worker',
+            name: 'oxmux-worker',
             version: '0.1.1',
           },
           capabilities: {

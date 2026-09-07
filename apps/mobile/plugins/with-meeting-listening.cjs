@@ -28,7 +28,7 @@ module.exports = (config) => {
           'android:exported': 'false',
           'android:foregroundServiceType': 'microphone',
         },
-        'intent-filter': [{ action: [{ $: { 'android:name': 'com.wemux.meeting-listening.STOP' } }] }],
+        'intent-filter': [{ action: [{ $: { 'android:name': 'com.oxmux.meeting-listening.STOP' } }] }],
       })
     }
     return nextConfig

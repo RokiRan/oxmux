@@ -9,7 +9,7 @@
 **解决**：
 ```bash
 docker ps -a
-docker rm -f wemux-postgres wemux-rustfs wemux-rustfs-init
+docker rm -f oxmux-postgres oxmux-rustfs oxmux-rustfs-init
 ```
 
 ### 需要重置基础设施
@@ -20,7 +20,7 @@ docker rm -f wemux-postgres wemux-rustfs wemux-rustfs-init
 ```bash
 pnpm dev:infra:down
 # 如需连数据一起重置
-docker volume rm wemux_wemux-postgres-data wemux_wemux-rustfs-data
+docker volume rm oxmux_oxmux-postgres-data oxmux_oxmux-rustfs-data
 pnpm dev:infra:up
 ```
 

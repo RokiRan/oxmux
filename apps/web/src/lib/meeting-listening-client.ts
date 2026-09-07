@@ -61,7 +61,7 @@ type LocalMeetingRuntimeSegment = {
 }
 
 const CHUNK_MS = 30_000
-const RUNTIME_SETTINGS_KEY = 'wemux.meeting-runtime'
+const RUNTIME_SETTINGS_KEY = 'oxmux.meeting-runtime'
 const DEFAULT_DESKTOP_RUNTIME_URL = 'http://127.0.0.1:4768'
 
 const normalizeRuntimeUrl = (value: string) => value.trim().replace(/\/$/, '')
@@ -284,7 +284,7 @@ const transcribeChunk = async (blob: Blob, startedAtMs: number, endedAtMs: numbe
   if (brainContext) form.append('brainContext', brainContext)
   const response = await fetch(`${runtime.url}/v1/meeting/transcribe`, {
     method: 'POST',
-    headers: runtime.token ? { 'X-Wemux-Meeting-Key': runtime.token } : undefined,
+    headers: runtime.token ? { 'X-Oxmux-Meeting-Key': runtime.token } : undefined,
     body: form,
   })
   if (!response.ok) throw new Error(`本地 MOSS 运行时不可用（${response.status}）`)
@@ -388,7 +388,7 @@ const browserSnapshot = (): MeetingListeningSnapshot => ({
 })
 
 const mobileSnapshot = async (): Promise<MeetingListeningSnapshot> => {
-  const native = (window as Window & { __WEMUX_MOBILE__?: { invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown> } }).__WEMUX_MOBILE__
+  const native = (window as Window & { __OXMUX_MOBILE__?: { invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown> } }).__OXMUX_MOBILE__
   if (!native) return browserSnapshot()
   const status = await native.invoke('recording_status') as Partial<MeetingListeningSnapshot>
   return {
@@ -410,7 +410,7 @@ export const getMeetingListeningSnapshot = async (): Promise<MeetingListeningSna
 
 export const startMeetingListening = async (): Promise<MeetingListeningSnapshot> => {
   if (isReactNativeMobileClient()) {
-    const native = (window as Window & { __WEMUX_MOBILE__?: { invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown> } }).__WEMUX_MOBILE__
+    const native = (window as Window & { __OXMUX_MOBILE__?: { invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown> } }).__OXMUX_MOBILE__
     if (!native) throw new Error('移动端录音 bridge 不可用')
     const accessToken = getAuthHeaders().Authorization?.replace(/^Bearer\s+/i, '') ?? ''
     const runtime = runtimeSettingsFor(true)
@@ -464,7 +464,7 @@ export const startMeetingListening = async (): Promise<MeetingListeningSnapshot>
 
 export const stopMeetingListening = async (): Promise<MeetingListeningSnapshot> => {
   if (isReactNativeMobileClient()) {
-    const native = (window as Window & { __WEMUX_MOBILE__?: { invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown> } }).__WEMUX_MOBILE__
+    const native = (window as Window & { __OXMUX_MOBILE__?: { invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown> } }).__OXMUX_MOBILE__
     if (!native) throw new Error('移动端录音 bridge 不可用')
     await native.invoke('recording_stop')
     return mobileSnapshot()

@@ -102,7 +102,7 @@ const verifyGitLabPat = async (token: string, host?: string): Promise<CandidateR
     const response = await fetch(resolveGitLabApiUrl(host), {
       headers: {
         'PRIVATE-TOKEN': token,
-        'User-Agent': 'wemux-pat-check',
+        'User-Agent': 'oxmux-pat-check',
       },
       signal: createSignal(),
     })

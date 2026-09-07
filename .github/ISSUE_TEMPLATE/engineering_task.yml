@@ -9,7 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form for a concrete task with an observable outcome. Open-ended ideas, product direction, and use-case discussion belong in [GitHub Discussions](https://github.com/wemux-ai/wemux/discussions).
+        Use this form for a concrete task with an observable outcome. Open-ended ideas, product direction, and use-case discussion belong in [GitHub Discussions](https://github.com/oxmux-ai/oxmux/discussions).
 
   - type: checkboxes
     id: preflight

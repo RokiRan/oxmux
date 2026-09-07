@@ -1,7 +1,7 @@
 /**
  * [INPUT]: Shared GitHub resource binding contracts and Drizzle persistence.
  * [OUTPUT]: Idempotent binding upserts and scoped binding queries.
- * [POS]: Authoritative local relationship store between GitHub resources and wemux contexts.
+ * [POS]: Authoritative local relationship store between GitHub resources and oxmux contexts.
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 

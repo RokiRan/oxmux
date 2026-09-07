@@ -19,7 +19,7 @@ export type PushDevice = {
 export type PushNotification = {
   title: string
   body: string
-  /** 点击后深链目标（如 wemux://chat 或 /meeting-records） */
+  /** 点击后深链目标（如 oxmux://chat 或 /meeting-records） */
   route?: string
   /** 事件类型（诊断/去重） */
   eventType: string
@@ -50,7 +50,7 @@ export const buildPushNotification = (eventType: string, payload: Record<string,
     ? payload.title.trim()
     : typeof payload.taskTitle === 'string' && payload.taskTitle.trim()
       ? payload.taskTitle.trim()
-      : 'wemux'
+      : 'oxmux'
   const body = [payload.handoffPrompt, payload.comment, payload.description, payload.transcript]
     .find((candidate) => typeof candidate === 'string' && candidate.trim())
   const bodyText = typeof body === 'string' ? body.slice(0, 120) : '有新动态'

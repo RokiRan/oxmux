@@ -12,7 +12,7 @@ That is why workstations matter. They are not an implementation detail. They are
 
 ## Why we built around delivery
 
-This is the design bet behind wemux. Not another chat tab. Not a fantasy of total autonomy. A control surface that routes work into the right machine and brings it back in a form a team can inspect.
+This is the design bet behind oxmux. Not another chat tab. Not a fantasy of total autonomy. A control surface that routes work into the right machine and brings it back in a form a team can inspect.
 
 If AI coding is going to matter inside real teams, it needs delivery primitives: task routing, worker pairing, repository execution, logs, branches, and human approval. Otherwise the system is optimizing for the screenshot, not the outcome.
 

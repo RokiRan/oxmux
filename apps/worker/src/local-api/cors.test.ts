@@ -16,11 +16,11 @@ test('isReadableLocalApiCorsPath allows only read-only diagnostics endpoints', (
 })
 
 test('isAllowedReadableLocalApiCorsOrigin allows Vibemux and local development origins', () => {
-  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://wemux.xyz'), true)
-  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://preview.wemux.xyz'), true)
-  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://wemux.ai'), true)
-  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://app.wemux.ai'), true)
-  assert.equal(isAllowedReadableLocalApiCorsOrigin('http://app.wemux.localtest.me:15173'), true)
+  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://oxmux.xyz'), true)
+  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://preview.oxmux.xyz'), true)
+  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://oxmux.ai'), true)
+  assert.equal(isAllowedReadableLocalApiCorsOrigin('https://app.oxmux.ai'), true)
+  assert.equal(isAllowedReadableLocalApiCorsOrigin('http://app.oxmux.localtest.me:15173'), true)
   assert.equal(isAllowedReadableLocalApiCorsOrigin('http://127.0.0.1:3000'), true)
   assert.equal(isAllowedReadableLocalApiCorsOrigin('http://localhost:3000'), true)
 })

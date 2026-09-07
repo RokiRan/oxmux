@@ -4,8 +4,8 @@ import type { AppState } from '@shared/types'
 import { VIBEMUX_READ_ONLY_MCP_TOOL_ANNOTATIONS } from '@shared/mcp'
 import type { McpServer } from './sdk'
 import { ErrorCode, McpError } from './sdk'
-import { registerWemuxMcpChatTools, normalizeMcpArguments } from './wemux-mcp-chat-tools'
-import type { WemuxMcpContext } from './wemux-mcp-context'
+import { registerOxmuxMcpChatTools, normalizeMcpArguments } from './oxmux-mcp-chat-tools'
+import type { OxmuxMcpContext } from './oxmux-mcp-context'
 
 type CapturedTool = {
   config: Record<string, unknown>
@@ -20,13 +20,13 @@ const captureChatTools = (runtimeAgentId?: string) => {
       return {}
     },
   } as unknown as McpServer
-  const ctx: WemuxMcpContext = {
+  const ctx: OxmuxMcpContext = {
     userId: 'user-1',
     runtimeAgentId,
     getState: () => ({ projects: [], tasks: [], mainChatSessions: [] }) as unknown as AppState,
     getConversations: () => [],
   }
-  registerWemuxMcpChatTools(server, ctx)
+  registerOxmuxMcpChatTools(server, ctx)
   return tools
 }
 

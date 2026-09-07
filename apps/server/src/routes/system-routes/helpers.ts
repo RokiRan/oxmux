@@ -11,13 +11,13 @@ import { getPrimaryAgentMcpServers } from '../../services/primary-agent-mcp'
 import { resolveUserFeatureFlags } from '../../services/user-experimental-settings-service'
 import { resolveExecutorMeshEnrollment } from '../../services/executor-mesh-service'
 
-const DEFAULT_WORKER_LOCAL_SERVER_PORT = Number(getEnv('WEMUX_WORKER_PORT') || getWorkerConsolePortBase(process.env.NODE_ENV === 'development' ? 'development' : 'production'))
+const DEFAULT_WORKER_LOCAL_SERVER_PORT = Number(getEnv('OXMUX_WORKER_PORT') || getWorkerConsolePortBase(process.env.NODE_ENV === 'development' ? 'development' : 'production'))
 const DEFAULT_WORKER_CONSOLE_URL = `http://127.0.0.1:${DEFAULT_WORKER_LOCAL_SERVER_PORT}`
 
 export const trimTrailingSlash = (value: string) => value.replace(/\/+$/, '')
 
 export const resolveWorkerConsoleUrl = () => {
-  const configured = getEnv('WEMUX_WORKER_CONSOLE_URL')?.trim()
+  const configured = getEnv('OXMUX_WORKER_CONSOLE_URL')?.trim()
   return trimTrailingSlash(configured || DEFAULT_WORKER_CONSOLE_URL)
 }
 
@@ -211,7 +211,7 @@ export const resolveCustomChannelAgent = (agentId: string, userId?: string) => {
 }
 
 export const resolvePublicBaseUrl = (requestUrl: string) => {
-  const configured = trimTrailingSlash(getEnv('WEMUX_PUBLIC_BASE_URL')?.trim() || '')
+  const configured = trimTrailingSlash(getEnv('OXMUX_PUBLIC_BASE_URL')?.trim() || '')
   if (configured) {
     return configured
   }

@@ -8,7 +8,7 @@ import type { ControlPlaneToExecutorMessage, ExecutorToControlPlaneMessage } fro
 
 const TERMINAL_DEBUG_PREFIX = '[worker][terminal]'
 const TERMINAL_DEBUG_ENABLED = ['1', 'true', 'yes', 'on'].includes(
-  (getEnv('WEMUX_TERMINAL_DEBUG') ?? '').trim().toLowerCase(),
+  (getEnv('OXMUX_TERMINAL_DEBUG') ?? '').trim().toLowerCase(),
 )
 
 const previewCommand = (value?: unknown) => {

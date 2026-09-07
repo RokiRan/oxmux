@@ -66,8 +66,8 @@ test('workspace create panel shows Codex runtime settings control', async () => 
       }]}
       projects={[{
         id: 'project-1',
-        name: 'wemux',
-        gitUrl: 'https://example.com/wemux.git',
+        name: 'oxmux',
+        gitUrl: 'https://example.com/oxmux.git',
         defaultBranch: 'master',
         versionControl: 'git-remote',
         createdAt: '2026-06-08T00:00:00.000Z',
@@ -81,6 +81,6 @@ test('workspace create panel shows Codex runtime settings control', async () => 
 
   assert.match(html, /思考强度：medium；摘要模式：auto/)
   assert.match(html, /执行权限：可写/)
-  assert.match(html, /wemux/)
+  assert.match(html, /oxmux/)
   assert.match(html, /Mac-mini/)
 })

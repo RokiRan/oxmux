@@ -1,12 +1,12 @@
-# Wemux vs Orca
+# Oxmux vs Orca
 
 Orca is one of the strongest execution-delivery competitors in the current AI coding market. It is especially strong for individual developers who want parallel worktrees, built-in diff review, SSH-connected execution, and a polished desktop experience.
 
-That makes it a serious comparison target. But it does not make Wemux and Orca identical products.
+That makes it a serious comparison target. But it does not make Oxmux and Orca identical products.
 
 ## Where Orca is strong
 
-Based on the competitor analysis already recorded inside Wemux, Orca is strongest in these areas:
+Based on the competitor analysis already recorded inside Oxmux, Orca is strongest in these areas:
 
 - parallel worktrees as a first-class product primitive
 - integrated diff review and GitHub-oriented delivery loops
@@ -16,9 +16,9 @@ Based on the competitor analysis already recorded inside Wemux, Orca is stronges
 
 If a single developer wants a highly polished local or desktop-first AI coding environment, Orca is a compelling option.
 
-## Where Wemux is different
+## Where Oxmux is different
 
-Wemux is not trying to be only a desktop orchestrator. Its core value is the control plane around execution and delivery:
+Oxmux is not trying to be only a desktop orchestrator. Its core value is the control plane around execution and delivery:
 
 - task routing instead of session-only ownership
 - worker-based execution across real machines
@@ -30,7 +30,7 @@ That difference matters in practice. A team usually does not just need an elegan
 
 ## Side-by-side
 
-| Dimension | Orca | Wemux |
+| Dimension | Orca | Oxmux |
 | --- | --- | --- |
 | Primary shape | Desktop-first AI coding workbench | Worker-first AI delivery control plane |
 | Best fit | Individual developers and power users | Teams coordinating real execution across machines |
@@ -43,11 +43,11 @@ That difference matters in practice. A team usually does not just need an elegan
 
 Choose Orca if your main problem is: “I want a very polished personal AI coding workstation with parallel worktrees and integrated review.”
 
-Choose Wemux if your main problem is: “Our AI work needs to survive real delivery conditions across workers, repos, machines, and team review.”
+Choose Oxmux if your main problem is: “Our AI work needs to survive real delivery conditions across workers, repos, machines, and team review.”
 
-That is the key distinction. Orca is very strong at the workbench layer. Wemux is building for the delivery-control layer around real execution.
+That is the key distinction. Orca is very strong at the workbench layer. Oxmux is building for the delivery-control layer around real execution.
 
-## Why teams may prefer Wemux
+## Why teams may prefer Oxmux
 
 Teams usually discover that the hard problem is not only generating code. The hard problem is keeping AI work:
 
@@ -57,4 +57,4 @@ Teams usually discover that the hard problem is not only generating code. The ha
 - resumable
 - transferable across machines
 
-That is where Wemux has the clearer product direction. If your workflow depends on a task surviving device changes, remote execution, and handoff between people or nodes, Wemux fits that problem more directly than a desktop-first AI coding workbench.
+That is where Oxmux has the clearer product direction. If your workflow depends on a task surviving device changes, remote execution, and handoff between people or nodes, Oxmux fits that problem more directly than a desktop-first AI coding workbench.

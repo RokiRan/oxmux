@@ -41,7 +41,7 @@ export const getLiveWorkerStatus = async (
   options: LocalWorkerStatusOptions = {},
 ): Promise<LocalWorkerStatus> => {
   const environment = options.portEnvironment ?? resolveWorkerConsolePortEnvironment({
-    explicitEnvironment: getEnv('WEMUX_WORKER_PORT_PROFILE'),
+    explicitEnvironment: getEnv('OXMUX_WORKER_PORT_PROFILE'),
     nodeEnv: process.env.NODE_ENV,
     releaseChannel: getWorkerReleaseChannel(),
     cloudUrl: config.cloudUrl,

@@ -1,6 +1,6 @@
 # Roadmap
 
-Wemux maintains a maintainer-owned roadmap. Community reactions and
+Oxmux maintains a maintainer-owned roadmap. Community reactions and
 comments inform prioritization but do not constitute a binding vote —
 see [COMMUNITY-GOVERNANCE.md](docs/COMMUNITY-GOVERNANCE.md).
 

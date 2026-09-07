@@ -1,6 +1,6 @@
 /**
  * [INPUT]: Web API request/response contracts and the shared authenticated request client.
- * [OUTPUT]: Typed HTTP methods consumed by Wemux web routes and components.
+ * [OUTPUT]: Typed HTTP methods consumed by Oxmux web routes and components.
  * [POS]: Web control-plane client surface; business validation stays on the server.
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */

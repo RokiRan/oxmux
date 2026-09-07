@@ -165,17 +165,17 @@ const resolveCurrentLocalWorkerEnvironment = (): LocalWorkerEnvironment => {
   // 兼容窗口：新旧域名都识别
   if (
     hostname === 'vibemux.xyz'
-    || hostname.endsWith('.wemux.xyz')
-    || hostname === 'wemux.xyz'
-    || hostname.endsWith('.wemux.xyz')
+    || hostname.endsWith('.oxmux.xyz')
+    || hostname === 'oxmux.xyz'
+    || hostname.endsWith('.oxmux.xyz')
   ) {
     return 'preview'
   }
   if (
     hostname === 'vibemux.com'
-    || hostname.endsWith('.wemux.com')
-    || hostname === 'wemux.ai'
-    || hostname.endsWith('.wemux.ai')
+    || hostname.endsWith('.oxmux.com')
+    || hostname === 'oxmux.ai'
+    || hostname.endsWith('.oxmux.ai')
   ) {
     return 'production'
   }

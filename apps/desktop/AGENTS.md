@@ -4,7 +4,7 @@
 
 - Owns the Electron main process, sandboxed preload bridge, desktop packaging and desktop development launcher.
 - Reuses the renderer from `apps/web`; product UI and business logic stay in the web app.
-- Exposes only the narrow `window.__WEMUX_DESKTOP__` bridge. Renderer code must not receive Node.js primitives.
+- Exposes only the narrow `window.__OXMUX_DESKTOP__` bridge. Renderer code must not receive Node.js primitives.
 - Desktop releases use the root product version and `electron-builder`; this package does not own a separate product version.
 
 ## Security invariants

@@ -33,7 +33,7 @@ const DEFAULT_EASYTIER_VERSION = 'v2.6.4'
 const DEFAULT_EASYTIER_DOWNLOAD_BASE_URL = 'https://github.com/EasyTier/EasyTier/releases/download'
 
 const normalizeEasyTierVersion = (value?: string) => {
-  const version = value?.trim() || getEnv('WEMUX_EASYTIER_VERSION')?.trim() || DEFAULT_EASYTIER_VERSION
+  const version = value?.trim() || getEnv('OXMUX_EASYTIER_VERSION')?.trim() || DEFAULT_EASYTIER_VERSION
   return version.startsWith('v') ? version : `v${version}`
 }
 
@@ -89,7 +89,7 @@ export const buildEasyTierDownloadUrl = (params: {
     return ''
   }
 
-  const baseUrl = params.baseUrl?.trim() || getEnv('WEMUX_EASYTIER_DOWNLOAD_BASE_URL')?.trim() || DEFAULT_EASYTIER_DOWNLOAD_BASE_URL
+  const baseUrl = params.baseUrl?.trim() || getEnv('OXMUX_EASYTIER_DOWNLOAD_BASE_URL')?.trim() || DEFAULT_EASYTIER_DOWNLOAD_BASE_URL
   return `${baseUrl.replace(/\/+$/, '')}/${encodeURIComponent(version)}/${encodeURIComponent(assetName)}`
 }
 
@@ -177,7 +177,7 @@ const runUnzip = (
 ) => {
   const unzipPath = (options.resolveExecutable ?? (() => ''))('unzip')
   if (!unzipPath) {
-    throw new Error('EasyTier auto download requires unzip. Install unzip or set WEMUX_EASYTIER_CORE_PATH and WEMUX_EASYTIER_CLI_PATH.')
+    throw new Error('EasyTier auto download requires unzip. Install unzip or set OXMUX_EASYTIER_CORE_PATH and OXMUX_EASYTIER_CLI_PATH.')
   }
 
   const result = options.runCommand?.(unzipPath, ['-oq', archivePath, '-d', installDir], { timeout: 120000 })

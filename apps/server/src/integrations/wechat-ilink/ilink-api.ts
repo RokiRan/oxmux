@@ -173,8 +173,8 @@ export type WeixinSendTypingResponse = {
 
 /** 每个请求携带的基础信息（channel_version / bot_agent，参照官方插件 base_info）。 */
 const buildBaseInfo = () => ({
-  channel_version: 'wemux-0.1.0',
-  bot_agent: 'Wemux/0.3.116 (wechat-ilink channel)',
+  channel_version: 'oxmux-0.1.0',
+  bot_agent: 'Oxmux/0.3.116 (wechat-ilink channel)',
 })
 
 /** X-WECHAT-UIN：随机 uint32 → 十进制字符串 → base64。 */

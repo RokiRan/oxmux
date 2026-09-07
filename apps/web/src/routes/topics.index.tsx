@@ -14,10 +14,10 @@ const topics = listMarketingTopicsWithDocuments()
 
 export const Route = createFileRoute('/topics/')({
   head: () => buildMarketingHead({
-    description: 'Topic clusters that connect Wemux blog posts, use cases, and compare pages into reusable SEO hubs.',
+    description: 'Topic clusters that connect Oxmux blog posts, use cases, and compare pages into reusable SEO hubs.',
     path: '/topics',
     structuredData: buildMarketingTopicDirectoryStructuredData(topics),
-    title: 'Wemux SEO Topics',
+    title: 'Oxmux SEO Topics',
   }),
   component: TopicsIndexRoute,
 })
@@ -25,9 +25,9 @@ export const Route = createFileRoute('/topics/')({
 function TopicsIndexRoute() {
   return (
     <MarketingPageLayout
-      description="Topics turn isolated content pages into reusable clusters. This is where Wemux can build durable internal linking around AI coding delivery."
+      description="Topics turn isolated content pages into reusable clusters. This is where Oxmux can build durable internal linking around AI coding delivery."
       eyebrow="Library"
-      title="Wemux topic clusters"
+      title="Oxmux topic clusters"
     >
       <MarketingTopicIndex topics={topics} />
     </MarketingPageLayout>

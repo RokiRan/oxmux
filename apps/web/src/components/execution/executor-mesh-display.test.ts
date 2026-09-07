@@ -94,7 +94,7 @@ test('shows config pending when a macOS mesh helper still uses old enrollment', 
   const remediation = getMeshRemediation(executor)
   assert.match(remediation?.command ?? '', /mesh install-service/)
   assert.equal(remediation?.title, '需要在这台 Mac 的终端执行一次授权命令')
-  assert.ok(remediation?.command.includes("WEMUX_WORKER_HOME='/Users/x/.vibemux-preview'"))
+  assert.ok(remediation?.command.includes("OXMUX_WORKER_HOME='/Users/x/.vibemux-preview'"))
 })
 
 test('suggests installing unzip when mesh auto download cannot extract EasyTier', () => {
@@ -109,7 +109,7 @@ test('suggests installing unzip when mesh auto download cannot extract EasyTier'
       mesh: {
         enabled: true,
         status: 'error' as const,
-        errorMessage: 'EasyTier auto download requires unzip. Install unzip or set WEMUX_EASYTIER_CORE_PATH and WEMUX_EASYTIER_CLI_PATH.',
+        errorMessage: 'EasyTier auto download requires unzip. Install unzip or set OXMUX_EASYTIER_CORE_PATH and OXMUX_EASYTIER_CLI_PATH.',
         peers: [],
         reportedAt: new Date().toISOString(),
       },
@@ -119,7 +119,7 @@ test('suggests installing unzip when mesh auto download cannot extract EasyTier'
   const remediation = getMeshRemediation(executor, 'zh')
   assert.equal(remediation?.kind, 'missing-unzip')
   assert.match(remediation?.title ?? '', /缺少 unzip/)
-  assert.match(remediation?.description ?? '', /WEMUX_EASYTIER_CORE_PATH/)
+  assert.match(remediation?.description ?? '', /OXMUX_EASYTIER_CORE_PATH/)
   assert.match(remediation?.command ?? '', /apt-get install -y unzip/)
   assert.match(remediation?.command ?? '', /dnf install -y unzip/)
   assert.match(remediation?.command ?? '', /apk add unzip/)
@@ -137,7 +137,7 @@ test('suggests Windows worker restart instead of Linux unzip command on win32', 
       mesh: {
         enabled: true,
         status: 'error' as const,
-        errorMessage: 'EasyTier auto download requires unzip. Install unzip or set WEMUX_EASYTIER_CORE_PATH and WEMUX_EASYTIER_CLI_PATH.',
+        errorMessage: 'EasyTier auto download requires unzip. Install unzip or set OXMUX_EASYTIER_CORE_PATH and OXMUX_EASYTIER_CLI_PATH.',
         peers: [],
         reportedAt: new Date().toISOString(),
       },
@@ -148,7 +148,7 @@ test('suggests Windows worker restart instead of Linux unzip command on win32', 
   assert.equal(remediation?.kind, 'windows-mesh-extract')
   assert.match(remediation?.title ?? '', /Windows Mesh/)
   assert.match(remediation?.description ?? '', /PowerShell/)
-  assert.match(remediation?.command ?? '', /wemux\.cmd/)
-  assert.match(remediation?.command ?? '', /worker service restart --name "wemux-worker-preview"/)
+  assert.match(remediation?.command ?? '', /oxmux\.cmd/)
+  assert.match(remediation?.command ?? '', /worker service restart --name "oxmux-worker-preview"/)
   assert.doesNotMatch(remediation?.command ?? '', /apt-get|dnf|yum|apk/)
 })

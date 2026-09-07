@@ -3,7 +3,7 @@ import test from 'node:test'
 import { getLiveWorkerStatus } from './status'
 
 const config = {
-  cloudUrl: 'https://wemux.ai',
+  cloudUrl: 'https://oxmux.ai',
   executorId: 'executor-expected',
   localServerPort: 49000,
 }

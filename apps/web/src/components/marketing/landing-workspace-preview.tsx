@@ -54,14 +54,14 @@ type WorkspacePreviewTerminalCommand = {
 
 const workspacePreviewProjects: WorkspacePreviewProject[] = [
   {
-    name: 'Wemux Console',
+    name: 'Oxmux Console',
     workspaces: [
       { name: 'auth-flow-fix', branch: 'main -> auth-flow-fix', running: true, attention: true, active: true },
       { name: 'integration-regression', branch: 'main -> qa/integration', running: true },
     ],
   },
   {
-    name: 'Wemux Docs',
+    name: 'Oxmux Docs',
     workspaces: [
       { name: 'release-notes', branch: 'main -> docs/release-notes' },
     ],

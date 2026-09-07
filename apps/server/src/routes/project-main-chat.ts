@@ -132,7 +132,7 @@ const getUnsupportedCustomAgentRuntimeMessage = (session: MainChatSession, userI
     return '当前主对话执行端不可用。'
   }
 
-  return `${getRuntimeDescriptor(customAgent.profile.preferredRuntime).label} 还没有接入当前 wemux worker，暂时不能用于主对话。`
+  return `${getRuntimeDescriptor(customAgent.profile.preferredRuntime).label} 还没有接入当前 oxmux worker，暂时不能用于主对话。`
 }
 
 const updateChatSession = (
@@ -220,7 +220,7 @@ const resolveMainChatExecutor = async (userId: string, session: MainChatSession)
     }
   }
 
-  // 未指定节点或默认官方云节点 → 优先按需分配 wemux 云节点执行；
+  // 未指定节点或默认官方云节点 → 优先按需分配 oxmux 云节点执行；
   // 云节点不可用（如生产环境尚未开放 / 未配置）时回退到用户可见的第一个在线执行器，
   // 避免「会话未指定执行节点」变成死胡同（web 已不再提供手动选择入口）。
   if (!executorId || isManagedCloudAutoExecutorId(executorId)) {
@@ -754,7 +754,7 @@ const buildCustomChatWorkerPrompt = (
     ),
     '',
     `默认工作目录: ${workDirPath}`,
-    '这个 Agent 的自由文件工作区仅限默认工作目录。Agent 根目录下的隐藏 .system 区域属于 wemux 自己管理，不应主动读写。',
+    '这个 Agent 的自由文件工作区仅限默认工作目录。Agent 根目录下的隐藏 .system 区域属于 oxmux 自己管理，不应主动读写。',
     '',
     historySection,
     `用户消息：${message.trim()}`,
@@ -763,7 +763,7 @@ const buildCustomChatWorkerPrompt = (
 }
 
 const buildAgentWorkdirPromptPath = (agentId: string) => {
-  return `~/.wemux/agents/${sanitizeAgentWorkdirId(agentId)}/workdir`
+  return `~/.oxmux/agents/${sanitizeAgentWorkdirId(agentId)}/workdir`
 }
 
 export const requestMainChatExecutorReply = async (params: {
@@ -972,7 +972,7 @@ export const requestMainChatExecutorReply = async (params: {
       resumeSessionId: getMainChatRuntimeSessionId(targetSession, continuationScope),
       cwd,
       agentWorkdir: customAgent ? { agentId: customAgent.agent.id, sessionId: targetSession.id, workspaceId: targetSession.workspaceId } : undefined,
-      title: customAgent ? `wemux Agent Chat · ${customAgent.agent.name}` : 'wemux Main Agent Chat',
+      title: customAgent ? `oxmux Agent Chat · ${customAgent.agent.name}` : 'oxmux Main Agent Chat',
       prompt,
       executionModel,
       agentSettings,

@@ -29,28 +29,28 @@ import {
 
 test('resolvePreviewDisplayPath strips bootstrap query params from the visible path', () => {
   assert.equal(
-    resolvePreviewDisplayPath('https://preview.wemux.localtest.me/dashboard?vmx_viewer_token=token-123&vmx_transport=direct&tab=logs#tail'),
+    resolvePreviewDisplayPath('https://preview.oxmux.localtest.me/dashboard?vmx_viewer_token=token-123&vmx_transport=direct&tab=logs#tail'),
     '/dashboard?tab=logs#tail',
   )
 })
 
 test('resolvePreviewDisplayUrl strips bootstrap query params from the visible address', () => {
   assert.equal(
-    resolvePreviewDisplayUrl('https://preview.wemux.localtest.me/dashboard?vmx_viewer_token=token-123&vmx_transport=direct&tab=logs#tail'),
-    'https://preview.wemux.localtest.me/dashboard?tab=logs#tail',
+    resolvePreviewDisplayUrl('https://preview.oxmux.localtest.me/dashboard?vmx_viewer_token=token-123&vmx_transport=direct&tab=logs#tail'),
+    'https://preview.oxmux.localtest.me/dashboard?tab=logs#tail',
   )
 })
 
 test('buildPreviewIframeUrl does not carry bootstrap query params into cookie-backed navigation urls', () => {
   assert.equal(
-    buildPreviewIframeUrl('https://preview.wemux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct', '/settings?mode=compact'),
-    'https://preview.wemux.localtest.me/settings?mode=compact',
+    buildPreviewIframeUrl('https://preview.oxmux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct', '/settings?mode=compact'),
+    'https://preview.oxmux.localtest.me/settings?mode=compact',
   )
 })
 
 test('resolvePreviewNavigationUrl keeps bootstrap query params only for the first iframe load', () => {
-  const bootstrapIframeUrl = 'https://preview.wemux.localtest.me/?vmx_viewer_token=token-123'
-  const cookieBackedBaseUrl = 'https://preview.wemux.localtest.me'
+  const bootstrapIframeUrl = 'https://preview.oxmux.localtest.me/?vmx_viewer_token=token-123'
+  const cookieBackedBaseUrl = 'https://preview.oxmux.localtest.me'
 
   assert.equal(
     resolvePreviewNavigationUrl({
@@ -59,7 +59,7 @@ test('resolvePreviewNavigationUrl keeps bootstrap query params only for the firs
       previewPath: '/settings?mode=compact',
       useBootstrapToken: true,
     }),
-    'https://preview.wemux.localtest.me/settings?mode=compact&vmx_viewer_token=token-123',
+    'https://preview.oxmux.localtest.me/settings?mode=compact&vmx_viewer_token=token-123',
   )
 
   assert.equal(
@@ -69,34 +69,34 @@ test('resolvePreviewNavigationUrl keeps bootstrap query params only for the firs
       previewPath: '/settings?mode=compact',
       useBootstrapToken: false,
     }),
-    'https://preview.wemux.localtest.me/settings?mode=compact',
+    'https://preview.oxmux.localtest.me/settings?mode=compact',
   )
 })
 
 test('resolvePreviewStableAccessUrl ignores rotating preview bootstrap params', () => {
   assert.equal(
-    resolvePreviewStableAccessUrl('https://preview.wemux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct&tab=logs#tail'),
-    'https://preview.wemux.localtest.me/?tab=logs#tail',
+    resolvePreviewStableAccessUrl('https://preview.oxmux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct&tab=logs#tail'),
+    'https://preview.oxmux.localtest.me/?tab=logs#tail',
   )
   assert.equal(
-    resolvePreviewStableAccessUrl('https://preview.wemux.localtest.me/?vmx_viewer_token=token-456&vmx_transport=direct&tab=logs#tail'),
-    'https://preview.wemux.localtest.me/?tab=logs#tail',
+    resolvePreviewStableAccessUrl('https://preview.oxmux.localtest.me/?vmx_viewer_token=token-456&vmx_transport=direct&tab=logs#tail'),
+    'https://preview.oxmux.localtest.me/?tab=logs#tail',
   )
 })
 
 test('resolvePreviewAddressNavigation supports browser-like jumps for same-origin full urls', () => {
   assert.deepEqual(
     resolvePreviewAddressNavigation({
-      value: 'https://preview.wemux.localtest.me/settings?mode=compact#editor',
-      bootstrapIframeUrl: 'https://preview.wemux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct',
-      cookieBackedBaseUrl: 'https://preview.wemux.localtest.me',
+      value: 'https://preview.oxmux.localtest.me/settings?mode=compact#editor',
+      bootstrapIframeUrl: 'https://preview.oxmux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct',
+      cookieBackedBaseUrl: 'https://preview.oxmux.localtest.me',
       useBootstrapToken: true,
     }),
     {
       previewPath: '/settings?mode=compact#editor',
-      iframeUrl: 'https://preview.wemux.localtest.me/settings?mode=compact&vmx_viewer_token=token-123#editor',
-      currentPreviewUrl: 'https://preview.wemux.localtest.me/settings?mode=compact#editor',
-      displayUrl: 'https://preview.wemux.localtest.me/settings?mode=compact#editor',
+      iframeUrl: 'https://preview.oxmux.localtest.me/settings?mode=compact&vmx_viewer_token=token-123#editor',
+      currentPreviewUrl: 'https://preview.oxmux.localtest.me/settings?mode=compact#editor',
+      displayUrl: 'https://preview.oxmux.localtest.me/settings?mode=compact#editor',
     },
   )
 })
@@ -105,8 +105,8 @@ test('resolvePreviewAddressNavigation supports direct jumps to external urls', (
   assert.deepEqual(
     resolvePreviewAddressNavigation({
       value: 'https://example.com/docs?ref=preview#top',
-      bootstrapIframeUrl: 'https://preview.wemux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct',
-      cookieBackedBaseUrl: 'https://preview.wemux.localtest.me',
+      bootstrapIframeUrl: 'https://preview.oxmux.localtest.me/?vmx_viewer_token=token-123&vmx_transport=direct',
+      cookieBackedBaseUrl: 'https://preview.oxmux.localtest.me',
       useBootstrapToken: true,
     }),
     {
@@ -122,16 +122,16 @@ test('resolvePreviewAddressNavigation rebases the current path when the preview 
   assert.deepEqual(
     resolvePreviewAddressNavigation({
       value: 'http://154.222.24.117:3000/dashboard?tab=logs',
-      bootstrapIframeUrl: 'https://workspace-preview.wemux.xyz/?vmx_viewer_token=token-123',
-      cookieBackedBaseUrl: 'https://workspace-preview.wemux.xyz/',
+      bootstrapIframeUrl: 'https://workspace-preview.oxmux.xyz/?vmx_viewer_token=token-123',
+      cookieBackedBaseUrl: 'https://workspace-preview.oxmux.xyz/',
       useBootstrapToken: false,
       rebaseAbsoluteUrl: true,
     }),
     {
       previewPath: '/dashboard?tab=logs',
-      iframeUrl: 'https://workspace-preview.wemux.xyz/dashboard?tab=logs',
-      currentPreviewUrl: 'https://workspace-preview.wemux.xyz/dashboard?tab=logs',
-      displayUrl: 'https://workspace-preview.wemux.xyz/dashboard?tab=logs',
+      iframeUrl: 'https://workspace-preview.oxmux.xyz/dashboard?tab=logs',
+      currentPreviewUrl: 'https://workspace-preview.oxmux.xyz/dashboard?tab=logs',
+      displayUrl: 'https://workspace-preview.oxmux.xyz/dashboard?tab=logs',
     },
   )
 })
@@ -139,19 +139,19 @@ test('resolvePreviewAddressNavigation rebases the current path when the preview 
 test('resolvePreviewNavigationBridgePath accepts only same-origin preview navigation', () => {
   assert.deepEqual(
     resolvePreviewNavigationBridgePath({
-      href: 'https://preview.wemux.localtest.me/conversations/abc?vmx_viewer_token=token-123&vmx_transport=direct&tab=chat#latest',
-      previewBaseUrl: 'https://preview.wemux.localtest.me/',
+      href: 'https://preview.oxmux.localtest.me/conversations/abc?vmx_viewer_token=token-123&vmx_transport=direct&tab=chat#latest',
+      previewBaseUrl: 'https://preview.oxmux.localtest.me/',
     }),
     {
       path: '/conversations/abc?tab=chat#latest',
-      url: 'https://preview.wemux.localtest.me/conversations/abc?tab=chat#latest',
+      url: 'https://preview.oxmux.localtest.me/conversations/abc?tab=chat#latest',
     },
   )
 
   assert.equal(
     resolvePreviewNavigationBridgePath({
       href: 'https://evil.example.com/conversations/abc',
-      previewBaseUrl: 'https://preview.wemux.localtest.me/',
+      previewBaseUrl: 'https://preview.oxmux.localtest.me/',
     }),
     null,
   )
@@ -170,7 +170,7 @@ test('resolveDirectPreviewAccessUrl rewrites loopback preview source urls to exe
 test('resolveDirectPreviewAccessUrl skips non-loopback source urls', () => {
   assert.equal(
     resolveDirectPreviewAccessUrl({
-      sourceAppUrl: 'https://preview.wemux.xyz/dashboard',
+      sourceAppUrl: 'https://preview.oxmux.xyz/dashboard',
       targetHost: '192.168.1.8',
     }),
     '',
@@ -181,13 +181,13 @@ test('resolvePreviewCookieAccessWarning flags loopback preview urls inside hoste
   assert.deepEqual(
     resolvePreviewCookieAccessWarning({
       previewUrl: 'http://127.0.0.1:3005/chat',
-      currentPageHostname: 'wemux.xyz',
+      currentPageHostname: 'oxmux.xyz',
     }),
     {
       reason: 'loopback',
       host: '127.0.0.1:3005',
       origin: 'http://127.0.0.1:3005',
-      isHostedWemuxPage: true,
+      isHostedOxmuxPage: true,
     },
   )
 })
@@ -195,22 +195,22 @@ test('resolvePreviewCookieAccessWarning flags loopback preview urls inside hoste
 test('resolvePreviewCookieAccessWarning flags ip and nip preview urls', () => {
   assert.equal(
     resolvePreviewCookieAccessWarning({
-      previewUrl: 'https://preview-abc.wemux.xyz/chat',
-      currentPageHostname: 'wemux.xyz',
+      previewUrl: 'https://preview-abc.oxmux.xyz/chat',
+      currentPageHostname: 'oxmux.xyz',
     }),
     null,
   )
   assert.equal(
     resolvePreviewCookieAccessWarning({
       previewUrl: 'http://203.0.113.10:3005/chat',
-      currentPageHostname: 'wemux.xyz',
+      currentPageHostname: 'oxmux.xyz',
     })?.reason,
     'ip',
   )
   assert.equal(
     resolvePreviewCookieAccessWarning({
       previewUrl: 'http://preview-abc.127.0.0.1.nip.io:48123/chat',
-      currentPageHostname: 'wemux.xyz',
+      currentPageHostname: 'oxmux.xyz',
     })?.reason,
     'nip',
   )
@@ -234,7 +234,7 @@ test('canUseLocalDirectPreview returns false when executor ids do not match', ()
 
 test('canUseLocalDirectPreview returns false for non-loopback source urls', () => {
   assert.equal(canUseLocalDirectPreview({
-    sourceAppUrl: 'https://preview.wemux.xyz/dashboard',
+    sourceAppUrl: 'https://preview.oxmux.xyz/dashboard',
     workspaceExecutorId: 'executor-1',
     localWorkerExecutorId: 'executor-1',
   }), false)
@@ -281,47 +281,47 @@ test('resolveSelectedPreviewSourceRemoteIframeUrl keeps per-port remote preview 
     selectedPreviewSource: {
       id: 'mastra',
       appUrl: 'http://127.0.0.1:4111/',
-      accessUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/?vmx_viewer_token=token-4111',
+      accessUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111',
       primary: false,
     },
-    fallbackIframeUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/?vmx_viewer_token=token-3005',
-  }), 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/?vmx_viewer_token=token-4111')
+    fallbackIframeUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/?vmx_viewer_token=token-3005',
+  }), 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111')
 })
 
 test('resolveRemotePreviewBaseUrl keeps selected per-port preview domains for remote navigation', () => {
   assert.equal(resolveRemotePreviewBaseUrl({
     preview: {
-      publicUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/',
+      publicUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/',
     } as any,
     selectedPreviewSource: {
       id: 'mastra',
       appUrl: 'http://127.0.0.1:4111/',
-      accessUrl: 'http://mastra-shopping--preview--b5dfdk-4111.wemux.localtest.me:18989/?vmx_viewer_token=token-4111',
+      accessUrl: 'http://mastra-shopping--preview--b5dfdk-4111.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111',
       primary: false,
     },
-    iframeUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/?vmx_viewer_token=token-3005',
-  }), 'http://mastra-shopping--preview--b5dfdk-4111.wemux.localtest.me:18989/?vmx_viewer_token=token-4111')
+    iframeUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/?vmx_viewer_token=token-3005',
+  }), 'http://mastra-shopping--preview--b5dfdk-4111.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111')
 })
 
 test('resolveAuthorizedPreviewCopyUrl keeps selected per-port preview domains authorized for copy', () => {
   assert.equal(resolveAuthorizedPreviewCopyUrl({
     preview: {
-      publicUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/',
+      publicUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/',
     } as any,
     selectedPreviewSource: {
       id: 'mastra',
       appUrl: 'http://127.0.0.1:4111/',
-      accessUrl: 'http://mastra-shopping--preview--b5dfdk-4111.wemux.localtest.me:18989/?vmx_viewer_token=token-4111',
+      accessUrl: 'http://mastra-shopping--preview--b5dfdk-4111.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111',
       primary: false,
     },
-    iframeUrl: 'http://mastra-shopping--preview--b5dfdk.wemux.localtest.me:18989/?vmx_viewer_token=token-3005',
-  }), 'http://mastra-shopping--preview--b5dfdk-4111.wemux.localtest.me:18989/?vmx_viewer_token=token-4111')
+    iframeUrl: 'http://mastra-shopping--preview--b5dfdk.oxmux.localtest.me:18989/?vmx_viewer_token=token-3005',
+  }), 'http://mastra-shopping--preview--b5dfdk-4111.oxmux.localtest.me:18989/?vmx_viewer_token=token-4111')
 })
 
 test('resolveRemotePreviewBaseUrl prefers preview domain over local app url fallback', () => {
   assert.equal(resolveRemotePreviewBaseUrl({
     preview: {
-      publicUrl: 'https://preview-abc.wemux.xyz/',
+      publicUrl: 'https://preview-abc.oxmux.xyz/',
     } as any,
     selectedPreviewSource: {
       id: 'primary',
@@ -329,14 +329,14 @@ test('resolveRemotePreviewBaseUrl prefers preview domain over local app url fall
       accessUrl: 'http://127.0.0.1:3005/',
       primary: true,
     },
-    iframeUrl: 'https://preview-abc.wemux.xyz/?vmx_viewer_token=token-123',
-  }), 'https://preview-abc.wemux.xyz/?vmx_viewer_token=token-123')
+    iframeUrl: 'https://preview-abc.oxmux.xyz/?vmx_viewer_token=token-123',
+  }), 'https://preview-abc.oxmux.xyz/?vmx_viewer_token=token-123')
 })
 
 test('resolveAuthorizedPreviewCopyUrl falls back to iframeUrl before bare publicUrl', () => {
   assert.equal(resolveAuthorizedPreviewCopyUrl({
     preview: {
-      publicUrl: 'https://preview-abc.wemux.xyz/',
+      publicUrl: 'https://preview-abc.oxmux.xyz/',
     } as any,
     selectedPreviewSource: {
       id: 'primary',
@@ -344,31 +344,31 @@ test('resolveAuthorizedPreviewCopyUrl falls back to iframeUrl before bare public
       accessUrl: 'http://127.0.0.1:3005/',
       primary: true,
     },
-    iframeUrl: 'https://preview-abc.wemux.xyz/?vmx_viewer_token=token-123',
-  }), 'https://preview-abc.wemux.xyz/?vmx_viewer_token=token-123')
+    iframeUrl: 'https://preview-abc.oxmux.xyz/?vmx_viewer_token=token-123',
+  }), 'https://preview-abc.oxmux.xyz/?vmx_viewer_token=token-123')
 })
 
 test('resolveRemotePreviewBaseUrl keeps selected remote source domains for extra ports', () => {
   assert.equal(resolveRemotePreviewBaseUrl({
     preview: {
-      publicUrl: 'https://preview-abc.wemux.xyz/',
+      publicUrl: 'https://preview-abc.oxmux.xyz/',
     } as any,
     selectedPreviewSource: {
       id: 'admin',
       appUrl: 'http://127.0.0.1:3006/',
-      accessUrl: 'https://preview-abc-admin.wemux.xyz/',
+      accessUrl: 'https://preview-abc-admin.oxmux.xyz/',
       primary: false,
     },
-  }), 'https://preview-abc-admin.wemux.xyz/')
+  }), 'https://preview-abc-admin.oxmux.xyz/')
 })
 
 test('resolveRemotePreviewBaseUrl falls back to preview public url when no selected source exists', () => {
   assert.equal(resolveRemotePreviewBaseUrl({
     preview: {
-      publicUrl: 'https://preview-abc.wemux.xyz/',
+      publicUrl: 'https://preview-abc.oxmux.xyz/',
     } as any,
     selectedPreviewSource: null,
-  }), 'https://preview-abc.wemux.xyz/')
+  }), 'https://preview-abc.oxmux.xyz/')
 })
 
 test('preview domain and share labels distinguish public proxy from tunnel sessions', () => {
@@ -406,7 +406,7 @@ test('resolvePublicDirectExternalReason keeps public direct as external-only fro
   assert.equal(resolvePublicDirectExternalReason({
     activeTransport: 'gateway',
     pageProtocol: 'https:',
-    previewUrl: 'https://test-preview--6g3ove.wemux.xyz/',
+    previewUrl: 'https://test-preview--6g3ove.oxmux.xyz/',
   }), '')
 })
 
@@ -561,8 +561,8 @@ test('resolvePreviewTransportOptions exposes availability and latency for the cu
     canAttemptLocalDirectPreview: true,
     localDirectBaseUrl: 'http://127.0.0.1:3000/',
     publicDirectBaseUrl: 'http://203.0.113.10:3000/',
-    previewAccessUrl: 'https://preview.wemux.xyz/',
-    previewBaseUrl: 'https://preview.wemux.xyz/',
+    previewAccessUrl: 'https://preview.oxmux.xyz/',
+    previewBaseUrl: 'https://preview.oxmux.xyz/',
     transportProbes: {
       'local-direct': { status: 'ok', roundTripMs: 14 },
       'public-direct': { status: 'ok', roundTripMs: 36 },

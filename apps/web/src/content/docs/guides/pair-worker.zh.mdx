@@ -1,41 +1,41 @@
 ---
 title: 配对 Worker
-description: 在 Wemux 中将您的机器连接为 Worker 执行器。
+description: 在 Oxmux 中将您的机器连接为 Worker 执行器。
 ---
 
 # 配对 Worker
 
-配对将您的机器连接到 Wemux，以便可以接收和执行任务。
+配对将您的机器连接到 Oxmux，以便可以接收和执行任务。
 
 ## 前置要求
 
-- Wemux Worker 守护进程已安装
-- 访问 Wemux Web 界面
+- Oxmux Worker 守护进程已安装
+- 访问 Oxmux Web 界面
 - 机器需要能够访问控制面的网络
 
 ## 第 1 步：安装 Worker
 
 ```bash
-npm install -g wemux-worker
+npm install -g oxmux-worker
 ```
 
 或使用 pnpm：
 
 ```bash
-pnpm add -g wemux-worker
+pnpm add -g oxmux-worker
 ```
 
 ## 第 2 步：启动守护进程
 
 ```bash
-Wemux worker daemon
+Oxmux worker daemon
 ```
 
 Worker 控制台将在 `http://127.0.0.1:48121` 启动。
 
 ## 第 3 步：生成配对码
 
-1. 打开 Wemux Web 界面
+1. 打开 Oxmux Web 界面
 2. 导航到您的 **项目** → **Worker** 选项卡
 3. 点击**"添加 Worker"**
 4. 将显示配对码（例如 `VMX-A3F7-9X2K`）
@@ -60,13 +60,13 @@ Worker 从环境变量读取配置：
 
 ```bash
 # 控制面 URL（默认：http://127.0.0.1:8989）
-WEMUX_CLOUD_URL=http://127.0.0.1:8989
+OXMUX_CLOUD_URL=http://127.0.0.1:8989
 
-# 任务工作目录（默认：/tmp/wemux-runtime）
-WEMUX_RUNTIME_DIR=/tmp/wemux-runtime
+# 任务工作目录（默认：/tmp/oxmux-runtime）
+OXMUX_RUNTIME_DIR=/tmp/oxmux-runtime
 
 # Worker 显示名称（可选）
-WEMUX_WORKER_NAME=my-macbook-pro
+OXMUX_WORKER_NAME=my-macbook-pro
 ```
 
 ## 管理多个 Worker

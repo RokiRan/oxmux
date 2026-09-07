@@ -97,11 +97,11 @@ const ensurePackagedWorker = () => {
 
 const isNpmWorkerPackage = () => {
   const packageName = getWorkerPackageJson().name?.trim() || ''
-  // 兼容窗口：存量 vibemux-* 与迁移后的 wemux-* 包名都按 npm 安装包处理
+  // 兼容窗口：存量 vibemux-* 与迁移后的 oxmux-* 包名都按 npm 安装包处理
   return packageName === 'vibemux-worker'
     || packageName === 'vibemux-worker-preview'
-    || packageName === 'wemux-worker'
-    || packageName === 'wemux-worker-preview'
+    || packageName === 'oxmux-worker'
+    || packageName === 'oxmux-worker-preview'
 }
 
 const hasNpmWorkerPackageInPrefix = (installPrefix: string) => {
@@ -183,7 +183,7 @@ const downloadAsset = async (url: string) => {
   }
 
   const buffer = Buffer.from(await response.arrayBuffer())
-  const updateDir = path.join(os.tmpdir(), 'wemux-worker-updates')
+  const updateDir = path.join(os.tmpdir(), 'oxmux-worker-updates')
   mkdirSync(updateDir, { recursive: true })
   const archivePath = path.join(updateDir, `worker-${Date.now()}.tar.gz`)
   writeFileSync(archivePath, buffer)

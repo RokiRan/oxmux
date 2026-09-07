@@ -1,41 +1,41 @@
 ---
 title: Pair a Worker
-description: Connect your machine as a worker executor in wemux.
+description: Connect your machine as a worker executor in oxmux.
 ---
 
 # Pair a Worker
 
-Pairing connects your machine to Wemux so it can receive and execute tasks.
+Pairing connects your machine to Oxmux so it can receive and execute tasks.
 
 ## Prerequisites
 
-- Wemux worker daemon installed
-- Access to the Wemux web interface
+- Oxmux worker daemon installed
+- Access to the Oxmux web interface
 - The machine needs network access to the control plane
 
 ## Step 1: Install the Worker
 
 ```bash
-npm install -g wemux-worker
+npm install -g oxmux-worker
 ```
 
 Or with pnpm:
 
 ```bash
-pnpm add -g wemux-worker
+pnpm add -g oxmux-worker
 ```
 
 ## Step 2: Start the Daemon
 
 ```bash
-Wemux worker daemon
+Oxmux worker daemon
 ```
 
 The worker console will start at `http://127.0.0.1:48121`.
 
 ## Step 3: Generate Pairing Code
 
-1. Open the Wemux web interface
+1. Open the Oxmux web interface
 2. Navigate to your **Project** → **Workers** tab
 3. Click **"Add Worker"**
 4. A pairing code will be displayed (e.g., `VMX-A3F7-9X2K`)
@@ -60,13 +60,13 @@ The worker reads configuration from environment variables:
 
 ```bash
 # Control plane URL (default: http://127.0.0.1:8989)
-WEMUX_CLOUD_URL=http://127.0.0.1:8989
+OXMUX_CLOUD_URL=http://127.0.0.1:8989
 
-# Working directory for tasks (default: /tmp/wemux-runtime)
-WEMUX_RUNTIME_DIR=/tmp/wemux-runtime
+# Working directory for tasks (default: /tmp/oxmux-runtime)
+OXMUX_RUNTIME_DIR=/tmp/oxmux-runtime
 
 # Worker display name (optional)
-WEMUX_WORKER_NAME=my-macbook-pro
+OXMUX_WORKER_NAME=my-macbook-pro
 ```
 
 ## Managing Multiple Workers

@@ -1,6 +1,6 @@
 ---
 title: Worker
-description: 了解 Worker 如何在 Wemux 中执行任务。
+description: 了解 Worker 如何在 Oxmux 中执行任务。
 ---
 
 # Worker
@@ -11,7 +11,7 @@ Worker 是执行 AI Agent 并在真实仓库中执行任务的执行器机器。
 
 Worker 是已配对的机器（本地 Mac、Linux 机器、VM 或云实例），可以：
 
-- 运行 Wemux Worker 守护进程
+- 运行 Oxmux Worker 守护进程
 - 从控制面接收任务分配
 - 在隔离的 Git worktree 中执行 AI Agent
 - 将执行日志、分支和产物报告回系统
@@ -21,7 +21,7 @@ Worker 是已配对的机器（本地 Mac、Linux 机器、VM 或云实例），
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   控制面                             │
-│                 (Wemux Server)                   │
+│                 (Oxmux Server)                   │
 └─────────────────────┬───────────────────────────────┘
                       │ 任务、命令、状态
 ┌─────────────────────▼───────────────────────────────┐
@@ -47,8 +47,8 @@ Worker 是已配对的机器（本地 Mac、Linux 机器、VM 或云实例），
 ## 配对 Worker
 
 1. 在您的机器上安装 Worker 守护进程
-2. 使用 `wemux worker daemon` 启动守护进程
-3. 打开 Wemux Web 界面
+2. 使用 `oxmux worker daemon` 启动守护进程
+3. 打开 Oxmux Web 界面
 4. 导航到项目 **Worker** 选项卡
 5. 点击**"添加 Worker"**生成配对码
 6. 在 Worker 控制台中输入代码

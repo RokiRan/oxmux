@@ -3,24 +3,24 @@ import test from 'node:test'
 import {
   appendRequiredPrimaryAgentSystemSkills,
   getSystemSkillDefinitions,
-  WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
-  WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG,
-  WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG,
-  WEMUX_MEMORY_SYSTEM_SKILL_SLUG,
-  WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG,
-  WEMUX_YML_SYSTEM_SKILL_SLUG,
+  OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
+  OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG,
+  OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG,
+  OXMUX_MEMORY_SYSTEM_SKILL_SLUG,
+  OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG,
+  OXMUX_YML_SYSTEM_SKILL_SLUG,
 } from './system-skills'
 
-test('system skills include the mandatory wemux Agent collaboration protocol', () => {
+test('system skills include the mandatory oxmux Agent collaboration protocol', () => {
   const skills = getSystemSkillDefinitions()
-  const collaborationSkill = skills.find((skill) => skill.slug === WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG)
+  const collaborationSkill = skills.find((skill) => skill.slug === OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG)
 
   if (!collaborationSkill) {
-    assert.fail('expected built-in Wemux Agent collaboration skill to exist')
+    assert.fail('expected built-in Oxmux Agent collaboration skill to exist')
   }
 
   assert.equal(collaborationSkill.sourceLocator.startsWith('builtin://'), true)
-  assert.equal(collaborationSkill.markdown.includes('所有 wemux Agent 的强制协作协议'), true)
+  assert.equal(collaborationSkill.markdown.includes('所有 oxmux Agent 的强制协作协议'), true)
   assert.equal(collaborationSkill.markdown.includes('task.execute(taskId, workspaceId'), true)
   assert.equal(collaborationSkill.markdown.includes('必须且只能调用一次 `task.delivery.report`'), true)
   assert.equal(collaborationSkill.markdown.includes('自动把 `task.comment.add` 和 `task.delivery.report` 挂回原评论线程'), true)
@@ -54,12 +54,12 @@ test('system skills include the mandatory wemux Agent collaboration protocol', (
   assert.equal(collaborationSkill.files['references/mcp-tools-full.md'].content.includes('`drive.write_file`'), true)
 })
 
-test('system skills include the built-in wemux YML writer package', () => {
+test('system skills include the built-in oxmux YML writer package', () => {
   const skills = getSystemSkillDefinitions()
-  const vibemuxYmlSkill = skills.find((skill) => skill.slug === WEMUX_YML_SYSTEM_SKILL_SLUG)
+  const vibemuxYmlSkill = skills.find((skill) => skill.slug === OXMUX_YML_SYSTEM_SKILL_SLUG)
 
   if (!vibemuxYmlSkill) {
-    assert.fail('expected built-in wemux YML skill to exist')
+    assert.fail('expected built-in oxmux YML skill to exist')
   }
 
   assert.equal(vibemuxYmlSkill.sourceLocator.startsWith('builtin://'), true)
@@ -83,7 +83,7 @@ test('system skills include the built-in wemux YML writer package', () => {
 
 test('system skills include the built-in Desktop Sandbox package', () => {
   const skills = getSystemSkillDefinitions()
-  const desktopSandboxSkill = skills.find((skill) => skill.slug === WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG)
+  const desktopSandboxSkill = skills.find((skill) => skill.slug === OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG)
 
   if (!desktopSandboxSkill) {
     assert.fail('expected built-in Desktop Sandbox skill to exist')
@@ -96,7 +96,7 @@ test('system skills include the built-in Desktop Sandbox package', () => {
 
 test('system skills include the built-in Test Agent package', () => {
   const skills = getSystemSkillDefinitions()
-  const testAgentSkill = skills.find((skill) => skill.slug === WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG)
+  const testAgentSkill = skills.find((skill) => skill.slug === OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG)
 
   if (!testAgentSkill) {
     assert.fail('expected built-in Test Agent skill to exist')
@@ -116,13 +116,13 @@ test('primary agent config appends required system skills without duplicates', (
 
   assert.deepEqual((appended.skills as Array<{ slug?: string } | string>).map((skill) => (
     typeof skill === 'string' ? skill : skill.slug
-  )), ['existing-skill', WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG, WEMUX_YML_SYSTEM_SKILL_SLUG, WEMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG, WEMUX_TEST_AGENT_SYSTEM_SKILL_SLUG, WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG, WEMUX_MEMORY_SYSTEM_SKILL_SLUG])
+  )), ['existing-skill', OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG, OXMUX_YML_SYSTEM_SKILL_SLUG, OXMUX_DESKTOP_SANDBOX_SYSTEM_SKILL_SLUG, OXMUX_TEST_AGENT_SYSTEM_SKILL_SLUG, OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG, OXMUX_MEMORY_SYSTEM_SKILL_SLUG])
   assert.equal((appendedAgain.skills as unknown[]).length, 7)
 })
 
 test('system skills include the Drive writeback package', () => {
   const skills = getSystemSkillDefinitions()
-  const writebackSkill = skills.find((skill) => skill.slug === WEMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG)
+  const writebackSkill = skills.find((skill) => skill.slug === OXMUX_DRIVE_WRITEBACK_SYSTEM_SKILL_SLUG)
 
   if (!writebackSkill) {
     assert.fail('expected built-in Drive writeback skill to exist')

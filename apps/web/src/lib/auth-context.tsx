@@ -60,13 +60,13 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
     localStorage.setItem('user', JSON.stringify(newUser))
     setUser(newUser)
     setToken(newToken)
-    window.dispatchEvent(new Event('wemux:auth-changed'))
+    window.dispatchEvent(new Event('oxmux:auth-changed'))
   }
 
   const updateUser = (nextUser: User) => {
     localStorage.setItem('user', JSON.stringify(nextUser))
     setUser(nextUser)
-    window.dispatchEvent(new Event('wemux:auth-changed'))
+    window.dispatchEvent(new Event('oxmux:auth-changed'))
   }
 
   const logout = async () => {

@@ -37,9 +37,9 @@ export const resolveChannelSuffixFromCliName = (cliName) => {
 }
 
 export const resolveWorkerHomeDir = ({ env = process.env, homedir = os.homedir(), channelSuffix = '' } = {}) => {
-  const configured = env.WEMUX_WORKER_HOME?.trim()
+  const configured = env.OXMUX_WORKER_HOME?.trim()
   if (configured) return path.resolve(configured)
-  return path.join(homedir, `.wemux${channelSuffix}`)
+  return path.join(homedir, `.oxmux${channelSuffix}`)
 }
 
 export const readCloudUrlFromWorkerHome = (workerHome) => {
@@ -56,8 +56,8 @@ export const readCloudUrlFromWorkerHome = (workerHome) => {
 }
 
 export const defaultCloudUrlForChannelSuffix = (channelSuffix) => {
-  if (channelSuffix === '-preview') return 'https://wemux.xyz'
-  return 'https://wemux.ai'
+  if (channelSuffix === '-preview') return 'https://oxmux.xyz'
+  return 'https://oxmux.ai'
 }
 
 const writeCrashMarker = (markerPath, patch) => {
@@ -175,7 +175,7 @@ export const handleEntryLoadFailure = async ({
 
   const cloudUrl = readCloudUrlFromWorkerHome(workerHome) || defaultCloudUrlForChannelSuffix(channelSuffix)
   const packageUrl = `${cloudUrl}/install/worker/package.tgz`
-  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'wemux-worker-self-repair-'))
+  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'oxmux-worker-self-repair-'))
   const archivePath = path.join(workDir, 'package.tgz')
   const extractDir = path.join(workDir, 'extracted')
 

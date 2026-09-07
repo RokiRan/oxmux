@@ -700,7 +700,7 @@ export function useTaskChatMessageActions({
     const preferredRuntime = runtimeOverrides?.runtime ?? profile.preferredRuntime
     const desiredRuntime = resolveAgentTypeForRuntimeId(preferredRuntime)
     if (!desiredRuntime) {
-      toast.error(`${getRuntimeDescriptor(preferredRuntime).label} 还没有接入当前 Wemux worker，暂时不能调用这个 Agent。`)
+      toast.error(`${getRuntimeDescriptor(preferredRuntime).label} 还没有接入当前 Oxmux worker，暂时不能调用这个 Agent。`)
       return false
     }
     const preferredModel = profile.preferredModel.trim()

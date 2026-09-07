@@ -8,11 +8,11 @@
 # 关键点：
 #   - 锁定镜像 tag（v1.3.5），不追 latest/tip；升级走受控流程
 #   - OOMOL_CONNECT_ENCRYPTION_KEY：凭据/连接/OAuth client 加密，必须设置
-#   - OOMOL_CONNECT_ADMIN_TOKEN：保护 /api/*（Wemux server 代理用它访问）
-#   - OOMOL_CONNECT_RUNTIME_TOKEN：保护 /v1/actions 与 /mcp（Wemux worker 物化 MCP 时带它）
+#   - OOMOL_CONNECT_ADMIN_TOKEN：保护 /api/*（Oxmux server 代理用它访问）
+#   - OOMOL_CONNECT_RUNTIME_TOKEN：保护 /v1/actions 与 /mcp（Oxmux worker 物化 MCP 时带它）
 #   - 若部署机处于 fake-ip / corporate VPN 网络，按需加 OOMOL_CONNECT_EGRESS_TRUSTED_HOSTS
 
-name: wemux-connector
+name: oxmux-connector
 
 services:
   connector:

@@ -70,7 +70,7 @@ const setPlatformVariable = (
   }
   variables[key] = normalized
   // 品牌迁移兼容窗口：`${{ vibemux.* }}` 是存量模板引用前缀，与新前缀同时发布
-  variables[`wemux.${key}`] = normalized
+  variables[`oxmux.${key}`] = normalized
   variables[`vibemux.${key}`] = normalized
 }
 

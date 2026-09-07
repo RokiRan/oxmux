@@ -5,13 +5,13 @@
 ### 开发环境
 
 ```bash
-DATABASE_URL=postgres://wemux:wemux@127.0.0.1:5434/wemux
+DATABASE_URL=postgres://oxmux:oxmux@127.0.0.1:5434/oxmux
 ```
 
 ### 生产环境
 
 ```bash
-DATABASE_URL=postgres://user:password@db-host:5432/wemux
+DATABASE_URL=postgres://user:password@db-host:5432/oxmux
 ```
 
 ### Docker 开发环境
@@ -23,11 +23,11 @@ postgres:
   ports:
     - "5434:5432"
   environment:
-    POSTGRES_USER: wemux
+    POSTGRES_USER: oxmux
     POSTGRES_PASSWORD: <local-dev-password>
-    POSTGRES_DB: wemux
+    POSTGRES_DB: oxmux
   volumes:
-    - wemux-postgres-data:/var/lib/postgresql/data
+    - oxmux-postgres-data:/var/lib/postgresql/data
 ```
 
 ## S3 兼容对象存储（RustFS）
@@ -36,8 +36,8 @@ postgres:
 
 ```bash
 OBJECT_STORAGE_ENDPOINT=http://127.0.0.1:9100
-OBJECT_STORAGE_BUCKET=wemux
-OBJECT_STORAGE_ACCESS_KEY_ID=wemux
+OBJECT_STORAGE_BUCKET=oxmux
+OBJECT_STORAGE_ACCESS_KEY_ID=oxmux
 OBJECT_SECRET_KEY=<local-dev-secret>
 ```
 
@@ -45,7 +45,7 @@ OBJECT_SECRET_KEY=<local-dev-secret>
 
 ```bash
 OBJECT_STORAGE_ENDPOINT=https://your-object-storage.example.com
-OBJECT_STORAGE_BUCKET=wemux
+OBJECT_STORAGE_BUCKET=oxmux
 OBJECT_STORAGE_ACCESS_KEY_ID=your_access_key
 OBJECT_SECRET_KEY=your_secret_key
 ```
@@ -60,8 +60,8 @@ rustfs:
     - "9100:9000"   # S3 API
     - "9101:9001"   # Console
   environment:
-    RUSTFS_BUCKET: wemux
-    RUSTFS_ACCESS_KEY: wemux
+    RUSTFS_BUCKET: oxmux
+    RUSTFS_ACCESS_KEY: oxmux
     RUSTFS_SECRET_KEY: <local-dev-secret>
 ```
 
@@ -72,8 +72,8 @@ rustfs:
 | Postgres | 127.0.0.1:5434 |
 | RustFS S3 API | 127.0.0.1:9100 |
 | RustFS Console | http://127.0.0.1:9101 |
-| Bucket | wemux |
-| Access Key | wemux |
+| Bucket | oxmux |
+| Access Key | oxmux |
 | Secret Key | `<local-dev-secret>` |
 
 ## 使用场景

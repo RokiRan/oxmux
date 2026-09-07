@@ -78,7 +78,7 @@ test('resolveWorkspaceFileLinkPath rejects relative paths that escape the curren
 })
 
 test('isLikelyWorkspaceFileLinkHref ignores external urls and app routes', () => {
-  assert.equal(isLikelyWorkspaceFileLinkHref('https://wemux.xyz'), false)
+  assert.equal(isLikelyWorkspaceFileLinkHref('https://oxmux.xyz'), false)
   assert.equal(isLikelyWorkspaceFileLinkHref('/workspace?taskId=task-1'), false)
   assert.equal(isLikelyWorkspaceFileLinkHref('workspace-session-list.tsx'), true)
 })

@@ -80,7 +80,7 @@ export function SiteHeader() {
   return (
     <header
       data-native-drag-region={isMacNative ? 'deep' : undefined}
-      className={cn("wemux-shell-header", isMacNative
+      className={cn("oxmux-shell-header", isMacNative
         ? "sticky top-0 z-20 border-b border-transparent bg-transparent"
         : isDesktopShell
           ? "sticky top-0 z-20 border-b border-transparent bg-transparent"

@@ -64,7 +64,7 @@ export function UserMenuPopover({ user, onLogout, language = 'zh' }: UserMenuPop
         align="end"
         side="top"
         sideOffset={8}
-        className="user-menu-popover wemux-sidebar-menu-surface w-[280px] rounded-xl border border-zinc-800 bg-[#09090b]/[.98] p-2.5 shadow-2xl backdrop-blur-xl"
+        className="user-menu-popover oxmux-sidebar-menu-surface w-[280px] rounded-xl border border-zinc-800 bg-[#09090b]/[.98] p-2.5 shadow-2xl backdrop-blur-xl"
       >
         <div className="space-y-2">
           {/* 用户信息头部 */}
@@ -125,17 +125,17 @@ export function UserMenuPopover({ user, onLogout, language = 'zh' }: UserMenuPop
             <MenuLinkItem
               icon={Home}
               label={language === 'zh' ? '主页' : 'Home'}
-              onClick={() => window.open('https://wemux.com', '_blank')}
+              onClick={() => window.open('https://oxmux.com', '_blank')}
             />
             <MenuLinkItem
               icon={HelpCircle}
               label={language === 'zh' ? '获取帮助' : 'Get Help'}
-              onClick={() => window.open('https://docs.wemux.com', '_blank')}
+              onClick={() => window.open('https://docs.oxmux.com', '_blank')}
             />
             <MenuLinkItem
               icon={FileText}
               label={language === 'zh' ? '文档' : 'Docs'}
-              onClick={() => window.open('https://docs.wemux.com', '_blank')}
+              onClick={() => window.open('https://docs.oxmux.com', '_blank')}
             />
           </div>
 

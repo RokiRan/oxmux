@@ -4,19 +4,19 @@
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
 import { parseCliArgs } from '../../cli-flags'
-import type { WemuxClient } from '../client'
+import type { OxmuxClient } from '../client'
 import { loadWorkerConfig } from '../../core/config'
 import { getCliName, throwUnknownCommand } from '../help'
 import { getOutputFormat, output } from '../output'
 
-export const runMcpCommand = async (client: WemuxClient, subcommand: string, args: string[]) => {
+export const runMcpCommand = async (client: OxmuxClient, subcommand: string, args: string[]) => {
   const { flags } = parseCliArgs(args)
   if (subcommand === 'list') {
     output(await client.callTool('mcp.list', {}), getOutputFormat(flags))
     return
   }
   if (subcommand === 'info') {
-    // 本地 MCP 桥接配置摘要（排查 wemux 内置 MCP / drive 工具不可用）
+    // 本地 MCP 桥接配置摘要（排查 oxmux 内置 MCP / drive 工具不可用）
     const config = loadWorkerConfig()
     output({
       cloudUrl: config.cloudUrl,

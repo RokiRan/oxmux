@@ -1,4 +1,4 @@
-# Wemux Public Documentation
+# Oxmux Public Documentation
 
 This directory contains documentation intended for community users and
 contributors: local development, self-hosting, public architecture, testing,

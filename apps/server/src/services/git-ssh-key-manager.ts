@@ -25,7 +25,7 @@ const runSshKeygen = (args: string[]) => {
 export const generateSshKeyPair = (userId: string) => {
   const tempDir = mkdtempSync(path.join(os.tmpdir(), 'vibemux-ssh-'))
   const keyPath = path.join(tempDir, 'git-identity')
-  const comment = `wemux-user-${userId}`
+  const comment = `oxmux-user-${userId}`
 
   try {
     runSshKeygen(['-t', 'ed25519', '-C', comment, '-f', keyPath, '-N', ''])

@@ -97,7 +97,7 @@ export class LinuxService implements PlatformService {
       .join('\n')
     const execStart = [options.workerPath, ...options.args].map(systemdQuote).join(' ')
     return `[Unit]
-Description=wemux Worker (${this.serviceName})
+Description=oxmux Worker (${this.serviceName})
 After=network-online.target
 Wants=network-online.target
 

@@ -22,8 +22,8 @@ const demoConfig = normalizeAgentConfig({
 const projects: Project[] = [
   {
     id: projectId,
-    name: 'Wemux Core',
-    gitUrl: 'git@github.com:demo/wemux-core.git',
+    name: 'Oxmux Core',
+    gitUrl: 'git@github.com:demo/oxmux-core.git',
     createdAt: now,
     updatedAt: now,
   },

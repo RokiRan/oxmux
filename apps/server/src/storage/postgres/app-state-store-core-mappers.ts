@@ -69,12 +69,12 @@ export const normalizeFilters = (filters: AppState['filters']): AppState['filter
   agent: filters.agent !== 'all' && isServerAgentType(filters.agent) ? filters.agent : 'all',
 })
 
-const readOfficialConnectorTarget = () => getEnv('WEMUX_OFFICIAL_CONNECTOR_URL')?.trim()
-  || getEnv('WEMUX_OFFICIAL_CONNECTOR_URL')?.trim()
+const readOfficialConnectorTarget = () => getEnv('OXMUX_OFFICIAL_CONNECTOR_URL')?.trim()
+  || getEnv('OXMUX_OFFICIAL_CONNECTOR_URL')?.trim()
   || ''
 
-const readOfficialConnectorRuntimeToken = () => getEnv('WEMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN')?.trim()
-  || getEnv('WEMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN')?.trim()
+const readOfficialConnectorRuntimeToken = () => getEnv('OXMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN')?.trim()
+  || getEnv('OXMUX_OFFICIAL_CONNECTOR_RUNTIME_TOKEN')?.trim()
   || ''
 
 export const normalizeConfig = (config: Partial<AppState['config']> | undefined): AppState['config'] => {

@@ -11,8 +11,8 @@ import {
   resolveMcpCreatorIdentity,
   summarizeTask,
   toToolResult,
-  type WemuxMcpContext,
-} from './wemux-mcp-context'
+  type OxmuxMcpContext,
+} from './oxmux-mcp-context'
 import {
   createSubtaskForUser,
   getTaskChatSessionSnapshotForUser,
@@ -60,7 +60,7 @@ const taskAgentUpdateSchema = taskChatSessionScopeSchema.extend({
   executorNodeId: z.string().trim().optional(),
 })
 
-export const registerWemuxMcpTaskCollabTools = (server: McpServer, ctx: WemuxMcpContext) => {
+export const registerOxmuxMcpTaskCollabTools = (server: McpServer, ctx: OxmuxMcpContext) => {
   server.registerTool('task.create_subtask', {
     title: 'Create Task Subtask',
     description: '从父任务拆分并创建一个子任务',

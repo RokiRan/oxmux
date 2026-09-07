@@ -12,7 +12,7 @@ A developer may spend the day on a MacBook reading the codebase, editing files, 
 
 That is not how long-running AI work should behave.
 
-At Wemux, we built one-click transfer to solve exactly this problem.
+At Oxmux, we built one-click transfer to solve exactly this problem.
 
 The goal is bigger than moving a single thread between hosts. The real goal is to migrate an active AI coding task when the current machine is about to go offline and let it continue automatically on another node.
 
@@ -45,9 +45,9 @@ AI agent handoff is the ability to move an active AI task from one machine or en
 
 Because the local execution node goes offline. If the AI task depends on that machine, the task stops with it.
 
-### How is Wemux different from remote desktop tools?
+### How is Oxmux different from remote desktop tools?
 
-Remote desktop gives a human access to a machine. Wemux is designed to transfer the AI task itself, including execution flow, code state, and context continuity.
+Remote desktop gives a human access to a machine. Oxmux is designed to transfer the AI task itself, including execution flow, code state, and context continuity.
 
 ### Why does persistent AI coding matter?
 

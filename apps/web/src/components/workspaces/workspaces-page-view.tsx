@@ -537,7 +537,7 @@ export function WorkspacesPageView({
           {t('workspace.pageView.loading')}
         </div>
       ) : panelMode === 'create' ? null : (
-        <div className="wemux-page-outer-frame flex h-full min-h-[24rem] items-center justify-center border border-dashed border-zinc-800 bg-[#050505] px-6 text-center text-zinc-500">
+        <div className="oxmux-page-outer-frame flex h-full min-h-[24rem] items-center justify-center border border-dashed border-zinc-800 bg-[#050505] px-6 text-center text-zinc-500">
           {t('workspace.pageView.empty')}
         </div>
       )}

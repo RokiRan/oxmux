@@ -6,7 +6,7 @@ url="${2:-}"
 
 case "$remote" in
   public)
-    expected_url='wemux-ai/wemux'
+    expected_url='oxmux-ai/oxmux'
     expected_branch='main'
     expected_remote_branch='main'
     ;;

@@ -1,6 +1,6 @@
 # Linear-Style UI Guide
 
-> Wemux UI 开发规范。所有新页面、重构页面必须遵循本指南。
+> Oxmux UI 开发规范。所有新页面、重构页面必须遵循本指南。
 
 ## 设计原则
 

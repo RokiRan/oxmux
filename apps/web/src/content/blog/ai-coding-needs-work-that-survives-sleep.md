@@ -34,9 +34,9 @@ That means:
 
 Once you see AI work through that lens, the product direction changes. You stop optimizing only for faster replies and start optimizing for continuity, routing, and recoverability.
 
-## Why Wemux leans into this
+## Why Oxmux leans into this
 
-Wemux is built around real workers and real execution surfaces. That makes persistence a routing problem, not just a UI problem. If a task needs to continue after someone leaves the office, the platform should be able to send the work to the next machine that can safely continue it.
+Oxmux is built around real workers and real execution surfaces. That makes persistence a routing problem, not just a UI problem. If a task needs to continue after someone leaves the office, the platform should be able to send the work to the next machine that can safely continue it.
 
 That is a much more practical framing of AI coding. The question is not “can the model keep typing?” The question is “can the work keep moving?”
 

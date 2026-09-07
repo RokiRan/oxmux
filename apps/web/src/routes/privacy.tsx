@@ -13,7 +13,7 @@ const seoPage = requireIndexedMarketingPage('/privacy')
 
 const sections: Array<{ body: ReactNode; title: string }> = [
   {
-    body: 'Wemux is an AI delivery platform that helps users route tasks into workers, coordinate execution, and review outputs. To operate the service we may process account details, workspace metadata, task content, execution logs, repository connection details, and service usage records.',
+    body: 'Oxmux is an AI delivery platform that helps users route tasks into workers, coordinate execution, and review outputs. To operate the service we may process account details, workspace metadata, task content, execution logs, repository connection details, and service usage records.',
     title: '1. Scope',
   },
   {
@@ -35,9 +35,9 @@ const sections: Array<{ body: ReactNode; title: string }> = [
   {
     body: (
       <>
-        If you have questions about this policy or need to discuss privacy-related requests, contact Wemux at <span>support</span>
+        If you have questions about this policy or need to discuss privacy-related requests, contact Oxmux at <span>support</span>
         <span>@</span>
-        <span>wemux.ai</span>.
+        <span>oxmux.ai</span>.
       </>
     ),
     title: '6. Contact',
@@ -88,9 +88,9 @@ export const Route = createFileRoute('/privacy')({
 function PrivacyRoute() {
   return (
     <MarketingPageLayout
-      description="This policy explains, at a public high level, how Wemux processes account, workspace, execution, and billing-adjacent data while operating the AI delivery platform."
+      description="This policy explains, at a public high level, how Oxmux processes account, workspace, execution, and billing-adjacent data while operating the AI delivery platform."
       eyebrow="Privacy Policy"
-      title="How Wemux handles platform data."
+      title="How Oxmux handles platform data."
     >
       <MarketingSection
         description="This page is a public-facing overview for website visitors, prospective customers, and payment compliance review."

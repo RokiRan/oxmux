@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { WemuxClient } from './client'
+import { OxmuxClient } from './client'
 
-test('WemuxClient uses user token authentication when provided', async () => {
+test('OxmuxClient uses user token authentication when provided', async () => {
   const originalFetch = globalThis.fetch
   let requestUrl = ''
   let authorization = ''
@@ -17,7 +17,7 @@ test('WemuxClient uses user token authentication when provided', async () => {
   }
 
   try {
-    await new WemuxClient({ cloudUrl: 'https://example.com', apiToken: 'vbx-test' }).listTools()
+    await new OxmuxClient({ cloudUrl: 'https://example.com', apiToken: 'vbx-test' }).listTools()
     assert.equal(requestUrl, 'https://example.com/mcp')
     assert.equal(authorization, 'Bearer vbx-test')
   } finally {

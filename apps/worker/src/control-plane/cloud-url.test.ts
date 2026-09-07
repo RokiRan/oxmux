@@ -8,8 +8,8 @@ test('toPreviewTunnelWsUrl builds a preview tunnel websocket from cloud url', ()
     'ws://127.0.0.1:18989/api/preview-tunnels/ws',
   )
   assert.equal(
-    toPreviewTunnelWsUrl('https://wemux.xyz'),
-    'wss://wemux.xyz/api/preview-tunnels/ws',
+    toPreviewTunnelWsUrl('https://oxmux.xyz'),
+    'wss://oxmux.xyz/api/preview-tunnels/ws',
   )
 })
 
@@ -17,7 +17,7 @@ test('resolvePreviewTunnelWsUrl prefers the worker cloud url when localtest host
   assert.equal(
     resolvePreviewTunnelWsUrl({
       cloudUrl: 'http://host.docker.internal:18989',
-      tunnelUrl: 'ws://app.wemux.localtest.me:18989/api/preview-tunnels/ws',
+      tunnelUrl: 'ws://app.oxmux.localtest.me:18989/api/preview-tunnels/ws',
     }),
     'ws://host.docker.internal:18989/api/preview-tunnels/ws',
   )
@@ -47,9 +47,9 @@ test('resolvePreviewTunnelWsUrl keeps the server-provided public tunnel url', ()
   assert.equal(
     resolvePreviewTunnelWsUrl({
       cloudUrl: 'http://127.0.0.1:18989',
-      tunnelUrl: 'wss://wemux.xyz/api/preview-tunnels/ws',
+      tunnelUrl: 'wss://oxmux.xyz/api/preview-tunnels/ws',
     }),
-    'wss://wemux.xyz/api/preview-tunnels/ws',
+    'wss://oxmux.xyz/api/preview-tunnels/ws',
   )
 })
 

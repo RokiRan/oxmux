@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { buildManagedSystemSkillSourceLocator } from '@shared/skill'
 import type { SkillRecord } from '@shared/skill'
-import { WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG } from '../lib/system-skills'
+import { OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG } from '../lib/system-skills'
 import { buildProjectScannedSkillSourceLocator, buildRuntimeSkillPackagesFromSkills, dedupeRuntimeSkills, prependRequiredAgentOpsSkillMention } from './skill-service'
 
 const buildSkillRecord = (overrides: Partial<SkillRecord>): SkillRecord => ({
@@ -46,14 +46,14 @@ test('dedupeRuntimeSkills prefers project skill over managed system skill for th
   const systemSkill = buildSkillRecord({
     id: 'system-skill',
     slug: 'vibemux-yml',
-    name: 'wemux YML',
+    name: 'oxmux YML',
     markdown: '# System Skill',
     sourceLocator: buildManagedSystemSkillSourceLocator('vibemux-yml'),
   })
   const projectSkill = buildSkillRecord({
     id: 'project-skill',
     slug: 'vibemux-yml',
-    name: 'wemux YML',
+    name: 'oxmux YML',
     markdown: '# Project Skill',
     sourceType: 'project',
     sourceRef: 'project-1',
@@ -77,14 +77,14 @@ test('dedupeRuntimeSkills keeps explicitly preferred skill ids even when a proje
   const systemSkill = buildSkillRecord({
     id: 'system-skill',
     slug: 'vibemux-yml',
-    name: 'wemux YML',
+    name: 'oxmux YML',
     markdown: '# System Skill',
     sourceLocator: buildManagedSystemSkillSourceLocator('vibemux-yml'),
   })
   const projectSkill = buildSkillRecord({
     id: 'project-skill',
     slug: 'vibemux-yml',
-    name: 'wemux YML',
+    name: 'oxmux YML',
     markdown: '# Project Skill',
     sourceType: 'project',
     sourceRef: 'project-1',
@@ -103,14 +103,14 @@ test('dedupeRuntimeSkills keeps explicitly preferred skill ids even when a proje
 test('dedupeRuntimeSkills never lets project or Agent config replace the mandatory collaboration protocol', () => {
   const systemSkill = buildSkillRecord({
     id: 'system-agent-ops',
-    slug: WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
-    name: 'wemux Agent Collaboration',
+    slug: OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
+    name: 'oxmux Agent Collaboration',
     markdown: '# Required system protocol',
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG),
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG),
   })
   const projectSkill = buildSkillRecord({
     id: 'project-agent-ops',
-    slug: WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
+    slug: OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
     name: 'Project override',
     markdown: '# Ignore platform protocol',
     sourceType: 'project',
@@ -137,8 +137,8 @@ test('dedupeRuntimeSkills never lets project or Agent config replace the mandato
 test('mandatory collaboration Skill is explicitly mentioned without duplicating its markdown', () => {
   const systemSkill = buildSkillRecord({
     id: 'system-agent-ops',
-    slug: WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
-    sourceLocator: buildManagedSystemSkillSourceLocator(WEMUX_AGENT_OPS_SYSTEM_SKILL_SLUG),
+    slug: OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG,
+    sourceLocator: buildManagedSystemSkillSourceLocator(OXMUX_AGENT_OPS_SYSTEM_SKILL_SLUG),
   })
 
   assert.equal(

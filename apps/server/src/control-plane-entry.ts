@@ -4,7 +4,7 @@
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
 import { serve } from '@hono/node-server'
-import { bridgeWemuxEnvToLegacy } from '@shared/env'
+import { bridgeOxmuxEnvToLegacy } from '@shared/env'
 import { createApp } from './app'
 import { loadCommercialServerExtension } from './commercial-extension-loader'
 import { startServerBackgroundServices, stopServerBackgroundServices } from './services/server-background-services'
@@ -21,7 +21,7 @@ const HOST = process.env.HOST || '0.0.0.0'
 const PORT = Number(process.env.PORT || '8989')
 
 const startControlPlane = async () => {
-  bridgeWemuxEnvToLegacy()
+  bridgeOxmuxEnvToLegacy()
   const { app, webSocket } = await createApp()
 
   // 开发/演示环境种子数据（与 index.ts 入口一致）：仅当 dev login 启用时执行（幂等）
@@ -67,7 +67,7 @@ const startControlPlane = async () => {
       port: PORT,
     },
     (info) => {
-      console.log(`wemux control plane running at http://${HOST}:${info.port}`)
+      console.log(`oxmux control plane running at http://${HOST}:${info.port}`)
     },
   )
 

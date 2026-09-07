@@ -6,7 +6,7 @@ import { getUserById, type UserRole } from '../../repositories/auth'
 import { saveAuditLog } from '../../storage/governance-store'
 import { resolveAdminAccess } from '../../routes/admin-routes'
 import { ErrorCode, McpError } from './sdk'
-import type { WemuxMcpContext } from './wemux-mcp-context'
+import type { OxmuxMcpContext } from './oxmux-mcp-context'
 
 export type McpAdminToolsOptions = {
   /** 测试/特殊场景注入：覆盖真实 getUserById。 */
@@ -29,7 +29,7 @@ export const resolveMcpAdminAccess = (
 
 /** 每次调用防线：非 admin 抛错；minRole='owner' 时仅 owner 放行。 */
 export const requireMcpAdmin = (
-  ctx: Pick<WemuxMcpContext, 'userId'>,
+  ctx: Pick<OxmuxMcpContext, 'userId'>,
   minRole: 'admin' | 'owner' = 'admin',
   getUserByIdImpl: (id: string) => { role?: UserRole; isInternal?: boolean } | null | undefined = getUserById,
 ): 'admin' | 'owner' => {

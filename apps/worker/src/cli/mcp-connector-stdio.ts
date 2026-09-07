@@ -1,7 +1,7 @@
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 import { getEnv } from '@shared/env'
 // [INPUT]: JSON-RPC stdin, connector bridge environment, persisted worker pairing.
-// [OUTPUT]: Authenticated JSON-RPC forwarding to the Wemux connector proxy (/api/connector/mcp).
+// [OUTPUT]: Authenticated JSON-RPC forwarding to the Oxmux connector proxy (/api/connector/mcp).
 // [POS]: Worker official-connector stdio bridge; lets runtimes without remote MCP headers (e.g. Codex) use the connector.
 
 import { getWorkerDefaultCloudUrl } from '../core/app-root'
@@ -13,11 +13,11 @@ const readText = async (response: Response) => response.text().catch(() => '')
 
 const resolveBridgeConfig = () => {
   const config = loadWorkerConfig()
-  const cloudUrl = getEnv('WEMUX_MCP_CLOUD_URL')?.trim() || config.cloudUrl || getWorkerDefaultCloudUrl()
-  const connectorToken = getEnv('WEMUX_CONNECTOR_TOKEN')?.trim() || ''
-  const workspaceId = getEnv('WEMUX_MCP_WORKSPACE')?.trim()
-  const actingUserId = getEnv('WEMUX_MCP_ACTING_USER')?.trim()
-  const runtimeAgentId = getEnv('WEMUX_MCP_RUNTIME_AGENT')?.trim()
+  const cloudUrl = getEnv('OXMUX_MCP_CLOUD_URL')?.trim() || config.cloudUrl || getWorkerDefaultCloudUrl()
+  const connectorToken = getEnv('OXMUX_CONNECTOR_TOKEN')?.trim() || ''
+  const workspaceId = getEnv('OXMUX_MCP_WORKSPACE')?.trim()
+  const actingUserId = getEnv('OXMUX_MCP_ACTING_USER')?.trim()
+  const runtimeAgentId = getEnv('OXMUX_MCP_RUNTIME_AGENT')?.trim()
 
   return {
     url: `${trimTrailingSlash(cloudUrl)}/api/connector/mcp`,
@@ -70,7 +70,7 @@ const forwardMessage = async (rawLine: string) => {
     : null
 
   if (!config.connectorToken) {
-    writeErrorResponse(id, 'Official connector token is not configured. Set WEMUX_CONNECTOR_TOKEN.')
+    writeErrorResponse(id, 'Official connector token is not configured. Set OXMUX_CONNECTOR_TOKEN.')
     return
   }
 
@@ -82,20 +82,20 @@ const forwardMessage = async (rawLine: string) => {
         'Content-Type': 'application/json',
         Accept: 'application/json, text/event-stream',
         Authorization: `Bearer ${config.connectorToken}`,
-        ...(config.workspaceId ? { 'x-wemux-workspace': config.workspaceId } : {}),
-        ...(config.actingUserId ? { 'x-wemux-acting-user': config.actingUserId } : {}),
-        ...(config.runtimeAgentId ? { 'x-wemux-runtime-agent': config.runtimeAgentId } : {}),
+        ...(config.workspaceId ? { 'x-oxmux-workspace': config.workspaceId } : {}),
+        ...(config.actingUserId ? { 'x-oxmux-acting-user': config.actingUserId } : {}),
+        ...(config.runtimeAgentId ? { 'x-oxmux-runtime-agent': config.runtimeAgentId } : {}),
       },
       body: JSON.stringify(payload),
     })
   } catch (error) {
-    writeErrorResponse(id, `Wemux connector bridge network error: ${error instanceof Error ? error.message : 'fetch failed'}`)
+    writeErrorResponse(id, `Oxmux connector bridge network error: ${error instanceof Error ? error.message : 'fetch failed'}`)
     return
   }
 
   const text = await readText(response)
   if (!response.ok) {
-    writeErrorResponse(id, `Wemux connector HTTP ${response.status}: ${text || response.statusText}`)
+    writeErrorResponse(id, `Oxmux connector HTTP ${response.status}: ${text || response.statusText}`)
     return
   }
 
@@ -135,7 +135,7 @@ export const runMcpConnectorStdioBridge = async () => {
       buffer = buffer.slice(index + 1)
       if (line) {
         pending = pending.then(() => forwardMessage(line)).catch((error) => {
-          writeErrorResponse(readMessageId(line), error instanceof Error ? error.message : 'Wemux connector bridge failed.')
+          writeErrorResponse(readMessageId(line), error instanceof Error ? error.message : 'Oxmux connector bridge failed.')
         })
       }
     }

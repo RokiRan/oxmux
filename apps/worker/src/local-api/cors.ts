@@ -19,7 +19,7 @@ export const isAllowedReadableLocalApiCorsOrigin = (origin?: string) => {
     return false
   }
 
-  const configuredOrigins = (getEnv('WEMUX_WORKER_LOCAL_API_CORS_ORIGINS') ?? '')
+  const configuredOrigins = (getEnv('OXMUX_WORKER_LOCAL_API_CORS_ORIGINS') ?? '')
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean)
@@ -39,15 +39,15 @@ export const isAllowedReadableLocalApiCorsOrigin = (origin?: string) => {
     }
 
     return hostname === 'vibemux.xyz'
-      || hostname.endsWith('.wemux.xyz')
-      || hostname === 'wemux.xyz'
-      || hostname.endsWith('.wemux.xyz')
+      || hostname.endsWith('.oxmux.xyz')
+      || hostname === 'oxmux.xyz'
+      || hostname.endsWith('.oxmux.xyz')
       || hostname === 'vibemux.com'
-      || hostname.endsWith('.wemux.com')
-      || hostname === 'wemux.ai'
-      || hostname.endsWith('.wemux.ai')
-      || hostname === 'app.wemux.localtest.me'
-      || hostname === 'app.wemux.localtest.me'
+      || hostname.endsWith('.oxmux.com')
+      || hostname === 'oxmux.ai'
+      || hostname.endsWith('.oxmux.ai')
+      || hostname === 'app.oxmux.localtest.me'
+      || hostname === 'app.oxmux.localtest.me'
   } catch {
     return false
   }

@@ -39,7 +39,7 @@ export const findCommercialServerExtensionEntry = (
 /** 加载可选商业扩展；公开核心没有私有目录时返回 false。 */
 export const loadCommercialServerExtension = async (): Promise<boolean> => {
   // 显式禁用开关：不依赖文件系统状态即可强制以社区版启动（`pnpm dev:oss`）。
-  if (getEnv('WEMUX_EXTENSION_DISABLED') === '1') {
+  if (getEnv('OXMUX_EXTENSION_DISABLED') === '1') {
     return false
   }
   const entry = findCommercialServerExtensionEntry()

@@ -126,7 +126,7 @@ export interface UpdateDriveFileInput {
   createdBy?: string
 }
 
-/** 工作区大脑（Wemux Brain）纳入的云盘文件（workspace_brain_files 关联表）。 */
+/** 工作区大脑（Oxmux Brain）纳入的云盘文件（workspace_brain_files 关联表）。 */
 export interface WorkspaceBrainFile {
   id: string
   workspaceId: string

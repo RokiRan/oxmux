@@ -269,8 +269,8 @@ test('project/task：仅可访问项目内的任务可见', { skip: await dbSkip
   await insertUser(testUserId, 'GS 项目用户', `gs-p-${testUserId}@example.com`)
   const projectId = `gs-project-${Date.now()}`
   const otherProjectId = `gs-project-other-${Date.now()}`
-  await insertProject(projectId, 'Wemux 移动端', testUserId)
-  await insertProject(otherProjectId, 'Wemux 移动端竞品', otherUserId)
+  await insertProject(projectId, 'Oxmux 移动端', testUserId)
+  await insertProject(otherProjectId, 'Oxmux 移动端竞品', otherUserId)
   await getDrizzleDb().insert(userProjects).values({ userId: testUserId, projectId, accessType: 'owner' })
   await insertTask(`gs-task-${Date.now()}`, projectId, '实现全局搜索', 'Cmd+K 唤起命令面板，方向键导航')
   await insertTask(`gs-task-other-${Date.now()}`, otherProjectId, '实现全局搜索竞品', 'secret')

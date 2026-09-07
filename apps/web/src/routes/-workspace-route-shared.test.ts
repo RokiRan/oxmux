@@ -118,15 +118,15 @@ test('prefers the saved workspace-specific panel when it exists', () => {
 
 test('classifies preview urls by browser address space', () => {
   assert.equal(resolvePreviewUrlAddressSpace('http://127.0.0.1:3005/'), 'local')
-  assert.equal(resolvePreviewUrlAddressSpace('http://app.wemux.localtest.me:15173/workspace'), 'local')
+  assert.equal(resolvePreviewUrlAddressSpace('http://app.oxmux.localtest.me:15173/workspace'), 'local')
   assert.equal(resolvePreviewUrlAddressSpace('http://192.168.2.11:3005/'), 'private')
-  assert.equal(resolvePreviewUrlAddressSpace('https://wemux.xyz/workspace'), 'public')
+  assert.equal(resolvePreviewUrlAddressSpace('https://oxmux.xyz/workspace'), 'public')
 })
 
 test('blocks direct preview source access when the current page is less private than the source url', () => {
   assert.deepEqual(
     resolvePreviewSourceDirectAccess({
-      currentPageUrl: 'https://wemux.xyz/workspace',
+      currentPageUrl: 'https://oxmux.xyz/workspace',
       sourceUrl: 'http://127.0.0.1:3005/',
     }),
     {
@@ -138,7 +138,7 @@ test('blocks direct preview source access when the current page is less private 
 
   assert.deepEqual(
     resolvePreviewSourceDirectAccess({
-      currentPageUrl: 'http://app.wemux.localtest.me:15173/workspace',
+      currentPageUrl: 'http://app.oxmux.localtest.me:15173/workspace',
       sourceUrl: 'http://127.0.0.1:3005/',
     }),
     {

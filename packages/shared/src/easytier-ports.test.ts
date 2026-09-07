@@ -18,8 +18,8 @@ test('resolveEasyTierPortProfile uses explicit profile first', () => {
 
 test('resolveEasyTierPortProfile infers preview and production from channel or URL', () => {
   assert.equal(resolveEasyTierPortProfile({ releaseChannel: 'preview' }), 'preview')
-  assert.equal(resolveEasyTierPortProfile({ publicBaseUrl: 'https://wemux.xyz' }), 'preview')
-  assert.equal(resolveEasyTierPortProfile({ cloudUrl: 'https://wemux.ai' }), 'production')
+  assert.equal(resolveEasyTierPortProfile({ publicBaseUrl: 'https://oxmux.xyz' }), 'preview')
+  assert.equal(resolveEasyTierPortProfile({ cloudUrl: 'https://oxmux.ai' }), 'production')
   // 兼容窗口：旧域名仍然识别
   assert.equal(resolveEasyTierPortProfile({ publicBaseUrl: 'https://vibemux.xyz' }), 'preview')
   assert.equal(resolveEasyTierPortProfile({ cloudUrl: 'https://vibemux.com' }), 'production')

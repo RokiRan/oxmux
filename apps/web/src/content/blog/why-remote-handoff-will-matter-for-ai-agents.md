@@ -29,9 +29,9 @@ As AI agents take on longer-running tasks, users will expect:
 
 That expectation will not stay limited to coding. Research agents, QA agents, docs agents, and operations agents will all hit the same boundary. The work needs a handoff path, not just a chat history.
 
-## Wemux and one-click transfer
+## Oxmux and one-click transfer
 
-This is exactly why one-click transfer matters in wemux. When a current machine is about to become unavailable, the task should be able to move:
+This is exactly why one-click transfer matters in oxmux. When a current machine is about to become unavailable, the task should be able to move:
 
 - save code state
 - reconnect on another worker
@@ -40,4 +40,4 @@ This is exactly why one-click transfer matters in wemux. When a current machine 
 
 That is a better mental model for AI agents. Humans may stop working for the day. Machines may change. The task should still have a path forward.
 
-That is also a strong SEO cluster for Wemux: remote handoff, persistent AI coding, AI task transfer, and multi-machine AI workflow are all increasingly concrete search intents as the market matures.
+That is also a strong SEO cluster for Oxmux: remote handoff, persistent AI coding, AI task transfer, and multi-machine AI workflow are all increasingly concrete search intents as the market matures.

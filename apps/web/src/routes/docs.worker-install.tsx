@@ -30,7 +30,7 @@ const checklist = [
 const buildInstallSteps = () => {
   return [
     {
-      body: 'Open the Execution page in Wemux, create a new executor, and generate a connect command.',
+      body: 'Open the Execution page in Oxmux, create a new executor, and generate a connect command.',
       command: 'Open /execution -> New Executor -> Generate Connect Command',
       title: '1. Generate a connect command',
     },
@@ -142,7 +142,7 @@ function WorkerInstallRoute() {
     <MarketingPageLayout
       description="This is the shortest onboarding path we want beta users to complete: install a worker, pair it, and prove the first task can come back with real execution output."
       eyebrow="Worker Install"
-      title="Install a Wemux worker, connect it fast, and finish the first task loop."
+      title="Install a Oxmux worker, connect it fast, and finish the first task loop."
     >
       <MarketingSection
         description="If this path is slow or confusing, onboarding breaks. The goal is not a long manual. The goal is to get one machine online fast."

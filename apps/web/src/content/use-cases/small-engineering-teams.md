@@ -34,7 +34,7 @@ That handoff is where small teams protect focus. A founder or tech lead should b
 - Your team wants AI help but does not want hidden autonomous changes.
 - You need one place to inspect task progress across people, agents, and machines.
 
-## Why Wemux fits small engineering teams
+## Why Oxmux fits small engineering teams
 
 Small engineering teams do not usually need a giant process layer. They need just enough structure to prevent chaos:
 
@@ -43,6 +43,6 @@ Small engineering teams do not usually need a giant process layer. They need jus
 - one visible execution history
 - one review path back to humans
 
-That is the point of the workflow. Wemux is useful when the team wants AI to keep working inside real repositories and real environments, while still preserving ownership, visibility, and decision-making speed.
+That is the point of the workflow. Oxmux is useful when the team wants AI to keep working inside real repositories and real environments, while still preserving ownership, visibility, and decision-making speed.
 
-For SEO, this page should help Wemux show up for search intent closer to the buying moment: teams searching for practical AI workflow structure, not abstract AI coding hype.
+For SEO, this page should help Oxmux show up for search intent closer to the buying moment: teams searching for practical AI workflow structure, not abstract AI coding hype.

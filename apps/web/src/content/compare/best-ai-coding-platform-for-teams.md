@@ -34,9 +34,9 @@ Some AI coding tools are strongest for:
 
 Those can all be valuable, but they do not automatically solve the team problem.
 
-## Why Wemux is positioned differently
+## Why Oxmux is positioned differently
 
-Wemux is built around the delivery layer of AI coding work:
+Oxmux is built around the delivery layer of AI coding work:
 
 - route work to real workers
 - run in the right environment
@@ -62,4 +62,4 @@ The more often the answer needs to be “yes,” the more the team needs a deliv
 
 If your main priority is individual coding speed, an editor-first AI tool may be enough.
 
-If your main priority is team delivery, execution ownership, machine routing, and persistent AI workflows, Wemux is the stronger fit.
+If your main priority is team delivery, execution ownership, machine routing, and persistent AI workflows, Oxmux is the stronger fit.

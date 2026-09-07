@@ -31,9 +31,9 @@ export function useTheme() {
 // shadcn CSS 变量（--background / --border 等）必须始终落在 `.dark` 分支，
 // 否则浅色模式下 outline 按钮会变成白底白字。
 // 主题偏好和桌面玻璃参数优先从本地缓存读取，再由登录账户设置覆盖。
-const STORAGE_KEY = 'wemux-theme-preference'
-const GLASS_STORAGE_KEY = 'wemux-glass-effect-settings'
-const AUTH_CHANGED_EVENT = 'wemux:auth-changed'
+const STORAGE_KEY = 'oxmux-theme-preference'
+const GLASS_STORAGE_KEY = 'oxmux-glass-effect-settings'
+const AUTH_CHANGED_EVENT = 'oxmux:auth-changed'
 const readStored = (): UserThemePreference => {
   if (typeof window === 'undefined') return 'dark'
   const value = window.localStorage.getItem(STORAGE_KEY)
@@ -67,10 +67,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
     document.documentElement.classList.toggle('light', resolvedTheme === 'light')
     document.documentElement.style.colorScheme = resolvedTheme
-    document.documentElement.style.setProperty('--wemux-glass-opacity', `${glass.opacity}%`)
-    document.documentElement.style.setProperty('--wemux-glass-blur', `${glass.blur}px`)
-    document.documentElement.style.setProperty('--wemux-glass-saturation', `${glass.saturation}%`)
-    document.documentElement.style.setProperty('--wemux-glass-border-opacity', `${glass.borderOpacity}%`)
+    document.documentElement.style.setProperty('--oxmux-glass-opacity', `${glass.opacity}%`)
+    document.documentElement.style.setProperty('--oxmux-glass-blur', `${glass.blur}px`)
+    document.documentElement.style.setProperty('--oxmux-glass-saturation', `${glass.saturation}%`)
+    document.documentElement.style.setProperty('--oxmux-glass-border-opacity', `${glass.borderOpacity}%`)
   }, [glass, resolvedTheme])
 
   useEffect(() => {

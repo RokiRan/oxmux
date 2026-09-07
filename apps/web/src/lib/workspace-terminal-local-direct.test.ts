@@ -106,13 +106,13 @@ test('buildPublicTerminalGatewayWsUrl appends one-time ticket', () => {
   assert.equal(
     buildPublicTerminalGatewayWsUrl({
       ticket: 'ticket-1',
-      wsUrl: 'wss://hk1.wemux.xyz/api/terminal-public/ws',
+      wsUrl: 'wss://hk1.oxmux.xyz/api/terminal-public/ws',
     }),
-    'wss://hk1.wemux.xyz/api/terminal-public/ws?ticket=ticket-1',
+    'wss://hk1.oxmux.xyz/api/terminal-public/ws?ticket=ticket-1',
   )
   assert.equal(buildPublicTerminalGatewayWsUrl({
     ticket: 'ticket-1',
-    wsUrl: 'wss://hk1.wemux.xyz/api/terminal-direct/ws',
+    wsUrl: 'wss://hk1.oxmux.xyz/api/terminal-direct/ws',
   }), '')
 })
 
@@ -125,16 +125,16 @@ test('resolveTerminalTransportLabel labels local direct transport', () => {
 
 test('resolveTerminalRemoteTransportKind distinguishes direct gateway from control-plane tunnel', () => {
   assert.equal(resolveTerminalRemoteTransportKind({
-    executorRealtimeBaseUrl: 'https://node-1.wemux.xyz',
-    currentPageOrigin: 'https://app.wemux.xyz',
+    executorRealtimeBaseUrl: 'https://node-1.oxmux.xyz',
+    currentPageOrigin: 'https://app.oxmux.xyz',
   }), 'gateway')
   assert.equal(resolveTerminalRemoteTransportKind({
-    executorRealtimeBaseUrl: 'wss://app.wemux.localtest.me:15173',
-    currentPageOrigin: 'http://app.wemux.localtest.me:15173',
+    executorRealtimeBaseUrl: 'wss://app.oxmux.localtest.me:15173',
+    currentPageOrigin: 'http://app.oxmux.localtest.me:15173',
   }), 'tunnel')
   assert.equal(resolveTerminalRemoteTransportKind({
     executorRealtimeBaseUrl: undefined,
-    currentPageOrigin: 'https://app.wemux.xyz',
+    currentPageOrigin: 'https://app.oxmux.xyz',
   }), 'tunnel')
 })
 

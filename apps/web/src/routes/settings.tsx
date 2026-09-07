@@ -205,9 +205,9 @@ function SettingsRoute() {
         }
 
         try {
-          new Notification(language === 'zh' ? 'Wemux 测试通知' : 'Wemux Test Notification', {
+          new Notification(language === 'zh' ? 'Oxmux 测试通知' : 'Oxmux Test Notification', {
             body: language === 'zh' ? '浏览器通知权限工作正常。' : 'Browser notifications are working.',
-            tag: 'wemux-browser-notification-test',
+            tag: 'oxmux-browser-notification-test',
           })
           toast.success(language === 'zh' ? '测试通知已弹出。' : 'Test notification sent.')
         } catch {

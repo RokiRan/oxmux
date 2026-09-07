@@ -1,11 +1,11 @@
 ---
 title: Common Issues
-description: Solutions to frequently encountered problems in wemux.
+description: Solutions to frequently encountered problems in oxmux.
 ---
 
 # Common Issues
 
-Solutions to problems you might encounter while using wemux.
+Solutions to problems you might encounter while using oxmux.
 
 ## Worker Issues
 
@@ -17,12 +17,12 @@ Solutions to problems you might encounter while using wemux.
 
 1. Check if the daemon is running:
    ```bash
-   ps aux | grep wemux-worker
+   ps aux | grep oxmux-worker
    ```
 
 2. Restart the daemon:
    ```bash
-   Wemux worker daemon
+   Oxmux worker daemon
    ```
 
 3. Check network connectivity to the control plane:
@@ -113,7 +113,7 @@ Solutions to problems you might encounter while using wemux.
 1. Check disk space on worker
 2. Clean up old worktrees:
    ```bash
-   wemux-worker cleanup
+   oxmux-worker cleanup
    ```
 3. Check Git version is up to date
 4. Ensure no conflicting branches exist
@@ -127,9 +127,9 @@ Solutions to problems you might encounter while using wemux.
 **Solutions**:
 
 1. Restart the worker daemon after changes
-2. Verify env file location: `~/.wemux/worker.env`
+2. Verify env file location: `~/.oxmux/worker.env`
 3. Check for syntax errors in the file
-4. Use `wemux worker status` to see loaded config
+4. Use `oxmux worker status` to see loaded config
 
 ### Model Not Available
 
@@ -163,7 +163,7 @@ Solutions to problems you might encounter while using wemux.
 
 - The Preview tunnel is already connected
 - But the source app itself did not respond successfully
-- The problem is no longer the Wemux tunnel, but the dev server inside the workspace
+- The problem is no longer the Oxmux tunnel, but the dev server inside the workspace
 
 **Solutions**:
 
@@ -229,5 +229,5 @@ Vite may only listen on `localhost` by default. If the app is running inside a D
 If these solutions don't resolve your issue:
 
 1. Check the [GitHub Issues](https://github.com/your-repo/issues)
-2. Join the [Discord community](https://discord.gg/wemux)
-3. Contact support at support@wemux.ai
+2. Join the [Discord community](https://discord.gg/oxmux)
+3. Contact support at support@oxmux.ai

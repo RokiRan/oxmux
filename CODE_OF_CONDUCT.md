@@ -32,7 +32,7 @@ Examples of unacceptable behavior:
 Community leaders are responsible for clarifying and enforcing our standards.
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-**security@wemux.ai**. All complaints will be reviewed and investigated promptly and fairly.
+**security@oxmux.ai**. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution
 

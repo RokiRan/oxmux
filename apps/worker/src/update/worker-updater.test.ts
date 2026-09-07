@@ -211,8 +211,8 @@ test('reinstallWorkerServiceRegistration rewrites the service registration again
   const tempDir = mkdtempSync(path.join(os.tmpdir(), 'vibemux-worker-reinstall-'))
   const originalExecutablePath = process.env.VIBEMUX_WORKER_EXECUTABLE_PATH
   const originalInstallPrefix = process.env.VIBEMUX_WORKER_INSTALL_PREFIX
-  const installPrefix = path.join(tempDir, '.wemux-preview-worker')
-  const workerPath = path.join(installPrefix, 'bin', 'wemux-worker-preview')
+  const installPrefix = path.join(tempDir, '.oxmux-preview-worker')
+  const workerPath = path.join(installPrefix, 'bin', 'oxmux-worker-preview')
 
   let recordedOptions: ServiceInstallOptions | undefined
   const fakeService: PlatformService = {
@@ -223,7 +223,7 @@ test('reinstallWorkerServiceRegistration rewrites the service registration again
     start: async () => undefined,
     stop: async () => undefined,
     restart: async () => undefined,
-    status: async () => ({ installed: true, running: false, serviceName: 'wemux-worker-preview' }),
+    status: async () => ({ installed: true, running: false, serviceName: 'oxmux-worker-preview' }),
     logs: async function* () {},
   }
 
@@ -234,14 +234,14 @@ test('reinstallWorkerServiceRegistration rewrites the service registration again
     const resolved = await reinstallWorkerServiceRegistration({
       service: fakeService,
       installPrefix,
-      serviceName: 'wemux-worker-preview',
+      serviceName: 'oxmux-worker-preview',
       logDir: path.join(tempDir, 'logs'),
     })
 
     assert.equal(resolved.workerPath, workerPath)
     assert.deepEqual(recordedOptions?.args, ['daemon'])
     assert.equal(recordedOptions?.workerPath, workerPath)
-    assert.equal(recordedOptions?.serviceName, 'wemux-worker-preview')
+    assert.equal(recordedOptions?.serviceName, 'oxmux-worker-preview')
     assert.equal(recordedOptions?.autoStart, true)
     assert.equal(recordedOptions?.restartOnFailure, true)
     assert.equal(recordedOptions?.logDir, path.join(tempDir, 'logs'))
@@ -326,7 +326,7 @@ test('resolveWorkerEntryPathInRoot locates the entry across npm prefix, flat nod
   const tempDir = mkdtempSync(path.join(os.tmpdir(), 'worker-smoke-entry-'))
   try {
     const entryRelativePath = path.join('dist-worker', 'apps', 'worker', 'src', 'index.js')
-    const packageName = 'wemux-worker-preview'
+    const packageName = 'oxmux-worker-preview'
 
     const npmPrefix = path.join(tempDir, 'npm-prefix')
     const npmEntry = path.join(npmPrefix, 'lib', 'node_modules', packageName, entryRelativePath)
@@ -356,7 +356,7 @@ test('resolveWorkerEntryPathInRoot locates the entry across npm prefix, flat nod
 test('smokeCheckStagedWorkerRoot passes only when the staged entry loads cleanly', () => {
   const tempDir = mkdtempSync(path.join(os.tmpdir(), 'worker-smoke-run-'))
   try {
-    const packageName = 'wemux-worker-preview'
+    const packageName = 'oxmux-worker-preview'
     const root = path.join(tempDir, 'staging')
     const entryPath = path.join(root, 'lib', 'node_modules', packageName, 'dist-worker', 'apps', 'worker', 'src', 'index.js')
     mkdirSync(path.dirname(entryPath), { recursive: true })

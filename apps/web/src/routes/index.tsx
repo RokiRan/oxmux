@@ -17,13 +17,13 @@ export const Route = createFileRoute('/')({
       '@graph': [
         {
           '@type': 'Organization',
-          name: 'Wemux',
+          name: 'Oxmux',
           url: marketingSite.homeUrl,
           logo: marketingSite.logoUrl,
         },
         {
           '@type': 'SoftwareApplication',
-          name: 'Wemux',
+          name: 'Oxmux',
           applicationCategory: 'DeveloperApplication',
           operatingSystem: 'Web, macOS, Linux',
           url: marketingSite.homeUrl,

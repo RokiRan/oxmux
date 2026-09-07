@@ -14,9 +14,9 @@ type RuntimeEnv = ImportMeta['env'] & {
 
 const trimTrailingSlash = (value: string) => value.replace(/\/$/, '')
 const LOOPBACK_HOSTNAMES = new Set(['127.0.0.1', 'localhost', '[::1]', '::1'])
-const LOCAL_PREVIEW_SITE_SUFFIXES = ['.vibemux.localtest.me', '.wemux.localtest.me']
-const PREVIEW_SITE_HOSTS = ['vibemux.xyz', 'wemux.xyz']
-const PRODUCTION_SITE_HOSTS = ['vibemux.com', 'wemux.ai']
+const LOCAL_PREVIEW_SITE_SUFFIXES = ['.vibemux.localtest.me', '.oxmux.localtest.me']
+const PREVIEW_SITE_HOSTS = ['vibemux.xyz', 'oxmux.xyz']
+const PRODUCTION_SITE_HOSTS = ['vibemux.com', 'oxmux.ai']
 const isPrivateIpv4Hostname = (hostname: string) => /^10\./.test(hostname)
   || /^192\.168\./.test(hostname)
   || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname)
@@ -188,8 +188,8 @@ export const isManagedCloudDevOnlyEnabled = () => isDevEnvironment() || isPrevie
 // ---------- 桌面端服务器地址选择（开源客户端连自托管/官方） ----------
 
 /** 官方云托管默认地址（桌面端开箱即连；自托管用户可在登录页改为自己的实例） */
-export const DEFAULT_SERVER_URL = 'https://wemux.ai'
-const CUSTOM_SERVER_STORAGE_KEY = 'wemux.serverUrl'
+export const DEFAULT_SERVER_URL = 'https://oxmux.ai'
+const CUSTOM_SERVER_STORAGE_KEY = 'oxmux.serverUrl'
 
 /** 商业分发构建锁：置 1 时桌面客户端固定连默认官方服务，忽略/禁用自定义服务器 */
 export const isDesktopServerLocked = (): boolean => getEnvValue('VITE_DESKTOP_SERVER_LOCKED') === '1'
@@ -221,7 +221,7 @@ export const setCustomServerUrl = (url: string): boolean => {
   }
 }
 
-/** 清除自定义服务器地址（回到官方默认 wemux.ai） */
+/** 清除自定义服务器地址（回到官方默认 oxmux.ai） */
 export const clearCustomServerUrl = (): void => {
   if (typeof window === 'undefined') return
   try {
@@ -232,7 +232,7 @@ export const clearCustomServerUrl = (): void => {
 }
 
 export const getApiBaseUrl = () => {
-  // Native 客户端优先使用登录页保存的服务器地址，默认官方 wemux.ai。
+  // Native 客户端优先使用登录页保存的服务器地址，默认官方 oxmux.ai。
   // 浏览器网页（云托管/自托管站点）保持同源相对路径，不受影响。
   if (isNativeClient() && !import.meta.env.DEV) {
     return getCustomServerUrl() || DEFAULT_SERVER_URL

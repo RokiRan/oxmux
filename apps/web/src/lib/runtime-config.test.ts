@@ -10,62 +10,62 @@ import {
 
 test('resolvePreviewEnvironment enables preview for preview hosts', () => {
   assert.equal(resolvePreviewEnvironment({
-    currentHostname: 'wemux.xyz',
-    appBaseUrl: 'https://app.wemux.ai',
+    currentHostname: 'oxmux.xyz',
+    appBaseUrl: 'https://app.oxmux.ai',
   }), true)
 
   assert.equal(resolvePreviewEnvironment({
-    currentHostname: 'desktop-preview--abc.wemux.xyz',
-    appBaseUrl: 'https://app.wemux.ai',
+    currentHostname: 'desktop-preview--abc.oxmux.xyz',
+    appBaseUrl: 'https://app.oxmux.ai',
   }), true)
 })
 
 test('resolvePreviewEnvironment enables preview when app base url is the preview site', () => {
   assert.equal(resolvePreviewEnvironment({
-    appBaseUrl: 'https://wemux.xyz',
+    appBaseUrl: 'https://oxmux.xyz',
   }), true)
 })
 
 test('resolvePreviewEnvironment keeps production hidden even if api/auth use preview domains', () => {
   assert.equal(resolvePreviewEnvironment({
-    currentHostname: 'app.wemux.ai',
-    appBaseUrl: 'https://app.wemux.ai',
+    currentHostname: 'app.oxmux.ai',
+    appBaseUrl: 'https://app.oxmux.ai',
   }), false)
 })
 
 test('resolveProductionEnvironment detects production hosts', () => {
   assert.equal(resolveProductionEnvironment({
-    currentHostname: 'app.wemux.ai',
-    appBaseUrl: 'https://wemux.xyz',
+    currentHostname: 'app.oxmux.ai',
+    appBaseUrl: 'https://oxmux.xyz',
   }), true)
 
   assert.equal(resolveProductionEnvironment({
-    appBaseUrl: 'https://wemux.ai',
+    appBaseUrl: 'https://oxmux.ai',
   }), true)
 })
 
 test('resolveProductionEnvironment excludes preview hosts', () => {
   assert.equal(resolveProductionEnvironment({
-    currentHostname: 'wemux.xyz',
-    appBaseUrl: 'https://wemux.xyz',
+    currentHostname: 'oxmux.xyz',
+    appBaseUrl: 'https://oxmux.xyz',
   }), false)
 })
 
 test('resolveReviewCenterEnvironment only enables dev and preview environments', () => {
   assert.equal(resolveReviewCenterEnvironment({
     dev: true,
-    currentHostname: 'app.wemux.ai',
-    appBaseUrl: 'https://app.wemux.ai',
+    currentHostname: 'app.oxmux.ai',
+    appBaseUrl: 'https://app.oxmux.ai',
   }), true)
 
   assert.equal(resolveReviewCenterEnvironment({
-    currentHostname: 'desktop-preview--abc.wemux.xyz',
-    appBaseUrl: 'https://app.wemux.ai',
+    currentHostname: 'desktop-preview--abc.oxmux.xyz',
+    appBaseUrl: 'https://app.oxmux.ai',
   }), true)
 
   assert.equal(resolveReviewCenterEnvironment({
-    currentHostname: 'app.wemux.ai',
-    appBaseUrl: 'https://app.wemux.ai',
+    currentHostname: 'app.oxmux.ai',
+    appBaseUrl: 'https://app.oxmux.ai',
   }), false)
 })
 
@@ -92,7 +92,7 @@ test('resolveCanonicalLoopbackUrl keeps loopback hybrid pages on loopback when l
   assert.equal(
     resolveCanonicalLoopbackUrlForConfig({
       currentUrl: 'http://127.0.0.1:15173/login?next=%2Fworkspace',
-      configuredBaseUrl: 'http://app.wemux.localtest.me:15173/api/identity',
+      configuredBaseUrl: 'http://app.oxmux.localtest.me:15173/api/identity',
     }),
     '',
   )

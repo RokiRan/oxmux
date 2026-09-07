@@ -16,7 +16,7 @@
 开发入口只在下面条件同时满足时启用：
 
 - `NODE_ENV !== production`
-- `WEMUX_ENABLE_DEV_LOGIN !== false`
+- `OXMUX_ENABLE_DEV_LOGIN !== false`
 
 服务端新增两个开发接口：
 
@@ -25,7 +25,7 @@
 - `POST /api/auth/dev/login`
   - 传入 `accountId`
   - 服务端按配置自动创建或更新该账号
-  - 直接签发 Wemux 自己的 token
+  - 直接签发 Oxmux 自己的 token
 
 这样浏览器自动化、Agent 验证、本地 smoke test 都不用再走 Google 跳转和账号选择流程。
 
@@ -36,12 +36,12 @@
 
 ## 自定义更多测试账号
 
-可以通过环境变量 `WEMUX_DEV_LOGIN_ACCOUNTS` 覆盖默认账号列表。
+可以通过环境变量 `OXMUX_DEV_LOGIN_ACCOUNTS` 覆盖默认账号列表。
 
 格式是一个 JSON 数组，例如：
 
 ```bash
-WEMUX_DEV_LOGIN_ACCOUNTS='[
+OXMUX_DEV_LOGIN_ACCOUNTS='[
   {
     "id": "pm",
     "label": "Product Manager",
@@ -103,7 +103,7 @@ Google 登录仍然保留，方便偶尔验证真实 OAuth 流程。
 如果你要在 preview 或共享测试环境里禁用它，显式设置：
 
 ```bash
-WEMUX_ENABLE_DEV_LOGIN=false
+OXMUX_ENABLE_DEV_LOGIN=false
 ```
 
 ## 推荐工作流

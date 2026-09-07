@@ -1,11 +1,11 @@
-# Wemux Code Wiki
+# Oxmux Code Wiki
 
 > 面向社区的代码知识库，记录公开架构、代码模式、关键概念和开发规范。
 
 ## 目录
 
 ### 核心概念
-- [项目概述](./01-project-overview.md) - Wemux 是什么、技术栈、目录结构
+- [项目概述](./01-project-overview.md) - Oxmux 是什么、技术栈、目录结构
 - [关键概念与术语](./02-key-concepts.md) - session、workspace、task 等核心概念的区分
 - [执行架构](./03-execution-architecture.md) - worker-only 执行模型、runtime 抽象
 
@@ -24,7 +24,7 @@
 - [Runtime 架构](./10-runtime-architecture.md) - OpenCode/Codex/ClaudeCode/Pi 统一底座
 - [Agent 执行链路](./11-agent-execution-flow.md) - task runner、prompt runner、session continuation
 - [Skill 与 MCP](./12-skill-and-mcp.md) - Skill 同步语义、MCP 注入机制
-- [CLI 与控制面 MCP](./19-cli-and-control-plane-mcp.md) - wemux CLI 命令树、控制面 MCP 工具面（inbox/drive/chat）
+- [CLI 与控制面 MCP](./19-cli-and-control-plane-mcp.md) - oxmux CLI 命令树、控制面 MCP 工具面（inbox/drive/chat）
 
 ### 页面与会话
 - [三个页面边界](./13-page-boundaries.md) - /chat、/workspace、/workspaces 的职责划分

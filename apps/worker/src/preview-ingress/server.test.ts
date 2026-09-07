@@ -151,7 +151,7 @@ test('public Host requests are not served directly by worker ingress', async () 
 
   previewIngressRegistry.register({
     previewSessionId: 'preview-direct-host',
-    publicHost: 'shop-preview--abc.wemux.xyz',
+    publicHost: 'shop-preview--abc.oxmux.xyz',
     targetUrl: `http://127.0.0.1:${upstreamPort}`,
     transport: 'gateway-public-proxy',
   })
@@ -160,7 +160,7 @@ test('public Host requests are not served directly by worker ingress', async () 
     const response = await requestText({
       port: ingressPort,
       path: '/catalog?sku=42',
-      host: 'shop-preview--abc.wemux.xyz',
+      host: 'shop-preview--abc.oxmux.xyz',
     })
 
     assert.equal(response.statusCode, 404)

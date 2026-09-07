@@ -14,7 +14,7 @@ const stopWords = new Set([
   'the', 'and', 'for', 'that', 'with', 'this', 'into', 'when', 'your', 'from', 'they', 'them', 'than', 'then', 'their',
   'have', 'will', 'would', 'there', 'which', 'what', 'where', 'while', 'about', 'across', 'should', 'could', 'because',
   'inside', 'outside', 'after', 'before', 'being', 'become', 'through', 'team', 'teams', 'work', 'works', 'workflow',
-  'platform', 'platforms', 'coding', 'agent', 'agents', 'ai', 'wemux',
+  'platform', 'platforms', 'coding', 'agent', 'agents', 'ai', 'oxmux',
 ])
 
 function buildMarkdownPath(entry: MarketingContentEntry) {

@@ -149,7 +149,7 @@ export const getProjectVersionControlDescription = (
   const versionControl = resolveProjectVersionControl(project)
   if (versionControl === 'git-remote') return t ? t('projectsPage.versionControl.gitRemoteDesc') : '已连接远端仓库，支持分支、隔离目录、push 和 PR 等完整 Git 工作流。'
   if (versionControl === 'git-local') return t ? t('projectsPage.versionControl.gitLocalDesc') : '已识别本地 Git 仓库，支持本地分支、diff、graph、rebase 和隔离目录；没有远端时暂不直接支持 PR。'
-  return t ? t('projectsPage.versionControl.gitNoneDesc') : '当前项目由 Wemux 托管但尚未初始化 Git；暂不支持 Git diff / rebase / PR，初始化 Git 后会自动升级。'
+  return t ? t('projectsPage.versionControl.gitNoneDesc') : '当前项目由 Oxmux 托管但尚未初始化 Git；暂不支持 Git diff / rebase / PR，初始化 Git 后会自动升级。'
 }
 
 export const getProjectSourceDisplay = (

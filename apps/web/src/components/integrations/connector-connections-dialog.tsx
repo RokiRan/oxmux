@@ -1,6 +1,6 @@
 // [INPUT]: 官方连接器 provider catalog + 已配置连接
 // [OUTPUT]: 连接管理对话框（api_key 连接创建/删除）
-// [POS]: Integrations 页连接管理 UI——代理经 Wemux server，凭据不落 web
+// [POS]: Integrations 页连接管理 UI——代理经 Oxmux server，凭据不落 web
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
 import { useEffect, useMemo, useState } from 'react'

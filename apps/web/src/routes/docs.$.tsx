@@ -10,7 +10,7 @@ import { buildDocsLegacyRedirectUrl } from '@shared/docs-content'
 export const Route = createFileRoute('/docs/$')({
   head: () => ({
     meta: [
-      { title: 'Wemux Docs' },
+      { title: 'Oxmux Docs' },
       { name: 'robots', content: 'index, follow' },
     ],
   }),

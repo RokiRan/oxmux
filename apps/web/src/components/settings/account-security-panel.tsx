@@ -102,7 +102,7 @@ export function AccountSecurityPanel({
         disableRedirect: false,
       })
       if (linkError?.status === 400 && linkError?.code === 'USER_ALREADY_HAS_ACCOUNT') {
-        setError(tr('该 Google 账号已绑定其他 Wemux 账号。', 'This Google account is already linked to another Wemux account.'))
+        setError(tr('该 Google 账号已绑定其他 Oxmux 账号。', 'This Google account is already linked to another Oxmux account.'))
         return
       }
       if (data?.url) {
@@ -243,7 +243,7 @@ export function AccountSecurityPanel({
 
           <p className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/40 px-3 py-2.5 text-xs leading-5 text-zinc-500">
             <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
-            {tr('邮箱密码与 Google 登录指向同一个 Wemux 账号，任选一种方式登录即可。', 'Email+password and Google sign-in point to the same Wemux account. Use either to sign in.')}
+            {tr('邮箱密码与 Google 登录指向同一个 Oxmux 账号，任选一种方式登录即可。', 'Email+password and Google sign-in point to the same Oxmux account. Use either to sign in.')}
           </p>
 
           <Button type="button" size="sm" variant="ghost" className="text-zinc-500" onClick={() => void logout()}>

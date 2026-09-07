@@ -1,6 +1,6 @@
-const CACHE_NAME = 'wemux-pwa-v1'
+const CACHE_NAME = 'oxmux-pwa-v1'
 const APP_SHELL = ['/', '/manifest.webmanifest', '/favicon.png', '/apple-touch-icon.png', '/pwa-192x192.png', '/pwa-512x512.png']
-const SKIP_WAITING_MESSAGE_TYPE = 'WEMUX_SKIP_WAITING'
+const SKIP_WAITING_MESSAGE_TYPE = 'OXMUX_SKIP_WAITING'
 
 const cacheIfOk = (request, response) => {
   if (!response.ok) {
@@ -95,7 +95,7 @@ self.addEventListener('notificationclick', (event) => {
 })
 
 self.addEventListener('push', (event) => {
-  let payload = { title: 'wemux', body: '', tag: '', url: '/' }
+  let payload = { title: 'oxmux', body: '', tag: '', url: '/' }
   if (event.data) {
     try {
       payload = { ...payload, ...JSON.parse(event.data.text()) }

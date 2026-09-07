@@ -42,9 +42,9 @@ const verifyDiscordSignature = (publicKeyHex: string, rawBody: string, signature
 export const registerFeedbackChannelRoutes = (app: Hono, _requireAuth: MiddlewareHandler) => {
   // 飞书事件订阅回调：URL 验证（challenge）+ im.message.receive_v1 → 反馈收件箱
   app.post('/api/channels/feishu/events', async (c) => {
-    const encryptKey = getEnv('WEMUX_FEEDBACK_FEISHU_ENCRYPT_KEY')?.trim()
+    const encryptKey = getEnv('OXMUX_FEEDBACK_FEISHU_ENCRYPT_KEY')?.trim()
     if (!encryptKey) {
-      return c.json({ message: '飞书反馈渠道未配置（WEMUX_FEEDBACK_FEISHU_ENCRYPT_KEY）' }, 503)
+      return c.json({ message: '飞书反馈渠道未配置（OXMUX_FEEDBACK_FEISHU_ENCRYPT_KEY）' }, 503)
     }
 
     const rawBody = await c.req.text()
@@ -79,9 +79,9 @@ export const registerFeedbackChannelRoutes = (app: Hono, _requireAuth: Middlewar
 
   // Discord interaction 回调：PING 保活 + /feedback 命令 → 反馈收件箱
   app.post('/api/channels/discord/interactions', async (c) => {
-    const publicKey = getEnv('WEMUX_FEEDBACK_DISCORD_PUBLIC_KEY')?.trim()
+    const publicKey = getEnv('OXMUX_FEEDBACK_DISCORD_PUBLIC_KEY')?.trim()
     if (!publicKey) {
-      return c.json({ message: 'Discord 反馈渠道未配置（WEMUX_FEEDBACK_DISCORD_PUBLIC_KEY）' }, 503)
+      return c.json({ message: 'Discord 反馈渠道未配置（OXMUX_FEEDBACK_DISCORD_PUBLIC_KEY）' }, 503)
     }
 
     const rawBody = await c.req.text()

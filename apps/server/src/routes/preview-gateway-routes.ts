@@ -310,7 +310,7 @@ const buildPreviewHtml = (params: {
       <section class="shell">
         <div class="eyebrow">
           <span class="badge">${escapedStatus}</span>
-          <span class="brand">wemux Preview Gateway</span>
+          <span class="brand">oxmux Preview Gateway</span>
         </div>
         <h1>${titleZh}</h1>
         <div class="subtitle">${titleEn}</div>
@@ -351,8 +351,8 @@ const buildAuthFailureHtml = (params: {
     status: String(params.status ?? 401),
     body: params.body,
     hint: {
-      zh: '请返回 wemux 重新打开预览，或使用有效的分享链接继续访问。',
-      en: 'Return to wemux and reopen the preview, or continue with a valid share link.',
+      zh: '请返回 oxmux 重新打开预览，或使用有效的分享链接继续访问。',
+      en: 'Return to oxmux and reopen the preview, or continue with a valid share link.',
     },
   }), {
     status: params.status ?? 401,
@@ -381,8 +381,8 @@ const buildPreviewProxyFailureHtml = (params: {
     },
     status: String(params.status),
     body: {
-      zh: `wemux Preview 隧道已经连通，但源应用 ${params.sourceAppUrl} 当前没有返回可展示的页面。`,
-      en: `The wemux preview tunnel is connected, but the source app at ${params.sourceAppUrl} did not return a page.`,
+      zh: `oxmux Preview 隧道已经连通，但源应用 ${params.sourceAppUrl} 当前没有返回可展示的页面。`,
+      en: `The oxmux preview tunnel is connected, but the source app at ${params.sourceAppUrl} did not return a page.`,
     },
     details: [
       {
@@ -440,8 +440,8 @@ const resolvePreviewGatewayAuthorization = (c: any) => {
             en: 'Preview Access Expired',
           },
           body: {
-            zh: '当前预览访问令牌无效或已过期，请从 wemux 重新打开这个预览页面。',
-            en: 'The preview viewer token is invalid or expired. Please reopen this preview from wemux.',
+            zh: '当前预览访问令牌无效或已过期，请从 oxmux 重新打开这个预览页面。',
+            en: 'The preview viewer token is invalid or expired. Please reopen this preview from oxmux.',
           },
         }),
       }
@@ -492,8 +492,8 @@ const resolvePreviewGatewayAuthorization = (c: any) => {
           en: 'Preview Authorization Required',
         },
         body: {
-          zh: '请从 wemux 内打开这个预览，或使用有效的分享链接继续访问。',
-          en: 'Open this preview from wemux, or use a valid share link to continue.',
+          zh: '请从 oxmux 内打开这个预览，或使用有效的分享链接继续访问。',
+          en: 'Open this preview from oxmux, or use a valid share link to continue.',
         },
       }),
     }
@@ -510,8 +510,8 @@ const resolvePreviewGatewayAuthorization = (c: any) => {
           en: 'Preview Access Expired',
         },
         body: {
-          zh: '当前预览访问凭证已经失效，请从 wemux 重新打开预览以刷新访问权限。',
-          en: 'The preview access cookie is no longer valid. Reopen the preview from wemux to refresh access.',
+          zh: '当前预览访问凭证已经失效，请从 oxmux 重新打开预览以刷新访问权限。',
+          en: 'The preview access cookie is no longer valid. Reopen the preview from oxmux to refresh access.',
         },
       }),
     }
@@ -552,7 +552,7 @@ const normalizePreviewWebSocketHeaders = (request: Request, previewSessionId: st
   const requestUrl = new URL(request.url)
   headers.push(['x-forwarded-host', requestUrl.host])
   headers.push(['x-forwarded-proto', requestUrl.protocol.replace(':', '')])
-  headers.push(['x-wemux-preview-id', previewSessionId])
+  headers.push(['x-oxmux-preview-id', previewSessionId])
   return headers
 }
 
@@ -614,10 +614,10 @@ const decodeRelayJson = <T>(raw: string | null | undefined): T | null => {
 const sanitizeRelayRequestHeaders = (headers: Headers) => {
   headers.delete('host')
   headers.delete('x-cluster-token')
-  headers.delete('x-wemux-preview-path')
-  headers.delete('x-wemux-preview-target-url')
-  headers.delete('x-wemux-preview-relay-headers')
-  headers.delete('x-wemux-preview-relay-subprotocols')
+  headers.delete('x-oxmux-preview-path')
+  headers.delete('x-oxmux-preview-target-url')
+  headers.delete('x-oxmux-preview-relay-headers')
+  headers.delete('x-oxmux-preview-relay-subprotocols')
   return headers
 }
 
@@ -708,11 +708,11 @@ const relayPreviewHttpRequest = async (params: {
   targetUrl?: string
 }) => {
   const relayHeaders = new Headers(params.request.headers)
-  relayHeaders.set('x-wemux-preview-path', params.pathWithQuery)
+  relayHeaders.set('x-oxmux-preview-path', params.pathWithQuery)
   if (params.targetUrl) {
-    relayHeaders.set('x-wemux-preview-target-url', params.targetUrl)
+    relayHeaders.set('x-oxmux-preview-target-url', params.targetUrl)
   } else {
-    relayHeaders.delete('x-wemux-preview-target-url')
+    relayHeaders.delete('x-oxmux-preview-target-url')
   }
   if (clusterConfig.sharedToken) {
     relayHeaders.set('x-cluster-token', clusterConfig.sharedToken)
@@ -741,12 +741,12 @@ const relayPreviewPublicIngressHttpRequest = async (params: {
   targetUrl?: string
 }) => {
   const relayHeaders = new Headers(params.request.headers)
-  relayHeaders.set('x-wemux-preview-path', params.pathWithQuery)
+  relayHeaders.set('x-oxmux-preview-path', params.pathWithQuery)
   relayHeaders.set('authorization', `Bearer ${getExecutorPreviewProxySecret(params.executorId)}`)
   if (params.targetUrl) {
-    relayHeaders.set('x-wemux-preview-target-url', params.targetUrl)
+    relayHeaders.set('x-oxmux-preview-target-url', params.targetUrl)
   } else {
-    relayHeaders.delete('x-wemux-preview-target-url')
+    relayHeaders.delete('x-oxmux-preview-target-url')
   }
   relayHeaders.delete('host')
 
@@ -888,7 +888,7 @@ const buildDesktopNoVncPolish = (session: PreviewSessionRecord) => {
     return ''
   }
 
-  return `<style data-wemux-desktop-novnc-polish>
+  return `<style data-oxmux-desktop-novnc-polish>
 #noVNC_status_bar { display: none !important; }
 #noVNC_container { top: 0 !important; }
 </style>`
@@ -1094,12 +1094,12 @@ export const registerPreviewGatewayRoutes = (app: Hono) => {
       return c.json({ message: 'preview session 不存在。' }, 404)
     }
 
-    const pathWithQuery = c.req.header('x-wemux-preview-path')?.trim()
+    const pathWithQuery = c.req.header('x-oxmux-preview-path')?.trim()
     if (!pathWithQuery) {
       return c.json({ message: '缺少 preview relay path。' }, 400)
     }
 
-    const targetUrl = c.req.header('x-wemux-preview-target-url')?.trim() || undefined
+    const targetUrl = c.req.header('x-oxmux-preview-target-url')?.trim() || undefined
     const proxyRequest = await buildInternalPreviewProxyRequest({
       session,
       request: c.req.raw,
@@ -1257,11 +1257,11 @@ export const registerPreviewGatewayWsRoute = (app: Hono, upgradeWebSocket: any) 
       ;(c as any).set('previewRelayTargetUrl', c.req.query('targetUrl')?.trim() || undefined)
       ;(c as any).set(
         'previewRelayHeaders',
-        decodeRelayJson<Array<[string, string]>>(c.req.header('x-wemux-preview-relay-headers')) ?? [],
+        decodeRelayJson<Array<[string, string]>>(c.req.header('x-oxmux-preview-relay-headers')) ?? [],
       )
       ;(c as any).set(
         'previewRelaySubprotocols',
-        decodeRelayJson<string[]>(c.req.header('x-wemux-preview-relay-subprotocols')) ?? [],
+        decodeRelayJson<string[]>(c.req.header('x-oxmux-preview-relay-subprotocols')) ?? [],
       )
       await next()
     },
@@ -1391,8 +1391,8 @@ export const registerPreviewGatewayWsRoute = (app: Hono, upgradeWebSocket: any) 
                     : (clusterConfig.sharedToken ? { 'x-cluster-token': clusterConfig.sharedToken } : {})),
                   ...(publicIngressTarget || relayTarget
                     ? {
-                        'x-wemux-preview-relay-headers': relayHeaders,
-                        'x-wemux-preview-relay-subprotocols': relaySubprotocols,
+                        'x-oxmux-preview-relay-headers': relayHeaders,
+                        'x-oxmux-preview-relay-subprotocols': relaySubprotocols,
                       }
                     : {}),
                 },

@@ -1,4 +1,4 @@
-"""Local-only MOSS + MiniCPM5 runtime for Wemux Backstage Dictation.
+"""Local-only MOSS + MiniCPM5 runtime for Oxmux Backstage Dictation.
 
 The process deliberately binds to 127.0.0.1. Audio is accepted only from the
 local client, transcribed locally, then discarded after the response. The web
@@ -21,26 +21,26 @@ from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
 
-MOSS_MODEL = os.environ.get("WEMUX_MOSS_MODEL", "OpenMOSS-Team/MOSS-Transcribe-Diarize")
-VALUE_MODEL = os.environ.get("WEMUX_VALUE_MODEL", "openbmb/MiniCPM5-1B")
+MOSS_MODEL = os.environ.get("OXMUX_MOSS_MODEL", "OpenMOSS-Team/MOSS-Transcribe-Diarize")
+VALUE_MODEL = os.environ.get("OXMUX_VALUE_MODEL", "openbmb/MiniCPM5-1B")
 DEFAULT_MOSS_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 DEFAULT_VALUE_DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
-MOSS_DEVICE = os.environ.get("WEMUX_MOSS_DEVICE", os.environ.get("WEMUX_MEETING_DEVICE", DEFAULT_MOSS_DEVICE))
-VALUE_DEVICE = os.environ.get("WEMUX_VALUE_DEVICE", os.environ.get("WEMUX_MEETING_DEVICE", DEFAULT_VALUE_DEVICE))
-RUNTIME_TOKEN = os.environ.get("WEMUX_MEETING_RUNTIME_TOKEN", "").strip()
-MAX_AUDIO_BYTES = max(1, int(os.environ.get("WEMUX_MEETING_MAX_AUDIO_BYTES", str(32 * 1024 * 1024))))
-ALLOWED_ORIGINS = [origin.strip() for origin in os.environ.get("WEMUX_MEETING_ALLOWED_ORIGINS", "").split(",") if origin.strip()]
-LOCAL_ORIGIN_PATTERN = r"^(?:https?://(?:localhost|127\.0\.0\.1)(?::\d+)?|wemux://local)$"
+MOSS_DEVICE = os.environ.get("OXMUX_MOSS_DEVICE", os.environ.get("OXMUX_MEETING_DEVICE", DEFAULT_MOSS_DEVICE))
+VALUE_DEVICE = os.environ.get("OXMUX_VALUE_DEVICE", os.environ.get("OXMUX_MEETING_DEVICE", DEFAULT_VALUE_DEVICE))
+RUNTIME_TOKEN = os.environ.get("OXMUX_MEETING_RUNTIME_TOKEN", "").strip()
+MAX_AUDIO_BYTES = max(1, int(os.environ.get("OXMUX_MEETING_MAX_AUDIO_BYTES", str(32 * 1024 * 1024))))
+ALLOWED_ORIGINS = [origin.strip() for origin in os.environ.get("OXMUX_MEETING_ALLOWED_ORIGINS", "").split(",") if origin.strip()]
+LOCAL_ORIGIN_PATTERN = r"^(?:https?://(?:localhost|127\.0\.0\.1)(?::\d+)?|oxmux://local)$"
 
-logger = logging.getLogger("wemux.meeting-runtime")
+logger = logging.getLogger("oxmux.meeting-runtime")
 
-app = FastAPI(title="Wemux local meeting runtime", version="0.1.0")
+app = FastAPI(title="Oxmux local meeting runtime", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_origin_regex=LOCAL_ORIGIN_PATTERN,
     allow_methods=["POST", "GET"],
-    allow_headers=["Content-Type", "X-Wemux-Meeting-Key"],
+    allow_headers=["Content-Type", "X-Oxmux-Meeting-Key"],
 )
 
 moss_model: Any | None = None
@@ -195,12 +195,12 @@ async def meeting_transcribe(
     startedAt: str = Form(...),
     endedAt: str = Form(...),
     brainContext: str = Form(default=""),
-    x_wemux_meeting_key: str | None = Header(default=None),
+    x_oxmux_meeting_key: str | None = Header(default=None),
 ) -> dict[str, Any]:
-    authorize_runtime(x_wemux_meeting_key)
+    authorize_runtime(x_oxmux_meeting_key)
     del endedAt  # The runtime derives per-speaker timestamps from the MOSS result.
     suffix = Path(audio.filename or "meeting.webm").suffix or ".webm"
-    temporary = tempfile.NamedTemporaryFile(prefix="wemux-meeting-", suffix=suffix, delete=False)
+    temporary = tempfile.NamedTemporaryFile(prefix="oxmux-meeting-", suffix=suffix, delete=False)
     try:
         received_bytes = 0
         while chunk := await audio.read(1024 * 1024):

@@ -160,17 +160,17 @@ const padCommands = (commands: Array<{ usage: string; description: string }>) =>
   }).join('\n')
 }
 
-export const getCliName = (invokedName = getEnv('WEMUX_CLI_NAME')?.trim()) => {
-  // 品牌迁移：wemux 是当前规范命令名；vbx / vibemux 仅作为旧别名保留（存量脚本兼容）。
+export const getCliName = (invokedName = getEnv('OXMUX_CLI_NAME')?.trim()) => {
+  // 品牌迁移：oxmux 是当前规范命令名；vbx / vibemux 仅作为旧别名保留（存量脚本兼容）。
   if (invokedName === 'vbx' || invokedName === 'vibemux') {
     return invokedName
   }
-  return 'wemux'
+  return 'oxmux'
 }
 
 export const isCanonicalCliName = (invokedName?: string) => {
-  // 规范 CLI：wemux / vbx / vibemux。npm daemon 包 bin（wemux-worker 等）按旧入口处理。
-  return invokedName === 'wemux' || invokedName === 'vbx' || invokedName === 'vibemux'
+  // 规范 CLI：oxmux / vbx / vibemux。npm daemon 包 bin（oxmux-worker 等）按旧入口处理。
+  return invokedName === 'oxmux' || invokedName === 'vbx' || invokedName === 'vibemux'
 }
 
 export const isHelpFlag = (value?: string) => value === 'help' || value === '--help' || value === '-h'
@@ -188,7 +188,7 @@ export const renderRootHelp = (cliName: string, version: string) => {
   }))
 
   return [
-    `wemux CLI ${version}`,
+    `oxmux CLI ${version}`,
     '',
     'Usage:',
     `  ${cliName} <command> [options]`,
@@ -204,7 +204,7 @@ export const renderRootHelp = (cliName: string, version: string) => {
     '      --json     Output machine-readable JSON where supported',
     '',
     `Run "${cliName} help <resource>" for resource commands.`,
-    'Authentication: set WEMUX_TOKEN, or pair the local worker.',
+    'Authentication: set OXMUX_TOKEN, or pair the local worker.',
   ].join('\n')
 }
 

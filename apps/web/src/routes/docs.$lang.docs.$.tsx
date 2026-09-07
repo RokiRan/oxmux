@@ -32,7 +32,7 @@ export const Route = createFileRoute('/docs/$lang/docs/$')({
     return buildMarketingHead({
       description: page.description ?? page.title,
       path: page.url,
-      title: `${page.title} — Wemux Docs`,
+      title: `${page.title} — Oxmux Docs`,
     })
   },
   component: DocsPageRoute,
@@ -80,7 +80,7 @@ function DocsPageRoute() {
       langHref={langHref}
       currentUrl={page.url}
       indexUrl={indexUrl}
-      indexLabel={zh ? '欢迎使用 Wemux' : 'Welcome to Wemux'}
+      indexLabel={zh ? '欢迎使用 Oxmux' : 'Welcome to Oxmux'}
       sections={model.sections}
       content={<DocsPageContent page={page} />}
       toc={toc}

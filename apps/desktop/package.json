@@ -1,8 +1,8 @@
 {
-  "name": "@wemux/desktop",
+  "name": "@oxmux/desktop",
   "version": "0.0.0",
-  "description": "Wemux Electron desktop client",
-  "author": "Wemux",
+  "description": "Oxmux Electron desktop client",
+  "author": "Oxmux",
   "private": true,
   "type": "module",
   "main": "src/main.mjs",

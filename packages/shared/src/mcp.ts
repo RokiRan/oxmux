@@ -1,5 +1,5 @@
 /**
- * [INPUT]: Stored MCP server configuration and Wemux control-plane tool names.
+ * [INPUT]: Stored MCP server configuration and Oxmux control-plane tool names.
  * [OUTPUT]: Shared MCP policy parsing, runtime materialization, and read-only tool metadata.
  * [POS]: Cross-runtime MCP contract shared by server, worker, and web configuration surfaces.
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
@@ -310,7 +310,7 @@ const buildRemoteServer = (target: string, headers?: Record<string, string>) => 
   }
 }
 
-// 官方连接器：agent 不直连 open-connector，而是经 Wemux server 代理（/api/connector/mcp）
+// 官方连接器：agent 不直连 open-connector，而是经 Oxmux server 代理（/api/connector/mcp）
 // 由 server 按 workspace 上下文过滤连接，实现多租户执行侧隔离。
 const buildOfficialConnectorServer = (
   server: McpServerPolicy,

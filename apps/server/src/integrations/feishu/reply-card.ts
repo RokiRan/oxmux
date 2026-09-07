@@ -112,7 +112,7 @@ export const buildFeishuReplyCard = (state: FeishuReplyCardState): Record<string
     config: { wide_screen_mode: true, update_multi: true },
     header: {
       template: meta.template,
-      title: { tag: 'plain_text', content: `wemux · ${meta.title}` },
+      title: { tag: 'plain_text', content: `oxmux · ${meta.title}` },
     },
     elements,
   }

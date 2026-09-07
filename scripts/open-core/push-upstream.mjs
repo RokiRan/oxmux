@@ -22,7 +22,7 @@ const run = (args, options = {}) => execFileSync('git', args, {
 
 const branch = run(['branch', '--show-current']).trim()
 const targets = {
-  public: { branch: 'main', remote: 'public', remoteBranch: 'main', url: 'wemux-ai/wemux' },
+  public: { branch: 'main', remote: 'public', remoteBranch: 'main', url: 'oxmux-ai/oxmux' },
 }
 const target = targets[mode]
 const expectedBranch = target.branch

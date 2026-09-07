@@ -239,8 +239,8 @@ export function DocsAiChat({ locale }: { locale: DocsLocale }) {
                 <Sparkles className="size-6 text-violet-500" />
                 <p className="max-w-[240px] text-xs leading-relaxed text-muted-foreground">
                   {isZh
-                    ? '问任何关于 Wemux 的问题，例如「如何创建任务？」「Worker 怎么连接？」'
-                    : 'Ask anything about Wemux, e.g. "How do I create a task?" or "How to connect a worker?"'}
+                    ? '问任何关于 Oxmux 的问题，例如「如何创建任务？」「Worker 怎么连接？」'
+                    : 'Ask anything about Oxmux, e.g. "How do I create a task?" or "How to connect a worker?"'}
                 </p>
               </div>
             ) : (

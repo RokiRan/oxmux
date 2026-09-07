@@ -12,7 +12,7 @@ on:
         required: true
         default: preview
       package-name:
-        description: '包名覆盖（默认 wemux-worker-preview / wemux-worker；一次性迁移包可传 vibemux-worker-preview）'
+        description: '包名覆盖（默认 oxmux-worker-preview / oxmux-worker；一次性迁移包可传 vibemux-worker-preview）'
         type: string
         required: false
         default: ''
@@ -57,11 +57,11 @@ jobs:
           BASE_VERSION=$(node -p "require('./package.json').version")
           if [ "${CHANNEL}" = "preview" ]; then
             PACKAGE_VERSION="${BASE_VERSION}-preview.${GITHUB_SHA::8}"
-            DEFAULT_NAME="wemux-worker-preview"
+            DEFAULT_NAME="oxmux-worker-preview"
             PACKAGE_TAG="preview"
           else
             PACKAGE_VERSION="${BASE_VERSION}"
-            DEFAULT_NAME="wemux-worker"
+            DEFAULT_NAME="oxmux-worker"
             PACKAGE_TAG="latest"
           fi
           PACKAGE_NAME="${{ inputs.package-name }}"
@@ -84,9 +84,9 @@ jobs:
         shell: bash
         run: |
           PACKAGE_ROOT=".artifacts/worker-npm/${PACKAGE_NAME}"
-          WEMUX_WORKER_HOME="${RUNNER_TEMP}/vbx-smoke" node "${PACKAGE_ROOT}/bin/vbx.mjs" --help
-          WEMUX_WORKER_HOME="${RUNNER_TEMP}/vbx-smoke" node "${PACKAGE_ROOT}/bin/wemux.mjs" --version
-          WEMUX_WORKER_HOME="${RUNNER_TEMP}/vbx-smoke" node "${PACKAGE_ROOT}/bin/cli.mjs" daemon --help
+          OXMUX_WORKER_HOME="${RUNNER_TEMP}/vbx-smoke" node "${PACKAGE_ROOT}/bin/vbx.mjs" --help
+          OXMUX_WORKER_HOME="${RUNNER_TEMP}/vbx-smoke" node "${PACKAGE_ROOT}/bin/oxmux.mjs" --version
+          OXMUX_WORKER_HOME="${RUNNER_TEMP}/vbx-smoke" node "${PACKAGE_ROOT}/bin/cli.mjs" daemon --help
         env:
           PACKAGE_NAME: ${{ steps.prep.outputs.package_name }}
 

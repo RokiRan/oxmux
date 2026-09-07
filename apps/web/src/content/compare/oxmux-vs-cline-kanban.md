@@ -1,12 +1,12 @@
-# Wemux vs Cline Kanban
+# Oxmux vs Cline Kanban
 
-Cline Kanban is one of the clearest local-first execution-delivery comparisons for wemux. It is not just another AI IDE wrapper. It explicitly pushes a task-card to worktree to diff-review to commit or PR workflow.
+Cline Kanban is one of the clearest local-first execution-delivery comparisons for oxmux. It is not just another AI IDE wrapper. It explicitly pushes a task-card to worktree to diff-review to commit or PR workflow.
 
 That makes the overlap real.
 
 ## Where Cline Kanban is strong
 
-According to the competitor-watch notes already maintained inside Wemux, Cline Kanban stands out for:
+According to the competitor-watch notes already maintained inside Oxmux, Cline Kanban stands out for:
 
 - local-first task-card workflows
 - ephemeral worktree execution
@@ -16,20 +16,20 @@ According to the competitor-watch notes already maintained inside Wemux, Cline K
 
 This creates a very sharp personal or small-team workflow for people who want AI execution tightly coupled to a local Kanban surface.
 
-## Where Wemux is different
+## Where Oxmux is different
 
-Wemux overlaps on execution delivery, but its center of gravity is different:
+Oxmux overlaps on execution delivery, but its center of gravity is different:
 
 - worker-based routing across real machines
 - stronger long-running continuity across nodes and devices
 - clearer direction around persistent AI work, transfer, and multi-machine execution
 - more explicit control-plane thinking instead of only local board automation
 
-Cline Kanban is strongest when the local task board is the center of the world. Wemux becomes more compelling when the bigger problem is orchestration across environments, devices, and routed execution surfaces.
+Cline Kanban is strongest when the local task board is the center of the world. Oxmux becomes more compelling when the bigger problem is orchestration across environments, devices, and routed execution surfaces.
 
 ## Side-by-side
 
-| Dimension | Cline Kanban | Wemux |
+| Dimension | Cline Kanban | Oxmux |
 | --- | --- | --- |
 | Product shape | Local-first Kanban workbench | Worker-first AI delivery platform |
 | Best fit | Personal or tightly local execution loops | Teams needing routed execution across machines |
@@ -42,7 +42,7 @@ Cline Kanban is strongest when the local task board is the center of the world. 
 
 Choose Cline Kanban if your main priority is a highly local, task-board-driven workflow with strong automatic transitions and worktree-centric execution.
 
-Choose Wemux if your main priority is keeping AI work operational across real infrastructure:
+Choose Oxmux if your main priority is keeping AI work operational across real infrastructure:
 
 - the correct machine
 - the correct repo
@@ -55,4 +55,4 @@ This is one of the most relevant comparisons for buyers because it exposes a rea
 
 Do you mainly want a local-first AI task board, or do you need an AI delivery layer that can keep work moving across machines, nodes, and changing device availability?
 
-Wemux is built for the second case. That is why persistent execution, routed workers, and one-click transfer matter so much to its product direction.
+Oxmux is built for the second case. That is why persistent execution, routed workers, and one-click transfer matter so much to its product direction.

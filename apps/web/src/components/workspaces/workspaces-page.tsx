@@ -2211,7 +2211,7 @@ export function WorkspacesPage() {
         candidateCwds: selectedWorkspaceCandidateCwds,
         target,
         customCommand: state.config.workspaceOpenSettings.customCommand,
-        debugPrefix: '[Wemux][Workspace Open][/workspaces]',
+        debugPrefix: '[Oxmux][Workspace Open][/workspaces]',
         t,
       })
       if (opened) {

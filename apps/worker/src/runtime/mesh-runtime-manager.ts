@@ -52,7 +52,7 @@ const splitEnvList = (value?: string) => (value ?? '')
   .filter(Boolean)
 
 const shouldAutoDownloadEasyTier = () => {
-  const value = getEnv('WEMUX_EASYTIER_AUTO_DOWNLOAD')?.trim().toLowerCase()
+  const value = getEnv('OXMUX_EASYTIER_AUTO_DOWNLOAD')?.trim().toLowerCase()
   return value !== '0' && value !== 'false' && value !== 'off'
 }
 
@@ -60,7 +60,7 @@ const truthyConfigValues = new Set(['1', 'true', 'yes', 'on'])
 const falsyConfigValues = new Set(['0', 'false', 'no', 'off'])
 
 export const shouldUseEasyTierSmoltcp = (platform = process.platform) => {
-  const configured = getEnv('WEMUX_EASYTIER_USE_SMOLTCP')?.trim().toLowerCase()
+  const configured = getEnv('OXMUX_EASYTIER_USE_SMOLTCP')?.trim().toLowerCase()
   if (configured && truthyConfigValues.has(configured)) {
     return true
   }
@@ -72,7 +72,7 @@ export const shouldUseEasyTierSmoltcp = (platform = process.platform) => {
 }
 
 export const shouldUseEasyTierNoTun = (platform = process.platform) => {
-  const configured = getEnv('WEMUX_EASYTIER_NO_TUN')?.trim().toLowerCase()
+  const configured = getEnv('OXMUX_EASYTIER_NO_TUN')?.trim().toLowerCase()
   if (configured && truthyConfigValues.has(configured)) {
     return true
   }
@@ -84,16 +84,16 @@ export const shouldUseEasyTierNoTun = (platform = process.platform) => {
 }
 
 export const resolveWorkerEasyTierRpcPortal = () => {
-  const configured = getEnv('WEMUX_EASYTIER_RPC_PORTAL')?.trim()
+  const configured = getEnv('OXMUX_EASYTIER_RPC_PORTAL')?.trim()
   if (configured) {
     return configured
   }
 
   const profile = resolveEasyTierPortProfile({
-    explicitProfile: getEnv('WEMUX_EASYTIER_PORT_PROFILE'),
+    explicitProfile: getEnv('OXMUX_EASYTIER_PORT_PROFILE'),
     nodeEnv: process.env.NODE_ENV,
     releaseChannel: getWorkerReleaseChannel(),
-    cloudUrl: getEnv('WEMUX_CLOUD_URL'),
+    cloudUrl: getEnv('OXMUX_CLOUD_URL'),
   })
   return getEasyTierRpcPortal(profile)
 }
@@ -304,14 +304,14 @@ export const parseEasyTierPeerOutput = (raw: string): WorkerMeshPeer[] => {
 }
 
 export const loadWorkerMeshRuntimeConfigFromEnv = (): WorkerMeshRuntimeConfig => ({
-  enabled: truthyEnvValues.has(getEnv('WEMUX_MESH_ENABLED')?.trim().toLowerCase() || ''),
-  corePath: getEnv('WEMUX_EASYTIER_CORE_PATH')?.trim() || process.env.EASYTIER_CORE_PATH?.trim() || undefined,
-  cliPath: getEnv('WEMUX_EASYTIER_CLI_PATH')?.trim() || process.env.EASYTIER_CLI_PATH?.trim() || undefined,
-  networkName: getEnv('WEMUX_EASYTIER_NETWORK_NAME')?.trim() || undefined,
-  networkSecret: getEnv('WEMUX_EASYTIER_NETWORK_SECRET')?.trim() || undefined,
-  peers: splitEnvList(getEnv('WEMUX_EASYTIER_PEERS')),
-  ipv4: getEnv('WEMUX_EASYTIER_IPV4')?.trim() || undefined,
-  hostname: getEnv('WEMUX_EASYTIER_HOSTNAME')?.trim() || undefined,
+  enabled: truthyEnvValues.has(getEnv('OXMUX_MESH_ENABLED')?.trim().toLowerCase() || ''),
+  corePath: getEnv('OXMUX_EASYTIER_CORE_PATH')?.trim() || process.env.EASYTIER_CORE_PATH?.trim() || undefined,
+  cliPath: getEnv('OXMUX_EASYTIER_CLI_PATH')?.trim() || process.env.EASYTIER_CLI_PATH?.trim() || undefined,
+  networkName: getEnv('OXMUX_EASYTIER_NETWORK_NAME')?.trim() || undefined,
+  networkSecret: getEnv('OXMUX_EASYTIER_NETWORK_SECRET')?.trim() || undefined,
+  peers: splitEnvList(getEnv('OXMUX_EASYTIER_PEERS')),
+  ipv4: getEnv('OXMUX_EASYTIER_IPV4')?.trim() || undefined,
+  hostname: getEnv('OXMUX_EASYTIER_HOSTNAME')?.trim() || undefined,
 })
 
 const fromEnrollment = (enrollment: WorkerMeshEnrollmentConfig): WorkerMeshRuntimeConfig => ({
@@ -511,7 +511,7 @@ export const startWorkerMeshRuntimeAsync = async (
     })
     try {
       if (!autoDownload) {
-        throw new Error('EasyTier executable was not found. Set WEMUX_EASYTIER_CORE_PATH and WEMUX_EASYTIER_CLI_PATH, or enable WEMUX_EASYTIER_AUTO_DOWNLOAD.')
+        throw new Error('EasyTier executable was not found. Set OXMUX_EASYTIER_CORE_PATH and OXMUX_EASYTIER_CLI_PATH, or enable OXMUX_EASYTIER_AUTO_DOWNLOAD.')
       }
       const binaries = await (options.ensureBinaries ?? ensureEasyTierBinaries)({
         // 节点级 tool 缓存固定机器级 workerHome，不随 workspaceRoot（云节点 R2 挂载）走
@@ -536,7 +536,7 @@ export const startWorkerMeshRuntimeAsync = async (
     return updateMeshStatus({
       enabled: true,
       status: 'error',
-      errorMessage: 'EasyTier core executable was not found. Set WEMUX_EASYTIER_CORE_PATH or enable automatic download.',
+      errorMessage: 'EasyTier core executable was not found. Set OXMUX_EASYTIER_CORE_PATH or enable automatic download.',
     })
   }
 

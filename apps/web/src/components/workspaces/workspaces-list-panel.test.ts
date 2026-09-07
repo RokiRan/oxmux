@@ -97,7 +97,7 @@ test('does not show dev running badge from runtime probe alone in workspace list
     } as unknown as WorkspaceListItem['workspace'],
     project: {
       id: 'project-a',
-      name: 'Wemux',
+      name: 'Oxmux',
     } as unknown as WorkspaceListItem['project'],
     recentActivityAt: '2026-06-12T00:00:00.000Z',
     linkedTasks: [],
@@ -143,7 +143,7 @@ test('shows preview badge as note and port in workspace list rows', () => {
     } as unknown as WorkspaceListItem['workspace'],
     project: {
       id: 'project-a',
-      name: 'Wemux',
+      name: 'Oxmux',
     } as unknown as WorkspaceListItem['project'],
     recentActivityAt: '2026-06-12T00:00:00.000Z',
     linkedTasks: [],
@@ -160,8 +160,8 @@ test('shows preview badge as note and port in workspace list rows', () => {
       previewId: 'preview-3000',
       remoteTransport: 'tunnel',
       sources: [{
-        publicUrl: 'https://preview-3000.wemux.xyz/',
-        previewHost: 'preview-3000.wemux.xyz',
+        publicUrl: 'https://preview-3000.oxmux.xyz/',
+        previewHost: 'preview-3000.oxmux.xyz',
         appUrl: 'http://127.0.0.1:3000/',
         port: 3000,
         note: 'Web',
@@ -201,7 +201,7 @@ test('shared workspace cards show creator avatar and active runtime signals with
     } as unknown as WorkspaceListItem['workspace'],
     project: {
       id: 'project-a',
-      name: 'Wemux',
+      name: 'Oxmux',
     } as unknown as WorkspaceListItem['project'],
     creatorProfile: {
       id: 'agent-research',
@@ -271,7 +271,7 @@ test('shared workspace cards hide idle status labels', () => {
     } as unknown as WorkspaceListItem['workspace'],
     project: {
       id: 'project-a',
-      name: 'Wemux',
+      name: 'Oxmux',
     } as unknown as WorkspaceListItem['project'],
     creatorProfile: {
       id: 'user-owner',
@@ -312,7 +312,7 @@ test('shared workspace cards hide idle status labels', () => {
 test('shows archived workspace section from summary count before archived items are loaded', () => {
   const project = {
     id: 'project-a',
-    name: 'Wemux',
+    name: 'Oxmux',
   } as unknown as WorkspaceListItem['project']
 
   const html = renderToStaticMarkup(
@@ -341,18 +341,18 @@ test('shows archived workspace section from summary count before archived items 
 test('workspace list retains configured preview ports', () => {
   const previewPorts = resolveWorkspaceListPreviewPorts([
       {
-        url: 'https://preview-3000.wemux.xyz/',
+        url: 'https://preview-3000.oxmux.xyz/',
         appUrl: 'http://127.0.0.1:3000/',
-        host: 'preview-3000.wemux.xyz',
+        host: 'preview-3000.oxmux.xyz',
         port: 3000,
         note: 'Web',
         transport: 'tunnel',
         transportLabel: '隧道预览域名',
       },
       {
-        url: 'https://preview-4111.wemux.xyz/',
+        url: 'https://preview-4111.oxmux.xyz/',
         appUrl: 'http://127.0.0.1:4111/',
-        host: 'preview-4111.wemux.xyz',
+        host: 'preview-4111.oxmux.xyz',
         port: 4111,
         note: 'Mastra',
         transport: 'tunnel',

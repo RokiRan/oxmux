@@ -118,8 +118,8 @@ export async function collectDocsStaticIndex(contentDir: string): Promise<DocsSt
 
   targets.push({
     path: '/docs',
-    title: 'wemux Docs',
-    description: 'wemux documentation: an AI coding delivery platform that orchestrates work across real repositories, workers, branches, logs, and review flows.',
+    title: 'oxmux Docs',
+    description: 'oxmux documentation: an AI coding delivery platform that orchestrates work across real repositories, workers, branches, logs, and review flows.',
     index: false,
   })
 
@@ -131,17 +131,17 @@ export async function collectDocsStaticIndex(contentDir: string): Promise<DocsSt
 
     targets.push({
       path: buildDocsLandingUrl(locale),
-      title: zh ? 'wemux 文档' : 'wemux Docs',
+      title: zh ? 'oxmux 文档' : 'oxmux Docs',
       description: zh
-        ? 'wemux（AI 编程交付平台）文档：协调真实仓库、Worker、分支、日志与审核流程。'
-        : 'wemux documentation: an AI coding delivery platform that orchestrates work across real repositories, workers, branches, logs, and review flows.',
+        ? 'oxmux（AI 编程交付平台）文档：协调真实仓库、Worker、分支、日志与审核流程。'
+        : 'oxmux documentation: an AI coding delivery platform that orchestrates work across real repositories, workers, branches, logs, and review flows.',
       index: true,
     })
 
     for (const page of model.pages) {
       targets.push({
         path: page.url,
-        title: `${page.title} — wemux Docs`,
+        title: `${page.title} — oxmux Docs`,
         description: page.description ?? page.title,
         index: true,
       })
@@ -154,8 +154,8 @@ export async function collectDocsStaticIndex(contentDir: string): Promise<DocsSt
           legacyRedirectPaths.add(from)
           targets.push({
             path: from,
-            title: 'wemux Docs',
-            description: 'Redirecting to the wemux documentation.',
+            title: 'oxmux Docs',
+            description: 'Redirecting to the oxmux documentation.',
             index: false,
           })
         }

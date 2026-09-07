@@ -13,13 +13,13 @@
 ### 开发环境
 
 ```bash
-DATABASE_URL=postgres://wemux:local-dev-password@127.0.0.1:5434/wemux
+DATABASE_URL=postgres://oxmux:local-dev-password@127.0.0.1:5434/oxmux
 ```
 
 ### 生产环境
 
 ```bash
-DATABASE_URL=postgres://user:password@db-host:5432/wemux
+DATABASE_URL=postgres://user:password@db-host:5432/oxmux
 ```
 
 ## 访问路径

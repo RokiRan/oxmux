@@ -160,7 +160,11 @@ export const authFetch = async (input: string, init?: RequestInit): Promise<Resp
     Object.assign(headers, getAuthHeaders())
   }
 
-  const response = await fetch(input, { ...init, headers })
+  // credentials:'include'：dev 下 VITE_API_BASE_URL 指向独立源（如 127.0.0.1:8989），
+  // /api/auth/account/* 等接口只认 better-auth 的 httpOnly session cookie（不认 Bearer token），
+  // 跨源请求默认 credentials:'same-origin' 会丢 cookie 导致 401「未登录」横幅。
+  // 服务端 /api/* CORS 已开 credentials:true；authFetch 消费方都打自有 API，无第三方目标。
+  const response = await fetch(input, { credentials: 'include', ...init, headers })
 
   if (response.status === 401 && typeof window !== 'undefined') {
     const path = window.location.pathname

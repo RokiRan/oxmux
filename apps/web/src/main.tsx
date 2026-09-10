@@ -1,5 +1,5 @@
-import 'virtual:commercial-extension'
 import './lib/polyfills'
+import 'virtual:commercial-extension'
 import './lib/i18n'
 import React from 'react'
 import ReactDOM from 'react-dom/client'

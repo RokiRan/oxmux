@@ -1,6 +1,35 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      // 纯 HTTP（非 secure context）自托管部署时浏览器不提供 crypto.randomUUID。
+      // module 脚本可能顶层调用它，而 chunk 内模块可能先于入口执行，
+      // 因此必须以经典内联脚本在任何 module 之前补齐（与 src/lib/polyfills.ts 同逻辑）。
+      (function () {
+        var cryptoObject = globalThis.crypto;
+        if (cryptoObject && typeof cryptoObject.randomUUID === 'function') return;
+        var randomUUID = function () {
+          if (cryptoObject && cryptoObject.getRandomValues) {
+            var bytes = cryptoObject.getRandomValues(new Uint8Array(16));
+            bytes[6] = (bytes[6] & 0x0f) | 0x40;
+            bytes[8] = (bytes[8] & 0x3f) | 0x80;
+            var hex = Array.prototype.map.call(bytes, function (byte) { return byte.toString(16).padStart(2, '0'); });
+            return hex.slice(0, 4).join('') + '-' + hex.slice(4, 6).join('') + '-' + hex.slice(6, 8).join('') + '-' + hex.slice(8, 10).join('') + '-' + hex.slice(10, 16).join('');
+          }
+          var timestamp = Date.now();
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (char) {
+            var random = (timestamp + Math.random() * 16) % 16 | 0;
+            timestamp = Math.floor(timestamp / 16);
+            return (char === 'x' ? random : (random & 0x3) | 0x8).toString(16);
+          });
+        };
+        if (cryptoObject) {
+          Object.defineProperty(cryptoObject, 'randomUUID', { value: randomUUID, configurable: true });
+        } else {
+          Object.defineProperty(globalThis, 'crypto', { value: { randomUUID: randomUUID }, configurable: true });
+        }
+      })();
+    </script>
     <!-- oxmux-google-analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHSGWBC0DV"></script>
     <script>

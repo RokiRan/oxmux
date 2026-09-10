@@ -145,6 +145,46 @@ test('resolveExternalRequestScheme defaults to https for non-local public hosts'
     'http',
   )
 })
+test('resolveExternalRequestScheme honors plain-http self-hosted deployments', () => {
+  // 私网/局域网地址没有公网 TLS 终止：无转发头时外部协议就是实际请求协议
+  assert.equal(
+    resolveExternalRequestScheme({
+      requestUrl: 'http://10.0.0.131:8989/install',
+      headers: new Headers({
+        host: '10.0.0.131:8989',
+      }),
+    }),
+    'http',
+  )
+
+  // 部署方通过 OXMUX_PUBLIC_BASE_URL 显式声明 http 外部地址时，公网域名也尊重 http
+  const previousPublicBaseUrl = process.env.OXMUX_PUBLIC_BASE_URL
+  const previousLegacyPublicBaseUrl = process.env.VIBEMUX_PUBLIC_BASE_URL
+  process.env.OXMUX_PUBLIC_BASE_URL = 'http://oxmux.example.com'
+  delete process.env.VIBEMUX_PUBLIC_BASE_URL
+  try {
+    assert.equal(
+      resolveExternalRequestScheme({
+        requestUrl: 'http://server:18989/install',
+        headers: new Headers({
+          host: 'oxmux.example.com',
+        }),
+      }),
+      'http',
+    )
+  } finally {
+    if (previousPublicBaseUrl === undefined) {
+      delete process.env.OXMUX_PUBLIC_BASE_URL
+    } else {
+      process.env.OXMUX_PUBLIC_BASE_URL = previousPublicBaseUrl
+    }
+    if (previousLegacyPublicBaseUrl === undefined) {
+      delete process.env.VIBEMUX_PUBLIC_BASE_URL
+    } else {
+      process.env.VIBEMUX_PUBLIC_BASE_URL = previousLegacyPublicBaseUrl
+    }
+  }
+})
 
 test('normalizePreviewPublicUrl defaults malformed remote preview urls to https', () => {
   assert.equal(

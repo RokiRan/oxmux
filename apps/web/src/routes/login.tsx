@@ -260,7 +260,9 @@ export function LoginPage() {
   const title = communityLogin
     ? tr('登录 Oxmux 社区版', 'Sign in to Oxmux Community')
     : tr('登录 Oxmux', 'Sign in to Oxmux')
-  const subtitle = tr('使用邮箱账号登录或注册，也可使用 Google 账号继续。', 'Sign in with your email or create an account, or continue with Google.')
+  const subtitle = googleConfigured
+    ? tr('使用邮箱账号登录或注册，也可使用 Google 账号继续。', 'Sign in with your email or create an account, or continue with Google.')
+    : tr('使用邮箱账号登录或注册。', 'Sign in with your email or create an account.')
   const googleLoginDisabled = loading || !googleConfigured || (isTurnstileEnabled && !turnstileToken)
 
   const handlePasswordLoginSuccess = (user: NonNullable<GoogleBridgeResponse['user']>, token: string) => {
@@ -343,46 +345,47 @@ export function LoginPage() {
             <EmailPasswordPanel
               tr={tr}
               emailConfigured={emailConfigured}
+              googleConfigured={googleConfigured}
               onSuccess={handlePasswordLoginSuccess}
               onError={setError}
             />
-            <div className="space-y-2">
-              {isTurnstileEnabled ? (
-                <TurnstilePanel
-                  message={turnstileMessage}
-                  resetKey={turnstileResetKey}
-                  siteKey={turnstileSiteKey}
-                  token={turnstileToken}
-                  onError={(message) => {
-                    setTurnstileToken('')
-                    setTurnstileMessage(message)
-                  }}
-                  onTokenChange={(token) => {
-                    setTurnstileToken(token)
-                    if (token) {
-                      setTurnstileMessage('')
-                    }
-                  }}
-                />
-              ) : null}
-              <Button
-                type="button"
-                className="h-9 w-full bg-zinc-100 text-zinc-950 hover:bg-zinc-200 disabled:cursor-not-allowed disabled:bg-zinc-800/60 disabled:text-zinc-500"
-                disabled={googleLoginDisabled}
-                onClick={() => void handleGoogleLogin()}
-              >
-                <GoogleGIcon className="h-4 w-4" />
-                {loading
-                  ? tr('正在跳转...', 'Redirecting...')
-                  : tr('使用 Google 登录', 'Sign in with Google')}
-                {!googleConfigured ? null : <ArrowRight className="h-4 w-4" />}
-              </Button>
-              <p className="text-center text-xs text-zinc-600">
-                {googleConfigured
-                  ? tr('Google 登录后直接进入系统。', 'Google sign-in takes you straight into Oxmux.')
-                  : tr('未配置 Google 登录（需 GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET）。', 'Google sign-in is not configured (requires GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET).')}
-              </p>
-            </div>
+            {googleConfigured ? (
+              <div className="space-y-2">
+                {isTurnstileEnabled ? (
+                  <TurnstilePanel
+                    message={turnstileMessage}
+                    resetKey={turnstileResetKey}
+                    siteKey={turnstileSiteKey}
+                    token={turnstileToken}
+                    onError={(message) => {
+                      setTurnstileToken('')
+                      setTurnstileMessage(message)
+                    }}
+                    onTokenChange={(token) => {
+                      setTurnstileToken(token)
+                      if (token) {
+                        setTurnstileMessage('')
+                      }
+                    }}
+                  />
+                ) : null}
+                <Button
+                  type="button"
+                  className="h-9 w-full bg-zinc-100 text-zinc-950 hover:bg-zinc-200 disabled:cursor-not-allowed disabled:bg-zinc-800/60 disabled:text-zinc-500"
+                  disabled={googleLoginDisabled}
+                  onClick={() => void handleGoogleLogin()}
+                >
+                  <GoogleGIcon className="h-4 w-4" />
+                  {loading
+                    ? tr('正在跳转...', 'Redirecting...')
+                    : tr('使用 Google 登录', 'Sign in with Google')}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+                <p className="text-center text-xs text-zinc-600">
+                  {tr('Google 登录后直接进入系统。', 'Google sign-in takes you straight into Oxmux.')}
+                </p>
+              </div>
+            ) : null}
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-zinc-500">
               <CommunityLinkList language={language} className="text-emerald-400 transition hover:text-emerald-300" />
             </div>
@@ -464,11 +467,13 @@ function ServerSelector({ tr }: { tr: (zh: string, en: string) => string }) {
 function EmailPasswordPanel({
   tr,
   emailConfigured,
+  googleConfigured,
   onSuccess,
   onError,
 }: {
   tr: (zh: string, en: string) => string
   emailConfigured: boolean
+  googleConfigured: boolean
   onSuccess: (user: NonNullable<GoogleBridgeResponse['user']>, token: string) => void
   onError: (message: string) => void
 }) {
@@ -683,9 +688,13 @@ function EmailPasswordPanel({
 
       <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-600">
         <Mail className="h-3 w-3" />
-        {emailConfigured
-          ? tr('邮箱注册需要验证邮件，Google 登录无需验证。', 'Email sign-up requires email verification. Google sign-in does not.')
-          : tr('邮箱注册无需邮件验证，Google 登录同样直接可用。', 'Email sign-up needs no email verification, and Google sign-in works the same way.')}
+        {googleConfigured
+          ? (emailConfigured
+            ? tr('邮箱注册需要验证邮件，Google 登录无需验证。', 'Email sign-up requires email verification. Google sign-in does not.')
+            : tr('邮箱注册无需邮件验证，Google 登录同样直接可用。', 'Email sign-up needs no email verification, and Google sign-in works the same way.'))
+          : (emailConfigured
+            ? tr('邮箱注册需要验证邮件。', 'Email sign-up requires email verification.')
+            : tr('邮箱注册无需邮件验证。', 'Email sign-up needs no email verification.'))}
       </p>
     </div>
   )

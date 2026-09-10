@@ -49,6 +49,15 @@ const resolveRequestIp = (forwardedFor: string | undefined, fallbackIp: string |
   const candidate = forwardedFor?.split(',')[0]?.trim() || fallbackIp?.trim() || ''
   return candidate || undefined
 }
+// 纯 HTTP 自托管部署时 Secure cookie 会被浏览器丢弃，人机验证状态随之丢失；
+// 显式配置 BETTER_AUTH_URL 时按其协议决定，未配置时保持原有 NODE_ENV 行为。
+const isSecureAuthCookieBaseUrl = () => {
+  const configured = process.env.BETTER_AUTH_URL?.trim()
+  if (configured) {
+    return configured.startsWith('https://')
+  }
+  return process.env.NODE_ENV === 'production'
+}
 
 export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) => {
   app.post('/api/auth/register', async (c) => {
@@ -141,7 +150,7 @@ export const registerAuthRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
       path: '/',
       httpOnly: true,
       sameSite: 'Lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: isSecureAuthCookieBaseUrl(),
       maxAge: turnstileLoginCookieMaxAge,
     })
 

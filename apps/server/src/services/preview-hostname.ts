@@ -75,6 +75,22 @@ export const isLocalPreviewHost = (host: string) => {
     || normalized === 'host.docker.internal'
     || normalized.endsWith('.localtest.me')
 }
+/**
+ * 私网地址（RFC1918、链路本地、CGNAT/ Tailscale 段）：没有公网 TLS 终止，
+ * 未带 x-forwarded-proto 时外部协议就是实际请求协议，不得默认升级为 https。
+ */
+const isPrivateNetworkHost = (host: string) => {
+  const octets = normalizeHostWithoutPort(host).split('.').map((part) => Number(part))
+  if (octets.length !== 4 || octets.some((value) => !Number.isInteger(value) || value < 0 || value > 255)) {
+    return false
+  }
+  const [first = 0, second = 0] = octets
+  return first === 10
+    || (first === 172 && second >= 16 && second <= 31)
+    || (first === 192 && second === 168)
+    || (first === 169 && second === 254)
+    || (first === 100 && second >= 64 && second <= 127)
+}
 
 const getHeaderValue = (headers: HeaderSource | undefined, name: string) => {
   if (!headers) {
@@ -251,7 +267,14 @@ export const resolveExternalRequestScheme = (params: {
     return forwardedProto
   }
 
-  if (!isLocalPreviewHost(resolveExternalHost(params))) {
+  // 部署方显式声明的外部地址（含 http 自托管）优先于公网 https 默认值。
+  const publicBaseScheme = parseHeaderUrlScheme(getEnv('OXMUX_PUBLIC_BASE_URL')?.trim() || '')
+  if (publicBaseScheme) {
+    return publicBaseScheme
+  }
+
+  const externalHost = resolveExternalHost(params)
+  if (!isLocalPreviewHost(externalHost) && !isPrivateNetworkHost(externalHost)) {
     return 'https'
   }
 

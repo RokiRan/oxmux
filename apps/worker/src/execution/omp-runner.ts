@@ -5,6 +5,8 @@
 import { spawn } from 'node:child_process'
 import type { ModelTokenUsage, OmpAgentSettings } from '@shared/types'
 import { buildAgentRuntimeEnvironment } from './agent-runtime-env'
+import { readManagedOmpModel, upsertOmpManagedProvider } from './omp-managed-models'
+import { resolveOmpAgentDir } from './omp-models'
 import { emitAgentEvent, normalizeExecutionModel, readJsonLine, resolveExecutable, shouldSpawnWithShellOnWindows, toAbortError, type WorkerAgentPromptParams, type WorkerAgentPromptResult } from './agent-runner-shared'
 
 type OmpToolCall = {
@@ -139,13 +141,21 @@ const runOmpPromptCore = async (params: WorkerAgentPromptParams): Promise<Worker
   // prompt 常以「--- 最近对话 ---」开头，必须以 -- 结束选项解析，否则 omp 把 prompt 当未知 flag 拒绝
   args.push('--', params.prompt)
 
+  // 受管模型桥接：omp 不读 OPENAI/MINIMAX 等注入 env，必须把控制面 binding 写进 profile 的 models.yml；
+  // apiKey 只落 env 名引用（OXMUX_MANAGED_MODEL_API_KEY），真实 key 随 runtimeEnv 注入子进程
+  const runtimeEnv = {
+    ...buildAgentRuntimeEnvironment(),
+    ...(params.runtimeEnv ?? {}),
+  }
+  const managedModel = readManagedOmpModel(runtimeEnv)
+  if (managedModel) {
+    upsertOmpManagedProvider(resolveOmpAgentDir(profile), managedModel)
+  }
+
   return new Promise<WorkerAgentPromptResult>((resolve, reject) => {
     const child = spawn(executable, args, {
       cwd: params.cwd,
-      env: {
-        ...buildAgentRuntimeEnvironment(),
-        ...(params.runtimeEnv ?? {}),
-      },
+      env: runtimeEnv,
       stdio: ['ignore', 'pipe', 'pipe'],
       shell: shouldSpawnWithShellOnWindows(executable),
     })

@@ -17,7 +17,6 @@ export const buildWorkspaceGitScopeKey = (params: {
 export const workspaceQueryKeys = {
   projectWorkspaces: (projectId: string) => ['workspace', 'project-workspaces', projectId] as const,
   executors: () => ['workspace', 'executors'] as const,
-  managedCloudRuntime: () => ['workspace', 'managed-cloud-runtime'] as const,
   gitWorkingTreeDiff: (
     taskId: string,
     workspaceId: string,

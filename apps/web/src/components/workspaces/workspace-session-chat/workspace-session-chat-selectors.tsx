@@ -96,14 +96,11 @@ export function TaskChatExecutorSelector({
     const isStarting = executor.status === 'paired'
     const latencyLabel = isOnline ? formatExecutorLatency(executor.presence?.latency) : ''
     const hasLatency = latencyLabel && latencyLabel !== '-'
-    const isManagedCloud = executor.executorSource === 'managed-cloud' || executor.managedBy === 'vibemux'
     return {
       value: executor.executorId,
-      label: isManagedCloud ? `${executor.name} · 按需` : executor.name,
+      label: executor.name,
       description: !isOnline
-        ? isManagedCloud
-          ? '使用中自动唤醒'
-          : undefined
+        ? undefined
         : isOutdated
           ? `当前版本 v${executor.version || '-'}，请先升级`
           : isStarting
@@ -111,9 +108,7 @@ export function TaskChatExecutorSelector({
             : undefined,
       statusTone: !isOnline ? 'offline' : isOutdated || executorBusy ? 'busy' : 'online',
       badgeLabel: !isOnline
-        ? isManagedCloud
-          ? '休眠'
-          : '离线'
+        ? '离线'
         : isOutdated
           ? `需升级`
           : isStarting

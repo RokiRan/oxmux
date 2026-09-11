@@ -26,24 +26,11 @@ import { processDingtalkInboundMessage } from './dingtalk-inbound-service'
 import { releaseExpiredInboxSnoozes } from './inbox-service'
 import { scanFeedbackEscalations } from './feedback-escalation-service'
 import { loadState } from '../storage/app-state-store'
-import { getManagedCloudGate } from './gate/managed-cloud-gate'
 import { enterpriseBackgroundServices } from '../extension-registry'
-
-const startManagedCloudStartupReconcile = () => {
-  void (async () => {
-    try {
-      const state = loadState()
-      await getManagedCloudGate().reconcileExecutors(state.config)
-    } catch (error) {
-      console.warn('[managed-cloud] startup reconcile failed:', error instanceof Error ? error.message : error)
-    }
-  })()
-}
 
 export const startServerBackgroundServices = () => {
   startAgentHeartbeatScheduler()
   startHeartbeatRetentionCleanup()
-  startManagedCloudStartupReconcile()
   startAgentEventRuntime()
   startAgentInboxReconciliation()
   startInboxSnoozeScheduler()

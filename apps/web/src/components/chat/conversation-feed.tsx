@@ -797,15 +797,10 @@ function TurnStatusExtraMeta({ status }: { status: ConversationTurn['status'] })
     return runDuration
   }
 
-  const sourceLabel = status?.workspaceExecutor?.executorSource === 'managed-cloud'
-    || status?.workspaceExecutor?.managedBy === 'vibemux'
-    ? '云节点'
-    : '自有节点'
-
   return (
     <span className="inline-flex min-w-0 items-center gap-2">
       <span className="truncate opacity-90" title={status?.workspaceExecutor?.executorId}>
-        运行节点 {executorLabel} · {sourceLabel}
+        运行节点 {executorLabel}
       </span>
       {runDuration ? (
         <>

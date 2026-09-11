@@ -4,7 +4,6 @@
 // POS: persistence/action boundary for workspace session chat settings
 
 import { useCallback } from 'react'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
 import { toast } from 'sonner'
 import type { TaskChatMessageRuntimeConfig } from '@shared/task-chat-session'
 import type { AgentRuntimeSettings, Task } from '@shared/types'
@@ -78,13 +77,9 @@ export function useTaskChatSettingsActions({
       return
     }
 
-    const virtualManagedCloudSelection = isManagedCloudAutoExecutorId(normalizedExecutorId)
-
     state.setExecutorMenuOpen(false)
-    if (!virtualManagedCloudSelection) {
-      state.setSelectedExecutorId(normalizedExecutorId)
-      state.setPreflightExecutorId(normalizedExecutorId)
-    }
+    state.setSelectedExecutorId(normalizedExecutorId)
+    state.setPreflightExecutorId(normalizedExecutorId)
 
     console.info('[workspace-session-chat][executor-switch][ui-select]', {
       taskId: task.id,
@@ -109,7 +104,7 @@ export function useTaskChatSettingsActions({
       || state.modelSaving
       || state.runtimeSettingsSaving
       || state.mcpSettingsSaving
-      || (normalizedExecutorId === state.persistedExecutorId && !virtualManagedCloudSelection)
+      || normalizedExecutorId === state.persistedExecutorId
     ) {
       console.info('[workspace-session-chat][executor-switch][ui-skip]', {
         taskId: task.id,
@@ -124,7 +119,7 @@ export function useTaskChatSettingsActions({
         modelSaving: state.modelSaving,
         runtimeSettingsSaving: state.runtimeSettingsSaving,
         mcpSettingsSaving: state.mcpSettingsSaving,
-        sameAsPersisted: normalizedExecutorId === state.persistedExecutorId && !virtualManagedCloudSelection,
+        sameAsPersisted: normalizedExecutorId === state.persistedExecutorId,
       })
       return
     }

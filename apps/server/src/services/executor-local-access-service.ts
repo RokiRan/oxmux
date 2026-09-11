@@ -16,8 +16,6 @@ const isValidLocalServerPort = (port?: number) => (
 
 const canBeBrowserLocal = (executor: ExecutorRecord) => (
   executor.status === 'online'
-  && executor.executorSource !== 'managed-cloud'
-  && executor.runtimeClass !== 'managed-worker'
   && isValidLocalServerPort(executor.localServerPort)
 )
 

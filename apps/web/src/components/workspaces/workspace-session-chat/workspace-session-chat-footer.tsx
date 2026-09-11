@@ -6,7 +6,6 @@
 import { useMemo } from 'react'
 import { GitBranch } from 'lucide-react'
 import type { McpServerPolicy } from '@shared/mcp'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
 import type { SkillRecord } from '@shared/skill'
 import type { AgentRuntimeSettings, Project, Task, Workspace } from '@shared/types'
 import type { TaskAgentOption } from '../../../lib/agent-runtime-options'
@@ -228,7 +227,6 @@ export function TaskChatFooterControls({
               selectedBranch={workspaceBranchName}
               options={workspaceBranchOptions}
               branchSources={workspaceBranchSources}
-              remoteOnly={isManagedCloudAutoExecutorId(effectiveExecutorId) || effectiveExecutorId.startsWith('managed-cloud')}
               disabled={busy || executorSaving}
               loading={workspaceBranchLoading}
               saving={workspaceBranchSaving}

@@ -17,8 +17,6 @@ import type {
   ClaudeCodeAgentSettings,
   CodexAgentSettings,
   ExecutionModelOption,
-  ManagedCloudCfSandboxConfig,
-  ManagedCloudConfig,
   OpenCodeAgentSettings,
   OmpAgentSettings,
   PiAgentSettings,
@@ -76,43 +74,6 @@ export const DEFAULT_AGENT_SETTINGS: AgentSettings = {
   Omp: DEFAULT_OMP_AGENT_SETTINGS,
 }
 
-export const DEFAULT_MANAGED_CLOUD_CONFIG: ManagedCloudConfig = {
-  runtimeProvider: 'disabled',
-  idleAutoStopMinutes: '30',
-  allowLocalDocker: false,
-  allowLocalControlPlaneRuntime: false,
-  dockerImage: '',
-  dockerHost: '',
-  dockerContext: '',
-  dockerEgressMode: 'default',
-  dockerNetwork: 'bridge',
-  dockerCpus: '2',
-  dockerMemory: '4g',
-  dockerWorkerHomeInContainer: '/var/lib/vibemux-worker', // 存量沿用：托管容器挂载点路径保持旧值，避免升级后卷失配
-  dockerPool: [],
-  boxliteUrl: '',
-  boxliteHome: '',
-  boxliteImage: '',
-  boxliteCpus: '2',
-  boxliteMemory: '4096',
-  boxliteWorkerHomeInContainer: '/var/lib/vibemux-worker', // 存量沿用
-  boxlitePool: [],
-  asciiBoxApiKey: '',
-  asciiBoxBaseUrl: 'https://ascii.dev/api/box/v1',
-  asciiBoxTtlSeconds: '86400',
-  asciiBoxBootstrapCommand: '',
-  cfSandbox: {
-    gatewayUrl: '',
-    apiKey: '',
-    instanceType: 'standard-1',
-    workspaceHome: '/var/lib/vibemux-worker', // 存量沿用
-    keepAliveSeconds: '900',
-    mountDrive: false,
-    driveMountPath: '/drive',
-    bootstrapCommand: 'oxmux-worker daemon',
-  },
-}
-
 export const DEFAULT_RUNTIME_SETTINGS: AgentSettings = {
   ...DEFAULT_AGENT_SETTINGS,
 }
@@ -132,126 +93,6 @@ const cloneSettings = (settings: AgentSettings): AgentSettings => ({
   Pi: { ...settings.Pi },
   Omp: { ...settings.Omp },
 })
-
-const normalizeManagedCloudDockerTargetConfig = (value: unknown): ManagedCloudConfig['dockerPool'][number] | null => {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return null
-  }
-
-  const record = value as Record<string, unknown>
-  const id = typeof record.id === 'string' ? record.id.trim() : ''
-  if (!id) {
-    return null
-  }
-
-  const host = typeof record.host === 'string' ? record.host.trim() : ''
-  const context = typeof record.context === 'string' ? record.context.trim() : ''
-  return {
-    id,
-    name: typeof record.name === 'string' ? record.name.trim() || undefined : undefined,
-    enabled: typeof record.enabled === 'boolean' ? record.enabled : true,
-    egressMode: record.egressMode === 'none'
-      ? 'none'
-      : (record.egressMode === 'default' ? 'default' : undefined),
-    host: host || undefined,
-    context: context || undefined,
-    image: typeof record.image === 'string' ? record.image.trim() || undefined : undefined,
-    network: typeof record.network === 'string' ? record.network.trim() || undefined : undefined,
-    cpus: typeof record.cpus === 'string' ? record.cpus.trim() || undefined : undefined,
-    memory: typeof record.memory === 'string' ? record.memory.trim() || undefined : undefined,
-    workerHomeInContainer: typeof record.workerHomeInContainer === 'string' ? record.workerHomeInContainer.trim() || undefined : undefined,
-  }
-}
-
-const normalizeManagedCloudBoxliteTargetConfig = (value: unknown): ManagedCloudConfig['boxlitePool'][number] | null => {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return null
-  }
-
-  const record = value as Record<string, unknown>
-  const id = typeof record.id === 'string' ? record.id.trim() : ''
-  if (!id) {
-    return null
-  }
-
-  return {
-    id,
-    name: typeof record.name === 'string' ? record.name.trim() || undefined : undefined,
-    enabled: typeof record.enabled === 'boolean' ? record.enabled : true,
-    egressMode: record.egressMode === 'none'
-      ? 'none'
-      : (record.egressMode === 'default' ? 'default' : undefined),
-    url: typeof record.url === 'string' ? record.url.trim() || undefined : undefined,
-    home: typeof record.home === 'string' ? record.home.trim() || undefined : undefined,
-    image: typeof record.image === 'string' ? record.image.trim() || undefined : undefined,
-    cpus: typeof record.cpus === 'string' ? record.cpus.trim() || undefined : undefined,
-    memory: typeof record.memory === 'string' ? record.memory.trim() || undefined : undefined,
-    workerHomeInContainer: typeof record.workerHomeInContainer === 'string' ? record.workerHomeInContainer.trim() || undefined : undefined,
-  }
-}
-
-const normalizeManagedCloudCfSandboxConfig = (config: ManagedCloudCfSandboxConfig | undefined, defaults: ManagedCloudCfSandboxConfig): ManagedCloudCfSandboxConfig => {
-  return {
-    gatewayUrl: config?.gatewayUrl?.trim() ?? defaults.gatewayUrl,
-    apiKey: config?.apiKey?.trim() ?? defaults.apiKey,
-    instanceType: config?.instanceType?.trim() || defaults.instanceType,
-    workspaceHome: config?.workspaceHome?.trim() || defaults.workspaceHome,
-    keepAliveSeconds: config?.keepAliveSeconds?.trim() || defaults.keepAliveSeconds,
-    mountDrive: typeof config?.mountDrive === 'boolean' ? config.mountDrive : defaults.mountDrive,
-    driveMountPath: config?.driveMountPath?.trim() || defaults.driveMountPath,
-    bootstrapCommand: config?.bootstrapCommand?.trim() || defaults.bootstrapCommand,
-  }
-}
-
-export const normalizeManagedCloudConfig = (config?: Partial<ManagedCloudConfig>): ManagedCloudConfig => {
-  const runtimeProvider = config?.runtimeProvider
-  const dockerPool = Array.isArray(config?.dockerPool)
-    ? config.dockerPool
-        .map((item) => normalizeManagedCloudDockerTargetConfig(item))
-        .filter((item): item is NonNullable<typeof item> => item !== null)
-    : []
-  const boxlitePool = Array.isArray(config?.boxlitePool)
-    ? config.boxlitePool
-        .map((item) => normalizeManagedCloudBoxliteTargetConfig(item))
-        .filter((item): item is NonNullable<typeof item> => item !== null)
-    : []
-
-  const allowLocalControlPlaneRuntime = typeof config?.allowLocalControlPlaneRuntime === 'boolean'
-    ? config.allowLocalControlPlaneRuntime
-    : (typeof config?.allowLocalDocker === 'boolean'
-        ? config.allowLocalDocker
-        : DEFAULT_MANAGED_CLOUD_CONFIG.allowLocalControlPlaneRuntime)
-
-  return {
-    runtimeProvider: runtimeProvider === 'unsafe-local-process' || runtimeProvider === 'docker-cli' || runtimeProvider === 'boxlite-cli' || runtimeProvider === 'ascii-box-cli' || runtimeProvider === 'ascii-box-sdk' || runtimeProvider === 'cloudflare-sandbox' || runtimeProvider === 'disabled'
-      ? runtimeProvider
-      : DEFAULT_MANAGED_CLOUD_CONFIG.runtimeProvider,
-    idleAutoStopMinutes: config?.idleAutoStopMinutes?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.idleAutoStopMinutes,
-    allowLocalDocker: allowLocalControlPlaneRuntime,
-    allowLocalControlPlaneRuntime,
-    dockerImage: config?.dockerImage?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.dockerImage,
-    dockerHost: config?.dockerHost?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.dockerHost,
-    dockerContext: config?.dockerContext?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.dockerContext,
-    dockerEgressMode: config?.dockerEgressMode === 'none' ? 'none' : DEFAULT_MANAGED_CLOUD_CONFIG.dockerEgressMode,
-    dockerNetwork: config?.dockerNetwork?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.dockerNetwork,
-    dockerCpus: config?.dockerCpus?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.dockerCpus,
-    dockerMemory: config?.dockerMemory?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.dockerMemory,
-    dockerWorkerHomeInContainer: config?.dockerWorkerHomeInContainer?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.dockerWorkerHomeInContainer,
-    dockerPool,
-    boxliteUrl: config?.boxliteUrl?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.boxliteUrl,
-    boxliteHome: config?.boxliteHome?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.boxliteHome,
-    boxliteImage: config?.boxliteImage?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.boxliteImage,
-    boxliteCpus: config?.boxliteCpus?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.boxliteCpus,
-    boxliteMemory: config?.boxliteMemory?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.boxliteMemory,
-    boxliteWorkerHomeInContainer: config?.boxliteWorkerHomeInContainer?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.boxliteWorkerHomeInContainer,
-    boxlitePool,
-    asciiBoxApiKey: config?.asciiBoxApiKey?.trim() ?? DEFAULT_MANAGED_CLOUD_CONFIG.asciiBoxApiKey,
-    asciiBoxBaseUrl: config?.asciiBoxBaseUrl?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.asciiBoxBaseUrl,
-    asciiBoxTtlSeconds: config?.asciiBoxTtlSeconds?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.asciiBoxTtlSeconds,
-    asciiBoxBootstrapCommand: config?.asciiBoxBootstrapCommand?.trim() || DEFAULT_MANAGED_CLOUD_CONFIG.asciiBoxBootstrapCommand,
-    cfSandbox: normalizeManagedCloudCfSandboxConfig(config?.cfSandbox, DEFAULT_MANAGED_CLOUD_CONFIG.cfSandbox),
-  }
-}
 
 export const normalizeAgentSettings = (settings?: Partial<AgentSettings>, legacyDefaultModel?: string): AgentSettings => {
   const next = cloneSettings(DEFAULT_AGENT_SETTINGS)
@@ -316,7 +157,6 @@ export const normalizeAgentConfig = (config: Omit<Partial<AgentConfig>, 'mcpServ
     workerUpdateSettings: normalizeWorkerUpdateSettings(config.workerUpdateSettings),
     workspaceRoot: config.workspaceRoot ?? '',
     workspaceOpenSettings: normalizeWorkspaceOpenSettings(config.workspaceOpenSettings ?? DEFAULT_WORKSPACE_OPEN_SETTINGS),
-    managedCloud: normalizeManagedCloudConfig(config.managedCloud),
   }
 }
 

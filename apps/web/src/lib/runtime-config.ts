@@ -183,7 +183,6 @@ export const isProductionEnvironment = () => {
   })
 }
 export const isDesktopSandboxDevOnlyEnabled = () => isDevEnvironment() || isPreviewEnvironment()
-export const isManagedCloudDevOnlyEnabled = () => isDevEnvironment() || isPreviewEnvironment()
 
 // ---------- 桌面端服务器地址选择（开源客户端连自托管/官方） ----------
 

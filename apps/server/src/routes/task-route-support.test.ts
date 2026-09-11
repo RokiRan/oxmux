@@ -344,9 +344,9 @@ test('listProjectWorkspacesForUser returns real workspaces and hides unreference
       id: `project-${crypto.randomUUID()}`,
       createdById: userId,
     }
-    const { executor } = executorRegistry.createManagedExecutor({
-      ownerUserId: userId,
-      visibility: 'private',
+    const pairing = await executorRegistry.createPairingCode({ ownerUserId: userId, visibility: 'private' })
+    const pairResult = await executorRegistry.exchangePairingCode({
+      pairingCode: pairing.pairingCode,
       machineId: `machine-${crypto.randomUUID()}`,
       machineName: 'Test machine',
       name: 'Test executor',
@@ -355,12 +355,10 @@ test('listProjectWorkspacesForUser returns real workspaces and hides unreference
       capabilities: [],
       labels: [],
     })
-    executorRegistry.upsertExecutor(executor.executorId, {
-      executorSource: 'customer-worker',
-      managedBy: 'user',
-      runtimeClass: 'user-worker',
-      billingClass: 'standard',
-    })
+    if (!pairResult.ok) {
+      throw new Error(`pairing failed: ${pairResult.message}`)
+    }
+    const executor = pairResult.executor
 
     saveProject(project)
     upsertProjectBinding(buildProjectBinding(project, executor.executorId))
@@ -426,23 +424,21 @@ test('listProjectWorkspacesForUser keeps owned manual workspaces when their exec
       id: `project-${crypto.randomUUID()}`,
       createdById: userId,
     }
-    const { executor } = executorRegistry.createManagedExecutor({
-      ownerUserId: userId,
-      visibility: 'private',
+    const pairing = await executorRegistry.createPairingCode({ ownerUserId: userId, visibility: 'private' })
+    const pairResult = await executorRegistry.exchangePairingCode({
+      pairingCode: pairing.pairingCode,
       machineId: `machine-${crypto.randomUUID()}`,
       machineName: 'Test machine',
-      name: 'Deleted executor',
+      name: 'Test executor',
       workspaceRoot: '/tmp/vibemux-test',
       maxConcurrency: 1,
       capabilities: [],
       labels: [],
     })
-    executorRegistry.upsertExecutor(executor.executorId, {
-      executorSource: 'customer-worker',
-      managedBy: 'user',
-      runtimeClass: 'user-worker',
-      billingClass: 'standard',
-    })
+    if (!pairResult.ok) {
+      throw new Error(`pairing failed: ${pairResult.message}`)
+    }
+    const executor = pairResult.executor
 
     saveProject(project)
     upsertProjectBinding(buildProjectBinding(project, executor.executorId))
@@ -499,23 +495,21 @@ test('listProjectWorkspacesForUser keeps pull request delivery visible when it o
       id: `project-${crypto.randomUUID()}`,
       createdById: userId,
     }
-    const { executor } = executorRegistry.createManagedExecutor({
-      ownerUserId: userId,
-      visibility: 'private',
+    const pairing = await executorRegistry.createPairingCode({ ownerUserId: userId, visibility: 'private' })
+    const pairResult = await executorRegistry.exchangePairingCode({
+      pairingCode: pairing.pairingCode,
       machineId: `machine-${crypto.randomUUID()}`,
       machineName: 'Test machine',
-      name: 'MacBook',
+      name: 'Test executor',
       workspaceRoot: '/tmp/vibemux-test',
       maxConcurrency: 1,
       capabilities: [],
       labels: [],
     })
-    executorRegistry.upsertExecutor(executor.executorId, {
-      executorSource: 'customer-worker',
-      managedBy: 'user',
-      runtimeClass: 'user-worker',
-      billingClass: 'standard',
-    })
+    if (!pairResult.ok) {
+      throw new Error(`pairing failed: ${pairResult.message}`)
+    }
+    const executor = pairResult.executor
     saveProject(project)
     upsertProjectBinding(buildProjectBinding(project, executor.executorId))
 

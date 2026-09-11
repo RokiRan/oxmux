@@ -20,7 +20,6 @@ import type {
   EnqueueTaskChatMessageResponse,
   TaskWorkspaceBindingResponse,
 } from './api/types'
-import { isManagedCloudExecutorRecord } from './managed-cloud-executor'
 import { readWorkspaceCreateRuntimePreference } from './workspace-create-preferences'
 
 type WorkspaceCreationImage = {
@@ -37,7 +36,7 @@ export const readWorkspaceCreationImage = (file: File) => new Promise<string>((r
 })
 
 export const isUsableWorkspaceCreationExecutor = (executor?: ExecutorRecord | null) => {
-  return Boolean(executor && (executor.status === 'online' || executor.status === 'paired' || isManagedCloudExecutorRecord(executor)))
+  return Boolean(executor && (executor.status === 'online' || executor.status === 'paired'))
 }
 
 export const resolveDefaultWorkspaceCreationExecutorId = (
@@ -57,17 +56,11 @@ export const resolveDefaultWorkspaceCreationExecutorId = (
     : null
   if (isUsableWorkspaceCreationExecutor(preferredExecutor)) return preferredExecutorId
 
-  // 本地在线优先；无在线本地节点时用云节点兜底（P0-5）。
-  const onlineLocalExecutor = executorOptions.find((executor) => (
-    executor.status === 'online' && !isManagedCloudExecutorRecord(executor)
-  ))
-  if (onlineLocalExecutor) return onlineLocalExecutor.executorId
+  // 在线节点优先。
+  const onlineExecutor = executorOptions.find((executor) => executor.status === 'online')
+  if (onlineExecutor) return onlineExecutor.executorId
 
-  const managedCloudExecutor = executorOptions.find((executor) => isManagedCloudExecutorRecord(executor))
-  if (managedCloudExecutor && isUsableWorkspaceCreationExecutor(managedCloudExecutor)) return managedCloudExecutor.executorId
-
-  return executorOptions.find((executor) => executor.status === 'online')?.executorId
-    || executorOptions.find((executor) => executor.status === 'paired' && !isManagedCloudExecutorRecord(executor))?.executorId
+  return executorOptions.find((executor) => executor.status === 'paired')?.executorId
     || executorOptions.find(isUsableWorkspaceCreationExecutor)?.executorId
     || ''
 }

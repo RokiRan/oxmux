@@ -108,11 +108,6 @@ const normalizeExecutorDescriptor = (executor: ExecutorDescriptor): ExecutorDesc
   workspaceIds: normalizeWorkspaceIds(executor.workspaceIds, executor.teamId),
   previewExposureMode: executor.previewExposureMode ?? 'private',
   previewIngressPort: executor.previewIngressPort ?? 38080,
-  executorSource: executor.executorSource ?? 'customer-worker',
-  // 品牌迁移兼容窗口：存量数据行可能仍存旧值 'vibemux'，读入时归一化为新值
-  managedBy: executor.managedBy === 'vibemux' ? 'oxmux' : (executor.managedBy ?? 'user'),
-  runtimeClass: executor.runtimeClass ?? 'user-worker',
-  billingClass: executor.billingClass ?? 'standard',
 })
 
 const persistExecutorState = (executorId: string) => {
@@ -137,16 +132,6 @@ const hydrateRegistryFromStore = (): void => {
       previewProxySecret: entry.previewProxySecret || buildPreviewProxySecret(),
     })
   }
-}
-
-const findExecutorByMachine = (ownerUserId: string, machineId: string) => {
-  for (const executor of executors.values()) {
-    if (executor.ownerUserId === ownerUserId && executor.machineId === machineId) {
-      return executor
-    }
-  }
-
-  return null
 }
 
 const normalizeProjectBindings = (bindings?: WorkerProjectBinding[]) => {
@@ -523,10 +508,6 @@ export const executorRegistry = {
       previewIngressReachable: reusedExecutor?.previewIngressReachable,
       previewIngressLastCheckedAt: reusedExecutor?.previewIngressLastCheckedAt,
       previewIngressLastError: reusedExecutor?.previewIngressLastError,
-      executorSource: reusedExecutor?.executorSource ?? 'customer-worker',
-      managedBy: reusedExecutor?.managedBy ?? 'user',
-      runtimeClass: reusedExecutor?.runtimeClass ?? 'user-worker',
-      billingClass: reusedExecutor?.billingClass ?? 'standard',
       note: reusedExecutor?.note,
       ownerUserId: pairing.ownerUserId,
       teamId: pairing.teamId,
@@ -662,81 +643,6 @@ export const executorRegistry = {
       persistExecutorState(executorId)
     }
     return executors.get(executorId) ?? null
-  },
-
-  createManagedExecutor(params: {
-    ownerUserId: string
-    teamId?: string
-    workspaceIds?: string[]
-    visibility: ExecutorVisibility
-    machineId: string
-    machineName: string
-    name: string
-    workspaceRoot: string
-    maxConcurrency: number
-    capabilities: string[]
-    labels: string[]
-    note?: string
-    platform?: string
-    version?: string
-  }) {
-    hydrateRegistryFromStore()
-    const createdAt = nowIso()
-    const existing = findExecutorByMachine(params.ownerUserId, params.machineId)
-    const executorId = existing?.executorId ?? crypto.randomUUID()
-    const executor = normalizeExecutorDescriptor({
-      executorId,
-      machineId: params.machineId,
-      machineName: params.machineName,
-      name: params.name,
-      previewExposureMode: existing?.previewExposureMode ?? 'private',
-      previewIngressPort: existing?.previewIngressPort ?? 38080,
-      previewIngressBaseUrl: existing?.previewIngressBaseUrl,
-      previewIngressDetectedPublicIp: existing?.previewIngressDetectedPublicIp,
-      previewIngressDetectedLanIp: existing?.previewIngressDetectedLanIp,
-      previewIngressReachable: existing?.previewIngressReachable,
-      previewIngressLastCheckedAt: existing?.previewIngressLastCheckedAt,
-      previewIngressLastError: existing?.previewIngressLastError,
-      executorSource: 'managed-cloud',
-      managedBy: 'vibemux',
-      runtimeClass: 'managed-worker',
-      billingClass: 'managed',
-      note: params.note ?? existing?.note,
-      ownerUserId: params.ownerUserId,
-      teamId: params.teamId,
-      workspaceIds: normalizeWorkspaceIds(params.workspaceIds, params.teamId),
-      connectedNodeId: existing?.status === 'online' ? existing.connectedNodeId : undefined,
-      visibility: params.visibility,
-      status: existing?.status === 'online' ? 'online' : 'offline',
-      workspaceRoot: params.workspaceRoot,
-      maxConcurrency: params.maxConcurrency,
-      capabilities: params.capabilities,
-      labels: params.labels,
-      platform: params.platform,
-      version: params.version,
-      createdAt: existing?.createdAt ?? createdAt,
-      lastSeenAt: existing?.lastSeenAt ?? createdAt,
-    })
-    const executorToken = buildExecutorToken()
-
-    executors.set(executorId, executor)
-    executorSecrets.set(executorId, {
-      tokenHash: hashToken(executorToken),
-      previewProxySecret: executorSecrets.get(executorId)?.previewProxySecret || buildPreviewProxySecret(),
-    })
-    executorPresence.set(executorId, executorPresence.get(executorId) ?? {
-      runningTaskIds: [],
-      queuedTaskIds: [],
-      lastHeartbeatAt: createdAt,
-    })
-    persistExecutorState(executorId)
-
-    return {
-      executor,
-      executorId,
-      executorToken,
-      created: !existing,
-    }
   },
 
   rotateExecutorToken(executorId: string) {

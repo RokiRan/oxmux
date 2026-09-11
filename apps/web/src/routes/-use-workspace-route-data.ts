@@ -8,9 +8,7 @@ import { buildWorkspaceTaskExecutionView, resolveWorkspaceSessionExecutorId, res
 import type { AppState, ExecutorRecord, Project, Task, WorkspaceSession, Workspace } from '@shared/types'
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
 import { api } from '../lib/api'
-import type { ManagedCloudRuntimeStatus } from '../lib/api'
 import type { Language } from '../lib/i18n'
-import { isManagedCloudExecutorRecord, normalizeManagedCloudExecutorForDisplay } from '../lib/managed-cloud-executor'
 import { useProjectWorkspacesData } from '../lib/use-project-workspaces-data'
 import { listWorkspaceSessionsForWorkspace } from '../lib/workspace-session-scope'
 import { useExecutorRuntimeData } from '../lib/use-executor-runtime-data'
@@ -26,14 +24,9 @@ import {
 
 const toWorkspaceExecutorStatus = (
   executor: ExecutorRecord | undefined,
-  runtime: ManagedCloudRuntimeStatus | null,
 ): Workspace['executorStatus'] => {
   if (!executor) {
     return 'offline'
-  }
-
-  if (isManagedCloudExecutorRecord(executor) && runtime?.available) {
-    return 'online'
   }
 
   switch (executor.status) {
@@ -71,9 +64,7 @@ export const useWorkspaceRouteData = ({
 }: UseWorkspaceRouteDataParams) => {
   const {
     executors,
-    managedCloudRuntime,
     refreshExecutors,
-    refreshManagedCloudRuntime,
   } = useExecutorRuntimeData()
   const {
     refreshProjectWorkspaces,
@@ -120,7 +111,7 @@ export const useWorkspaceRouteData = ({
       agentType: fallbackSession?.agentType ?? task.agentType,
       name: t('workspace.unnamed', { defaultValue: '未命名工作区' }),
       executorName: matchedExecutor?.name || (legacyFallbackWorkerId || t('workspace.unassignedNode', { defaultValue: '未分配节点' })),
-      executorStatus: toWorkspaceExecutorStatus(matchedExecutor, managedCloudRuntime),
+      executorStatus: toWorkspaceExecutorStatus(matchedExecutor),
       status: project.versionControl === 'git-remote' ? 'pending_repo' : 'ready',
       repoReady: project.versionControl !== 'git-remote',
       repoPath: project.versionControl === 'git-remote' ? undefined : project.rootPath,
@@ -133,7 +124,7 @@ export const useWorkspaceRouteData = ({
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
     }
-  }, [executors, managedCloudRuntime, project, routeIndexes, search.workspaceId, search.workspaceSessionId, t, task, workspace])
+  }, [executors, project, routeIndexes, search.workspaceId, search.workspaceSessionId, t, task, workspace])
 
   const gitPanelEnabled = project?.versionControl !== 'none'
 
@@ -221,12 +212,12 @@ export const useWorkspaceRouteData = ({
     return resolveWorkspaceSessionRuntime({
       bindingPathHint,
       defaultWorkspaceRoot: state.config.workspaceRoot,
-      executors: executors.map((executor) => normalizeManagedCloudExecutorForDisplay(executor, managedCloudRuntime)),
+      executors,
       project,
       workspace: currentWorkspace,
       workspaceSession,
     })
-  }, [currentWorkspace, executors, managedCloudRuntime, project, routeIndexes, state.config.workspaceRoot, workspaceSession, workspaceExecutorId])
+  }, [currentWorkspace, executors, project, routeIndexes, state.config.workspaceRoot, workspaceSession, workspaceExecutorId])
 
   const workspaceExecutor = workspaceSessionRuntime?.executor ?? null
   const workspaceRuntimeExecutorId = workspaceSessionRuntime?.executorId || workspaceExecutorId
@@ -301,7 +292,6 @@ export const useWorkspaceRouteData = ({
     let cancelled = false
 
     void refreshExecutors()
-    void refreshManagedCloudRuntime()
 
     if (!project?.id) {
       return () => {
@@ -324,7 +314,7 @@ export const useWorkspaceRouteData = ({
     return () => {
       cancelled = true
     }
-  }, [project?.id, refreshExecutors, refreshManagedCloudRuntime, refreshProjectWorkspaces, setState])
+  }, [project?.id, refreshExecutors, refreshProjectWorkspaces, setState])
 
   return {
     currentWorkspace,
@@ -334,7 +324,6 @@ export const useWorkspaceRouteData = ({
     environmentPreview,
     executors,
     gitPanelEnabled,
-    managedCloudRuntime,
     hasEnvironmentControls,
     matchedWorkspaceSession,
     parentWorkspaceSession,

@@ -5,7 +5,7 @@ import type { DistributedTask, ExecutionEventCursor, ExecutionEventLayer, Execut
 import { api } from '../lib/api'
 import { useTranslation } from '../lib/i18n/react'
 import { agentMeta, cn, formatDate, formatExecutionModelLabel } from '../lib/utils'
-import { isExecutorEffectivelyOnline } from '../lib/managed-cloud-executor'
+import { isExecutorOnline } from '../lib/executor-availability'
 import { RuntimeLabel } from './runtime/runtime-icons'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
@@ -184,7 +184,7 @@ export function ExecutionLogCenter({
                   label: executor.name,
                   description: executor.machineName,
                   keywords: [executor.machineName],
-                  statusTone: isExecutorEffectivelyOnline(executor) ? 'online' : 'offline',
+                  statusTone: isExecutorOnline(executor) ? 'online' : 'offline',
                 })),
               ]}
               placeholder={tr('全部节点', 'All executors')}

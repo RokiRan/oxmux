@@ -8,7 +8,7 @@
 import { mergeAgentRuntimeSettings } from '@shared/agent-config'
 import { sanitizeAgentWorkdirId } from '@shared/agent-workdir'
 import { getRuntimeDescriptor } from '@shared/agent-type'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
+import { isLegacyManagedCloudAutoExecutorId } from '@shared/legacy-executor-markers'
 import { normalizeMainChatSessionState } from '@shared/main-chat-session'
 import { findMatchingAgentExecutionModelOption, resolveMatchingAgentExecutionModelOptionId } from '@shared/model-profile'
 import { normalizeAssistantReplyText } from '@shared/task-chat'
@@ -80,7 +80,6 @@ import {
   resolveServerAgentTypeForRuntimeId,
   type ServerAgentType,
 } from '../services/server-agent'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 export { createCustomAgentChatSession, createMainChatSession } from './project-main-chat-session'
 
 export type MainAgentChatResponse = {
@@ -220,53 +219,21 @@ const resolveMainChatExecutor = async (userId: string, session: MainChatSession)
     }
   }
 
-  // 未指定节点或默认官方云节点 → 优先按需分配 oxmux 云节点执行；
-  // 云节点不可用（如生产环境尚未开放 / 未配置）时回退到用户可见的第一个在线执行器，
+  // 未指定节点（含存量 'managed-cloud:auto' 标记）→ 回退到用户可见的第一个在线执行器，
   // 避免「会话未指定执行节点」变成死胡同（web 已不再提供手动选择入口）。
-  if (!executorId || isManagedCloudAutoExecutorId(executorId)) {
-    try {
-      getManagedCloudGate().ensureDevOnlyAccess()
-      const state = loadState()
-      await getManagedCloudGate().ensureUsageAccess({
-        state,
-        userId,
-      })
-      const result = await getManagedCloudGate().ensureExecutor({
-        config: state.config,
-        ownerUserId: userId,
-        workspaceId: session.workspaceId?.trim() || undefined,
-        projects: state.projects,
-      })
+  if (!executorId || isLegacyManagedCloudAutoExecutorId(executorId)) {
+    const onlineExecutor = resolveFallbackOnlineExecutor(listVisibleExecutorsForUser(userId))
+    if (onlineExecutor) {
       return {
         ok: true as const,
-        executor: result.executor,
+        executor: onlineExecutor,
       }
-    } catch (error) {
-      if (getManagedCloudGate().isUsageLimitError(error)) {
-        return {
-          ok: false as const,
-          status: 402 as const,
-          message: error instanceof Error ? error.message : '官方云节点暂不可用。',
-        }
-      }
+    }
 
-      // 云节点不可用（非开发环境未开放 / 未配置）→ 回退到用户可见的第一个在线执行器，
-      // 与渠道会话 resolveAgentChannelExecutorId 的在线回退策略保持一致。
-      const onlineExecutor = resolveFallbackOnlineExecutor(listVisibleExecutorsForUser(userId))
-      if (onlineExecutor) {
-        return {
-          ok: true as const,
-          executor: onlineExecutor,
-        }
-      }
-
-      return {
-        ok: false as const,
-        status: 503 as const,
-        message: error instanceof Error
-          ? `当前没有可用的执行节点（${error.message}），请先连接一个执行器后再试。`
-          : '当前没有可用的执行节点，请先连接一个执行器后再试。',
-      }
+    return {
+      ok: false as const,
+      status: 503 as const,
+      message: '当前没有可用的执行节点，请先连接一个执行器后再试。',
     }
   }
 

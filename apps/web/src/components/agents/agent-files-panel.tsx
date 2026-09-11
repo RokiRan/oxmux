@@ -1,16 +1,14 @@
 /**
- * [INPUT]: Agent id、默认执行节点、workdir 回调与摘要
- * [OUTPUT]: 双栏文件对照面板——左：执行位置（本地 workdir / 云节点 R2）；右：云盘 Drive agents/<id>/
+ * [INPUT]: Agent id、workdir 回调与摘要
+ * [OUTPUT]: 双栏文件对照面板——左：执行位置（本地 workdir）；右：云盘 Drive agents/<id>/
  * [POS]: Agent 设置 → 配置 →「文件」Tab；帮助用户分辨运行时文件与云盘交换层文件
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
-import type { CloudDriveFileEntry, DriveFileRecord } from '@shared/types'
+import type { DriveFileRecord } from '@shared/types'
 import {
   ChevronRight,
-  Cloud,
   ExternalLink,
   File as FileIcon,
   Folder,
@@ -21,7 +19,6 @@ import {
 } from 'lucide-react'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { AgentWorkdirPanel } from './agent-workdir-panel'
-import { CloudFilePreview } from '../drive/cloud-file-preview'
 import { SectionHeader } from './custom-agent-detail-panel-shared'
 import type {
   AgentWorkdirFileEntry,
@@ -33,13 +30,6 @@ import { downloadDriveFile } from '../../lib/api/methods/drive'
 import { useTranslation } from '../../lib/i18n/react'
 import { cn, formatDate } from '../../lib/utils'
 import { Button } from '../ui/button'
-
-type ExecutorOption = {
-  executorId: string
-  name: string
-  executorSource?: string
-  managedBy?: string
-}
 
 const formatSize = (bytes: number | null) => {
   if (bytes === null || !Number.isFinite(bytes)) return '—'
@@ -58,190 +48,6 @@ const findAgentDriveFolder = (files: DriveFileRecord[], agentId: string) => {
       ) ?? null
     : null
   return { agentsFolder, agentFolder }
-}
-
-const resolveUsesManagedCloudExecution = (
-  defaultExecutorId: string,
-  executors: ExecutorOption[],
-) => {
-  if (!defaultExecutorId.trim() || isManagedCloudAutoExecutorId(defaultExecutorId)) {
-    return true
-  }
-  const executor = executors.find((item) => item.executorId === defaultExecutorId)
-  if (!executor) {
-    return false
-  }
-  return executor.executorSource === 'managed-cloud' || executor.managedBy === 'vibemux'
-}
-
-function ExecutionLocationBadge({ managedCloud }: { managedCloud: boolean }) {
-  const { language } = useTranslation()
-  return (
-    <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-300">
-      {managedCloud
-        ? (language === 'zh' ? 'Hosted Cloud · R2 挂载' : 'Hosted Cloud · R2 mount')
-        : (language === 'zh' ? '本地执行节点' : 'Local executor node')}
-    </span>
-  )
-}
-
-function AgentCloudExecutionFiles({
-  agentId,
-  executorLabel,
-}: {
-  agentId: string
-  executorLabel: string
-}) {
-  const { language } = useTranslation()
-  const [cloudPath, setCloudPath] = useState(agentId)
-  const [entries, setEntries] = useState<CloudDriveFileEntry[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selected, setSelected] = useState<CloudDriveFileEntry | null>(null)
-
-  const reload = useCallback(async () => {
-    setLoading(true)
-    try {
-      const response = await api.listMyDriveCloudFiles(cloudPath)
-      setEntries(response.entries)
-    } catch {
-      setEntries([])
-    } finally {
-      setLoading(false)
-    }
-  }, [cloudPath])
-
-  useEffect(() => {
-    setCloudPath(agentId)
-  }, [agentId])
-
-  useEffect(() => {
-    void reload()
-  }, [reload])
-
-  useEffect(() => {
-    setSelected(null)
-  }, [cloudPath, agentId])
-
-  const sorted = useMemo(() => [...entries].sort((left, right) => {
-    if (left.kind !== right.kind) return left.kind === 'folder' ? -1 : 1
-    return left.name.localeCompare(right.name)
-  }), [entries])
-
-  const breadcrumbs = useMemo(() => {
-    if (!cloudPath.startsWith(agentId)) {
-      return [agentId]
-    }
-    const suffix = cloudPath.slice(agentId.length).replace(/^\/+/, '')
-    return suffix ? [agentId, ...suffix.split('/').filter(Boolean)] : [agentId]
-  }, [agentId, cloudPath])
-
-  const navigateToCrumb = (index: number) => {
-    if (index === 0) {
-      setCloudPath(agentId)
-      return
-    }
-    const segments = breadcrumbs.slice(0, index + 1)
-    setCloudPath(segments.join('/'))
-  }
-
-  return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-zinc-900 px-3 py-2">
-        <Cloud className="size-3.5 text-zinc-500" />
-        <span className="text-xs font-medium text-zinc-300">{executorLabel}</span>
-        <ExecutionLocationBadge managedCloud />
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          disabled={loading}
-          onClick={() => void reload()}
-          className="ml-auto size-7 rounded-md text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200"
-        >
-          <RefreshCw className={loading ? 'size-3.5 animate-spin' : 'size-3.5'} />
-        </Button>
-      </div>
-      <div className="flex shrink-0 items-center gap-1 border-b border-zinc-900 bg-zinc-950/60 px-3 py-1.5 text-[10px] text-zinc-500">
-        <span>
-          {language === 'zh'
-            ? '单一权威 = 执行位置。云节点运行时 Agent 实际读写的 R2 目录。'
-            : 'Single source of truth = execution location. R2 files the agent reads/writes on cloud nodes.'}
-        </span>
-      </div>
-      <Group orientation="vertical" className="min-h-0 flex-1">
-        <Panel id="agentCloudFilesList" defaultSize={selected ? '58%' : '100%'} minSize="35%">
-          <div className="flex h-full min-h-0 flex-col">
-            <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-zinc-900 px-3 py-2 text-xs text-zinc-500">
-              {breadcrumbs.map((segment, index) => (
-                <span key={`${segment}-${index}`} className="flex items-center gap-1">
-                  {index > 0 ? <ChevronRight className="size-3 text-zinc-700" /> : null}
-                  <button type="button" className="hover:text-zinc-200" onClick={() => navigateToCrumb(index)}>
-                    {segment}
-                  </button>
-                </span>
-              ))}
-              <span className="ml-auto text-[11px] text-zinc-600">{sorted.length}</span>
-            </div>
-            <div className="min-h-0 flex-1 overflow-auto">
-              {loading ? (
-                <div className="flex items-center justify-center gap-2 p-6 text-xs text-zinc-500">
-                  <Loader2 className="size-4 animate-spin" />
-                  {language === 'zh' ? '加载中…' : 'Loading…'}
-                </div>
-              ) : sorted.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 p-8 text-center text-xs text-zinc-500">
-                  <FolderOpen className="size-8 text-zinc-700" />
-                  {language === 'zh'
-                    ? '暂无云节点执行文件。在此 Agent 的云节点会话中产生的文件会显示在这里。'
-                    : 'No cloud execution files yet. Files created during cloud-node runs for this agent appear here.'}
-                </div>
-              ) : (
-                sorted.map((entry) => (
-                  <button
-                    key={entry.key}
-                    type="button"
-                    onClick={() => {
-                      if (entry.kind === 'folder') {
-                        setCloudPath(entry.key)
-                      } else {
-                        setSelected(entry)
-                      }
-                    }}
-                    className={cn(
-                      'flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-zinc-400 transition-colors hover:bg-zinc-900/40 hover:text-zinc-200',
-                      selected?.key === entry.key && 'bg-zinc-900/60 text-zinc-100',
-                    )}
-                  >
-                    {entry.kind === 'folder'
-                      ? <Folder className="size-3.5 shrink-0 text-zinc-500" />
-                      : <FileIcon className="size-3.5 shrink-0 text-zinc-500" />}
-                    <span className="min-w-0 flex-1 truncate">{entry.name}</span>
-                    <span className="shrink-0 text-[10px] text-zinc-600">
-                      {entry.kind === 'folder' ? '—' : formatSize(entry.sizeBytes)}
-                    </span>
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-        </Panel>
-        {selected && selected.kind === 'file' ? (
-          <>
-            <Separator className="h-px bg-zinc-900" />
-            <Panel id="agentCloudFilePreview" defaultSize="42%" minSize="28%">
-              <CloudFilePreview
-                workspaceId={null}
-                key={selected.key}
-                name={selected.name}
-                sizeBytes={selected.sizeBytes}
-                onClose={() => setSelected(null)}
-              />
-            </Panel>
-          </>
-        ) : null}
-      </Group>
-    </div>
-  )
 }
 
 function AgentDriveFilesBrowser({ agentId }: { agentId: string }) {
@@ -418,8 +224,6 @@ function AgentDriveFilesBrowser({ agentId }: { agentId: string }) {
 
 export function AgentFilesPanel({
   agentId,
-  defaultExecutorId,
-  executors,
   workdirSummary,
   workdirFiles,
   workdirLoading,
@@ -432,8 +236,6 @@ export function AgentFilesPanel({
   onDeleteWorkdirFile,
 }: {
   agentId: string
-  defaultExecutorId: string
-  executors: ExecutorOption[]
   workdirSummary: AgentWorkdirSummary | null
   workdirFiles: AgentWorkdirFileEntry[]
   workdirLoading: boolean
@@ -445,14 +247,7 @@ export function AgentFilesPanel({
   onDownloadWorkdirFile: (relativePath: string) => Promise<void>
   onDeleteWorkdirFile: (relativePath: string) => Promise<void>
 }) {
-  const { language, t } = useTranslation()
-  const usesManagedCloud = resolveUsesManagedCloudExecution(defaultExecutorId, executors)
-  const executorLabel = useMemo(() => {
-    if (!defaultExecutorId.trim() || isManagedCloudAutoExecutorId(defaultExecutorId)) {
-      return t('agents.custom.detail.runtime.managedCloudDefault', { defaultValue: 'Hosted Cloud' })
-    }
-    return executors.find((executor) => executor.executorId === defaultExecutorId)?.name || defaultExecutorId
-  }, [defaultExecutorId, executors, t])
+  const { language } = useTranslation()
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
@@ -473,24 +268,20 @@ export function AgentFilesPanel({
               {language === 'zh' ? '执行位置' : 'Execution location'}
             </div>
             <div className="min-h-0 flex-1 overflow-auto">
-              {usesManagedCloud ? (
-                <AgentCloudExecutionFiles agentId={agentId} executorLabel={executorLabel} />
-              ) : (
-                <div className="p-3">
-                  <AgentWorkdirPanel
-                    summary={workdirSummary}
-                    files={workdirFiles}
-                    loading={workdirLoading}
-                    refreshing={workdirRefreshing}
-                    onEnsure={onEnsureWorkdir}
-                    onRefresh={onRefreshWorkdir}
-                    onCleanup={onCleanupWorkdir}
-                    onRead={onReadWorkdirFile}
-                    onDownload={onDownloadWorkdirFile}
-                    onDelete={onDeleteWorkdirFile}
-                  />
-                </div>
-              )}
+              <div className="p-3">
+                <AgentWorkdirPanel
+                  summary={workdirSummary}
+                  files={workdirFiles}
+                  loading={workdirLoading}
+                  refreshing={workdirRefreshing}
+                  onEnsure={onEnsureWorkdir}
+                  onRefresh={onRefreshWorkdir}
+                  onCleanup={onCleanupWorkdir}
+                  onRead={onReadWorkdirFile}
+                  onDownload={onDownloadWorkdirFile}
+                  onDelete={onDeleteWorkdirFile}
+                />
+              </div>
             </div>
           </div>
         </Panel>

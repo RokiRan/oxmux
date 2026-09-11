@@ -262,31 +262,6 @@ curl "https://your-domain/api/health/detailed?token=$OXMUX_HEALTH_TOKEN"
 
 ## 七、社区版能力边界
 
-本仓库是 Oxmux 的社区版，包含以下能力：本地 worker 执行、BYOK 模型、主聊天/任务/工作区编排、渠道集成（飞书/Slack/钉钉/企微/微信/WhatsApp）、多节点组网（easytier）、**自托管云节点**（docker-cli / boxlite / ascii-box / cloudflare-sandbox 底座）、桌面与移动客户端、对象存储（S3 兼容，含 Railway Bucket / MinIO / R2）。
+本仓库是 Oxmux 的社区版，包含以下能力：本地 worker 执行、BYOK 模型、主聊天/任务/工作区编排、渠道集成（飞书/Slack/钉钉/企微/微信/WhatsApp）、多节点组网（easytier）、桌面与移动客户端、对象存储（S3 兼容，含 Railway Bucket / MinIO / R2）。
 
-以下平台能力**不包含在本仓库中**（作为独立的商业服务运营）：平台托管模型网关与用量计费、订阅计费、合作商系统、官方托管云节点池（oxmux.ai 的沙箱 worker）。社区版以**本地 worker + 自托管云节点 + BYOK** 为执行核心，上述边界不影响核心编排/执行/协作功能。
-
-### 自托管云节点（配置后可用，不配置不可用）
-
-社区版支持按需配置自托管执行节点，执行资源由你自己提供：
-
-```bash
-# 1. 开启云节点准入（production 默认关闭，显式开启）
-OXMUX_MANAGED_CLOUD_ENABLED=1
-
-# 2. 选择底座（任选其一）
-OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=docker-cli        # 本机/远程 Docker
-# OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=boxlite-cli     # BoxLite
-# OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=ascii-box-cli   # ASCII Box
-# OXMUX_MANAGED_CLOUD_RUNTIME_PROVIDER=unsafe-local-process  # 本机进程（仅开发）
-
-# 3. 按底座配置（Docker 示例）
-OXMUX_MANAGED_CLOUD_DOCKER_HOST=tcp://10.0.0.5:2375    # 远程 Docker 宿主（可选，默认本机）
-OXMUX_MANAGED_CLOUD_DOCKER_IMAGE=oxmux/worker:latest
-OXMUX_MANAGED_CLOUD_DOCKER_CPUS=2
-OXMUX_MANAGED_CLOUD_DOCKER_MEMORY=4g
-```
-
-配置完成后，控制面「执行中心」会显示云节点面板，任务可派发到云节点执行（worker 在容器内运行，隔离工作区）。不配置 `OXMUX_MANAGED_CLOUD_ENABLED` 时云节点面板显示「不可用」，不影响本地 worker。
-
-> 云节点运行时镜像需包含 oxmux worker。不同运行时的具体参数以对应自托管环境文档为准。
+以下平台能力**不包含在本仓库中**（作为独立的商业服务运营）：平台托管模型网关与用量计费、订阅计费、合作商系统、托管云节点池（oxmux.ai 的沙箱 worker）。社区版以**本地 worker + BYOK** 为执行核心，上述边界不影响核心编排/执行/协作功能。

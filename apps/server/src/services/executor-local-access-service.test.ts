@@ -40,15 +40,14 @@ test('local access plan puts the exact target before owned mesh sources', () => 
   assert.equal(plan.expiresAt, '1970-01-01T00:00:31.000Z')
 })
 
-test('local access plan excludes managed, offline, and invalid-port executors', () => {
+test('local access plan excludes offline and invalid-port executors', () => {
   const plan = buildExecutorLocalAccessPlan({
     allowMesh: true,
     executors: [
-      executor({ executorId: 'managed', executorSource: 'managed-cloud' }),
       executor({ executorId: 'offline', status: 'offline' }),
       executor({ executorId: 'invalid-port', localServerPort: 70_000 }),
     ],
-    targetExecutorId: 'managed',
+    targetExecutorId: 'offline',
     userId: 'user-1',
   })
 

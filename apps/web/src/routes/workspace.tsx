@@ -34,7 +34,7 @@ import { useApp } from '../lib/app-provider'
 import { api } from '../lib/api'
 import { buildWorkspacePageTabId, openPageTab } from '../lib/page-tabs-store'
 import { useTranslation } from '../lib/i18n/react'
-import { buildExecutorOptionsWithManagedCloud, isManagedCloudExecutorRecord } from '../lib/managed-cloud-executor'
+import { buildExecutorOptions } from '../lib/executor-availability'
 import { isLikelyWorkspaceFileLinkHref, resolveWorkspaceFileLinkPath } from '../lib/workspace-file-link'
 import { isCustomAgentVisibleInWorkspace, readCustomAgentConfig } from '@shared/custom-agent'
 import { useAuth } from '../lib/auth-context'
@@ -319,7 +319,6 @@ function WorkspaceRoute() {
     environmentPreview,
     executors,
     gitPanelEnabled,
-    managedCloudRuntime,
     hasEnvironmentControls,
     matchedWorkspaceSession,
     parentWorkspaceSession,
@@ -392,49 +391,8 @@ function WorkspaceRoute() {
         || (executor.visibility === 'team' && (executor.workspaceIds ?? []).includes(workspaceId))
       ))
       : executors
-    return buildExecutorOptionsWithManagedCloud(scopedExecutors, managedCloudRuntime, { includeOffline: true })
-  }, [currentAuthUser?.id, currentWorkspaceId, executors, managedCloudRuntime])
-  useEffect(() => {
-    if (!workspaceExecutor || !isManagedCloudExecutorRecord(workspaceExecutor) || workspaceExecutor.status === 'online') {
-      return
-    }
-
-    let cancelled = false
-
-    const refreshManagedExecutor = async () => {
-      const refreshDelays = [1500, 2500, 4000, 6000, 6000]
-      for (const delay of refreshDelays) {
-        if (typeof document !== 'undefined' && document.visibilityState !== 'visible') {
-          return
-        }
-
-        await new Promise((resolve) => window.setTimeout(resolve, delay))
-        if (cancelled) {
-          return
-        }
-
-        try {
-          const nextExecutors = await refreshExecutors(true)
-          if (cancelled) {
-            return
-          }
-
-          const matchedExecutor = nextExecutors.find((item) => item.executorId === workspaceExecutor.executorId)
-          if (!matchedExecutor || matchedExecutor.status === 'online' || matchedExecutor.status === 'offline') {
-            return
-          }
-        } catch {
-          return
-        }
-      }
-    }
-
-    void refreshManagedExecutor()
-
-    return () => {
-      cancelled = true
-    }
-  }, [refreshExecutors, workspaceExecutor])
+    return buildExecutorOptions(scopedExecutors, { includeOffline: true })
+  }, [currentAuthUser?.id, currentWorkspaceId, executors])
   const workspaceSessionUnreadState = useWorkspaceSessionUnreadState({
     workspaceSessions: state.workspaceSessions,
     selectedWorkspaceSessionId,

@@ -22,8 +22,6 @@ import { useTranslation } from '../../lib/i18n/react'
 import { cn, formatDate } from '../../lib/utils'
 import type { Project, Task, Workspace } from '@shared/types'
 import { canDeleteWorkspaceRecord } from '@shared/workspace-lifecycle'
-import { isManagedCloudExecutorRecord } from '../../lib/managed-cloud-executor'
-import { isManagedCloudDevOnlyEnabled } from '../../lib/runtime-config'
 
 type WorkspaceListItem = {
   workspace: Workspace
@@ -80,36 +78,7 @@ export function WorkspacesDetailPanel({
   }
 
   const statusMeta = workspaceStatusMeta[item.workspace.status]
-  const isManagedCloudWorkspace = isManagedCloudDevOnlyEnabled()
-    && item.workspace.executorNodeId.startsWith('managed-cloud:')
-    && isManagedCloudExecutorRecord({
-      executorId: item.workspace.executorNodeId,
-      machineId: item.workspace.executorNodeId,
-      machineName: item.workspace.executorName,
-      name: item.workspace.executorName,
-      ownerUserId: '',
-      visibility: 'private',
-      status: item.workspace.executorStatus === 'error' ? 'offline' : item.workspace.executorStatus,
-      workspaceRoot: '',
-      maxConcurrency: 0,
-      capabilities: [],
-      labels: [],
-      createdAt: '',
-      lastSeenAt: '',
-      executorSource: 'managed-cloud',
-      managedBy: 'vibemux',
-    })
-  const executorMeta = isManagedCloudWorkspace
-    ? (
-      item.workspace.executorStatus === 'error'
-        ? { label: '云节点异常', dotClassName: 'bg-rose-500' }
-        : item.workspace.executorStatus === 'offline'
-          ? { label: '云节点待唤起', dotClassName: 'bg-amber-500' }
-          : item.workspace.executorStatus === 'paired'
-            ? { label: '云节点启动中', dotClassName: 'bg-sky-500' }
-            : { label: '云节点可用', dotClassName: 'bg-emerald-500' }
-    )
-    : executorStatusMeta[item.workspace.executorStatus]
+  const executorMeta = executorStatusMeta[item.workspace.executorStatus]
 
   return (
     <main className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-stone-200 bg-stone-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 min-w-0">

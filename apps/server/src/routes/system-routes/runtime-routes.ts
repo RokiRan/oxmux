@@ -81,9 +81,7 @@ import {
 import { parseOpencodeConfigContent } from '@shared/opencode-config'
 import { streamObject, uploadObject } from '../../services/object-storage'
 import { SERVER_AGENT_TYPES } from '../../services/server-agent'
-import { applyManagedCloudEnvConfig } from '../../services/managed-cloud-env-config'
 import { isDevLoginEnabled } from '../../services/dev-auth-service'
-import { getManagedCloudGate } from '../../services/gate/managed-cloud-gate'
 
 const serverAgentTypeSchema = z.enum(SERVER_AGENT_TYPES)
 const visibleAgentTypeSchema = z.enum(VISIBLE_AGENT_TYPES)
@@ -1211,7 +1209,7 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
         incoming: payload.mcpServers,
         userId,
       })
-      const nextConfig = applyManagedCloudEnvConfig(normalizeAgentConfig({
+      const nextConfig = normalizeAgentConfig({
         opencodeCommand: state.config.opencodeCommand,
         opencodeConfigContent: payload.opencodeConfigContent,
         codexConfigContent: payload.codexConfigContent,
@@ -1235,7 +1233,7 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
           },
         },
         workspaceExecutionDefaults: payload.workspaceExecutionDefaults,
-      }))
+      })
       parseOpencodeConfigContent(nextConfig.opencodeConfigContent)
       parseClaudeCodeConfigContent(nextConfig.claudeCodeConfigContent)
       const adapters = await checkAdapters(nextConfig, state.adapters)
@@ -1244,30 +1242,15 @@ export const registerRuntimeSystemRoutes = (app: Hono, requireAuth: MiddlewareHa
         config: nextConfig,
         adapters,
       }
-      const managedCloudSync = await getManagedCloudGate().reconcileExecutors(nextState.config) ?? {
-        totalCount: 0,
-        rewrittenConfigCount: 0,
-        relabeledCount: 0,
-        warnings: [] as string[],
-      }
       const syncedExecutorIds = syncSettingsToVisibleExecutors({
         userId,
         config: nextState.config,
       })
       const messageParts = ['Agent 配置已保存。']
-      if (managedCloudSync.totalCount > 0) {
-        messageParts.push(`已重写 ${managedCloudSync.rewrittenConfigCount} 个官方云节点 worker 配置`)
-        if (managedCloudSync.relabeledCount > 0) {
-          messageParts.push(`重新分配 ${managedCloudSync.relabeledCount} 个官方云节点 target`)
-        }
-      }
       if (syncedExecutorIds.length > 0) {
         messageParts.push(`并已同步到 ${syncedExecutorIds.length} 个在线执行节点。`)
       } else {
         messageParts.push('新的执行节点连接后会自动获取最新 MCP 与 OpenCode 配置。')
-      }
-      if (managedCloudSync.warnings.length > 0) {
-        messageParts.push(managedCloudSync.warnings[0])
       }
       const message = messageParts.join('')
       return c.json(await withState(nextState, message, userId))

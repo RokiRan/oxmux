@@ -273,7 +273,7 @@ function SimpleConnectionDiagram({
               )}
             </div>
 
-            <CloudBox connected={connected} pairing={pairing} />
+            <ControlPlaneBox connected={connected} pairing={pairing} />
           </div>
         </div>
       </div>
@@ -309,7 +309,7 @@ function EndpointBox({
   )
 }
 
-function CloudBox({
+function ControlPlaneBox({
   connected,
   pairing,
 }: {
@@ -319,7 +319,7 @@ function CloudBox({
   return (
     <div className="w-full rounded-lg border border-zinc-800 bg-zinc-950/80 px-4 py-3">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-zinc-100">Hosted Cloud</span>
+        <span className="text-sm font-medium text-zinc-100">Control Plane</span>
         <span className="h-2 w-2 rounded-full bg-emerald-400" />
       </div>
       <div className="mt-1 text-xs text-zinc-500">

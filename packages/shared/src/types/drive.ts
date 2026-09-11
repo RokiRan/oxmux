@@ -44,20 +44,6 @@ export interface DriveSearchResult {
   updatedAt: string
 }
 
-/**
- * 云节点文件只读视图条目：直接读 R2 的 `workspaces/<wid>/` 前缀（挂载即持久），
- * 无 DB 元数据；目录由对象键的 `/` 层级推断（扁平键虚拟目录）。
- */
-export interface CloudDriveFileEntry {
-  kind: 'folder' | 'file'
-  /** 当前层名称（不含路径） */
-  name: string
-  /** 相对对象键：文件 = 对象键；文件夹 = 前缀（供下载/下钻） */
-  key: string
-  sizeBytes: number | null
-  updatedAt: string | null
-}
-
 export interface DriveFileRecord {
   id: string
   /** 所属协作组织（collab_workspaces.id）；null = 个人文件 */

@@ -23,7 +23,6 @@ import {
   registerCreditInsufficientError,
 } from './services/gate/commercial-gate'
 import { registerHostedModelGate } from './services/gate/hosted-model-gate'
-import { registerManagedCloudGate } from './services/gate/managed-cloud-gate'
 
 const builtExtensionEntry = path.resolve(process.cwd(), 'dist-server/apps/server/src/enterprise/index.js')
 const sourceExtensionEntry = path.resolve(process.cwd(), 'apps/server/src/enterprise/index.ts')
@@ -67,7 +66,6 @@ export const loadCommercialServerExtension = async (): Promise<boolean> => {
       gates: {
         registerCommercialGate,
         registerCreditInsufficientError,
-        registerManagedCloudGate,
         registerHostedModelGate,
         registerAdminAnalyticsProvider,
       },

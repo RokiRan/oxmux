@@ -161,7 +161,6 @@ test('prefers active directory data until archived directory payload is loaded',
   const activeDirectoryData: WorkspacesPageDirectoryData = {
     archivedWorkspaceCountByProject: { 'project-a': 1 },
     executors: [],
-    managedCloudRuntime: null,
     presenceByWorkspaceId: {},
     previewByWorkspaceId: {},
     updatedProjects: [],
@@ -172,7 +171,6 @@ test('prefers active directory data until archived directory payload is loaded',
   const archivedDirectoryData: WorkspacesPageDirectoryData = {
     archivedWorkspaceCountByProject: { 'project-a': 1 },
     executors: [],
-    managedCloudRuntime: null,
     presenceByWorkspaceId: {},
     previewByWorkspaceId: {},
     updatedProjects: [],
@@ -212,7 +210,6 @@ test('normalizeWorkspacesPageDirectoryCache preserves archived counts for active
   const directoryData: WorkspacesPageDirectoryData = {
     archivedWorkspaceCountByProject: { 'project-a': 3 },
     executors: [],
-    managedCloudRuntime: null,
     presenceByWorkspaceId: {},
     previewByWorkspaceId: {},
     updatedProjects: [],

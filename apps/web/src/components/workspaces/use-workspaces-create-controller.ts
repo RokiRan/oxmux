@@ -13,7 +13,7 @@ import { buildWorkspaceTitleFallback } from '@shared/workspace-title'
 import type { WorkspaceRouteSearch } from '../../routes/-workspace-route-shared'
 import { useAuth } from '../../lib/auth-context'
 import { api, type GitHubAppInstallationSummary, type GitHubAppRepositorySummary } from '../../lib/api'
-import { buildExecutorOptionsWithManagedCloud } from '../../lib/managed-cloud-executor'
+import { buildExecutorOptions } from '../../lib/executor-availability'
 import {
   readWorkspaceCreateBaseBranchPreference,
   writeWorkspaceCreateBaseBranchPreference,
@@ -114,7 +114,6 @@ export type WorkspacesCreateControllerOptions = {
   executors: WorkspacesPageDirectoryData['executors']
   isMobile: boolean
   language: string
-  managedCloudRuntime: WorkspacesPageDirectoryData['managedCloudRuntime']
   panelMode: 'detail' | 'create'
   pendingWorkspaceSelectionIdRef: MutableRefObject<string>
   pendingWorkspaceSessionSelectionIdRef: MutableRefObject<string>
@@ -145,7 +144,6 @@ export function useWorkspacesCreateController({
   executors,
   isMobile,
   language,
-  managedCloudRuntime,
   panelMode,
   pendingWorkspaceSelectionIdRef,
   pendingWorkspaceSessionSelectionIdRef,
@@ -198,8 +196,8 @@ export function useWorkspacesCreateController({
     [createState.projectId, workspaceScopedProjects],
   )
   const executorOptions = useMemo(
-    () => buildExecutorOptionsWithManagedCloud(executors, managedCloudRuntime),
-    [executors, managedCloudRuntime],
+    () => buildExecutorOptions(executors),
+    [executors],
   )
   const githubAppInstallationsRef = useRef<GitHubAppInstallationSummary[]>([])
   const loadGitHubAppInstallations = useCallback(async () => {

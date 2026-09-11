@@ -188,7 +188,6 @@ const hiddenInfoNoticeMessages = new Set([
   '消息已入队。',
   '委派消息已进入独立工作区会话队列。',
   '实时连接暂不可用，已通过备用通道加入消息队列。',
-  '官方云节点正在启动，消息已进入队列，准备完成后会自动发送。',
 ])
 
 export const TASK_CHAT_SOCKET_NOT_READY_MESSAGE = '实时连接尚未建立，请稍后重试。'

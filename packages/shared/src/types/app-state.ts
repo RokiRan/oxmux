@@ -37,79 +37,12 @@ export interface AgentConfig {
   workerUpdateSettings: WorkerUpdateSettings
   workspaceRoot: string
   workspaceOpenSettings: WorkspaceOpenSettings
-  managedCloud: ManagedCloudConfig
 }
 
 export interface WorkspaceExecutionDefaults {
   executorNodeId: string
   agentType?: AgentType
   executionModel: string
-}
-
-export interface ManagedCloudDockerTargetConfig {
-  id: string
-  name?: string
-  enabled?: boolean
-  egressMode?: 'default' | 'none'
-  host?: string
-  context?: string
-  image?: string
-  network?: string
-  cpus?: string
-  memory?: string
-  workerHomeInContainer?: string
-}
-
-export interface ManagedCloudBoxliteTargetConfig {
-  id: string
-  name?: string
-  enabled?: boolean
-  egressMode?: 'default' | 'none'
-  url?: string
-  home?: string
-  image?: string
-  cpus?: string
-  memory?: string
-  workerHomeInContainer?: string
-}
-
-export interface ManagedCloudCfSandboxConfig {
-  gatewayUrl: string
-  apiKey: string
-  instanceType: string
-  workspaceHome: string
-  keepAliveSeconds: string
-  mountDrive: boolean
-  driveMountPath: string
-  bootstrapCommand: string
-}
-
-export interface ManagedCloudConfig {
-  runtimeProvider: 'disabled' | 'unsafe-local-process' | 'docker-cli' | 'boxlite-cli' | 'ascii-box-cli' | 'ascii-box-sdk' | 'cloudflare-sandbox'
-  idleAutoStopMinutes: string
-  allowLocalDocker: boolean
-  allowLocalControlPlaneRuntime: boolean
-  dockerImage: string
-  dockerHost: string
-  dockerContext: string
-  dockerEgressMode: 'default' | 'none'
-  dockerNetwork: string
-  dockerCpus: string
-  dockerMemory: string
-  dockerWorkerHomeInContainer: string
-  dockerPool: ManagedCloudDockerTargetConfig[]
-  boxliteUrl: string
-  boxliteHome: string
-  boxliteImage: string
-  boxliteCpus: string
-  boxliteMemory: string
-  boxliteWorkerHomeInContainer: string
-  boxlitePool: ManagedCloudBoxliteTargetConfig[]
-  asciiBoxApiKey: string
-  asciiBoxBaseUrl: string
-  asciiBoxTtlSeconds: string
-  asciiBoxBootstrapCommand: string
-  cfSandbox: ManagedCloudCfSandboxConfig
 }
 
 export interface AppDomainState {

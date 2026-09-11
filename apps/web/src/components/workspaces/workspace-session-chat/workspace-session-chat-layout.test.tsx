@@ -1701,9 +1701,6 @@ test('TaskChatFeed keeps the final run duration visible after the current worksp
             workspaceExecutor: {
               executorId: 'a48370fc-42e1-401e-b588-1b056ed53df4',
               name: 'Oxmux Cloud Workspace',
-              executorSource: 'managed-cloud',
-              managedBy: 'vibemux',
-              runtimeClass: 'managed-worker',
               status: 'online',
             },
           },
@@ -1724,7 +1721,7 @@ test('TaskChatFeed keeps the final run duration visible after the current worksp
   )
 
   assert.match(html, /已完成/)
-  assert.match(html, /运行节点 Oxmux Cloud Workspace · 云节点/)
+  assert.match(html, /运行节点 Oxmux Cloud Workspace/)
   assert.match(html, /00:20/)
 })
 

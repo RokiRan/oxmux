@@ -4,7 +4,6 @@
 // [PROTOCOL]: Update this header when changing responsibilities, then check AGENTS.md.
 import type { AppState, ExecutorRecord, MainChatSession } from '@shared/types'
 import { readCustomAgentConfig } from '@shared/custom-agent'
-import { isManagedCloudAutoExecutorId, MANAGED_CLOUD_AUTO_EXECUTOR_ID } from '@shared/managed-cloud'
 import { listVisibleExecutorsForUser } from '../control-plane/collaboration'
 import { executorRegistry } from '../control-plane/executor-registry'
 import { getAllUsers } from '../repositories/auth'
@@ -20,10 +19,7 @@ export const resolveAgentChannelExecutorId = (
   preferredExecutorIds: Array<string | null | undefined>,
 ) => {
   const preferredIds = preferredExecutorIds.map(trimString).filter((value): value is string => Boolean(value))
-  // agent 默认官方云节点：保留 auto 标记，执行时由 resolveMainChatExecutor 按需分配云节点
-  if (preferredIds.some(isManagedCloudAutoExecutorId)) {
-    return MANAGED_CLOUD_AUTO_EXECUTOR_ID
-  }
+  // 存量 'managed-cloud:auto' 标记匹配不到任何执行器，自然落入下方在线回退。
   const preferredExecutors = preferredIds
     .map((executorId) => executors.find((executor) => executor.executorId === executorId))
     .filter((executor): executor is Pick<ExecutorRecord, 'executorId' | 'status'> => Boolean(executor))
@@ -86,12 +82,10 @@ export const resolveAgentChannelActingUserId = (params: {
 export const resolveAgentOwnerUserId = (agent: Pick<AgentRecord, 'ownerUserId' | 'config'>) => {
   const ownerUserId = trimString(agent.ownerUserId)
   const defaultExecutorId = readCustomAgentConfig(agent.config).defaultExecutorId.trim()
-  // 官方云节点（auto）视为 owner 可用：执行时按需分配
-  const usesManagedCloudDefault = isManagedCloudAutoExecutorId(defaultExecutorId)
-  const defaultExecutor = !usesManagedCloudDefault && defaultExecutorId
+  const defaultExecutor = defaultExecutorId
     ? executorRegistry.listExecutorsWithPresence().find((executor) => executor.executorId === defaultExecutorId)
     : undefined
-  const ownerCanUseDefaultExecutor = usesManagedCloudDefault || Boolean(
+  const ownerCanUseDefaultExecutor = Boolean(
     ownerUserId
     && defaultExecutorId
     && listVisibleExecutorsForUser(ownerUserId).some((executor) => executor.executorId === defaultExecutorId),

@@ -3,7 +3,7 @@ import { ChevronRight, ChevronUp, CornerDownLeft, Download, FileText, FolderOpen
 import { toggleMessageReaction } from '@shared/message-reactions'
 import { sortMainChatSessions, isMainChatSessionVisibleInWorkspace } from '@shared/main-chat-session'
 import { readCustomAgentConfig } from '@shared/custom-agent'
-import { isExecutorEffectivelyOnline } from '../../lib/managed-cloud-executor'
+import { isExecutorOnline } from '../../lib/executor-availability'
 import { toast } from 'sonner'
 import type { ChatMessage, MainChatSession, ToolCall } from '@shared/types'
 import type { AgentRecord, AgentWorkdirFileEntry, AgentWorkdirSummary } from '../../lib/api'
@@ -1103,7 +1103,7 @@ export function CustomAgentChatPanel({
                             label: executor.name,
                             description: executor.status,
                             badgeLabel: executor.status,
-                            statusTone: isExecutorEffectivelyOnline(executor) ? 'online' : 'offline',
+                            statusTone: isExecutorOnline(executor) ? 'online' : 'offline',
                           })),
                         ]}
                         placeholder={t('agents.custom.chat.selectExecutor')}

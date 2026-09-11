@@ -877,7 +877,7 @@ export const registerPreviewRoutes = (app: Hono, requireAuth: MiddlewareHandler)
       }
       previewSessionService.markActive(
         session.id,
-        'managed-cloud',
+        'private-node',
         session.accessMode,
       )
       session = previewSessionService.getSessionById(session.id) ?? session

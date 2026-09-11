@@ -11,7 +11,6 @@ interface TaskChatWorkspaceBranchControlProps {
   selectedBranch?: string
   options: string[]
   branchSources?: Record<string, 'remote' | 'local-only'>
-  remoteOnly?: boolean
   disabled?: boolean
   loading?: boolean
   saving?: boolean
@@ -26,7 +25,6 @@ export function TaskChatWorkspaceBranchControl({
   selectedBranch,
   options,
   branchSources,
-  remoteOnly = false,
   disabled = false,
   loading = false,
   saving = false,
@@ -56,15 +54,12 @@ export function TaskChatWorkspaceBranchControl({
 
   const normalizedQuery = query.trim().toLowerCase()
   const filteredOptions = useMemo(() => {
-    const visibleOptions = remoteOnly && branchSources
-      ? options.filter((branch) => branchSources[branch] !== 'local-only')
-      : options
     if (!normalizedQuery) {
-      return visibleOptions
+      return options
     }
 
-    return visibleOptions.filter((branch) => branch.toLowerCase().includes(normalizedQuery))
-  }, [normalizedQuery, options, remoteOnly, branchSources])
+    return options.filter((branch) => branch.toLowerCase().includes(normalizedQuery))
+  }, [normalizedQuery, options])
 
   const label = value || (mode === 'original-dir' ? '当前分支' : '选择分支')
   const helperText = saving
@@ -180,11 +175,6 @@ export function TaskChatWorkspaceBranchControl({
           )}
         </div>
 
-        {remoteOnly ? (
-          <p className="mt-1 rounded-md border border-sky-500/20 bg-sky-500/10 px-2 py-1 text-[9px] leading-3 text-sky-300/90">
-            {t('workspace.branchSources.cloudOnlyHint')}
-          </p>
-        ) : null}
       </PopoverContent>
     </Popover>
   )

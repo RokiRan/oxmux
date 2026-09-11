@@ -4,11 +4,10 @@ import { mergeAgentRuntimeSettings, normalizeAgentSettings } from '@shared/agent
 import { resolveMatchingAgentExecutionModelOptionId } from '@shared/model-profile'
 import { getProjectColor } from '@shared/project-color'
 import { isPlaygroundProjectId, PLAYGROUND_PROJECT_ID } from '@shared/playground-workspace'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
 import type { AgentSettings, ExecutionModelOption, ExecutorRecord, Project, Workspace } from '@shared/types'
 import type { GitHubAppInstallationSummary } from '../../lib/api'
 import { buildTaskAgentOptions } from '../../lib/agent-runtime-options'
-import { isExecutorEffectivelyOnline, isManagedCloudExecutorRecord } from '../../lib/managed-cloud-executor'
+import { isExecutorOnline } from '../../lib/executor-availability'
 import { useTranslation } from '../../lib/i18n/react'
 import { cn } from '../../lib/utils'
 import {
@@ -540,17 +539,15 @@ function CreateComposerFooterControls({
             options={executorOptions.map((executor) => ({
               value: executor.executorId,
               label: executor.name,
-              description: isManagedCloudExecutorRecord(executor)
-                ? t('workspace.createPanel.executorDescriptions.managedCloudHint')
-                : selectedProject?.versionControl !== 'git-remote'
-                  && selectedProjectExecutorId
-                  && executor.executorId !== selectedProjectExecutorId
-                  ? t('workspace.createPanel.executorDescriptions.localProjectBlocked', { owner: selectedProjectExecutor?.name || selectedProjectExecutorId })
-                  : executor.machineName,
+              description: selectedProject?.versionControl !== 'git-remote'
+                && selectedProjectExecutorId
+                && executor.executorId !== selectedProjectExecutorId
+                ? t('workspace.createPanel.executorDescriptions.localProjectBlocked', { owner: selectedProjectExecutor?.name || selectedProjectExecutorId })
+                : executor.machineName,
               disabled: selectedProject?.versionControl !== 'git-remote'
                 && Boolean(selectedProjectExecutorId)
                 && executor.executorId !== selectedProjectExecutorId,
-              statusTone: isExecutorEffectivelyOnline(executor) ? 'online' : executor.status === 'paired' ? 'busy' : 'offline',
+              statusTone: isExecutorOnline(executor) ? 'online' : executor.status === 'paired' ? 'busy' : 'offline',
             }))}
             placeholder={t('workspace.createPanel.placeholders.selectExecutor')}
             searchPlaceholder={t('workspace.createPanel.placeholders.searchExecutor')}
@@ -595,7 +592,6 @@ function CreateComposerFooterControls({
               selectedBranch={createState.selectedBranch}
               options={createState.branchOptions}
               branchSources={createState.branchSources}
-              remoteOnly={isManagedCloudAutoExecutorId(createState.executorId) || createState.executorId.startsWith('managed-cloud')}
               disabled={createState.branchLoading || createState.branchOptions.length === 0}
               loading={createState.branchLoading}
               message={createState.branchMessage || t('workspace.createPanel.directoryDescriptions.worktree')}

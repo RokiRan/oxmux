@@ -6,7 +6,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { GitHubResourceBinding, Project, ProjectPullRequestListResponse, ProjectPullRequestReviewSummary, RailwayDeploymentSummary, RailwayResourceBinding, Task, TaskWorkspaceBinding, WorkspacePresenceUser, WorkspacePreviewSummary, WorkspaceSession, Workspace } from '@shared/types'
-import { api, type ManagedCloudRuntimeStatus } from '../../lib/api'
+import { api } from '../../lib/api'
 import { NormalizedEntityCollectionStore } from '../../lib/app-entity-store'
 import { useExecutorRuntimeData } from '../../lib/use-executor-runtime-data'
 import { loadAvailableAgents } from '../../lib/use-available-agents'
@@ -14,7 +14,6 @@ import { loadAvailableAgents } from '../../lib/use-available-agents'
 export type WorkspacesPageDirectoryData = {
   archivedWorkspaceCountByProject: Record<string, number>
   executors: Awaited<ReturnType<typeof api.listExecutors>>['executors']
-  managedCloudRuntime: ManagedCloudRuntimeStatus | null
   presenceByWorkspaceId: Record<string, WorkspacePresenceUser[]>
   previewByWorkspaceId: Record<string, WorkspacePreviewSummary>
   updatedProjects: Project[]
@@ -175,9 +174,9 @@ export const useWorkspacesPageDirectoryQuery = (
   enabled = true,
   options?: { includeArchived?: boolean },
 ) => {
-  // executors/managedCloudRuntime 复用共享的 react-query 缓存和轮询（useExecutorRuntimeData），
+  // executors 复用共享的 react-query 缓存和轮询（useExecutorRuntimeData），
   // 不再在这里各自定义一份同 key 的 useQuery，避免重复的查询定义和潜在的配置漂移。
-  const { executors, managedCloudRuntime, executorsLoading } = useExecutorRuntimeData()
+  const { executors, executorsLoading } = useExecutorRuntimeData()
   const hasCloningProjects = projects.some((project) => project.repositoryCloneStatus === 'cloning')
   const includeArchived = options?.includeArchived ?? false
   const directoryQuery = useQuery<WorkspacesPageDirectoryData>({
@@ -190,7 +189,6 @@ export const useWorkspacesPageDirectoryQuery = (
           projects.map((project) => [project.id, response.archivedWorkspaceCountByProject?.[project.id] ?? 0]),
         ) as Record<string, number>,
         executors: [],
-        managedCloudRuntime: null,
         presenceByWorkspaceId: response.presenceByWorkspaceId ?? {},
         previewByWorkspaceId: response.previewByWorkspaceId ?? {},
         updatedProjects: response.projects,
@@ -211,7 +209,6 @@ export const useWorkspacesPageDirectoryQuery = (
       projects.map((project) => [project.id, cachedDirectoryData?.archivedWorkspaceCountByProject[project.id] ?? 0]),
     ) as Record<string, number>,
     executors: executors.length > 0 ? executors : cachedDirectoryData?.executors ?? [],
-    managedCloudRuntime: managedCloudRuntime ?? cachedDirectoryData?.managedCloudRuntime ?? null,
     presenceByWorkspaceId: cachedDirectoryData?.presenceByWorkspaceId ?? {},
     previewByWorkspaceId: cachedDirectoryData?.previewByWorkspaceId ?? {},
     updatedProjects: cachedDirectoryData?.updatedProjects ?? [],
@@ -221,7 +218,6 @@ export const useWorkspacesPageDirectoryQuery = (
   } satisfies WorkspacesPageDirectoryData), [
     cachedDirectoryData,
     executors,
-    managedCloudRuntime,
     projects,
   ])
 

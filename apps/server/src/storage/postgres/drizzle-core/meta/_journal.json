@@ -22,6 +22,13 @@
       "when": 1788464579595,
       "tag": "0002_motionless_marrow",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789109534884,
+      "tag": "0003_yellow_cassandra_nova",
+      "breakpoints": true
     }
   ]
 }

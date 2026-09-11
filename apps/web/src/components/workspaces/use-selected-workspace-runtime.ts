@@ -1,17 +1,12 @@
 import { useMemo } from 'react'
 import type { AppState, ExecutorRecord, WorkspaceSession } from '@shared/types'
 import { buildWorkspaceRepoPath } from '@shared/workspace-paths'
-import {
-  normalizeManagedCloudExecutorForDisplay,
-} from '../../lib/managed-cloud-executor'
-import type { ManagedCloudRuntimeStatus } from '../../lib/api'
 import { resolveWorkspaceSessionRuntime } from '../../lib/workspace-session-runtime'
 import type { WorkspaceListItem } from './workspaces-page-utils'
 
 type UseSelectedWorkspaceRuntimeOptions = {
   defaultWorkspaceRoot: AppState['config']['workspaceRoot']
   executors: ExecutorRecord[]
-  managedCloudRuntime: ManagedCloudRuntimeStatus | null
   projectBindings: AppState['projectBindings']
   selectedItem: WorkspaceListItem | null
   selectedWorkspaceSession: WorkspaceSession | null
@@ -20,7 +15,6 @@ type UseSelectedWorkspaceRuntimeOptions = {
 export function useSelectedWorkspaceRuntime({
   defaultWorkspaceRoot,
   executors,
-  managedCloudRuntime,
   projectBindings,
   selectedItem,
   selectedWorkspaceSession,
@@ -40,7 +34,7 @@ export function useSelectedWorkspaceRuntime({
     return resolveWorkspaceSessionRuntime({
       bindingPathHint,
       defaultWorkspaceRoot,
-      executors: executors.map((executor) => normalizeManagedCloudExecutorForDisplay(executor, managedCloudRuntime)),
+      executors,
       project: selectedItem.project,
       workspace: selectedItem.workspace,
       workspaceSession: selectedWorkspaceSession,
@@ -48,7 +42,6 @@ export function useSelectedWorkspaceRuntime({
   }, [
     defaultWorkspaceRoot,
     executors,
-    managedCloudRuntime,
     projectBindings,
     selectedItem,
     selectedWorkspaceExecutorIdFromWorkspace,

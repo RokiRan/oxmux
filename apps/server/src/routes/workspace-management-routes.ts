@@ -6,7 +6,7 @@
 import type { Hono, MiddlewareHandler } from 'hono'
 import { z } from 'zod'
 import { buildDisplayOrderPatch, resolveNextDisplayOrder } from '@shared/project-workspace-order'
-import { isManagedCloudAutoExecutorId, MANAGED_CLOUD_AUTO_EXECUTOR_ID } from '@shared/managed-cloud'
+import { isLegacyManagedCloudAutoExecutorId } from '@shared/legacy-executor-markers'
 import { isPlaygroundProjectId, PLAYGROUND_PROJECT_ID, PLAYGROUND_PROJECT_NAME } from '@shared/playground-workspace'
 import { resolveEffectiveProjectEnvironmentTemplate, resolveProjectEnvironmentPreview } from '@shared/project-environment-template'
 import { validateProjectEnvironmentPreviewPorts } from '@shared/types'
@@ -43,7 +43,6 @@ import {
   resolveWorkspaceEffectiveEnvironmentTemplate,
   saveWorkspaceEnvironmentTemplate,
 } from '../services/workspace-environment-template-service'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 import { canUserManageProjectWorkspace, getProjectWorkspaceManagementDeniedMessage } from '../services/project-workspace-management-access'
 import { resolveScopedRuntimeEnvironment, saveWorkspaceRuntimeEnvironmentConfig } from '../services/runtime-environment-service'
 import { scheduleTaskChatQueueDrain } from '../services/task-chat-dispatch'
@@ -63,7 +62,6 @@ import { persistWorkspaceSessionTurnHistory } from '../storage/postgres/workspac
 import { deleteTaskWorkspaceBindings, deleteWorkspaceSessions, loadState, saveProject, saveTask, saveTaskAndWait, saveTaskWorkspaceBinding, saveWorkspaceSession, saveWorkspaceSessionAndWait } from '../storage/app-state-store'
 import { deleteWorkspaces, getWorkspace, listProjectBindings, saveWorkspace, saveWorkspaceAndWait } from '../storage/distributed-task-store'
 import { getScopedState, getUserIdFromHeader, projectEnvironmentTemplateSchema, withClusterState, withState } from './shared'
-import { deleteObjectPrefix } from '../services/object-storage'
 import { normalizeProjectEnvironmentTemplate } from './project-route-shared'
 import {
   allocateWorkspaceWorktreeUniqueId,
@@ -392,38 +390,16 @@ export const applyWorkspaceSessionCreatePayload = (params: {
   )
 }
 
-const resolveWorkspaceManagedCloudExecutorId = async (params: {
-  state: AppState
-  userId: string
-  projectWorkspaceId?: string
-}) => {
-  getManagedCloudGate().ensureDevOnlyAccess()
-  await getManagedCloudGate().ensureUsageAccess({
-    state: params.state,
-    userId: params.userId,
-  })
-
-  const result = await getManagedCloudGate().ensureExecutor({
-    config: params.state.config,
-    ownerUserId: params.userId,
-    workspaceId: params.projectWorkspaceId?.trim() || undefined,
-    projects: params.state.projects,
-  })
-  return result.executor.executorId
-}
-
 /**
- * 新建工作区默认节点策略：本地在线优先，无在线本地节点时返回 null（由调用方回退云节点）。
+ * 新建工作区默认节点策略：在线节点优先，无在线节点时返回 null。
  * preferredExecutorId 命中最先，其余保持原顺序。
  */
 export const resolveDefaultWorkspaceExecutorId = (params: {
-  visibleExecutors: Array<Pick<ExecutorRecord, 'executorId' | 'status' | 'executorSource' | 'managedBy'>>
+  visibleExecutors: Array<Pick<ExecutorRecord, 'executorId' | 'status'>>
   preferredExecutorId?: string
 }): string | null => {
   const onlineLocalExecutors = params.visibleExecutors.filter((executor) => (
     executor.status === 'online'
-    && executor.executorSource !== 'managed-cloud'
-    && executor.managedBy !== 'vibemux'
   ))
   if (onlineLocalExecutors.length === 0) {
     return null
@@ -436,22 +412,10 @@ export const resolveDefaultWorkspaceExecutorId = (params: {
   return preferred?.executorId ?? onlineLocalExecutors[0].executorId
 }
 
-const resolveWorkspaceExecutorNodeId = async (params: {
-  state: AppState
-  userId: string
-  projectWorkspaceId?: string
-  executorNodeId: string
-}) => {
-  const executorNodeId = params.executorNodeId.trim()
-  if (!isManagedCloudAutoExecutorId(executorNodeId)) {
-    return executorNodeId
-  }
-
-  return resolveWorkspaceManagedCloudExecutorId({
-    state: params.state,
-    userId: params.userId,
-    projectWorkspaceId: params.projectWorkspaceId,
-  })
+// 存量 'managed-cloud:auto' 标记按「未指定」处理：返回 null，由调用方走默认节点策略。
+const resolveWorkspaceExecutorNodeId = (executorNodeId: string) => {
+  const trimmed = executorNodeId.trim()
+  return isLegacyManagedCloudAutoExecutorId(trimmed) ? null : trimmed
 }
 
 const mergeWorkspaceMessage = (message: string, detail: string) => {
@@ -802,54 +766,6 @@ const persistWorkspacePreparationUnavailableStatus = async (params: {
   })
 }
 
-/**
- * 云节点被 idle-stop 后自动启动并等待上线（对齐 task-chat 路径的 auto-start 逻辑）。
- * 启动失败或等待期间被新操作替代时，由调用方中止后续准备。
- */
-const ensureWorkspacePreparationExecutorOnline = async (params: {
-  state: AppState
-  project: Project
-  task: Task
-  workspace: WorkspaceRecord
-  session: WorkspaceSession
-  executorId: string
-  stopIfSuperseded: () => boolean
-}): Promise<'online' | 'superseded' | 'error'> => {
-  await persistWorkspacePreparationStatus({
-    project: params.project,
-    task: params.task,
-    workspace: params.workspace,
-    session: params.session,
-    step: '正在启动云节点，请稍候…',
-    status: 'executing',
-  })
-
-  try {
-    await getManagedCloudGate().startExecutor({
-      config: params.state.config,
-      executorId: params.executorId,
-      projects: params.state.projects,
-    })
-    const startedExecutor = await getManagedCloudGate().waitForExecutorOnline(params.executorId)
-    if (startedExecutor?.status !== 'online') {
-      throw new Error('云节点启动超时，请稍后重试。')
-    }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : '云节点启动失败。'
-    await persistWorkspacePreparationStatus({
-      project: params.project,
-      task: params.task,
-      workspace: params.workspace,
-      session: params.session,
-      step: `云节点启动失败：${message}`,
-      status: 'error',
-    })
-    return 'error'
-  }
-
-  return params.stopIfSuperseded() ? 'superseded' : 'online'
-}
-
 const trimTerminalOutputForTimeline = (output: string) => {
   const normalized = output.trim()
   if (normalized.length <= 800) {
@@ -993,7 +909,7 @@ export const runWorkspaceBackgroundPreparation = async (params: {
     const executor = executorId
       ? executorRegistry.listExecutorsWithPresence().find((item) => item.executorId === executorId)
       : undefined
-    if (!executorId || !executor || (executor.status !== 'online' && !getManagedCloudGate().isManagedExecutor(executor))) {
+    if (!executorId || !executor || executor.status !== 'online') {
       await persistWorkspacePreparationUnavailableStatus({
         project: params.project,
         task: params.task,
@@ -1001,21 +917,6 @@ export const runWorkspaceBackgroundPreparation = async (params: {
         session: params.session,
       })
       return
-    }
-
-    if (executor.status !== 'online') {
-      const startResult = await ensureWorkspacePreparationExecutorOnline({
-        state: params.state,
-        project: params.project,
-        task: params.task,
-        workspace: params.workspace,
-        session: params.session,
-        executorId,
-        stopIfSuperseded,
-      })
-      if (startResult !== 'online') {
-        return
-      }
     }
 
     if (stopIfSuperseded()) {
@@ -1433,27 +1334,9 @@ export const registerWorkspaceManagementRoutes = (app: Hono, requireAuth: Middle
       return fallbackResponse('missing_executor')
     }
 
-    let resolvedExecutorNodeId = payload.executorNodeId
-    try {
-      resolvedExecutorNodeId = await resolveWorkspaceExecutorNodeId({
-        state,
-        userId,
-        projectWorkspaceId: project.workspaceId,
-        executorNodeId: payload.executorNodeId,
-      })
-    } catch (error) {
-      const message = error instanceof Error ? error.message : '官方云节点暂不可用。'
-      if (getManagedCloudGate().isUsageLimitError(error)) {
-        return c.json({
-          ok: true,
-          title: fallbackTitle,
-          source: 'fallback' as const,
-          reason: 'executor_unavailable',
-          message,
-        }, 402)
-      }
-
-      return fallbackResponse('executor_unavailable', message)
+    const resolvedExecutorNodeId = resolveWorkspaceExecutorNodeId(payload.executorNodeId)
+    if (!resolvedExecutorNodeId) {
+      return fallbackResponse('missing_executor')
     }
 
     const executorAccess = canUserUseExecutorForProject({ userId, projectId: project.id, executorId: resolvedExecutorNodeId })
@@ -1513,30 +1396,24 @@ export const registerWorkspaceManagementRoutes = (app: Hono, requireAuth: Middle
     }
 
     const workspaceExecutionDefaults = state.config.workspaceExecutionDefaults
-    let requestedExecutorNodeId = payload.executorNodeId?.trim() || workspaceExecutionDefaults.executorNodeId?.trim() || ''
+    let requestedExecutorNodeId = resolveWorkspaceExecutorNodeId(
+      payload.executorNodeId?.trim() || workspaceExecutionDefaults.executorNodeId?.trim() || '',
+    ) ?? ''
     if (!requestedExecutorNodeId) {
-      // 默认节点策略：本地在线优先，无在线本地节点时回退云节点（由 resolveWorkspaceExecutorNodeId 复用同一段云节点路径）。
+      // 默认节点策略：在线节点优先。
       requestedExecutorNodeId = resolveDefaultWorkspaceExecutorId({
         visibleExecutors: listVisibleExecutorsForUser(userId),
         preferredExecutorId: project.preferredExecutorId,
-      }) ?? MANAGED_CLOUD_AUTO_EXECUTOR_ID
+      }) ?? ''
+    }
+    if (!requestedExecutorNodeId) {
+      return c.json({ message: '当前没有在线执行节点，请先连接一个执行器后再试。' }, 400)
     }
     const effectiveAgentType = payload.agentType ?? workspaceExecutionDefaults.agentType
     const effectiveExecutionModel = payload.executionModel?.trim()
       || (effectiveAgentType === workspaceExecutionDefaults.agentType ? workspaceExecutionDefaults.executionModel : undefined)
 
-    let resolvedExecutorNodeId = requestedExecutorNodeId
-    try {
-      resolvedExecutorNodeId = await resolveWorkspaceExecutorNodeId({
-        state,
-        userId,
-        projectWorkspaceId: project.workspaceId,
-        executorNodeId: requestedExecutorNodeId,
-      })
-    } catch (error) {
-      return c.json({ message: error instanceof Error ? error.message : '官方云节点暂不可用。' }, getManagedCloudGate().isUsageLimitError(error) ? 402 : 400)
-    }
-
+    const resolvedExecutorNodeId = requestedExecutorNodeId
     const executorAccess = canUserUseExecutorForProject({ userId, projectId: project.id, executorId: resolvedExecutorNodeId })
     if (!executorAccess.ok) {
       return c.json({ message: executorAccess.message }, 403)
@@ -2331,16 +2208,10 @@ export const registerWorkspaceManagementRoutes = (app: Hono, requireAuth: Middle
     if (!context.ok) return c.json({ message: context.message }, 404)
     const { workspace, project, scopedWorkspace } = context
 
-    let nextExecutorId = payload.executorNodeId?.trim() || workspace.executorNodeId
-    try {
-      nextExecutorId = await resolveWorkspaceExecutorNodeId({
-        state,
-        userId,
-        projectWorkspaceId: project.workspaceId,
-        executorNodeId: nextExecutorId,
-      })
-    } catch (error) {
-      return c.json({ message: error instanceof Error ? error.message : '官方云节点暂不可用。' }, getManagedCloudGate().isUsageLimitError(error) ? 402 : 400)
+    const requestedNextExecutorId = payload.executorNodeId?.trim() || workspace.executorNodeId
+    const nextExecutorId = resolveWorkspaceExecutorNodeId(requestedNextExecutorId)
+    if (!nextExecutorId) {
+      return c.json({ message: '当前没有在线执行节点，请先连接一个执行器后再试。' }, 400)
     }
 
     const executorAccess = canUserUseExecutorForProject({ userId, projectId: project.id, executorId: nextExecutorId })
@@ -2524,16 +2395,10 @@ export const registerWorkspaceManagementRoutes = (app: Hono, requireAuth: Middle
     const { workspace, project, scopedWorkspace } = context
 
     // Resolve target executor
-    let nextExecutorId = payload.executorNodeId.trim()
-    try {
-      nextExecutorId = await resolveWorkspaceExecutorNodeId({
-        state,
-        userId,
-        projectWorkspaceId: project.workspaceId,
-        executorNodeId: nextExecutorId,
-      })
-    } catch (error) {
-      return c.json({ message: error instanceof Error ? error.message : '官方云节点暂不可用。' }, getManagedCloudGate().isUsageLimitError(error) ? 402 : 400)
+    const requestedTargetExecutorId = payload.executorNodeId.trim()
+    const nextExecutorId = resolveWorkspaceExecutorNodeId(requestedTargetExecutorId)
+    if (!nextExecutorId) {
+      return c.json({ message: '当前没有在线执行节点，请先连接一个执行器后再试。' }, 400)
     }
 
     // Must be a different executor
@@ -3286,12 +3151,6 @@ export const registerWorkspaceManagementRoutes = (app: Hono, requireAuth: Middle
       userId,
       deleteLocalBranch: payload.deleteLocalBranch,
       deleteRemoteBranch: payload.deleteRemoteBranch,
-    })
-
-    // 云节点文件清理（R2）：workspaces/<wid>/ 前缀下是云节点执行文件（唯一消费者），
-    // 与本地目录清理语义对齐；尽力而为，失败不阻断工作区删除。
-    void deleteObjectPrefix(`workspaces/${workspaceId}`).catch((error) => {
-      console.warn(`[workspace-delete] R2 云节点文件清理失败 workspace=${workspaceId}:`, error instanceof Error ? error.message : error)
     })
 
     const nextState: AppState = {

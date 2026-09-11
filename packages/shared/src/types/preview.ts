@@ -1,6 +1,6 @@
 import type { PreviewAccessRoute } from './mesh'
 
-export type PreviewExecutionSurface = 'private-node' | 'managed-cloud'
+export type PreviewExecutionSurface = 'private-node'
 
 export type PreviewSessionPurpose = 'app' | 'desktop' | 'code-server'
 

@@ -70,12 +70,11 @@ import type { ExecuteTaskChatTurnResult, TaskChatQueueClaim, TaskMessageResult }
 import {
   buildWorkerOnlyTaskDetailResult,
   ensureWorkspaceChatTaskReady,
-  resolveWorkspaceChatDispatchAvailabilityAsync,
+  resolveWorkspaceChatDispatchAvailability,
   runWorkspaceMessageViaExecutor,
 } from './workspace-executor'
 import { getServerAgentLabel } from '../server-agent'
 import { getCommercialGate } from '../../services/gate/commercial-gate'
-import { getManagedCloudGate } from '../gate/managed-cloud-gate'
 
 const hasSharedWorktreeSessionConflict = (task: Task, workspaceId?: string, workspaceSessionId?: string) => {
   if (!workspaceId || !workspaceSessionId) {
@@ -878,21 +877,6 @@ export const executeTaskChatTurn = async (params: {
     const nextSession = scopedWorkspaceId && latestWorkspaceSession && !staleWorkspaceRuntimeResult
       ? applyWorkspaceMessageResult(pendingTask, latestWorkspaceSession, result)
       : undefined
-    if (nextSession && pendingSession?.runtimeStartedAt) {
-      const usageRecord = getManagedCloudGate().buildUsageRecord({
-        state: params.state,
-        userId: params.userId,
-        session: nextSession,
-        startedAt: pendingSession.runtimeStartedAt,
-        endedAt: nextSession.lastRuntimeEventAt ?? nextSession.updatedAt,
-        ok: result.ok,
-        id: `turn:${effectiveTurnId}`,
-      })
-      if (usageRecord) {
-        getManagedCloudGate().recordUsage(usageRecord)
-      }
-    }
-
     const linkedTaskRunId = params.queueClaim?.taskRunId ?? result.taskRunId
     const linkedTaskRun = linkedTaskRunId ? getTaskRun(linkedTaskRunId) : null
     if (linkedTaskRun) {
@@ -1089,7 +1073,7 @@ const runTaskChatQueueDrain = async (params: {
     try {
       const { nextQueued, context } = drainContext
 
-      const dispatchAvailability = await resolveWorkspaceChatDispatchAvailabilityAsync({
+      const dispatchAvailability = resolveWorkspaceChatDispatchAvailability({
         state: context.state,
         userId: context.userId,
         task: context.task,

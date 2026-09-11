@@ -7,9 +7,6 @@ import type {
   AgentRunningStatus,
   CreatorIdentity,
   ExecutorConnectionStatus,
-  ExecutorManagedBy,
-  ExecutorRuntimeClass,
-  ExecutorSource,
   TaskResultDelivery,
   ToolCall,
 } from './types'
@@ -19,9 +16,6 @@ import type { TaskChatAttachment } from './task-chat-attachment'
 export interface ChatTimelineWorkspaceExecutor {
   executorId: string
   name?: string
-  executorSource?: ExecutorSource
-  managedBy?: ExecutorManagedBy
-  runtimeClass?: ExecutorRuntimeClass
   status?: ExecutorConnectionStatus
 }
 

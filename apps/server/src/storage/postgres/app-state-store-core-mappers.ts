@@ -21,7 +21,6 @@ import type { LogRow, ProjectRow, TaskCollaborationRow, TaskRow, TaskRunRow, Tas
 import { cloneJson } from './helpers'
 import { initialServerState } from './app-state-seed'
 import { coerceServerAgentType, isServerAgentType } from '../../services/server-agent'
-import { applyManagedCloudEnvConfig } from '../../services/managed-cloud-env-config'
 
 export const mapProjectRow = (row: ProjectRow): Project => ({
   id: row.id,
@@ -78,10 +77,10 @@ const readOfficialConnectorRuntimeToken = () => getEnv('OXMUX_OFFICIAL_CONNECTOR
   || ''
 
 export const normalizeConfig = (config: Partial<AppState['config']> | undefined): AppState['config'] => {
-  const normalized = applyManagedCloudEnvConfig(normalizeAgentConfig({
+  const normalized = normalizeAgentConfig({
     ...initialServerState.config,
     ...config,
-  }))
+  })
   const officialConnectorTarget = readOfficialConnectorTarget()
   if (!officialConnectorTarget) {
     return normalized

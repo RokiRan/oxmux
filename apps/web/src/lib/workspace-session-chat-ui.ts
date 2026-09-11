@@ -70,9 +70,6 @@ const taskResultDeliverySchema = z.object({
 const workspaceExecutorSchema = z.object({
   executorId: z.string(),
   name: z.string().optional(),
-  executorSource: z.enum(['customer-worker', 'managed-cloud']).optional(),
-  managedBy: z.enum(['user', 'vibemux']).optional(),
-  runtimeClass: z.enum(['user-worker', 'managed-worker']).optional(),
   status: z.enum(['pairing', 'paired', 'online', 'offline', 'disabled']).optional(),
 }).passthrough()
 

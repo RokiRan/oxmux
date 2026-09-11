@@ -5,8 +5,7 @@
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { MANAGED_CLOUD_AUTO_EXECUTOR_ID } from '@shared/managed-cloud'
-import { isExecutorEffectivelyOnline } from '../../lib/managed-cloud-executor'
+import { isExecutorOnline } from '../../lib/executor-availability'
 import type { RuntimeId } from '@shared/types'
 import { Activity, Bot, BrainCircuit, Cable, CalendarClock, Camera, Check, ChevronRight, Cpu, FolderOpen, Inbox, Loader2, Lock, MessageSquareText, Radio, Settings2, ShieldCheck, Sparkles, Unplug, Users, Waypoints } from 'lucide-react'
 import { CustomAgentActivityPanel, type CustomAgentAuditEntry, type CustomAgentAuditSummary } from './custom-agent-activity-panel'
@@ -135,7 +134,7 @@ export function CustomAgentDetailPanel({
   const { language, t } = useTranslation()
   const avatarInputRef = useRef<HTMLInputElement | null>(null)
   const { preferredModelOptions } = useCustomAgentDetailState({ draft, state })
-  const [executors, setExecutors] = useState<Array<{ executorId: string; name: string; status: string; executorSource?: string; managedBy?: string }>>([])
+  const [executors, setExecutors] = useState<Array<{ executorId: string; name: string; status: string }>>([])
   const [executorMenuOpen, setExecutorMenuOpen] = useState(false)
   const [feishuBindOpen, setFeishuBindOpen] = useState(false)
   const [feishuDisconnecting, setFeishuDisconnecting] = useState(false)
@@ -151,8 +150,6 @@ export function CustomAgentDetailPanel({
           executorId: e.executorId,
           name: e.name,
           status: e.status,
-          executorSource: e.executorSource,
-          managedBy: e.managedBy,
         })))
       }
     }).catch(() => undefined)
@@ -459,8 +456,6 @@ export function CustomAgentDetailPanel({
         {activeTab === 'files' && !creating && selectedAgentId ? (
           <AgentFilesPanel
             agentId={selectedAgentId}
-            defaultExecutorId={draft.defaultExecutorId}
-            executors={executors}
             workdirSummary={workdirSummary}
             workdirFiles={workdirFiles}
             workdirLoading={workdirLoading}
@@ -508,24 +503,16 @@ export function CustomAgentDetailPanel({
               <ExecutorSelect
                 open={executorMenuOpen}
                 onOpenChange={setExecutorMenuOpen}
-                value={draft.defaultExecutorId || MANAGED_CLOUD_AUTO_EXECUTOR_ID}
+                value={draft.defaultExecutorId}
                 placeholder={t('agents.custom.detail.runtime.noDefaultExecutor', { defaultValue: '不指定（会话创建时手动选择）' })}
                 emptyText={t('agents.custom.detail.runtime.noExecutors', { defaultValue: '暂无可用执行节点' })}
                 searchPlaceholder={t('agents.custom.detail.runtime.searchExecutors', { defaultValue: '搜索执行节点...' })}
                 options={[
-                  {
-                    value: MANAGED_CLOUD_AUTO_EXECUTOR_ID,
-                    label: t('agents.custom.detail.runtime.managedCloudDefault', { defaultValue: 'Hosted Cloud' }),
-                    description: t('agents.custom.detail.runtime.managedCloudDefaultHint', { defaultValue: '官方云节点（默认）' }),
-                    statusTone: 'online' as const,
-                  },
-                  ...executors
-                    .filter((executor) => executor.executorId !== MANAGED_CLOUD_AUTO_EXECUTOR_ID)
-                    .map((executor) => ({
-                      value: executor.executorId,
-                      label: executor.name || executor.executorId,
-                      statusTone: (isExecutorEffectivelyOnline(executor) ? 'online' : executor.status === 'busy' ? 'busy' : 'offline') as 'online' | 'busy' | 'offline',
-                    })),
+                  ...executors.map((executor) => ({
+                    value: executor.executorId,
+                    label: executor.name || executor.executorId,
+                    statusTone: (isExecutorOnline(executor) ? 'online' : executor.status === 'busy' ? 'busy' : 'offline') as 'online' | 'busy' | 'offline',
+                  })),
                   {
                     value: '',
                     label: t('agents.custom.detail.runtime.noDefaultExecutor', { defaultValue: '不指定' }),

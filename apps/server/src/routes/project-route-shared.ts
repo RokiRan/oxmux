@@ -12,7 +12,6 @@ import { canUserUseExecutorForProject } from '../control-plane/collaboration'
 import { getProjectBranchSnapshotFromExecutor } from '../control-plane/executor-repo-service'
 import { deactivateProjectBinding, upsertProjectBinding } from '../storage/distributed-task-store'
 import { buildProjectBinding, cloneSchema, projectSchema } from './shared'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 
 const gitCredentialIdSchema = z.string().trim().optional()
 const gitHubInstallationIdSchema = z.coerce.number().int().positive().optional()
@@ -220,10 +219,6 @@ export const prepareClonedProject = async (params: {
   })
   if (!access.ok) {
     return { ok: false as const, status: 403, message: access.message }
-  }
-
-  if (!getManagedCloudGate().isExecutorAllowed(access.executor)) {
-    return { ok: false as const, status: 403 as const, message: getManagedCloudGate().devOnlyMessage }
   }
 
   upsertProjectBinding(buildProjectBinding(params.project, executorId, params.pathHint))

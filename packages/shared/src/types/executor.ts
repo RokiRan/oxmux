@@ -4,12 +4,8 @@ import type { TaskChatAttachment } from '../task-chat-attachment'
 import type {
   AgentRuntimeSettings,
   AgentSettings,
-  ExecutorBillingClass,
   ExecutionModelOption,
   ExecutorConnectionStatus,
-  ExecutorManagedBy,
-  ExecutorRuntimeClass,
-  ExecutorSource,
   ExecutorVisibility,
   GitAuthMode,
   GitAuthSourceType,
@@ -43,10 +39,6 @@ export interface ExecutorDescriptor {
   previewIngressReachable?: boolean
   previewIngressLastCheckedAt?: string
   previewIngressLastError?: string
-  executorSource?: ExecutorSource
-  managedBy?: ExecutorManagedBy
-  runtimeClass?: ExecutorRuntimeClass
-  billingClass?: ExecutorBillingClass
   note?: string
   ownerUserId: string
   teamId?: string
@@ -63,17 +55,7 @@ export interface ExecutorDescriptor {
   platform?: string
   version?: string
   lastSeenAt?: string
-  managedCloudLifecycle?: ExecutorManagedCloudLifecycleSnapshot
   createdAt: string
-}
-
-export interface ExecutorManagedCloudLifecycleSnapshot {
-  state: 'active' | 'stopped' | 'auto-stopped'
-  startedAt?: string
-  stoppedAt?: string
-  stopReason?: string
-  lastActivityAt?: string
-  idleDurationMs?: number
 }
 
 export interface ExecutorCpuSnapshot {

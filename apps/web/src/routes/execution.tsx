@@ -7,7 +7,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { ExecutionPage } from '../components/execution/execution-page'
-import { api, type CollaborationWorkspace, type ManagedCloudUsageResponse } from '../lib/api'
+import { api, type CollaborationWorkspace } from '../lib/api'
 import { useApp } from '../lib/app-provider'
 import {
   COLLABORATION_WORKSPACE_CHANGE_EVENT,
@@ -38,18 +38,15 @@ function ExecutionRoute() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const { state, busy, runMutation } = useApp()
-  // executors/managedCloudRuntime 复用共享的 react-query 缓存和轮询，
-  // 避免和 dashboard、workspaces 页面各自发起独立的 listExecutors/getManagedCloudRuntime 请求。
+  // executors 复用共享的 react-query 缓存和轮询，
+  // 避免和 dashboard、workspaces 页面各自发起独立的 listExecutors 请求。
   const {
     executors,
     executorsLoading,
-    managedCloudRuntime,
     refreshExecutors,
-    refreshManagedCloudRuntime,
     setExecutorsData,
   } = useExecutorRuntimeData()
   const [workspaces, setWorkspaces] = useState<CollaborationWorkspace[]>([])
-  const [managedCloudUsage, setManagedCloudUsage] = useState<ManagedCloudUsageResponse | null>(null)
   const [defaultWorkspaceId, setDefaultWorkspaceId] = useState('')
   const [pairingCode, setPairingCode] = useState('')
   const [pairingExpiresAt, setPairingExpiresAt] = useState('')
@@ -71,16 +68,11 @@ function ExecutionRoute() {
       })
     : ''
 
-  // executors/managedCloudRuntime 由 useExecutorRuntimeData 统一轮询，这里只加载
-  // workspaces/managedCloudUsage 这两项该 hook 不覆盖的数据。
-  const loadWorkspacesAndUsage = useCallback(async (options?: { silent?: boolean }) => {
+  // executors 由 useExecutorRuntimeData 统一轮询，这里只加载该 hook 不覆盖的 workspaces。
+  const loadWorkspaces = useCallback(async (options?: { silent?: boolean }) => {
     try {
-      const [workspaceResponse, managedCloudUsageResponse] = await Promise.all([
-        api.listCollaborationWorkspaces().catch(() => ({ workspaces: [] })),
-        api.getManagedCloudUsage().catch(() => null),
-      ])
+      const workspaceResponse = await api.listCollaborationWorkspaces().catch(() => ({ workspaces: [] }))
       setWorkspaces(workspaceResponse.workspaces)
-      setManagedCloudUsage(managedCloudUsageResponse)
       const resolvedWorkspaceId = resolveCollaborationWorkspaceId(
         workspaceResponse.workspaces,
         searchWorkspaceId || getStoredCollaborationWorkspaceId(),
@@ -105,10 +97,10 @@ function ExecutionRoute() {
 
   useEffect(() => {
     let cancelled = false
-    void loadWorkspacesAndUsage()
+    void loadWorkspaces()
     const timer = window.setInterval(() => {
       if (!cancelled) {
-        void loadWorkspacesAndUsage({ silent: true })
+        void loadWorkspaces({ silent: true })
       }
     }, 8000)
 
@@ -116,7 +108,7 @@ function ExecutionRoute() {
       cancelled = true
       window.clearInterval(timer)
     }
-  }, [loadWorkspacesAndUsage])
+  }, [loadWorkspaces])
 
   useEffect(() => {
     const handleWorkspaceChange = (event: Event) => {
@@ -141,8 +133,6 @@ function ExecutionRoute() {
       projectBindings={state.projectBindings}
       distributedTasks={state.distributedTasks}
       executors={executors}
-      managedCloudRuntime={managedCloudRuntime}
-      managedCloudUsage={managedCloudUsage}
       workspaces={workspaces}
       defaultWorkspaceId={defaultWorkspaceId}
       pairingCode={pairingCode}
@@ -256,12 +246,6 @@ function ExecutionRoute() {
       onShutdownExecutor={async (executorId) => {
         const response = await api.shutdownExecutor(executorId)
         toast.success(response.message || (language === 'zh' ? '已通知节点退出' : 'Executor shutdown requested'))
-      }}
-      onStartManagedCloudExecutor={async () => {
-        const response = await api.ensureManagedCloudExecutor({ autoStart: true })
-        void refreshExecutors(true)
-        void refreshManagedCloudRuntime(true)
-        toast.success(response.message || (language === 'zh' ? '官方云节点已启动' : 'Managed cloud executor started'))
       }}
       onCreateDistributedTask={(payload) => runMutation(() => api.createDistributedTask(payload))}
       onAssignTask={(taskId, nodeId) => runMutation(() => api.assignDistributedTask(taskId, nodeId))}

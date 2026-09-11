@@ -16,7 +16,7 @@ Oxmux is an open-source agent collaboration platform. It orchestrates AI agents 
 
 **Open source** — Apache-2.0 licensed (see [LICENSE](LICENSE)), fully self-hostable, community driven. Star us on [GitHub](https://github.com/oxmux-ai/oxmux), open an [issue](https://github.com/oxmux-ai/oxmux/issues), or join the discussion. Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-> **Note** — This repository contains the open-source community edition of Oxmux. Some platform capabilities — hosted model gateway, usage-based billing, hosted cloud-node pool, and partner systems — are operated as separate commercial services and are **not part of this repository**. **Self-hosted cloud nodes are open source** (bring your own Docker/BoxLite hosts — see [SELF-HOSTING.md § 七](docs/SELF-HOSTING.md)). Everything in this repo is free to use under Apache-2.0. See [Open source vs hosted](#open-source-vs-hosted-services) for the full breakdown.
+> **Note** — This repository contains the open-source community edition of Oxmux. Some platform capabilities — hosted model gateway, usage-based billing, hosted cloud-node pool, and partner systems — are operated as separate commercial services and are **not part of this repository**. Everything in this repo is free to use under Apache-2.0. See [Open source vs hosted](#open-source-vs-hosted-services) for the full breakdown.
 
 ## Contents
 
@@ -60,10 +60,10 @@ This repository is the self-hostable **community edition**: everything in the le
 | Channel integrations (Feishu / Slack / DingTalk / WeCom / WeChat / WhatsApp) | ✅ | — |
 | Multi-node mesh (easytier) | ✅ | — |
 | Usage dashboard & user-set token quota | ✅ | platform-enforced quota |
-| Admin console (users / feedback / ops) | ✅ | billing, credits, gateways, cloud-nodes, partners panels |
+| Admin console (users / feedback / ops) | ✅ | billing, credits, gateways, partners panels |
 | Native clients (Electron desktop + React Native Android/iOS) | ✅ | — |
 | Hosted model gateway (official model catalog) | — | ✅ |
-| Managed cloud nodes (hosted sandbox workers) | **self-hosted runtime included** (docker-cli / boxlite / ascii-box / CF sandbox) | hosted pool |
+| Managed cloud nodes (hosted sandbox workers) | — | hosted pool |
 | Subscription / usage billing, credits & payments | — | ✅ |
 | Partner (合作商) systems | — | ✅ |
 
@@ -228,10 +228,10 @@ No. The worker just runs the agent CLI locally — model inference happens at yo
 Oxmux orchestrates OpenCode, Claude Code and Codex runtimes, with any model your runtime supports — bring your own keys (BYOK).
 
 **Do I have to self-host?**
-No. The same product is offered as a hosted service (oxmux.ai) with managed cloud nodes and billing. This repository is the self-hostable community edition.
+No. The same product is also offered as a hosted service (oxmux.ai) with managed cloud nodes and billing. This repository is the self-hostable community edition.
 
 **Is it really free?**
-Yes. Everything in this repository is Apache-2.0, including the self-hosted cloud-node runtime. Only separately operated hosted services — model gateway, hosted cloud-node pool, billing, partner systems — are commercial, and none of them is part of this repo.
+Yes. Everything in this repository is Apache-2.0. Only separately operated hosted services — model gateway, hosted cloud-node pool, billing, partner systems — are commercial, and none of them is part of this repo.
 
 **How is Oxmux different from cloud agent platforms?**
 Worker-first execution: code runs on machines you control, in isolated worktrees, with human-in-the-loop diff review before merge. Plus multi-node mesh, IM channel integrations, and workspace-level collaboration — all self-hostable.

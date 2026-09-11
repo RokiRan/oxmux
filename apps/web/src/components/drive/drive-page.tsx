@@ -30,7 +30,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import type { CloudDriveFileEntry, DriveFileRecord, DriveSearchResult } from '@shared/types'
+import type { DriveFileRecord, DriveSearchResult } from '@shared/types'
 import { api } from '../../lib/api'
 import { downloadDriveFile, type DriveQuotaInfo } from '../../lib/api/methods/drive'
 import { COLLABORATION_WORKSPACE_CHANGE_EVENT, getStoredCollaborationWorkspaceId } from '../../lib/collaboration-workspace'
@@ -46,11 +46,10 @@ import {
 import { Input } from '../ui/input'
 
 import { DriveFilePreview } from './drive-file-preview'
-import { CloudFilePreview } from './cloud-file-preview'
 import { DrivePermissionDialog, DriveShareDialog } from './drive-share-permission-dialogs'
 
 type ViewMode = 'list' | 'grid'
-type DriveSection = 'drive' | 'cloud' | 'trash'
+type DriveSection = 'drive' | 'trash'
 type FileSection = 'team' | 'personal'
 
 const fileIconFor = (file: DriveFileRecord) => {
@@ -101,9 +100,6 @@ export function DrivePage() {
   const [dragOver, setDragOver] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [section, setSection] = useState<DriveSection>('drive')
-  const [cloudPath, setCloudPath] = useState('')
-  const [cloudEntries, setCloudEntries] = useState<CloudDriveFileEntry[]>([])
-  const [cloudLoading, setCloudLoading] = useState(false)
   const [trashFiles, setTrashFiles] = useState<DriveFileRecord[]>([])
   const [trashLoading, setTrashLoading] = useState(false)
   const [previewFile, setPreviewFile] = useState<DriveFileRecord | null>(null)
@@ -166,7 +162,6 @@ export function DrivePage() {
 
   useEffect(() => { void reload() }, [reload])
 
-  const showCloudSection = section === 'cloud'
   const showTrashSection = section === 'trash'
 
   // 回收站（R8.3 孤儿软删）：列表 + 恢复。
@@ -194,21 +189,6 @@ export function DrivePage() {
       toast.error(error instanceof Error ? error.message : '恢复失败。')
     }
   }, [reload, isTeamApi, workspaceId])
-
-  // 云节点文件只读视图：直接读 R2 前缀（团队 workspaces/<wid>/，个人 users/<uid>/agents），虚拟目录无 DB 元数据
-  useEffect(() => {
-    if (section !== 'cloud') return
-    setCloudLoading(true)
-    const load = isTeamApi
-      ? api.listTeamDriveCloudFiles(workspaceId!, cloudPath)
-      : api.listMyDriveCloudFiles(cloudPath)
-    load
-      .then((res) => setCloudEntries(res.entries))
-      .catch((error) => toast.error(error instanceof Error ? error.message : '读取云节点文件失败。'))
-      .finally(() => setCloudLoading(false))
-  }, [section, isTeamApi, cloudPath])
-
-  const cloudBreadcrumbs = useMemo(() => cloudPath ? cloudPath.split('/').filter(Boolean) : [], [cloudPath])
 
   const folders = useMemo(() => allFiles.filter((f) => f.fileType === 'folder'), [allFiles])
   const children = useMemo(() => {
@@ -343,13 +323,6 @@ export function DrivePage() {
           <button
             className={cn(
               'flex h-6 items-center rounded-sm px-2 text-xs transition-colors',
-              section === 'cloud' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300',
-            )}
-            onClick={() => setSection('cloud')}
-          >云节点文件</button>
-          <button
-            className={cn(
-              'flex h-6 items-center rounded-sm px-2 text-xs transition-colors',
               section === 'trash' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300',
             )}
             onClick={() => setSection('trash')}
@@ -412,7 +385,7 @@ export function DrivePage() {
         </div>
       </div>
 
-      {/* 主体：云节点文件只读视图 / 回收站 / 目录树 + 文件区 + 预览 */}
+      {/* 主体：回收站 / 目录树 + 文件区 + 预览 */}
       {showTrashSection ? (
         <div className="flex min-h-0 flex-1 flex-col gap-3 p-4">
           <div className="flex items-center justify-between">
@@ -446,15 +419,6 @@ export function DrivePage() {
             </div>
           )}
         </div>
-      ) : showCloudSection ? (
-        <CloudFilesPanel
-          workspaceId={workspaceId ?? null}
-          path={cloudPath}
-          breadcrumbs={cloudBreadcrumbs}
-          entries={cloudEntries}
-          loading={cloudLoading}
-          onNavigate={setCloudPath}
-        />
       ) : (
       <Group orientation="horizontal" className="min-h-0 flex-1">
         <Panel id="driveTree" defaultSize="20%" minSize="16%" maxSize="28%">
@@ -832,124 +796,6 @@ function DriveFileCard({ file, selected, onOpen, onDownload, onRename, onMove, o
         <DriveFileActionsMenu file={file} actions={{ onOpen, onDownload, onRename, onMove, onDelete, onShare, onPermission }} />
       </div>
     </div>
-  )
-}
-
-// ---------- 云节点文件只读视图（直接读 R2 前缀；无上传/新建/重命名/删除） ----------
-
-function CloudFilesPanel({
-  workspaceId,
-  path,
-  breadcrumbs,
-  entries,
-  loading,
-  onNavigate,
-}: {
-  workspaceId: string | null
-  path: string
-  breadcrumbs: string[]
-  entries: CloudDriveFileEntry[]
-  loading: boolean
-  onNavigate: (path: string) => void
-}) {
-  const [selected, setSelected] = useState<CloudDriveFileEntry | null>(null)
-  const sorted = useMemo(() => [...entries].sort((a, b) => {
-    if (a.kind !== b.kind) return a.kind === 'folder' ? -1 : 1
-    return a.name.localeCompare(b.name)
-  }), [entries])
-
-  // 导航目录或切换 scope 时清空选中预览
-  useEffect(() => { setSelected(null) }, [path, workspaceId])
-
-  const handleOpen = (entry: CloudDriveFileEntry) => {
-    if (entry.kind === 'folder') {
-      onNavigate(entry.key)
-    } else {
-      setSelected(entry)
-    }
-  }
-
-  return (
-    <Group orientation="horizontal" className="min-h-0 flex-1">
-      <Panel id="cloudFiles" defaultSize="62%" minSize="40%">
-        <section className="flex h-full min-h-0 flex-col">
-          {/* 面包屑（虚拟目录层级）+ 来源标注 */}
-          <div className="flex shrink-0 items-center gap-1 border-b border-zinc-900 px-4 py-2 text-xs text-zinc-500">
-            <button className="hover:text-zinc-200" onClick={() => onNavigate('')}>云节点文件</button>
-            {breadcrumbs.map((segment, index) => (
-              <span key={`${segment}-${index}`} className="flex items-center gap-1">
-                <ChevronRight className="h-3 w-3 text-zinc-700" />
-                <button
-                  className="hover:text-zinc-200"
-                  onClick={() => onNavigate(breadcrumbs.slice(0, index + 1).join('/'))}
-                >{segment}</button>
-              </span>
-            ))}
-            <span className="ml-auto flex items-center gap-1">
-              <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-300">云节点执行文件</span>
-              <span className="text-[11px] text-zinc-600">{sorted.length} 项</span>
-            </span>
-          </div>
-
-          {loading ? (
-            <div className="flex flex-1 items-center justify-center text-sm text-zinc-500">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />加载中…
-            </div>
-          ) : sorted.length === 0 ? (
-            <div className="flex flex-1 items-center justify-center p-6">
-              <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-zinc-800 bg-zinc-950/70 px-6 py-8 text-center text-xs text-zinc-500">
-                <FolderOpen className="h-8 w-8 text-zinc-700" />
-                暂无云节点文件——在 Oxmux 云节点执行的任务/工作区文件会显示在这里（只读）。
-              </div>
-            </div>
-          ) : (
-            <div className="flex-1 overflow-auto">
-              <div className="grid grid-cols-[1fr_88px_88px_160px] items-center gap-2 border-b border-zinc-900 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wide text-zinc-500">
-                <span>名称</span>
-                <span>类型</span>
-                <span>大小</span>
-                <span>修改时间</span>
-              </div>
-              {sorted.map((entry) => (
-                <div
-                  key={entry.key}
-                  className={cn(
-                    'group grid grid-cols-[1fr_88px_88px_160px] items-center gap-2 px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-900/40 hover:text-zinc-200',
-                    selected?.key === entry.key && 'bg-zinc-900/60 text-zinc-100',
-                  )}
-                  onClick={() => handleOpen(entry)}
-                  role="button"
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    {entry.kind === 'folder'
-                      ? <Folder className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
-                      : <FileIcon className="h-3.5 w-3.5 shrink-0 text-zinc-500" />}
-                    <span className="truncate">{entry.name}</span>
-                  </span>
-                  <span className="truncate text-[11px] text-zinc-600">{entry.kind === 'folder' ? '文件夹' : '文件'}</span>
-                  <span className="truncate text-[11px] text-zinc-600">{entry.kind === 'folder' ? '—' : formatSize(entry.sizeBytes)}</span>
-                  <span className="truncate text-[11px] text-zinc-600">{entry.updatedAt ? formatTime(entry.updatedAt) : '—'}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-      </Panel>
-      {selected && selected.kind === 'file' && (
-        <>
-          <Separator className="w-px bg-zinc-900" />
-          <Panel id="cloudFilePreview" defaultSize="38%" minSize="28%">
-            <CloudFilePreview
-              workspaceId={workspaceId}
-              key={selected.key}
-              name={selected.name}
-              sizeBytes={selected.sizeBytes}
-              onClose={() => setSelected(null)}
-            />
-          </Panel>
-        </>
-      )}
-    </Group>
   )
 }
 

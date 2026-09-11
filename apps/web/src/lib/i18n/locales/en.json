@@ -367,8 +367,7 @@
         "originalDir": "Reuse the existing repo directory without creating an isolated directory"
       },
       "executorDescriptions": {
-        "localProjectBlocked": "This project only exists on {{owner}} and cannot be reused across workers automatically",
-        "managedCloudHint": "The cloud node auto-starts on the first task and can only access pushed online branches."
+        "localProjectBlocked": "This project only exists on {{owner}} and cannot be reused across workers automatically"
       },
       "executorWarnings": {
         "localProjectOwner": "This project currently only exists on executor \"{{owner}}\". Local Git / empty projects cannot be reused across workers automatically; push or bind a Git remote before switching executors."
@@ -887,8 +886,7 @@
       "loading": "Loading Git panel…"
     },
     "branchSources": {
-      "unpushed": "Unpushed",
-      "cloudOnlyHint": "Cloud nodes can only access pushed online branches."
+      "unpushed": "Unpushed"
     },
     "files": {
       "title": "File tree",
@@ -1223,27 +1221,6 @@
       "confirm": "Transfer All",
       "transferring": "Transferring...",
       "failed": "Transfer failed. Please try again later."
-    },
-    "managedCloud": {
-      "title": "Hosted Cloud Node",
-      "readyMessage": "Managed cloud node is ready — tasks can run in the cloud without a local runtime",
-      "unavailableMessage": "Managed cloud node is currently unavailable — try again later",
-      "available": "Managed cloud runtime available",
-      "unavailable": "Managed cloud runtime currently unavailable",
-      "start": "Start managed cloud node",
-      "status": "Runtime status",
-      "statusReady": "Ready",
-      "statusUnavailable": "Unavailable",
-      "hosted": "Cloud-hosted · auto-recycled when idle",
-      "executors": "Cloud executors",
-      "activeNodes": "{{count}} running",
-      "notRunning": "Not running",
-      "usage": "Compute usage",
-      "remaining": "{{count}}h remaining",
-      "latestStop": "Last auto-stop",
-      "none": "None",
-      "noAutoStop": "No auto-stop records",
-      "latestStopReason": "Latest auto-stop reason"
     }
   },
   "login": {
@@ -1898,8 +1875,6 @@
           "noDefaultExecutor": "Unspecified (choose at session creation)",
           "noExecutors": "No available executors",
           "searchExecutors": "Search executors…",
-          "managedCloudDefault": "Hosted Cloud",
-          "managedCloudDefaultHint": "Official cloud node (default)",
           "noDefaultExecutorHint": "Choose manually at session creation"
         },
         "channels": {
@@ -3140,7 +3115,6 @@
       "nodes": "Nodes",
       "nodesDesc": "Multi-node control-plane health",
       "executors": "Executors",
-      "cloudNodes": "Cloud Nodes",
       "tasks": "Tasks",
       "workspaces": "Workspaces",
       "audit": "Audit",
@@ -3375,37 +3349,6 @@
       "toolCalls": "{{count}} tool calls",
       "approvals": "{{count}} approvals",
       "channelLabel": "Channel"
-    },
-    "cloudNodes": {
-      "title": "Cloud Nodes",
-      "subtitle": "Cloud runtime availability and targets",
-      "targetsConfigured": "Targets configured",
-      "totalTargets": "Total targets",
-      "available": "Available",
-      "enabled": "Enabled",
-      "degraded": "Degraded",
-      "needsAttention": "Needs attention",
-      "readyForWorkloads": "Ready for workloads",
-      "activeTargets": "Active targets",
-      "runtimeStatus": "Runtime status",
-      "runtimeStatusDesc": "Availability of the cloud runtime",
-      "provider": "Provider",
-      "unknown": "Unknown",
-      "isolationMode": "Isolation mode",
-      "hostMode": "Host mode",
-      "availableLabel": "Available",
-      "yes": "Yes",
-      "no": "No",
-      "cloudTargets": "Cloud targets",
-      "cloudTargetsDesc": "Cloud node targets configured for the mesh",
-      "noTargets": "No targets configured",
-      "noTargetsDesc": "Add a cloud node target to run workloads",
-      "colTarget": "Target",
-      "colStatus": "Status",
-      "colDisplayName": "Display name",
-      "colMessage": "Message",
-      "disabled": "Disabled",
-      "unavailable": "Unavailable"
     },
     "dashboard": {
       "title": "Dashboard",

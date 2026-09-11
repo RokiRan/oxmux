@@ -8,7 +8,6 @@ import type { ExecutorRecord } from '@shared/types'
 import { getTeamProjects, getUserTeams } from '../repositories/auth'
 import { executorRegistry } from './executor-registry'
 import { resolveExecutorRealtimeBaseUrl } from '../services/executor-realtime-routing'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 
 const getExecutorWorkspaceIds = (executor: Pick<ExecutorRecord, 'workspaceIds' | 'teamId'>) => {
   const workspaceIds = executor.workspaceIds?.filter((value) => typeof value === 'string' && value.trim().length > 0) ?? []
@@ -49,20 +48,14 @@ export const isExecutorVisibleToUser = (
 
 export const listVisibleExecutorsForUser = (userId: string, workspaceId?: string): ExecutorRecord[] => {
   const teamIds = new Set(getUserTeams(userId).map((team) => team.id))
-  const managedCloudLifecycleByExecutorId = getManagedCloudGate().buildLifecycleSnapshotByExecutorId()
-  return executorRegistry.listExecutorsWithPresence().filter((executor) => {
-    if (!getManagedCloudGate().isExecutorAllowed(executor)) {
-      return false
-    }
-
-    return isExecutorVisibleToUser(executor, userId, {
+  return executorRegistry.listExecutorsWithPresence().filter((executor) => (
+    isExecutorVisibleToUser(executor, userId, {
       workspaceId,
       teamIds,
     })
-  }).map((executor) => ({
+  )).map((executor) => ({
     ...executor,
     realtimeBaseUrl: resolveExecutorRealtimeBaseUrl(executor) || undefined,
-    managedCloudLifecycle: managedCloudLifecycleByExecutorId.get(executor.executorId),
     coLocatedWithServer: Boolean(executor.machineName?.trim()) && executor.machineName.trim().toLowerCase() === os.hostname().trim().toLowerCase(),
   }))
 }

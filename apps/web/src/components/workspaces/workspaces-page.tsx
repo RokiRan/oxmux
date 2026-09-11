@@ -37,7 +37,7 @@ import { buildWorkspacePageTabId, openPageTab } from '../../lib/page-tabs-store'
 import { queryClient } from '../../lib/query-client'
 import { useApp } from '../../lib/app-provider'
 import { isImeComposingKeyboardEvent } from '../../lib/ime-keyboard'
-import { buildExecutorOptionsWithManagedCloud, isManagedCloudExecutorRecord } from '../../lib/managed-cloud-executor'
+import { buildExecutorOptions } from '../../lib/executor-availability'
 import { buildWorkspaceGitScopeKey, workspaceQueryKeys } from '../../lib/workspace-query-keys'
 import { getStoredCollaborationWorkspaceId } from '../../lib/collaboration-workspace'
 import { useTranslation } from '../../lib/i18n/react'
@@ -421,7 +421,6 @@ export function WorkspacesPage() {
   const presenceByWorkspaceId = directoryData?.presenceByWorkspaceId ?? {}
   const previewByWorkspaceId = directoryData?.previewByWorkspaceId ?? {}
   const executors = directoryData?.executors ?? []
-  const managedCloudRuntime = directoryData?.managedCloudRuntime ?? null
   const agentsQuery = useWorkspacesPageAgentsQuery()
   const availableAgents = agentsQuery.data ?? []
   const reviewPullRequestsQuery = useWorkspacesPageReviewPullRequestsQuery(
@@ -1088,8 +1087,8 @@ export function WorkspacesPage() {
   }, [isMobile, panelMode, routeWorkspaceTargetId, selectedWorkspaceId])
 
   const executorOptions = useMemo(
-    () => buildExecutorOptionsWithManagedCloud(executors, managedCloudRuntime),
-    [executors, managedCloudRuntime],
+    () => buildExecutorOptions(executors),
+    [executors],
   )
   const openCreatePanel = useCallback(() => {
     const nextProjectId = selectedProjectId || selectedItem?.project.id || workspaceScopedProjects[0]?.id || ''
@@ -1227,7 +1226,6 @@ export function WorkspacesPage() {
   const workspaceRuntime = useSelectedWorkspaceRuntime({
     defaultWorkspaceRoot: state.config.workspaceRoot,
     executors,
-    managedCloudRuntime,
     projectBindings: state.projectBindings,
     selectedItem,
     selectedWorkspaceSession,
@@ -1322,49 +1320,6 @@ export function WorkspacesPage() {
   ), [isMobile, persistentTerminalOpenPanelKeys, terminalOpenWorkspaceIds])
   const selectedWorkspaceTerminalPresenceWorkspaceId = selectedItem?.workspace.id || ''
 
-  useEffect(() => {
-    if (!selectedWorkspaceExecutor || !isManagedCloudExecutorRecord(selectedWorkspaceExecutor) || selectedWorkspaceExecutor.status === 'online') {
-      return
-    }
-
-    let cancelled = false
-
-    const refreshManagedExecutor = async () => {
-      const deadline = Date.now() + 20_000
-      while (!cancelled && Date.now() < deadline) {
-        await new Promise((resolve) => window.setTimeout(resolve, 1500))
-        if (cancelled) {
-          return
-        }
-
-        try {
-          const response = await api.listExecutors()
-          if (cancelled) {
-            return
-          }
-
-          updateWorkspaceDirectoryCache((current) => current
-            ? {
-                ...current,
-                executors: response.executors,
-              }
-            : current)
-          const matchedExecutor = response.executors.find((item) => item.executorId === selectedWorkspaceExecutor.executorId)
-          if (!matchedExecutor || matchedExecutor.status === 'online' || matchedExecutor.status === 'offline') {
-            return
-          }
-        } catch {
-          return
-        }
-      }
-    }
-
-    void refreshManagedExecutor()
-
-    return () => {
-      cancelled = true
-    }
-  }, [selectedWorkspaceExecutor])
   const testerWorkspaceSession = useMemo<WorkspaceSession | null>(() => {
     return selectedWorkspaceSessions.find((session) => session.status === 'active' && session.sessionKind === 'subagent' && session.sessionRole === 'tester') ?? null
   }, [selectedWorkspaceSessions])
@@ -2756,7 +2711,6 @@ export function WorkspacesPage() {
             executorOptions={executorOptions}
             isMobile={isMobile}
             language={language}
-            managedCloudRuntime={managedCloudRuntime}
             panelMode={panelMode}
             pendingWorkspaceSelectionIdRef={pendingWorkspaceSelectionIdRef}
             pendingWorkspaceSessionSelectionIdRef={pendingWorkspaceSessionSelectionIdRef}

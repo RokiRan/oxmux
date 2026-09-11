@@ -1,6 +1,5 @@
 import type { ExecutorRecord, ExecutionModelOption, Task, Workspace } from '@shared/types'
 import { ChevronRight, FolderGit2, GitBranch, HardDrive, X } from 'lucide-react'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
 import { buildTaskAgentOptions } from '../../lib/agent-runtime-options'
 import { ExecutorSelect } from '../../components/ui/executor-select'
 import { RuntimeIcon } from '../../components/runtime/runtime-icons'
@@ -332,7 +331,6 @@ function TaskWorkspaceCreateFooterControls({
               selectedBranch={selectedBranch}
               options={branchOptions}
               branchSources={branchSources}
-              remoteOnly={isManagedCloudAutoExecutorId(activeExecutorId) || activeExecutorId.startsWith('managed-cloud')}
               disabled={branchLoading || branchOptions.length === 0}
               loading={branchLoading}
               message={branchMessage || modelMessage || (task.baseBranchHint ? `建议从 ${task.baseBranchHint} 开始。` : '优先选择本次任务的基线分支。')}

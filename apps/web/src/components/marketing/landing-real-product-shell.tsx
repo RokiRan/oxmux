@@ -603,7 +603,7 @@ function AgentRow({ avatar, name, onClick }: { avatar: 'developer' | 'tester' | 
         <span className="block truncate text-[13px] font-medium">{name}</span>
         <span className="mt-0.5 flex items-center gap-1.5 text-xs text-zinc-500">
           <Radio className="h-3 w-3 shrink-0 text-emerald-400" />
-          <span className="truncate">Oxmux 云节点</span>
+          <span className="truncate">Oxmux 节点</span>
         </span>
       </span>
     </Button>

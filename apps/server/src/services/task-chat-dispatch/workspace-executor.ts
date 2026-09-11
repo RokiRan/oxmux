@@ -116,7 +116,7 @@ import { shouldEnsureWorkspaceDirectoryOnExecutor, verifyWorkspaceDirectoryReady
 import { validateProjectExecutorPathAccess } from '../project-executor-ownership'
 import type { ChatTimelineWorkspaceExecutor } from '@shared/timeline'
 import { buildTaskChatContextPromptPrefix } from './context-ref-prompt'
-import { getManagedCloudGate } from '../gate/managed-cloud-gate'
+import { getHostedModelGate } from '../gate/hosted-model-gate'
 
 const isInteractiveQuestionTool = (toolName: string) => toolName === 'question' || toolName === 'AskUserQuestion'
 
@@ -502,8 +502,7 @@ export const loadAgentModelOptionsFromExecutor = async (
     await listAgentModelProfileOptions(userId, agentType, workspaceId),
     'catalog',
   )
-  const hostedModels = await getManagedCloudGate().listExecutionModelOptions()
-
+  const hostedModels = await getHostedModelGate().listExecutionModelOptions()
   const executorId = preferredExecutorId?.trim()
   if (agentType === 'OpenCode' && !executorId) {
     if (catalogModels.length === 0) {
@@ -590,7 +589,6 @@ export const loadAgentModelOptionsFromExecutor = async (
     : []
   const mergedModels = mergeExecutionModelOptions([
     catalogModels,
-    hostedModels,
     runtimeModels,
     fallbackModels,
   ]).filter((model) => !isNonCodingPreviewModel(model))
@@ -941,7 +939,6 @@ export const buildWorkerOnlyTaskDetailResult = (agentType: ServerAgentType): Tas
 }
 
 export const OFFLINE_TASK_CHAT_QUEUE_WAIT_MESSAGE = '执行器当前离线，消息已保留在队列中，等待恢复后自动发送。'
-export const MANAGED_CLOUD_TASK_CHAT_QUEUE_WAIT_MESSAGE = '官方云节点正在启动，消息已进入队列，准备完成后会自动发送。'
 
 export const resolveWorkspaceChatDispatchAvailability = (params: {
   state: AppState
@@ -995,13 +992,10 @@ export const resolveWorkspaceChatDispatchAvailability = (params: {
 
   const executor = executorRegistry.getExecutor(executorId)
   if (executor?.status !== 'online' || !executorRegistry.getSocket(executorId)) {
-    const queueMessage = getManagedCloudGate().isManagedExecutor(executor)
-      ? MANAGED_CLOUD_TASK_CHAT_QUEUE_WAIT_MESSAGE
-      : OFFLINE_TASK_CHAT_QUEUE_WAIT_MESSAGE
     return {
       ready: false as const,
       shouldQueue: true as const,
-      message: queueMessage,
+      message: OFFLINE_TASK_CHAT_QUEUE_WAIT_MESSAGE,
     }
   }
 
@@ -1010,78 +1004,6 @@ export const resolveWorkspaceChatDispatchAvailability = (params: {
     shouldQueue: false as const,
     message: undefined,
   }
-}
-
-export const resolveWorkspaceChatDispatchAvailabilityAsync = async (params: {
-  state: AppState
-  userId: string
-  task: Task
-  project: Project
-  workspaceId?: string
-  workspaceSessionId?: string
-}) => {
-  const availability = resolveWorkspaceChatDispatchAvailability(params)
-  if (availability.ready || !params.workspaceId) {
-    return availability
-  }
-
-  const workspace = getScopedWorkspaceForProject(params.userId, params.project, params.workspaceId)
-  const sessionExecutor = resolveWorkspaceSessionExecutor({
-    task: params.task,
-    workspaceExecutorId: workspace?.executorNodeId,
-    workspaceId: params.workspaceId,
-    workspaceSessionId: params.workspaceSessionId,
-  })
-  const executorId = sessionExecutor.executorId
-  const executor = executorId ? executorRegistry.getExecutor(executorId) : null
-  if (!availability.shouldQueue || !executorId || !getManagedCloudGate().isManagedExecutor(executor)) {
-    return availability
-  }
-
-  try {
-    await getManagedCloudGate().ensureUsageAccess({
-      state: params.state,
-      userId: params.userId,
-    })
-    console.info('[workspace-chat][managed-cloud-start]', JSON.stringify({
-      taskId: params.task.id,
-      workspaceId: params.workspaceId,
-      workspaceSessionId: params.workspaceSessionId ?? sessionExecutor.workspaceSession?.id ?? null,
-      executorId,
-    }))
-    const startedExecutor = await getManagedCloudGate().startExecutor({
-      config: params.state.config,
-      executorId,
-      projects: params.state.projects,
-    })
-    console.info('[workspace-chat][managed-cloud-started]', JSON.stringify({
-      taskId: params.task.id,
-      workspaceId: params.workspaceId,
-      workspaceSessionId: params.workspaceSessionId ?? sessionExecutor.workspaceSession?.id ?? null,
-      executorId,
-      status: startedExecutor.status,
-      hasSocket: Boolean(executorRegistry.getSocket(executorId)),
-    }))
-  } catch (error) {
-    if (getManagedCloudGate().isUsageLimitError(error) && error instanceof Error) {
-      return {
-        ready: false as const,
-        shouldQueue: false as const,
-        message: error.message,
-      }
-    }
-
-    console.warn('[workspace-chat][managed-cloud-start-failed]', JSON.stringify({
-      taskId: params.task.id,
-      workspaceId: params.workspaceId,
-      workspaceSessionId: params.workspaceSessionId ?? sessionExecutor.workspaceSession?.id ?? null,
-      executorId,
-      error: error instanceof Error ? error.message : String(error),
-    }))
-    return availability
-  }
-
-  return resolveWorkspaceChatDispatchAvailability(params)
 }
 
 export const ensureWorkspaceChatTaskReady = async (params: {
@@ -1469,9 +1391,6 @@ export const runWorkspaceMessageViaExecutor = async (params: {
   const workspaceExecutorMetadata: ChatTimelineWorkspaceExecutor = {
     executorId,
     ...(resolvedExecutor?.name ? { name: resolvedExecutor.name } : {}),
-    ...(resolvedExecutor?.executorSource ? { executorSource: resolvedExecutor.executorSource } : {}),
-    ...(resolvedExecutor?.managedBy ? { managedBy: resolvedExecutor.managedBy } : {}),
-    ...(resolvedExecutor?.runtimeClass ? { runtimeClass: resolvedExecutor.runtimeClass } : {}),
     ...(resolvedExecutor?.status ? { status: resolvedExecutor.status } : {}),
   }
   const assistantAuthorName = getServerAgentLabel((params.session.agentType ?? params.task.agentType) as ServerAgentType)

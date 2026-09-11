@@ -28,8 +28,6 @@ const MEMORY_WARNING_PERCENT = 75
 const MEMORY_CRITICAL_PERCENT = 90
 const DISK_WARNING_PERCENT = 80
 const DISK_CRITICAL_PERCENT = 90
-const MANAGED_RUNTIME_TARGET_LABEL_PREFIX = 'managed-runtime-target:'
-const MANAGED_RUNTIME_HOST_MODE_LABEL_PREFIX = 'managed-runtime-host-mode:'
 
 type Severity = 'normal' | 'warning' | 'critical' | 'unknown'
 const tr = (language: string, zh: string, en: string) => language === 'zh' ? zh : en
@@ -232,11 +230,6 @@ const getDoctorCategoryLabel = (category: string, language: string) => {
   return category
 }
 
-const readExecutorManagedRuntimeLabel = (labels: string[], prefix: string) => {
-  const match = labels.find((label) => label.startsWith(prefix))
-  return match ? match.slice(prefix.length) : ''
-}
-
 const getExecutorPublicIp = (executor: Pick<ExecutorRecord, 'previewIngressDetectedPublicIp' | 'previewIngressBaseUrl'>) => {
   const detectedPublicIp = executor.previewIngressDetectedPublicIp?.trim() || ''
   if (detectedPublicIp) {
@@ -398,9 +391,6 @@ export function ExecutorDetailDialog({
   const hasCriticalResourceAlert = [cpuSeverity, memorySeverity, diskSeverity].includes('critical')
   const resourceAlertTone = hasCriticalResourceAlert ? 'border-rose-500/20 bg-rose-500/10 text-rose-100' : 'border-amber-500/20 bg-amber-500/10 text-amber-100'
   const maskedSshPubkey = maskSshPubkey(executor.sshPubkey)
-  const managedRuntimeTarget = readExecutorManagedRuntimeLabel(executor.labels, MANAGED_RUNTIME_TARGET_LABEL_PREFIX)
-  const managedRuntimeHostMode = readExecutorManagedRuntimeLabel(executor.labels, MANAGED_RUNTIME_HOST_MODE_LABEL_PREFIX)
-  const managedCloudLifecycle = executor.managedCloudLifecycle
   const executorPublicIp = getExecutorPublicIp(executor)
   const executorRegionLabel = getExecutorRegionLabel(executor)
   const networkType = resolveExecutorNetworkType(executor)
@@ -495,26 +485,6 @@ export function ExecutorDetailDialog({
                     <InfoField label={tr(language, '项目绑定', 'Project Bindings')} value={tr(language, `${bindingCount} 个活跃绑定`, `${bindingCount} active bindings`)} />
                     <InfoField label={tr(language, '工作区根目录', 'Workspace Root')} value={executor.workspaceRoot} />
                     <InfoField label={tr(language, 'Worker 版本', 'Worker Version')} value={executor.version || telemetry?.system.workerVersion || '-'} />
-                    {executor.executorSource === 'managed-cloud' ? (
-                      <InfoField
-                        label={tr(language, '托管宿主', 'Managed Host')}
-                        value={managedRuntimeTarget || (managedRuntimeHostMode === 'control-plane-host'
-                          ? tr(language, '控制面宿主机', 'Control-plane host')
-                          : tr(language, '未分配', 'Unassigned'))}
-                      />
-                    ) : null}
-                    {executor.executorSource === 'managed-cloud' ? (
-                      <InfoField
-                        label={tr(language, '隔离落点', 'Isolation Placement')}
-                        value={managedRuntimeHostMode === 'remote-docker-host'
-                          ? tr(language, '远程运行宿主', 'Remote runtime host')
-                          : managedRuntimeHostMode === 'remote-boxlite-host'
-                          ? tr(language, '远程 BoxLite 宿主', 'Remote BoxLite host')
-                          : managedRuntimeHostMode === 'control-plane-host'
-                          ? tr(language, '控制面宿主机', 'Control-plane host')
-                          : '-'}
-                      />
-                    ) : null}
                   </div>
                   {executor.note ? (
                     <div className="mt-3 rounded-lg bg-zinc-900/50 px-3 py-2">
@@ -539,43 +509,7 @@ export function ExecutorDetailDialog({
                     <InfoField label={tr(language, '运行中任务', 'Running Tasks')} value={tr(language, `${runningTaskIds.length} 个`, `${runningTaskIds.length}`)} />
                     <InfoField label={tr(language, '排队任务', 'Queued Tasks')} value={tr(language, `${queuedTaskIds.length} 个`, `${queuedTaskIds.length}`)} />
                     <InfoField label={tr(language, '活跃任务总数', 'Active Tasks')} value={tr(language, `${activeTaskCount} 个`, `${activeTaskCount}`)} />
-                    {executor.executorSource === 'managed-cloud' ? (
-                      <InfoField
-                        label={tr(language, '托管生命周期', 'Managed Lifecycle')}
-                        value={managedCloudLifecycle?.state === 'active'
-                          ? tr(language, '运行中', 'Active')
-                          : managedCloudLifecycle?.state === 'auto-stopped'
-                            ? tr(language, '自动停止', 'Auto-stopped')
-                            : managedCloudLifecycle?.state === 'stopped'
-                              ? tr(language, '已停止', 'Stopped')
-                              : '-'}
-                      />
-                    ) : null}
-                    {executor.executorSource === 'managed-cloud' ? (
-                      <InfoField
-                        label={tr(language, '最后活动', 'Last Activity')}
-                        value={managedCloudLifecycle?.lastActivityAt ? formatDate(managedCloudLifecycle.lastActivityAt) : '-'}
-                      />
-                    ) : null}
-                    {executor.executorSource === 'managed-cloud' ? (
-                      <InfoField
-                        label={tr(language, '空闲时长', 'Idle Duration')}
-                        value={formatDurationFromMs(managedCloudLifecycle?.idleDurationMs, language)}
-                      />
-                    ) : null}
-                    {executor.executorSource === 'managed-cloud' ? (
-                      <InfoField
-                        label={tr(language, '最近停止', 'Last Stop')}
-                        value={managedCloudLifecycle?.stoppedAt ? formatDate(managedCloudLifecycle.stoppedAt) : '-'}
-                      />
-                    ) : null}
                   </div>
-                  {executor.executorSource === 'managed-cloud' && managedCloudLifecycle?.stopReason ? (
-                    <div className="mt-3 rounded-lg bg-zinc-900/50 px-3 py-3">
-                      <p className="text-xs text-zinc-500">{tr(language, '最近停机原因', 'Latest Stop Reason')}</p>
-                      <p className="mt-1 text-sm text-zinc-200">{managedCloudLifecycle.stopReason}</p>
-                    </div>
-                  ) : null}
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-lg bg-zinc-900/50 px-3 py-3">
                       <p className="text-xs text-zinc-500">{tr(language, '运行任务 ID', 'Running Task IDs')}</p>

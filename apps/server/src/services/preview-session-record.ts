@@ -3,7 +3,7 @@
 // [POS]: preview 会话记录
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
-import type { PreviewAccessMode, PreviewSessionPurpose, PreviewSessionStatus, PreviewTunnelClientStatus } from '@shared/types'
+import type { PreviewAccessMode, PreviewExecutionSurface, PreviewSessionPurpose, PreviewSessionStatus, PreviewTunnelClientStatus } from '@shared/types'
 
 export type PreviewCloseReason =
   | 'stopped_by_user'
@@ -43,7 +43,7 @@ export type PreviewSessionRecord = {
   workspaceSessionId: string
   executorId: string
   ownerUserId: string
-  executionSurface: 'private-node' | 'managed-cloud'
+  executionSurface: PreviewExecutionSurface
   accessMode: PreviewAccessMode
   status: PreviewSessionStatus
   closeReason?: PreviewCloseReason

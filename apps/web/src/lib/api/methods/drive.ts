@@ -3,7 +3,7 @@
 // [POS]: Web 控制面 Drive 客户端；文件上传走 multipart，文本新建/内容保存走 JSON（create*/save*Text*），下载走 authFetch + blob
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
-import type { CloudDriveFileEntry, DriveFilePermissionRecord, DriveFileRecord, DriveFileShareRecord, DriveFileVersionRecord, DriveSearchResult } from '@shared/types'
+import type { DriveFilePermissionRecord, DriveFileRecord, DriveFileShareRecord, DriveFileVersionRecord, DriveSearchResult } from '@shared/types'
 import { authFetch, request } from '../client'
 
 /** Drive 配额摘要（Drive 页展示已用/总额度） */
@@ -75,9 +75,6 @@ export const driveMethods = {
   // 全文搜索
   searchTeamDrive: (workspaceId: string, query: string) =>
     request<{ results: DriveSearchResult[] }>(`${teamBase(workspaceId)}/search?q=${encodeURIComponent(query)}`),
-  // 云节点文件只读视图（直接读 R2 的 workspaces/<wid>/ 前缀）
-  listTeamDriveCloudFiles: (workspaceId: string, path: string) =>
-    request<{ entries: CloudDriveFileEntry[] }>(`${teamBase(workspaceId)}/cloud-files${path ? `?path=${encodeURIComponent(path)}` : ''}`),
   getTeamDriveQuota: (workspaceId: string) =>
     request<DriveQuotaInfo>(`${teamBase(workspaceId)}/quota`),
 
@@ -122,9 +119,6 @@ export const driveMethods = {
   deleteMyDriveShare: (fileId: string) => request<{ message: string }>(`${myBase}/${fileId}/share`, { method: 'DELETE' }),
   // 全文搜索
   searchMyDrive: (query: string) => request<{ results: DriveSearchResult[] }>(`${myBase}/search?q=${encodeURIComponent(query)}`),
-  // 云节点文件只读视图（个人域「我的云节点文件」）
-  listMyDriveCloudFiles: (path: string) =>
-    request<{ entries: CloudDriveFileEntry[] }>(`${myBase}/cloud-files${path ? `?path=${encodeURIComponent(path)}` : ''}`),
   getMyDriveQuota: () => request<DriveQuotaInfo>(`${myBase}/quota`),
 
   // ---------- 权限协作者候选（添加协作者选择器） ----------
@@ -166,16 +160,6 @@ export const readDriveTextContent = async (workspaceId: string | null, fileId: s
   const response = await authFetch(url)
   if (!response.ok) throw new Error('读取文件内容失败。')
   return response.text()
-}
-
-/** 下载云节点文件（只读视图）：key 为 R2 相对对象键 */
-export const downloadCloudDriveFile = (workspaceId: string, key: string, fileName: string) => {
-  return downloadAsBlob(`/api/collab/workspaces/${workspaceId}/drive/cloud-files/download?key=${encodeURIComponent(key)}`, fileName)
-}
-
-/** 下载个人云节点文件（只读视图） */
-export const downloadMyCloudDriveFile = (key: string, fileName: string) => {
-  return downloadAsBlob(`/api/my/drive/cloud-files/download?key=${encodeURIComponent(key)}`, fileName)
 }
 
 /** 预览内容：返回可渲染的 URL（blob），供 <img>/<iframe> 使用 */

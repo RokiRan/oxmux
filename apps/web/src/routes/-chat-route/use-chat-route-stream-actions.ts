@@ -335,7 +335,7 @@ export function useChatRouteStreamActions({
   }
 
   useEffect(() => {
-    // 未指定执行节点时视为「自动分配（官方云节点 / 在线执行器）」：不阻塞队列消费。
+    // 未指定执行节点时视为「自动分配在线执行器」：不阻塞队列消费。
     const selectedExecutorOnline = !routeState.effectiveExecutorId
       || routeState.selectedExecutor?.status === 'online'
     if (

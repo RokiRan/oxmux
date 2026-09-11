@@ -43,7 +43,7 @@ import {
   upsertDriveShare,
 } from '../repositories/drive-store'
 import { buildDriveObjectKey, streamDriveObject, uploadDriveObject } from '../services/drive-storage'
-import { listObjectPrefix, streamObject, sumObjectPrefixSize } from '../services/object-storage'
+import { streamObject } from '../services/object-storage'
 import { registerDriveFileReference } from '../repositories/drive-store'
 import { buildDriveAttachmentToken, parseDriveAttachmentToken } from '../services/drive-attachment-token'
 import { filterVisibleUserIds } from '../services/user-visibility-service'
@@ -92,20 +92,6 @@ export const buildDriveReferenceAttachment = async (params: {
   }
 }
 
-/** 云节点文件占用的 R2 前缀（计入配额）：团队 = workspaces/<wid>，个人 = users/<uid>/agents */
-const resolveScopeCloudStoragePrefix = (scope: DriveScope) => {
-  return scope.workspaceId
-    ? `workspaces/${scope.workspaceId}`
-    : `users/${scope.userId}/agents`
-}
-
-/** scope 已用云盘存储 = DB 记录和 + 云节点 R2 前缀和（R2 未配置/失败按 0 计） */
-const resolveScopeStorageUsed = async (scope: DriveScope) => {
-  const dbBytes = await sumDriveStorageUsed(scope)
-  const cloudBytes = await sumObjectPrefixSize(resolveScopeCloudStoragePrefix(scope)).catch(() => 0)
-  return dbBytes + cloudBytes
-}
-
 /**
  * 文本文件配额判定：与 upload 同一口径（团队域按工作区 owner 套餐，个人域按本人）。
  * existingSizeBytes 传入时按「覆盖」计算增量（新大小 - 旧大小计入总存储），避免覆盖大文件被重复计满。
@@ -115,7 +101,7 @@ const resolveDriveQuotaCheck = async (scope: DriveScope, fileSizeBytes: number, 
     ? (await getWorkspaceById(scope.workspaceId))?.ownerUserId || scope.userId
     : scope.userId
   const policy = await getCommercialGate().resolveBillingPolicySnapshot(quotaOwnerUserId)
-  const usedStorageBytes = await resolveScopeStorageUsed(scope)
+  const usedStorageBytes = await sumDriveStorageUsed(scope)
   const effectiveUsed = existingSizeBytes === null
     ? usedStorageBytes
     : Math.max(0, usedStorageBytes - existingSizeBytes)
@@ -124,77 +110,6 @@ const resolveDriveQuotaCheck = async (scope: DriveScope, fileSizeBytes: number, 
     fileSizeBytes,
     usedStorageBytes: effectiveUsed,
   })
-}
-
-// ---------- 云节点文件只读视图（直接读 R2 前缀，挂载即持久） ----------
-
-const buildCloudFilesPrefix = (workspaceId: string) => `workspaces/${workspaceId}`
-
-/** 个人域云节点文件根：用户私人 Agent 的执行前缀（与挂载 resolveCfSandboxDrivePrefix 一致） */
-const buildPersonalCloudFilesPrefix = (userId: string) => `users/${userId}/agents`
-
-/** 规范化云节点文件路径：拒绝 `..`/空段/绝对路径；返回 <base 前缀>/<path> 或空串（无效） */
-export const resolveCloudFilesPrefixWithin = (basePrefix: string, rawPath: string) => {
-  const normalized = rawPath.trim().replace(/^\/+|\/+$/g, '')
-  if (!normalized) {
-    return basePrefix
-  }
-  const segments = normalized.split('/')
-  if (segments.some((segment) => !segment || segment === '.' || segment === '..')) {
-    return ''
-  }
-  return `${basePrefix}/${segments.join('/')}`
-}
-
-/** 规范化云节点文件路径：拒绝 `..`/空段/绝对路径；返回 <wid 前缀>/<path> 或空串（无效） */
-export const resolveCloudFilesPrefix = (workspaceId: string, rawPath: string) => {
-  return resolveCloudFilesPrefixWithin(buildCloudFilesPrefix(workspaceId), rawPath)
-}
-
-export const isCloudFileKeyWithinWorkspace = (workspaceId: string, key: string) => {
-  const base = `${buildCloudFilesPrefix(workspaceId)}/`
-  return key.startsWith(base) && !key.split('/').includes('..')
-}
-
-/** 个人域白名单：key 必须落在 users/<uid>/agents/ 前缀内 */
-export const isCloudFileKeyWithinUser = (userId: string, key: string) => {
-  const base = `${buildPersonalCloudFilesPrefix(userId)}/`
-  return key.startsWith(base) && !key.split('/').includes('..')
-}
-
-type CloudFilesScope = {
-  basePrefix: string
-  within: (key: string) => boolean
-}
-
-const buildCloudFilesListHandler = (resolveScope: (c: Context) => Promise<CloudFilesScope | null>) => async (c: Context) => {
-  const scope = await resolveScope(c)
-  if (!scope) return jsonError(c, '无权访问。', 403)
-  const prefix = resolveCloudFilesPrefixWithin(scope.basePrefix, c.req.query('path') || '')
-  if (!prefix) {
-    return jsonError(c, '路径无效。', 400)
-  }
-  try {
-    const entries = await listObjectPrefix(prefix)
-    return c.json({ entries })
-  } catch (error) {
-    return jsonError(c, error instanceof Error ? error.message : '读取云节点文件失败。', 502)
-  }
-}
-
-const buildCloudFilesDownloadHandler = (resolveScope: (c: Context) => Promise<CloudFilesScope | null>) => async (c: Context) => {
-  const scope = await resolveScope(c)
-  if (!scope) return jsonError(c, '无权访问。', 403)
-  const key = c.req.query('key') || ''
-  if (!scope.within(key)) {
-    return jsonError(c, '无效文件。', 400)
-  }
-  const fileName = key.split('/').pop() || 'file'
-  const response = await streamObject(key)
-  if (response.ok && fileName) {
-    response.headers.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(fileName)}`)
-  }
-  return response
 }
 
 const createFolderSchema = z.object({
@@ -397,7 +312,7 @@ const registerDriveScopeRoutes = (
       ? (await getWorkspaceById(scope.workspaceId))?.ownerUserId || scope.userId
       : scope.userId
     const policy = await getCommercialGate().resolveBillingPolicySnapshot(quotaOwnerUserId)
-    const usedStorageBytes = await resolveScopeStorageUsed(scope)
+    const usedStorageBytes = await sumDriveStorageUsed(scope)
     const quotaAccess = getCommercialGate().buildDriveQuotaAccess({
       plan: policy.plan,
       fileSizeBytes: file.size,
@@ -716,7 +631,7 @@ export const registerDriveRoutes = (app: Hono, requireAuth: MiddlewareHandler) =
     const quotaOwnerUserId = workspace?.ownerUserId || userId
     const policy = await getCommercialGate().resolveBillingPolicySnapshot(quotaOwnerUserId)
     const limits = getCommercialGate().resolveDriveQuotaLimits(policy.plan)
-    const usedStorageBytes = await resolveScopeStorageUsed({ workspaceId, userId })
+    const usedStorageBytes = await sumDriveStorageUsed({ workspaceId, userId })
     return c.json({
       plan: policy.plan,
       maxFileSizeBytes: limits.maxFileSizeBytes,
@@ -731,7 +646,7 @@ export const registerDriveRoutes = (app: Hono, requireAuth: MiddlewareHandler) =
     if (!userId) return jsonError(c, '无权访问。', 403)
     const policy = await getCommercialGate().resolveBillingPolicySnapshot(userId)
     const limits = getCommercialGate().resolveDriveQuotaLimits(policy.plan)
-    const usedStorageBytes = await resolveScopeStorageUsed({ workspaceId: null, userId })
+    const usedStorageBytes = await sumDriveStorageUsed({ workspaceId: null, userId })
     return c.json({
       plan: policy.plan,
       maxFileSizeBytes: limits.maxFileSizeBytes,
@@ -797,45 +712,6 @@ export const registerDriveRoutes = (app: Hono, requireAuth: MiddlewareHandler) =
     if (!file || file.fileType !== 'file' || !file.s3Key) return jsonError(c, '文件不存在。', 404)
     return streamDriveObject(file.s3Key)
   })
-
-  // 云节点文件只读视图（团队域，独立于 DB 元数据树）：直接读 R2 的 workspaces/<wid>/ 前缀
-  app.get(
-    '/api/collab/workspaces/:workspaceId/drive/cloud-files',
-    requireAuth,
-    buildCloudFilesListHandler(async (c) => {
-      const userId = getUserIdFromHeader(c)
-      const workspaceId = c.req.param('workspaceId')
-      if (!userId || !workspaceId || !(await isWorkspaceMember(workspaceId, userId))) return null
-      return { basePrefix: buildCloudFilesPrefix(workspaceId), within: (key) => isCloudFileKeyWithinWorkspace(workspaceId, key) }
-    }),
-  )
-
-  // 云节点文件下载（只读）：key 必须落在该 workspace 的 workspaces/<wid>/ 前缀内
-  app.get(
-    '/api/collab/workspaces/:workspaceId/drive/cloud-files/download',
-    requireAuth,
-    buildCloudFilesDownloadHandler(async (c) => {
-      const userId = getUserIdFromHeader(c)
-      const workspaceId = c.req.param('workspaceId')
-      if (!userId || !workspaceId || !(await isWorkspaceMember(workspaceId, userId))) return null
-      return { basePrefix: buildCloudFilesPrefix(workspaceId), within: (key) => isCloudFileKeyWithinWorkspace(workspaceId, key) }
-    }),
-  )
-
-  // 云节点文件只读视图（个人域「我的云节点文件」）：直接读 R2 的 users/<uid>/agents 前缀
-  app.get('/api/my/drive/cloud-files', requireAuth, buildCloudFilesListHandler(async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) return null
-    const basePrefix = buildPersonalCloudFilesPrefix(userId)
-    return { basePrefix, within: (key) => isCloudFileKeyWithinUser(userId, key) }
-  }))
-
-  app.get('/api/my/drive/cloud-files/download', requireAuth, buildCloudFilesDownloadHandler(async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) return null
-    const basePrefix = buildPersonalCloudFilesPrefix(userId)
-    return { basePrefix, within: (key) => isCloudFileKeyWithinUser(userId, key) }
-  }))
 
   // 团队域：/api/collab/workspaces/:workspaceId/drive/*
   registerDriveScopeRoutes(app, requireAuth, '/api/collab/workspaces/:workspaceId/drive', async (c) => {

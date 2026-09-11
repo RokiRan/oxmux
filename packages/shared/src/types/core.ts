@@ -6,10 +6,6 @@ export type { AgentType, RuntimeId } from '../agent-type'
 export type AgentManaged = 'ai' | 'none'
 
 export type ExecutorVisibility = 'private' | 'team'
-export type ExecutorSource = 'customer-worker' | 'managed-cloud'
-export type ExecutorManagedBy = 'user' | 'oxmux' | 'vibemux' // 'vibemux' 仅存量持久化行，读边界归一化为 'oxmux'
-export type ExecutorRuntimeClass = 'user-worker' | 'managed-worker'
-export type ExecutorBillingClass = 'standard' | 'managed'
 
 export type TaskGitIdentityMode = 'personal'
 export type GitAuthMode = 'pat' | 'ssh' | 'github-app'

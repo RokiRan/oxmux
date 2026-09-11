@@ -14,11 +14,6 @@ import type {
 } from '@shared/types'
 import type {
   ApiResponse,
-  ManagedCloudExecutorPayload,
-  ManagedCloudUsageResponse,
-  ManagedCloudRuntimePrewarmResult,
-  ManagedCloudRuntimeStatus,
-  ManagedCloudRuntimeTargetStatus,
   TeamExecutorRecord,
   WorkerDoctorPayload,
 } from '../types'
@@ -29,24 +24,6 @@ export const executorsMethods = {
     const suffix = workspaceId?.trim() ? `?workspaceId=${encodeURIComponent(workspaceId.trim())}` : ''
     return request<{ executors: ExecutorRecord[] }>(`/api/control-plane/executors${suffix}`)
   },
-  getManagedCloudRuntime: () =>
-    request<{ runtime: ManagedCloudRuntimeStatus; targets: ManagedCloudRuntimeTargetStatus[] }>('/api/control-plane/executors/managed-cloud/runtime'),
-  getManagedCloudUsage: () =>
-    request<ManagedCloudUsageResponse>('/api/control-plane/executors/managed-cloud/usage'),
-  reconcileManagedCloudExecutors: () =>
-    request<{ ok: boolean; runtime: ManagedCloudRuntimeStatus; targets: ManagedCloudRuntimeTargetStatus[]; relabeledCount: number; rewrittenConfigCount: number; warnings: string[]; message: string }>('/api/control-plane/executors/managed-cloud/runtime/reconcile', {
-      method: 'POST',
-    }),
-  prewarmManagedCloudTargets: (payload?: { targetIds?: string[] }) =>
-    request<{ ok: boolean; runtime: ManagedCloudRuntimeStatus; targets: ManagedCloudRuntimeTargetStatus[]; prewarmed: ManagedCloudRuntimePrewarmResult[]; message: string }>('/api/control-plane/executors/managed-cloud/runtime/prewarm', {
-      method: 'POST',
-      body: JSON.stringify(payload ?? {}),
-    }),
-  ensureManagedCloudExecutor: (payload?: ManagedCloudExecutorPayload) =>
-    request<{ ok: boolean; executor: ExecutorRecord; created: boolean; started: boolean; message: string }>('/api/control-plane/executors/managed-cloud', {
-      method: 'POST',
-      body: JSON.stringify(payload ?? {}),
-    }),
   listExecutionEvents: (params?: { taskId?: string; executorId?: string; eventType?: ExecutionEventType; layer?: ExecutionEventLayer; failuresOnly?: boolean; limit?: number; cursor?: ExecutionEventCursor }) => {
     const search = new URLSearchParams()
     if (params?.taskId) search.set('taskId', params.taskId)

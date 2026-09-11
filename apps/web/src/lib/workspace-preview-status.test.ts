@@ -40,14 +40,14 @@ test('isWorkspacePreviewConnected treats tunnel previews as connected only when 
 test('isWorkspacePreviewConnected treats active public-proxy previews as connected without a tunnel client', () => {
   assert.equal(isWorkspacePreviewConnected({
     ...basePreview,
-    executionSurface: 'managed-cloud',
+    executionSurface: 'private-node',
     accessMode: 'public-proxy',
     tunnelClientStatus: undefined,
   }), true)
 
   assert.equal(isWorkspacePreviewConnected({
     ...basePreview,
-    executionSurface: 'managed-cloud',
+    executionSurface: 'private-node',
     accessMode: 'public-proxy',
     status: 'waiting_tunnel',
     tunnelClientStatus: undefined,

@@ -133,7 +133,7 @@ test('restored workspace preview reconnects only when the tunnel is not open', (
   }), false)
   assert.equal(shouldReconnectRestoredWorkspacePreview({
     ...basePreview,
-    executionSurface: 'managed-cloud',
+    executionSurface: 'private-node',
     accessMode: 'public-proxy',
     status: 'active',
     tunnelClientStatus: undefined,

@@ -30,7 +30,7 @@ import {
   executeTaskChatTurn,
   getTaskChatWorkspaceIfVisible,
   isTaskChatQueueDrainBlocked,
-  resolveWorkspaceChatDispatchAvailabilityAsync,
+  resolveWorkspaceChatDispatchAvailability,
   loadTaskModelOptionsFromExecutor,
   scheduleTaskChatQueueDrain,
   tryAcquireTaskChatExecutionLease,
@@ -286,7 +286,7 @@ export const sendTaskChatMessageForUser = async (params: {
     }
   }
 
-  const dispatchAvailability = await resolveWorkspaceChatDispatchAvailabilityAsync({
+  const dispatchAvailability = resolveWorkspaceChatDispatchAvailability({
     state,
     userId: params.userId,
     task: taskResult.task,

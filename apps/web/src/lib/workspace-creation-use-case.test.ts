@@ -135,22 +135,22 @@ test('workspace creation executor selection prefers the configured workspace def
   }), 'configured')
 })
 
-test('workspace creation executor selection prefers an online local node over the cloud node', () => {
+test('workspace creation executor selection prefers the first online node', () => {
   const executors = [
-    { executorId: 'cloud', executorSource: 'managed-cloud', managedBy: 'vibemux', status: 'online' },
-    { executorId: 'local-online', status: 'online' },
+    { executorId: 'first-online', status: 'online' },
+    { executorId: 'second-online', status: 'online' },
   ] as never
 
-  assert.equal(resolveDefaultWorkspaceCreationExecutorId(null, executors), 'local-online')
+  assert.equal(resolveDefaultWorkspaceCreationExecutorId(null, executors), 'first-online')
 })
 
-test('workspace creation executor selection falls back to the cloud node without online local nodes', () => {
+test('workspace creation executor selection falls back to paired nodes without online nodes', () => {
   const executors = [
     { executorId: 'local-offline', status: 'offline' },
-    { executorId: 'cloud', executorSource: 'managed-cloud', managedBy: 'vibemux', status: 'online' },
+    { executorId: 'local-paired', status: 'paired' },
   ] as never
 
-  assert.equal(resolveDefaultWorkspaceCreationExecutorId(null, executors), 'cloud')
+  assert.equal(resolveDefaultWorkspaceCreationExecutorId(null, executors), 'local-paired')
 })
 
 test('workspace creation clone blocking preserves failed clone detail', () => {

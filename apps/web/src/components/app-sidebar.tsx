@@ -53,7 +53,8 @@ import {
   type SidebarProjectDropPosition,
 } from "./app-sidebar-project-order"
 import { partitionAgentsByScope, readCustomAgentConfig } from "@shared/custom-agent"
-import { isAgentEffectivelyOnline } from "../lib/managed-cloud-executor"
+import { isLegacyManagedCloudAutoExecutorId } from "@shared/legacy-executor-markers"
+import { isAgentAvailable } from "../lib/executor-availability"
 import { AGENT_SIDEBAR_REFRESH_EVENT, consumeSelectedAgentId, setSelectedAgentId } from "../lib/agent-sidebar-store"
 import { useTranslation } from "../lib/i18n/react"
 import { changeLanguage } from '../lib/i18n'
@@ -680,15 +681,17 @@ function SidebarAgentButton({
   const profile = getSidebarAgentProfile(agent)
   const config = readCustomAgentConfig(agent.config)
   const isActive = currentPath === "/agents" && selectedAgentId === agent.id
-  const runtimeExecutor = config.defaultExecutorId
-    ? executors.find((executor) => executor.executorId === config.defaultExecutorId)
+  // 存量 'managed-cloud:auto' 标记按「未配置默认节点」处理
+  const defaultExecutorId = isLegacyManagedCloudAutoExecutorId(config.defaultExecutorId) ? '' : config.defaultExecutorId
+  const runtimeExecutor = defaultExecutorId
+    ? executors.find((executor) => executor.executorId === defaultExecutorId)
     : undefined
   const nodeLabel = runtimeExecutor?.name
-    || config.defaultExecutorId
-    || (language === "zh" ? "云托管节点" : "Hosted Cloud")
-  const agentOnline = isAgentEffectivelyOnline({
+    || defaultExecutorId
+    || (language === "zh" ? "自动分配" : "Auto-assign")
+  const agentOnline = isAgentAvailable({
     agentStatus: agent.status,
-    defaultExecutorId: config.defaultExecutorId,
+    defaultExecutorId,
     executors,
   })
   return (
@@ -777,11 +780,10 @@ export function AppSidebar() {
   const personalProjectIdSet = new Set(personalProjects.map((project) => project.id))
   const [githubSectionExpanded, setGithubSectionExpanded] = useState(currentPath === '/review' || currentPath === '/actions')
   const editingProject = editingProjectId ? state.projects.find((project) => project.id === editingProjectId) ?? null : null
-  const visibleExecutors = executors.filter((executor) => executor.executorSource !== 'managed-cloud' && executor.managedBy !== 'vibemux')
-  const onlineExecutorCount = visibleExecutors.filter((executor) => executor.status === "online").length
-  const pairedExecutorCount = visibleExecutors.filter((executor) => executor.status === "paired" || executor.status === "pairing").length
-  const offlineExecutorCount = visibleExecutors.length - onlineExecutorCount - pairedExecutorCount
-  const updatableExecutorCount = visibleExecutors.filter((executor) => isNodeVersionOutdated(executor.version)).length
+  const onlineExecutorCount = executors.filter((executor) => executor.status === "online").length
+  const pairedExecutorCount = executors.filter((executor) => executor.status === "paired" || executor.status === "pairing").length
+  const offlineExecutorCount = executors.length - onlineExecutorCount - pairedExecutorCount
+  const updatableExecutorCount = executors.filter((executor) => isNodeVersionOutdated(executor.version)).length
   const isInboxActive = currentPath === '/inbox' || (currentPath === '/agents' && currentSearchParams?.get('tab') === 'inbox')
   const isAutomationVisible = isDevEnvironment()
   const reviewCenterEnabled = isReviewCenterEnabled()
@@ -839,7 +841,7 @@ export function AppSidebar() {
       label: t('nav.workstationManagement'),
       icon: Workflow,
       path: '/execution',
-      meta: visibleExecutors.length > 0
+      meta: executors.length > 0
         ? (
             <>
               <span className="text-emerald-400">

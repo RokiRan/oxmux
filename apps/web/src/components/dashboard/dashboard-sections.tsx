@@ -5,7 +5,7 @@ import type { InboxGroupSummary } from '@shared/inbox'
 import type { AgentType, Task, TaskStatus, TaskWorkspaceBinding, WorkspaceSession } from '@shared/types'
 import type { AgentRecord } from '../../lib/api'
 import type { AgentLiveStatus } from '../../lib/agent-live-status'
-import { isAgentEffectivelyOnline } from '../../lib/managed-cloud-executor'
+import { isAgentAvailable } from '../../lib/executor-availability'
 import { readCustomAgentConfig } from '@shared/custom-agent'
 import type { ExecutorRecord } from '@shared/types'
 import { RuntimeLabel } from '../runtime/runtime-icons'
@@ -998,7 +998,7 @@ export function AgentTeamPanel({
             const liveStatus = liveStatuses.get(agent.id)
             const isWorking = (liveStatus?.workingCount ?? 0) > 0
             const config = readCustomAgentConfig(agent.config)
-            const isOnline = isAgentEffectivelyOnline({
+            const isOnline = isAgentAvailable({
               agentStatus: agent.status,
               defaultExecutorId: config.defaultExecutorId,
               executors,

@@ -10,7 +10,6 @@ import {
   registerCreditInsufficientError,
 } from './services/gate/commercial-gate'
 import { registerHostedModelGate } from './services/gate/hosted-model-gate'
-import { registerManagedCloudGate } from './services/gate/managed-cloud-gate'
 
 export type EnterpriseRouteRegistration = (app: unknown, requireAuth: unknown) => void
 
@@ -62,7 +61,6 @@ export interface CommercialExtensionActivationContext {
   gates: {
     registerCommercialGate: typeof registerCommercialGate
     registerCreditInsufficientError: typeof registerCreditInsufficientError
-    registerManagedCloudGate: typeof registerManagedCloudGate
     registerHostedModelGate: typeof registerHostedModelGate
     registerAdminAnalyticsProvider: typeof registerAdminAnalyticsProvider
   }

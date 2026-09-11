@@ -29,7 +29,7 @@ import {
   markTaskChatRuntimeStopped,
   persistWorkspaceFailureTurn,
   publishTaskChatSessionUpdate,
-  resolveWorkspaceChatDispatchAvailabilityAsync,
+  resolveWorkspaceChatDispatchAvailability,
   resolveScopedRuntimeTask,
   scheduleTaskChatQueueDrain,
   stopTaskChatExecutionAcrossNodes,
@@ -203,7 +203,7 @@ export const registerTaskChatWsRoute = (app: Hono, upgradeWebSocket: any) => {
           }
         }
 
-        const dispatchAvailability = await resolveWorkspaceChatDispatchAvailabilityAsync({
+        const dispatchAvailability = resolveWorkspaceChatDispatchAvailability({
           state: currentState,
           userId,
           task: currentTask,

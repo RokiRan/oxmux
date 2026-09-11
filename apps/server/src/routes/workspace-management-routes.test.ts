@@ -402,8 +402,6 @@ type DefaultExecutorCandidate = Parameters<typeof resolveDefaultWorkspaceExecuto
 const createExecutor = (overrides: Partial<DefaultExecutorCandidate> = {}): DefaultExecutorCandidate => ({
   executorId: 'executor-1',
   status: 'online',
-  executorSource: undefined,
-  managedBy: undefined,
   ...overrides,
 })
 
@@ -426,10 +424,9 @@ test('resolveDefaultWorkspaceExecutorId matches preferredExecutorId first regard
   }), 'preferred-node')
 })
 
-test('resolveDefaultWorkspaceExecutorId skips offline, managed-cloud and missing preferred executors', () => {
+test('resolveDefaultWorkspaceExecutorId skips offline, paired and missing preferred executors', () => {
   assert.equal(resolveDefaultWorkspaceExecutorId({
     visibleExecutors: [
-      createExecutor({ executorId: 'cloud', executorSource: 'managed-cloud', managedBy: 'vibemux' }),
       createExecutor({ executorId: 'cloud-paired', status: 'paired' }),
       createExecutor({ executorId: 'offline-local', status: 'offline' }),
     ],
@@ -447,10 +444,10 @@ test('resolveDefaultWorkspaceExecutorId falls back to the first online local whe
   }), 'local-a')
 })
 
-test('resolveDefaultWorkspaceExecutorId returns null when only cloud executors are visible', () => {
+test('resolveDefaultWorkspaceExecutorId returns null when no executors are online', () => {
   assert.equal(resolveDefaultWorkspaceExecutorId({
     visibleExecutors: [
-      createExecutor({ executorId: 'cloud', executorSource: 'managed-cloud', managedBy: 'vibemux', status: 'online' }),
+      createExecutor({ executorId: 'offline', status: 'offline' }),
     ],
   }), null)
 })

@@ -16,7 +16,7 @@ import {
   type WorkspaceSessionUnreadOptions,
 } from '../../lib/workspace-session-attention'
 import { shouldShowWorkspaceInUserLists } from '../../lib/workspace-visibility'
-import { isExecutorEffectivelyOnline } from '../../lib/managed-cloud-executor'
+import { isExecutorOnline } from '../../lib/executor-availability'
 import { replaceEqualDeep } from '../../lib/app-entity-store'
 import { resolveWorkspaceSessionDisplaySummary } from './workspace-session-display-summary'
 import {
@@ -591,7 +591,7 @@ export function buildWorkspaceItems(
         const currentExecutorRecord = currentExecutorId
           ? unreadOptions.executors?.find((executor) => executor.executorId === currentExecutorId)
           : undefined
-        const currentExecutorStatusTone: WorkspaceListItem['currentExecutorStatusTone'] = isExecutorEffectivelyOnline(currentExecutorRecord)
+        const currentExecutorStatusTone: WorkspaceListItem['currentExecutorStatusTone'] = isExecutorOnline(currentExecutorRecord)
           ? 'online'
           : currentExecutorRecord?.status === 'paired'
             ? 'busy'

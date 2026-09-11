@@ -1,6 +1,6 @@
-// [INPUT]: 已鉴权 Hono app，配对/连接路由/本地访问/managed-cloud 请求
-// [OUTPUT]: /api/control-plane/executors/* 路由（配对码/pair/connection-route/local-access/managed-cloud）
-// [POS]: 执行器控制面 HTTP 协议层（配对/连接/遥测/managed-cloud）
+// [INPUT]: 已鉴权 Hono app，配对/连接路由/本地访问请求
+// [OUTPUT]: /api/control-plane/executors/* 路由（配对码/pair/connection-route/local-access）
+// [POS]: 执行器控制面 HTTP 协议层（配对/连接/遥测）
 // [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 
 import { normalizeTaskChatAttachments } from '@shared/task-chat-attachment'
@@ -21,7 +21,6 @@ import { ensureTeamMember, getScopedState, getUserIdFromHeader, jsonError } from
 import { executorRegistry } from '../control-plane/executor-registry'
 import { uploadObject } from '../services/object-storage'
 import { resolveExecutorConnectionRoute } from '../services/executor-connection-route'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 import { recordTaskObservation } from '../services/task-observation-service'
 import { getPrimaryAgentMcpServers } from '../services/primary-agent-mcp'
 import { resolveUserFeatureFlags } from '../services/user-experimental-settings-service'
@@ -68,17 +67,6 @@ const pairRequestSchema = z.object({
   capabilities: z.array(z.string()).default([]),
   platform: z.string().trim().optional(),
   version: z.string().trim().optional(),
-})
-
-const managedCloudExecutorSchema = z.object({
-  workspaceId: z.string().trim().optional(),
-  name: z.string().trim().min(1).max(120).optional(),
-  maxConcurrency: z.number().int().positive().max(32).optional(),
-  autoStart: z.boolean().optional().default(true),
-})
-
-const managedCloudPrewarmSchema = z.object({
-  targetIds: z.array(z.string().trim().min(1)).optional(),
 })
 
 const updateExecutorSchema = z.object({
@@ -392,212 +380,6 @@ export const registerExecutorControlPlaneRoutes = (app: Hono, requireAuth: Middl
     }))
   })
 
-  app.get('/api/control-plane/executors/managed-cloud/runtime', requireAuth, async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) {
-      return c.json({ message: '未登录' }, 401)
-    }
-
-    if (!getManagedCloudGate().isDevOnlyEnabled()) {
-      return c.json({ message: getManagedCloudGate().devOnlyMessage }, 404)
-    }
-
-    const state = loadState()
-    const executors = listVisibleExecutorsForUser(userId)
-    const runtime = await getManagedCloudGate().inspectRuntime(state.config.managedCloud)
-    const targets = await getManagedCloudGate().inspectRuntimeTargets(executors, state.config.managedCloud)
-    return c.json({ runtime, targets })
-  })
-
-  app.get('/api/control-plane/executors/managed-cloud/usage', requireAuth, async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) {
-      return c.json({ message: '未登录' }, 401)
-    }
-
-    if (!getManagedCloudGate().isDevOnlyEnabled()) {
-      return c.json({ message: getManagedCloudGate().devOnlyMessage }, 404)
-    }
-
-    const state = getScopedState(loadState(), userId)
-    const billingPolicy = await getCommercialGate().resolveBillingPolicySnapshot(userId)
-    return c.json(getManagedCloudGate().buildUsageResponse({ state, userId, billingPlan: billingPolicy.plan }))
-  })
-
-  app.post('/api/control-plane/executors/managed-cloud', requireAuth, async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) {
-      return c.json({ message: '未登录' }, 401)
-    }
-
-    try {
-      getManagedCloudGate().ensureDevOnlyAccess()
-    } catch (error) {
-      return c.json({ message: error instanceof Error ? error.message : getManagedCloudGate().devOnlyMessage }, 404)
-    }
-
-    const payload = managedCloudExecutorSchema.parse(await c.req.json().catch(() => ({})))
-    const workspaceId = payload.workspaceId?.trim() || undefined
-    if (workspaceId && !ensureTeamMember(workspaceId, userId)) {
-      return c.json({ message: '无权限为该组织创建官方云节点。' }, 403)
-    }
-
-    try {
-      const state = loadState()
-      const billingPolicy = await getCommercialGate().resolveBillingPolicySnapshot(userId)
-      await getManagedCloudGate().ensureUsageAccess({
-        state: getScopedState(state, userId),
-        userId,
-        billingPlan: billingPolicy.plan,
-      })
-      const result = await getManagedCloudGate().ensureExecutor({
-        config: state.config,
-        ownerUserId: userId,
-        workspaceId,
-        name: payload.name,
-        maxConcurrency: payload.maxConcurrency,
-        autoStart: payload.autoStart,
-        projects: state.projects,
-      })
-
-      return c.json({
-        ok: true,
-        executor: result.executor,
-        created: result.created,
-        started: result.started,
-        message: result.executor.status === 'online'
-          ? (result.created ? '官方云节点已创建并启动。' : '官方云节点已就绪。')
-          : (result.created ? '官方云节点已创建，正在启动。' : '官方云节点启动中，请稍候刷新状态。'),
-      })
-    } catch (error) {
-      if (getManagedCloudGate().isUsageLimitError(error)) {
-        const usageLimit = error as { message?: string; usage?: unknown; statusCode?: number }
-        return c.json({ message: usageLimit.message ?? String(error), usage: usageLimit.usage }, usageLimit.statusCode as 402)
-      }
-
-      if (getManagedCloudGate().isRuntimeError(error)) {
-        const runtimeError = error as { message?: string; statusCode?: number }
-        return c.json({ message: runtimeError.message ?? String(error) }, runtimeError.statusCode as 409)
-      }
-
-      throw error
-    }
-  })
-
-  app.post('/api/control-plane/executors/managed-cloud/runtime/prewarm', requireAuth, async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) {
-      return c.json({ message: '未登录' }, 401)
-    }
-
-    try {
-      getManagedCloudGate().ensureDevOnlyAccess()
-    } catch (error) {
-      return c.json({ message: error instanceof Error ? error.message : getManagedCloudGate().devOnlyMessage }, 404)
-    }
-
-    const user = getUserById(userId)
-    if (!user?.isInternal) {
-      return c.json({ message: '只有内部运维账号可以预热官方云节点 target。' }, 403)
-    }
-
-    const payload = managedCloudPrewarmSchema.parse(await c.req.json().catch(() => ({})))
-    const state = loadState()
-
-    try {
-      const prewarmed = await getManagedCloudGate().prewarmRuntimeTargets(state.config.managedCloud, payload.targetIds)
-      const executors = listVisibleExecutorsForUser(userId)
-      const runtime = await getManagedCloudGate().inspectRuntime(state.config.managedCloud)
-      const targets = await getManagedCloudGate().inspectRuntimeTargets(executors, state.config.managedCloud)
-      const succeeded = prewarmed.filter((item: { ok?: boolean }) => item.ok).length
-      const failed = prewarmed.length - succeeded
-
-      recordAdminOperationAudit({
-        actorUserId: userId,
-        eventType: 'admin.cloud_target.prewarm',
-        payload: {
-          targetIds: payload.targetIds ?? [],
-          succeeded,
-          failed,
-        },
-      })
-
-      return c.json({
-        ok: failed === 0,
-        runtime,
-        targets,
-        prewarmed,
-        message: failed === 0
-          ? `已完成 ${succeeded} 个 managed cloud target 的镜像预热。`
-          : `已完成 ${succeeded} 个 managed cloud target 的镜像预热，${failed} 个 target 失败。`,
-      })
-    } catch (error) {
-      if (getManagedCloudGate().isRuntimeError(error)) {
-        const runtimeError = error as { message?: string; statusCode?: number }
-        return c.json({ message: runtimeError.message ?? String(error) }, runtimeError.statusCode as 409)
-      }
-
-      throw error
-    }
-  })
-
-  app.post('/api/control-plane/executors/managed-cloud/runtime/reconcile', requireAuth, async (c) => {
-    const userId = getUserIdFromHeader(c)
-    if (!userId) {
-      return c.json({ message: '未登录' }, 401)
-    }
-
-    try {
-      getManagedCloudGate().ensureDevOnlyAccess()
-    } catch (error) {
-      return c.json({ message: error instanceof Error ? error.message : getManagedCloudGate().devOnlyMessage }, 404)
-    }
-
-    const user = getUserById(userId)
-    if (!user?.isInternal) {
-      return c.json({ message: '只有内部运维账号可以重平衡官方云节点。' }, 403)
-    }
-
-    try {
-      const state = loadState()
-      const result = await getManagedCloudGate().reconcileExecutors(state.config)
-      const executors = listVisibleExecutorsForUser(userId)
-      const runtime = await getManagedCloudGate().inspectRuntime(state.config.managedCloud)
-      const targets = await getManagedCloudGate().inspectRuntimeTargets(executors, state.config.managedCloud)
-      const message = result.warnings.length > 0
-        ? `已重写 ${result.rewrittenConfigCount} 个官方云节点配置，重分配 ${result.relabeledCount} 个 target。${result.warnings[0]}`
-        : `已重写 ${result.rewrittenConfigCount} 个官方云节点配置，重分配 ${result.relabeledCount} 个 target。`
-
-      recordAdminOperationAudit({
-        actorUserId: userId,
-        eventType: 'admin.cloud_target.reconcile',
-        payload: {
-          relabeledCount: result.relabeledCount,
-          rewrittenConfigCount: result.rewrittenConfigCount,
-          warningCount: result.warnings.length,
-          warnings: result.warnings.slice(0, 5),
-        },
-      })
-
-      return c.json({
-        ok: result.warnings.length === 0,
-        runtime,
-        targets,
-        relabeledCount: result.relabeledCount,
-        rewrittenConfigCount: result.rewrittenConfigCount,
-        warnings: result.warnings,
-        message,
-      })
-    } catch (error) {
-      if (getManagedCloudGate().isRuntimeError(error)) {
-        const runtimeError = error as { message?: string; statusCode?: number }
-        return c.json({ message: runtimeError.message ?? String(error) }, runtimeError.statusCode as 409)
-      }
-
-      return c.json({ message: error instanceof Error ? error.message : '重平衡官方云节点失败。' }, 400)
-    }
-  })
-
   app.get('/api/control-plane/execution-events', requireAuth, async (c) => {
     const userId = getUserIdFromHeader(c)
     if (!userId) {
@@ -793,20 +575,12 @@ export const registerExecutorControlPlaneRoutes = (app: Hono, requireAuth: Middl
       })
     }
 
-    if (getManagedCloudGate().isManagedExecutor(executor)) {
-      await getManagedCloudGate().stopExecutor({
-        config: loadState().config,
-        executorId,
-        cleanup: true,
-      })
-    } else {
-      executorWsService.dispatchTask(executorId, {
-        type: 'executor.unpair',
-        reason: '工作站已从控制面删除，本地 worker 将自动退出。请重新配对后再连接。',
-        shutdown: true,
-        at: new Date().toISOString(),
-      })
-    }
+    executorWsService.dispatchTask(executorId, {
+      type: 'executor.unpair',
+      reason: '工作站已从控制面删除，本地 worker 将自动退出。请重新配对后再连接。',
+      shutdown: true,
+      at: new Date().toISOString(),
+    })
 
     const deletedExecutor = executorRegistry.deleteExecutor(executorId)
     if (!deletedExecutor) {
@@ -819,7 +593,6 @@ export const registerExecutorControlPlaneRoutes = (app: Hono, requireAuth: Middl
       payload: {
         executorId,
         executorName: executor.name,
-        managedCloud: getManagedCloudGate().isManagedExecutor(executor),
       },
     })
 
@@ -855,27 +628,6 @@ export const registerExecutorControlPlaneRoutes = (app: Hono, requireAuth: Middl
       return c.json({ message: '该工作站仍有运行中任务，暂时不能退出。' }, 409)
     }
 
-    if (getManagedCloudGate().isManagedExecutor(executor)) {
-      await getManagedCloudGate().stopExecutor({
-        config: loadState().config,
-        executorId,
-      })
-      recordAdminOperationAudit({
-        actorUserId: userId,
-        eventType: 'admin.executor.shutdown',
-        payload: {
-          executorId,
-          executorName: executor.name,
-          managedCloud: true,
-        },
-      })
-      return c.json({
-        ok: true,
-        executorId,
-        message: '已停止官方云节点。',
-      })
-    }
-
     if (executor.status !== 'online') {
       return c.json({ message: '执行器当前不在线，无法远程退出。' }, 409)
     }
@@ -896,7 +648,6 @@ export const registerExecutorControlPlaneRoutes = (app: Hono, requireAuth: Middl
       payload: {
         executorId,
         executorName: executor.name,
-        managedCloud: false,
       },
     })
 

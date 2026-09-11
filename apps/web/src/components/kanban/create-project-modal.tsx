@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { ExternalLink, GitFork, Github, Link, Loader2, Plus } from 'lucide-react'
-import { MANAGED_CLOUD_AUTO_EXECUTOR_ID } from '@shared/managed-cloud'
 import type { ExecutorRecord } from '@shared/types'
 import { toast } from 'sonner'
-import { api, type CollaborationWorkspace, type GitCredentialSummary, type GitHubAppInstallationSummary, type GitHubAppRepositorySummary, type ManagedCloudRuntimeStatus } from '../../lib/api'
+import { api, type CollaborationWorkspace, type GitCredentialSummary, type GitHubAppInstallationSummary, type GitHubAppRepositorySummary } from '../../lib/api'
 import { useApp } from '../../lib/app-provider'
-import { buildExecutorOptionsWithManagedCloud } from '../../lib/managed-cloud-executor'
-import { isManagedCloudDevOnlyEnabled } from '../../lib/runtime-config'
+import { buildExecutorOptions } from '../../lib/executor-availability'
 import { ProjectColorField } from '../project-color-field'
 import { Button } from '../ui/button'
 import {
@@ -64,74 +62,6 @@ const EMPTY_DRAFT: CreateProjectDraft = {
   workspaceId: '',
 }
 
-const getManagedCloudBoxRuntimeLabel = (runtime: ManagedCloudRuntimeStatus | null | undefined) => (
-  runtime?.providerName === 'ascii-box-cli' || runtime?.providerName === 'ascii-box-sdk' ? 'ASCII Box' : 'BoxLite'
-)
-
-const isManagedCloudBoxRuntime = (runtime: ManagedCloudRuntimeStatus | null | undefined) => (
-  runtime?.providerName === 'boxlite-cli' || runtime?.providerName === 'ascii-box-cli' || runtime?.providerName === 'ascii-box-sdk'
-)
-
-const getManagedCloudExecutorDescription = (
-  executor: ExecutorRecord,
-  runtime: ManagedCloudRuntimeStatus | null,
-) => {
-  if (executor.executorId !== MANAGED_CLOUD_AUTO_EXECUTOR_ID) {
-    return executor.machineName
-  }
-
-  if (runtime?.isolationMode !== 'container') {
-    return executor.machineName
-  }
-
-  const boxRuntimeLabel = getManagedCloudBoxRuntimeLabel(runtime)
-  if (runtime.poolSize > 1) {
-    return isManagedCloudBoxRuntime(runtime)
-      ? `官方托管 ${boxRuntimeLabel} 池，首次使用时自动分配宿主`
-      : '官方托管 Docker 池，首次使用时自动分配宿主'
-  }
-
-  if (runtime.hostMode === 'remote-docker-host') {
-    return '官方托管远程 Docker 节点，首次使用时自动开通'
-  }
-  if (runtime.hostMode === 'remote-cloudflare-sandbox') {
-    return '官方托管 Cloudflare Sandbox 节点，首次使用时自动开通'
-  }
-  if (runtime.hostMode === 'remote-boxlite-host') {
-    return `官方托管 ${boxRuntimeLabel} 节点，首次使用时自动开通`
-  }
-
-  return isManagedCloudBoxRuntime(runtime)
-    ? `官方托管 ${boxRuntimeLabel} 节点，但当前仍落在控制面宿主机上`
-    : '官方托管 Docker 节点，但当前仍落在控制面宿主机上'
-}
-
-const getManagedCloudExecutorBadgeLabel = (
-  executor: ExecutorRecord,
-  runtime: ManagedCloudRuntimeStatus | null,
-) => {
-  if (executor.executorId !== MANAGED_CLOUD_AUTO_EXECUTOR_ID) {
-    return undefined
-  }
-
-  if (runtime?.isolationMode !== 'container') {
-    return '官方托管'
-  }
-
-  const boxRuntimeLabel = getManagedCloudBoxRuntimeLabel(runtime)
-  if (runtime.poolSize > 1) {
-    return isManagedCloudBoxRuntime(runtime) ? `${boxRuntimeLabel} 池` : 'Docker 池'
-  }
-  if (runtime.hostMode === 'remote-docker-host') {
-    return 'Docker'
-  }
-  if (runtime.hostMode === 'remote-boxlite-host') {
-    return boxRuntimeLabel
-  }
-
-  return isManagedCloudBoxRuntime(runtime) ? `本机 ${boxRuntimeLabel}` : '本机 Docker'
-}
-
 const resolveRepoHost = (gitUrl?: string) => {
   const trimmed = gitUrl?.trim() || ''
   if (!trimmed) {
@@ -183,12 +113,11 @@ export function CreateProjectModal({
   const [githubRepositoriesLoading, setGitHubRepositoriesLoading] = useState(false)
   const [githubRepositoriesScope, setGitHubRepositoriesScope] = useState<'all' | 'installation'>('installation')
   const [githubOAuthAuthorized, setGitHubOAuthAuthorized] = useState(false)
-  const [managedCloudRuntime, setManagedCloudRuntime] = useState<ManagedCloudRuntimeStatus | null>(null)
   const [autoFilledNameFromUrl, setAutoFilledNameFromUrl] = useState('')
 
   const executorOptions = useMemo(
-    () => buildExecutorOptionsWithManagedCloud(executors, managedCloudRuntime),
-    [executors, managedCloudRuntime],
+    () => buildExecutorOptions(executors),
+    [executors],
   )
   const credentialRepoHost = useMemo(() => resolveRepoHost(draft.gitUrl), [draft.gitUrl])
   const filteredCredentials = useMemo(() => {
@@ -248,11 +177,6 @@ export function CreateProjectModal({
         setGitHubAppConfigured(true)
         setGitHubAppInstallations([])
       })
-    if (isManagedCloudDevOnlyEnabled()) {
-      void api.getManagedCloudRuntime().then((response) => setManagedCloudRuntime(response.runtime)).catch(() => setManagedCloudRuntime(null))
-    } else {
-      setManagedCloudRuntime(null)
-    }
   }, [open])
 
   useEffect(() => {
@@ -266,7 +190,6 @@ export function CreateProjectModal({
         workspaceId: defaultWorkspaceId.trim(),
         visibility: 'private',
       })
-      setManagedCloudRuntime(null)
       setGitHubRepositories([])
       setGitHubRepositoriesLoading(false)
       setGitHubRepositoriesScope('installation')
@@ -379,23 +302,6 @@ export function CreateProjectModal({
   }, [draft.cloneSource, draft.githubInstallationId, githubRepositoriesScope, mode, open])
 
   useEffect(() => {
-    if (draft.preferredExecutorId !== MANAGED_CLOUD_AUTO_EXECUTOR_ID) {
-      return
-    }
-
-    const virtualManagedCloudVisible = executorOptions.some((executor) => executor.executorId === MANAGED_CLOUD_AUTO_EXECUTOR_ID)
-    if (virtualManagedCloudVisible) {
-      return
-    }
-
-    setDraft((current) => (
-      current.preferredExecutorId === MANAGED_CLOUD_AUTO_EXECUTOR_ID
-        ? { ...current, preferredExecutorId: '' }
-        : current
-    ))
-  }, [draft.preferredExecutorId, executorOptions])
-
-  useEffect(() => {
     if (mode !== 'clone') {
       return
     }
@@ -489,11 +395,7 @@ export function CreateProjectModal({
       return
     }
 
-    const resolvedExecutorId = draft.preferredExecutorId === MANAGED_CLOUD_AUTO_EXECUTOR_ID
-      ? (await api.ensureManagedCloudExecutor({
-          workspaceId: draft.visibility === 'workspace' ? draft.workspaceId.trim() || undefined : undefined,
-        })).executor.executorId
-      : draft.preferredExecutorId
+    const selectedExecutorId = draft.preferredExecutorId
 
     if (mode === 'clone') {
       if (!draft.gitUrl.trim()) {
@@ -505,7 +407,7 @@ export function CreateProjectModal({
           name: draft.name,
           color: draft.color.trim() || undefined,
           gitUrl: draft.gitUrl,
-          preferredExecutorId: resolvedExecutorId,
+          preferredExecutorId: selectedExecutorId,
           gitCredentialId: draft.gitBindingMode === 'credential' ? draft.gitCredentialId.trim() || undefined : undefined,
           githubInstallationId: draft.gitBindingMode === 'github-app' ? Number(draft.githubInstallationId || '0') || undefined : undefined,
           githubRepositoryId: draft.gitBindingMode === 'github-app' ? Number(draft.githubRepositoryId || '0') || undefined : undefined,
@@ -525,17 +427,17 @@ export function CreateProjectModal({
       name: draft.name,
       color: draft.color.trim() || undefined,
       gitUrl: '',
-      preferredExecutorId: resolvedExecutorId,
+      preferredExecutorId: selectedExecutorId,
       workspaceId: draft.workspaceId.trim() || undefined,
       visibility: draft.visibility,
     }))
     const projectId = response?.state.selectedProjectId
     const createdProject = response?.state.projects.find((project) => project.id === projectId)
     const bindingPathHint = createdProject?.rootPath?.trim() || ''
-    if (projectId && bindingPathHint && resolvedExecutorId) {
+    if (projectId && bindingPathHint && selectedExecutorId) {
       await runMutation(() => api.saveProjectBinding({
         projectId,
-        nodeId: resolvedExecutorId,
+        nodeId: selectedExecutorId,
         pathHint: bindingPathHint,
       }))
     }
@@ -841,12 +743,9 @@ export function CreateProjectModal({
                 ...executorOptions.map((executor) => ({
                   value: executor.executorId,
                   label: executor.name,
-                  description: getManagedCloudExecutorDescription(executor, managedCloudRuntime),
+                  description: executor.machineName,
                   keywords: [executor.machineName],
-                  badgeLabel: getManagedCloudExecutorBadgeLabel(executor, managedCloudRuntime),
-                  statusTone: executor.executorId === MANAGED_CLOUD_AUTO_EXECUTOR_ID
-                    ? 'online'
-                    : (executor.status === 'online' ? 'online' : 'offline'),
+                  statusTone: executor.status === 'online' ? 'online' : 'offline',
                 })),
               ]}
               placeholder="暂不绑定（执行时再选）"

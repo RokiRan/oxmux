@@ -6,7 +6,7 @@ import type { Hono, MiddlewareHandler } from 'hono'
 import { z } from 'zod'
 import { mergeAgentRuntimeSettings } from '@shared/agent-config'
 import { getImportableExecutorAgentSessionEntries } from '@shared/executor-agent-session'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
+import { isLegacyManagedCloudAutoExecutorId } from '@shared/legacy-executor-markers'
 import { findMatchingAgentExecutionModelOption } from '@shared/model-profile'
 import { withOpenCodeExecutionModel } from '@shared/opencode-execution-config'
 import { normalizeTaskChatAttachments } from '@shared/task-chat-attachment'
@@ -73,7 +73,6 @@ import {
   upsertTaskWorkspaceBindingInState,
   upsertWorkspaceSessionInState,
 } from './task-route-support'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 
 const taskObservationSchema = z.object({
   workspaceId: z.string().trim().min(1).optional(),
@@ -129,31 +128,10 @@ const normalizeTaskChatSnapshot = <T extends ReturnType<typeof buildTaskChatSess
   }
 }
 
-const resolveTaskAgentExecutorNodeId = async (params: {
-  state: AppState
-  userId: string
-  workspaceId?: string
-  projectWorkspaceId?: string
-  executorNodeId?: string
-}) => {
-  const executorNodeId = params.executorNodeId?.trim()
-  if (!isManagedCloudAutoExecutorId(executorNodeId)) {
-    return executorNodeId
-  }
-
-  getManagedCloudGate().ensureDevOnlyAccess()
-  await getManagedCloudGate().ensureUsageAccess({
-    state: params.state,
-    userId: params.userId,
-  })
-
-  const result = await getManagedCloudGate().ensureExecutor({
-    config: params.state.config,
-    ownerUserId: params.userId,
-    workspaceId: params.projectWorkspaceId?.trim() || params.workspaceId?.trim() || undefined,
-    projects: params.state.projects,
-  })
-  return result.executor.executorId
+// 存量 'managed-cloud:auto' 标记按「未指定」处理：下游走默认节点解析。
+const resolveTaskAgentExecutorNodeId = (executorNodeId?: string) => {
+  const trimmed = executorNodeId?.trim()
+  return isLegacyManagedCloudAutoExecutorId(trimmed) ? undefined : trimmed
 }
 
 const queueTaskChatMessage = async (params: {
@@ -648,26 +626,7 @@ export const registerTaskInteractionRoutes = (app: Hono, requireAuth: Middleware
       scopedWorkspaceExecutorNodeId: scopedWorkspace?.executorNodeId ?? '',
       initialPreferredExecutorId: preferredExecutorId ?? '',
     }))
-    try {
-      preferredExecutorId = await resolveTaskAgentExecutorNodeId({
-        state,
-        userId,
-        workspaceId: scopedWorkspaceId,
-        projectWorkspaceId: taskResult.project.workspaceId,
-        executorNodeId: preferredExecutorId,
-      })
-    } catch (error) {
-      console.warn('[task-agent-route][executor-switch][resolve-failed]', JSON.stringify({
-        userId,
-        taskId,
-        workspaceId: scopedWorkspaceId,
-        workspaceSessionId: scopedWorkspaceSessionId,
-        requestedExecutorNodeId: payload.executorNodeId?.trim() || '',
-        initialPreferredExecutorId: preferredExecutorId ?? '',
-        error: error instanceof Error ? error.message : String(error),
-      }))
-      return c.json({ message: error instanceof Error ? error.message : '官方云节点暂不可用。' }, getManagedCloudGate().isUsageLimitError(error) ? 402 : 400)
-    }
+    preferredExecutorId = resolveTaskAgentExecutorNodeId(preferredExecutorId)
     console.info('[task-agent-route][executor-switch][resolved]', JSON.stringify({
       userId,
       taskId,
@@ -678,10 +637,6 @@ export const registerTaskInteractionRoutes = (app: Hono, requireAuth: Middleware
     }))
 
     if (preferredExecutorId) {
-      const matchedExecutor = listVisibleExecutorsForUser(userId).find((executor) => executor.executorId === preferredExecutorId)
-      if (!getManagedCloudGate().isExecutorAllowed(matchedExecutor)) {
-        return c.json({ message: getManagedCloudGate().devOnlyMessage }, 403)
-      }
       const pathAccess = validateProjectExecutorPathAccess({
         project: taskResult.project,
         executorId: preferredExecutorId,

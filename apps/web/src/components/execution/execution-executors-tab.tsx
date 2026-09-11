@@ -13,7 +13,7 @@ import { Input } from '../ui/input'
 import { NativeSelect } from '../ui/native-select'
 import { SearchableSelect } from '../ui/searchable-select'
 import { Textarea } from '../ui/textarea'
-import { resolveApiUrl, type CollaborationWorkspace, type ManagedCloudUsageResponse } from '../../lib/api'
+import { resolveApiUrl, type CollaborationWorkspace } from '../../lib/api'
 import { formatExecutorLatency, resolveExecutorLatencyTone } from '../../lib/executor-latency'
 import { useTranslation } from '../../lib/i18n/react'
 import { CURRENT_APP_VERSION, isNodeVersionOutdated } from '../../lib/node-version'
@@ -42,10 +42,6 @@ const latencyToneClassName = {
   slow: 'border-rose-500/20 bg-rose-500/10 text-rose-300',
   unknown: 'border-zinc-700 bg-zinc-900/70 text-zinc-500',
 }
-
-const isManagedCloudExecutorRecord = (executor: Pick<ExecutorRecord, 'executorSource' | 'managedBy'>) => (
-  executor.executorSource === 'managed-cloud' || executor.managedBy === 'vibemux'
-)
 
 const isDockerWorkerRoot = (workspaceRoot?: string) => (
   workspaceRoot?.trim().replace(/\/+$/, '') === '/data/oxmux-worker'
@@ -495,7 +491,7 @@ function ExecutorMeshPanel({
                     <Cloud className="size-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-zinc-100">Hosted Cloud</p>
+                    <p className="truncate text-sm font-semibold text-zinc-100">{tr(language, '控制面', 'Control Plane')}</p>
                     <p className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-emerald-300/80">Mesh</p>
                   </div>
                 </div>
@@ -624,7 +620,6 @@ export function ExecutorsTab({
   executors,
   distributedTasks,
   projectBindings,
-  managedCloudUsage: _managedCloudUsage,
   workspaces,
   defaultWorkspaceId,
   pairingCode,
@@ -662,7 +657,6 @@ export function ExecutorsTab({
   executors: ExecutorRecord[]
   distributedTasks: DistributedTask[]
   projectBindings: ProjectBinding[]
-  managedCloudUsage: ManagedCloudUsageResponse | null
   workspaces: CollaborationWorkspace[]
   defaultWorkspaceId?: string
   pairingCode: string
@@ -730,10 +724,6 @@ export function ExecutorsTab({
     const workspaceIds = executor.workspaceIds?.filter((value) => typeof value === 'string' && value.trim().length > 0) ?? []
     return workspaceIds.length > 0 ? workspaceIds : (executor.teamId ? [executor.teamId] : [])
   }
-  const userManagedExecutors = useMemo(
-    () => executors.filter((executor) => !isManagedCloudExecutorRecord(executor)),
-    [executors],
-  )
   const workspacesByExecutorId = useMemo(() => {
     const map = new Map<string, CollaborationWorkspace[]>()
     for (const workspace of workspaces) {
@@ -746,11 +736,11 @@ export function ExecutorsTab({
     return map
   }, [workspaces])
   const filteredExecutors = useMemo(() => {
-    if (!filterWorkspaceId) return userManagedExecutors
+    if (!filterWorkspaceId) return executors
     const targetWorkspace = workspaces.find((w) => w.id === filterWorkspaceId)
     if (!targetWorkspace?.activeExecutorNodeId) return []
-    return userManagedExecutors.filter((e) => e.executorId === targetWorkspace.activeExecutorNodeId)
-  }, [userManagedExecutors, filterWorkspaceId, workspaces])
+    return executors.filter((e) => e.executorId === targetWorkspace.activeExecutorNodeId)
+  }, [executors, filterWorkspaceId, workspaces])
   const pairingRunModeOptions = [
     { value: 'local' as const, label: tr(language, '本机运行', 'Local'), detail: tr(language, '安装为系统服务。', 'Install as a system service.') },
     { value: 'docker' as const, label: tr(language, 'Docker 容器', 'Docker'), detail: tr(language, 'Node Linux 容器。', 'Node Linux container.') },
@@ -929,7 +919,7 @@ export function ExecutorsTab({
       <Card className={panelClassName}>
         <CardContent className="p-5">
           <ExecutorMeshPanel
-            executors={userManagedExecutors}
+            executors={executors}
             selectedExecutorId={selectedExecutorId}
             language={language}
             onSelectExecutor={setSelectedExecutorId}
@@ -940,8 +930,8 @@ export function ExecutorsTab({
               <h3 className="text-lg font-medium text-zinc-50">{tr(language, '节点列表', 'Executors')}</h3>
               <p className="mt-1 text-sm text-zinc-400">
                 {filterWorkspaceId
-                  ? tr(language, `${filteredExecutors.length} / ${userManagedExecutors.length} 个节点`, `${filteredExecutors.length} / ${userManagedExecutors.length} executors`)
-                  : tr(language, `${userManagedExecutors.length} 个已配对节点`, `${userManagedExecutors.length} paired executors`)}
+                  ? tr(language, `${filteredExecutors.length} / ${executors.length} 个节点`, `${filteredExecutors.length} / ${executors.length} executors`)
+                  : tr(language, `${executors.length} 个已配对节点`, `${executors.length} paired executors`)}
               </p>
             </div>
             <div className="flex items-center gap-2 sm:shrink-0">

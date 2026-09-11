@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import type { DriveFileRecord } from '@shared/types'
 import { collectDescendants, hasRoleLevel } from '../repositories/drive-store'
-import { guessContentType, inferTextFileMimeType, isCloudFileKeyWithinUser, isCloudFileKeyWithinWorkspace, resolveCloudFilesPrefix, resolveCloudFilesPrefixWithin, resolveDriveMoveTarget } from './drive-routes'
+import { guessContentType, inferTextFileMimeType, resolveDriveMoveTarget } from './drive-routes'
 
 test('inferTextFileMimeType 按扩展名推断文本文件 MIME', () => {
   assert.equal(inferTextFileMimeType('note.md'), 'text/markdown')
@@ -115,38 +115,4 @@ test('resolveDriveMoveTarget 跨区移动：edit/read 拒绝，普通成员不�
   const none = resolveDriveMoveTarget({ currentWorkspaceId: null, role: null, requestedTargetWorkspaceId: 'ws-1' })
   assert.equal(none.ok, false)
   if (!none.ok) assert.equal(none.status, 403)
-})
-
-test('resolveCloudFilesPrefix 落在该工作区 workspaces/<wid>/ 前缀内', () => {
-  assert.equal(resolveCloudFilesPrefix('ws-1', ''), 'workspaces/ws-1')
-  assert.equal(resolveCloudFilesPrefix('ws-1', 'worktrees/task-1'), 'workspaces/ws-1/worktrees/task-1')
-  assert.equal(resolveCloudFilesPrefix('ws-1', 'a/b/c/'), 'workspaces/ws-1/a/b/c')
-})
-
-test('resolveCloudFilesPrefix 拒绝 .. 与空段路径', () => {
-  assert.equal(resolveCloudFilesPrefix('ws-1', '../secret'), '')
-  assert.equal(resolveCloudFilesPrefix('ws-1', 'a/../b'), '')
-  assert.equal(resolveCloudFilesPrefix('ws-1', 'a//b'), '')
-  assert.equal(resolveCloudFilesPrefix('ws-1', '/etc/passwd'), 'workspaces/ws-1/etc/passwd')
-})
-
-test('isCloudFileKeyWithinWorkspace 拒绝跨工作区/穿越键', () => {
-  assert.equal(isCloudFileKeyWithinWorkspace('ws-1', 'workspaces/ws-1/worktrees/task-1/src/main.ts'), true)
-  assert.equal(isCloudFileKeyWithinWorkspace('ws-1', 'workspaces/ws-2/file.txt'), false)
-  assert.equal(isCloudFileKeyWithinWorkspace('ws-1', 'users/user-1/agents/a1/file.txt'), false)
-  assert.equal(isCloudFileKeyWithinWorkspace('ws-1', 'workspaces/ws-1/a/../b.txt'), false)
-  assert.equal(isCloudFileKeyWithinWorkspace('ws-1', 'workspaces/ws-1'), false)
-})
-
-test('isCloudFileKeyWithinUser 拒绝越权个人键', () => {
-  assert.equal(isCloudFileKeyWithinUser('user-1', 'users/user-1/agents/exec-1/file.txt'), true)
-  assert.equal(isCloudFileKeyWithinUser('user-1', 'users/user-2/agents/exec-1/file.txt'), false)
-  assert.equal(isCloudFileKeyWithinUser('user-1', 'workspaces/ws-1/worktrees/x/main.ts'), false)
-  assert.equal(isCloudFileKeyWithinUser('user-1', 'users/user-1/agents/a/../b.txt'), false)
-})
-
-test('resolveCloudFilesPrefixWithin 在给定基前缀下规范化路径', () => {
-  assert.equal(resolveCloudFilesPrefixWithin('users/user-1/agents', ''), 'users/user-1/agents')
-  assert.equal(resolveCloudFilesPrefixWithin('users/user-1/agents', 'exec-1/notes.md'), 'users/user-1/agents/exec-1/notes.md')
-  assert.equal(resolveCloudFilesPrefixWithin('users/user-1/agents', '../evil'), '')
 })

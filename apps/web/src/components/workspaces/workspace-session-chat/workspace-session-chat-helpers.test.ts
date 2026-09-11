@@ -28,7 +28,6 @@ test('shouldShowTaskChatNotice hides only redundant queue enqueue info notices',
   assert.equal(shouldShowTaskChatNotice(buildNotice('消息已入队。')), false)
   assert.equal(shouldShowTaskChatNotice(buildNotice('实时连接暂不可用，已通过备用通道加入消息队列。')), false)
   assert.equal(shouldShowTaskChatNotice(buildNotice('委派消息已进入独立工作区会话队列。')), false)
-  assert.equal(shouldShowTaskChatNotice(buildNotice('官方云节点正在启动，消息已进入队列，准备完成后会自动发送。')), false)
   assert.equal(shouldShowTaskChatNotice(buildNotice('执行器当前离线，消息已保留在队列中，等待恢复后自动发送。')), true)
   assert.equal(shouldShowTaskChatNotice(buildNotice('消息入队失败', 'error')), true)
 })

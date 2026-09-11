@@ -367,8 +367,7 @@
         "originalDir": "复用现有仓库目录，不新建隔离目录"
       },
       "executorDescriptions": {
-        "localProjectBlocked": "该项目只存在于 {{owner}}，不能跨 worker 自动复用",
-        "managedCloudHint": "云节点会在首个任务时自动启动，仅能访问已推送的在线分支。"
+        "localProjectBlocked": "该项目只存在于 {{owner}}，不能跨 worker 自动复用"
       },
       "executorWarnings": {
         "localProjectOwner": "当前项目只存在于执行节点「{{owner}}」。本地 Git / 空项目不能跨 worker 自动复用；如需切换节点，请先推送或绑定 Git remote。"
@@ -887,8 +886,7 @@
       "loading": "正在加载 Git 面板..."
     },
     "branchSources": {
-      "unpushed": "未推送",
-      "cloudOnlyHint": "云节点仅能访问已推送的在线分支。"
+      "unpushed": "未推送"
     },
     "files": {
       "title": "文件树",
@@ -1222,27 +1220,6 @@
       "confirm": "全部转接",
       "transferring": "转接中...",
       "failed": "转接失败，请稍后重试。"
-    },
-    "managedCloud": {
-      "title": "官方云节点",
-      "readyMessage": "官方云节点已就绪，任务可在云端执行，无需本地运行环境。",
-      "unavailableMessage": "官方云节点当前不可用，请稍后重试。",
-      "available": "官方云节点运行时可用",
-      "unavailable": "官方云节点运行时当前不可用",
-      "start": "启动官方云节点",
-      "status": "运行状态",
-      "statusReady": "已就绪",
-      "statusUnavailable": "不可用",
-      "hosted": "云端托管 · 空闲自动回收",
-      "executors": "云端执行节点",
-      "activeNodes": "{{count}} 个运行中",
-      "notRunning": "未运行",
-      "usage": "算力使用",
-      "remaining": "剩余 {{count}}h",
-      "latestStop": "最近自动停止",
-      "none": "无",
-      "noAutoStop": "暂无自动停止记录",
-      "latestStopReason": "最近自动停止原因"
     }
   },
   "login": {
@@ -1897,8 +1874,6 @@
           "noDefaultExecutor": "不指定（会话创建时手动选择）",
           "noExecutors": "暂无可用执行节点",
           "searchExecutors": "搜索执行节点...",
-          "managedCloudDefault": "云托管节点",
-          "managedCloudDefaultHint": "官方云节点（默认）",
           "noDefaultExecutorHint": "会话创建时手动选择"
         },
         "channels": {
@@ -3139,7 +3114,6 @@
       "nodes": "节点状态",
       "nodesDesc": "多后端 control-plane 节点健康",
       "executors": "执行器",
-      "cloudNodes": "云节点",
       "tasks": "任务",
       "workspaces": "工作区",
       "audit": "审计",
@@ -3374,37 +3348,6 @@
       "toolCalls": "{{count}} 次工具调用",
       "approvals": "{{count}} 个审批",
       "channelLabel": "渠道"
-    },
-    "cloudNodes": {
-      "title": "云节点",
-      "subtitle": "云运行环境可用性与接入目标",
-      "targetsConfigured": "已配置目标",
-      "totalTargets": "目标总数",
-      "available": "可用",
-      "enabled": "已启用",
-      "degraded": "降级",
-      "needsAttention": "需要关注",
-      "readyForWorkloads": "可承接负载",
-      "activeTargets": "活跃目标",
-      "runtimeStatus": "运行环境状态",
-      "runtimeStatusDesc": "云运行环境的可用性",
-      "provider": "提供商",
-      "unknown": "未知",
-      "isolationMode": "隔离模式",
-      "hostMode": "宿主模式",
-      "availableLabel": "可用",
-      "yes": "是",
-      "no": "否",
-      "cloudTargets": "云接入目标",
-      "cloudTargetsDesc": "已配置的云节点组网目标",
-      "noTargets": "未配置目标",
-      "noTargetsDesc": "添加云节点目标以承接负载",
-      "colTarget": "目标",
-      "colStatus": "状态",
-      "colDisplayName": "显示名称",
-      "colMessage": "信息",
-      "disabled": "已禁用",
-      "unavailable": "不可用"
     },
     "dashboard": {
       "title": "总览",

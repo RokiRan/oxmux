@@ -6,7 +6,7 @@
  */
 import { mkdirSync } from 'node:fs'
 import type { Hono, MiddlewareHandler } from 'hono'
-import { isManagedCloudAutoExecutorId } from '@shared/managed-cloud'
+import { isLegacyManagedCloudAutoExecutorId } from '@shared/legacy-executor-markers'
 import { mergeImportedProjectEnvironmentTemplate } from '@shared/project-environment-template'
 import { validateProjectEnvironmentPreviewPorts } from '@shared/types'
 import { resolveGitRemoteHost } from '@shared/git-auth'
@@ -29,7 +29,6 @@ import { generateProjectContext, getProjectsWithContext } from '../repositories/
 import { getGitCredentialById, normalizeGitCredentialHost } from '../services/git-credential-store'
 import { getGitHubAppInstallationById, getGitHubAppInstallationForUser, isGitHubAppInstallationAccessibleToUser } from '../services/github-app-installation-store'
 import { hasInvalidManagedScopePlaceholder, resolveDefaultLocalProjectRootPath, resolveManagedPath } from '../services/local-project-root'
-import { getManagedCloudGate } from '../services/gate/managed-cloud-gate'
 import { saveProjectGitCredentialBinding, saveProjectGitHubAppInstallationBinding } from '../services/project-git-binding-store'
 import { deleteProjectRootDirectory } from '../services/project-delete-service'
 import { autoImportProjectRuntimeEnvironment, summarizeProjectRuntimeEnvironmentImport } from '../services/project-runtime-environment-import-service'
@@ -399,37 +398,13 @@ const validatePreferredProjectExecutorAccess = (params: {
     return { ok: false as const, status: 403 as const, message: access.message }
   }
 
-  if (!getManagedCloudGate().isExecutorAllowed(access.executor)) {
-    return { ok: false as const, status: 403 as const, message: getManagedCloudGate().devOnlyMessage }
-  }
-
   return { ok: true as const }
 }
 
-const resolveProjectBranchExecutorId = async (params: {
-  state: AppState
-  userId: string
-  project: AppState['projects'][number]
-  executorId?: string
-}) => {
-  const executorId = params.executorId?.trim()
-  if (!isManagedCloudAutoExecutorId(executorId)) {
-    return executorId
-  }
-
-  getManagedCloudGate().ensureDevOnlyAccess()
-  await getManagedCloudGate().ensureUsageAccess({
-    state: params.state,
-    userId: params.userId,
-  })
-
-  const result = await getManagedCloudGate().ensureExecutor({
-    config: params.state.config,
-    ownerUserId: params.userId,
-    workspaceId: params.project.workspaceId?.trim() || undefined,
-    projects: params.state.projects,
-  })
-  return result.executor.executorId
+// 存量 'managed-cloud:auto' 标记按「未指定」处理：分支探测回退到可见执行器。
+const resolveProjectBranchExecutorId = (executorId?: string) => {
+  const trimmed = executorId?.trim()
+  return isLegacyManagedCloudAutoExecutorId(trimmed) ? undefined : trimmed
 }
 
 export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler) => {
@@ -466,20 +441,15 @@ export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler)
     }
 
     try {
-      const executorId = await resolveProjectBranchExecutorId({
-        state,
-        userId,
-        project,
-        executorId: query.executorId,
-      })
+      const executorId = resolveProjectBranchExecutorId(query.executorId)
       return c.json(await getProjectBranchSnapshotFromExecutor(userId, project, executorId))
     } catch (error) {
       return c.json({
         ok: false,
         branches: [],
         defaultBranch: project.defaultBranch || 'main',
-        message: error instanceof Error ? error.message : '官方云节点暂不可用。',
-      }, getManagedCloudGate().isUsageLimitError(error) ? 402 : 400)
+        message: error instanceof Error ? error.message : '读取项目分支失败。',
+      }, 400)
     }
   })
 
@@ -975,10 +945,6 @@ export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler)
       if (!visibleExecutorIds.has(requestedExecutorId)) {
         return c.json({ message: '执行节点不可见或无权限访问。' }, 403)
       }
-      const matchedExecutor = visibleExecutors.find((executor) => executor.executorId === requestedExecutorId)
-      if (!getManagedCloudGate().isExecutorAllowed(matchedExecutor)) {
-        return c.json({ message: getManagedCloudGate().devOnlyMessage }, 403)
-      }
     }
 
     const requestedExecutionModel = payload.executionModel?.trim() || defaults.executionModel
@@ -1235,10 +1201,6 @@ export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler)
       const visibleExecutorIds = new Set(visibleExecutors.map((executor) => executor.executorId))
       if (!visibleExecutorIds.has(executorId)) {
         return c.json({ message: '执行节点不可见或无权限访问。' }, 403)
-      }
-      const matchedExecutor = visibleExecutors.find((executor) => executor.executorId === executorId)
-      if (!getManagedCloudGate().isExecutorAllowed(matchedExecutor)) {
-        return c.json({ message: getManagedCloudGate().devOnlyMessage }, 403)
       }
     }
 

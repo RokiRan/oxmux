@@ -8,7 +8,7 @@ import { Save } from 'lucide-react'
 import { VISIBLE_AGENT_TYPES } from '@shared/agent-type'
 import type { AgentConfig, ExecutionModelOption, ExecutorRecord } from '@shared/types'
 import { cn } from '../../lib/utils'
-import { isExecutorEffectivelyOnline } from '../../lib/managed-cloud-executor'
+import { isExecutorOnline } from '../../lib/executor-availability'
 import { RuntimeLabel } from '../runtime/runtime-icons'
 import { Button } from '../ui/button'
 import { ExecutorSelect } from '../ui/executor-select'
@@ -154,8 +154,8 @@ export function ModelCenterRuntimePanel({
                   value: executor.executorId,
                   label: executor.name,
                   description: executor.machineName,
-                  badgeLabel: isExecutorEffectivelyOnline(executor) ? (language === 'zh' ? '在线' : 'Online') : (language === 'zh' ? '离线' : 'Offline'),
-                  statusTone: isExecutorEffectivelyOnline(executor) ? ('online' as const) : ('offline' as const),
+                  badgeLabel: isExecutorOnline(executor) ? (language === 'zh' ? '在线' : 'Online') : (language === 'zh' ? '离线' : 'Offline'),
+                  statusTone: isExecutorOnline(executor) ? ('online' as const) : ('offline' as const),
                 })),
               ]}
               placeholder={language === 'zh' ? '选择执行节点' : 'Select a worker'}

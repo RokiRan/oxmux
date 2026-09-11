@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # 部署 oxmux 控制面到树莓派（或任意 arm64 Linux 主机）：纯 HTTP 自托管，无 Caddy/TLS。
 #
-# 流程：确保基础镜像 → 构建 control-plane → 灌入目标机 → compose 起栈 → 健康检查。
+# 流程：确保基础镜像 → 构建 control-plane → 灌入目标机 → compose 起栈 → 健康检查
+# → host worker 升级（若目标机装有 host worker，从刚部署的 server 拉 package.tgz
+# 按 /install/worker.sh 的标准 tar 换包路径刷新并重启服务；server 重部署不会带 host worker）。
 # 幂等：可反复运行；首次运行会在目标机生成 ~/oxmux/.env.production（随机 secrets，只生成一次），
 # 之后每次运行强制对齐 HTTP 对外配置项并同步 compose 模板。
 #
@@ -116,14 +118,78 @@ rm -f /tmp/oxmux-cp.tar.gz
 echo "$DEPLOY_SUDO_PASS" | sudo -S docker compose -f docker-compose.pi.yml --env-file .env.production up -d --remove-orphans
 REMOTE
 
-echo "==> [6/6] 健康检查 http://$PI_HOST:$SERVER_PORT/api/ready"
+echo "==> [6/7] 健康检查 http://$PI_HOST:$SERVER_PORT/api/ready"
+ready=""
 for _ in $(seq 1 30); do
   if curl -sf --max-time 5 "http://$PI_HOST:$SERVER_PORT/api/ready" 2>/dev/null | grep -q '"ok":true'; then
-    echo "部署完成: http://$PI_HOST:$SERVER_PORT"
-    echo "提示: worker 会用 Postgres 里已有的 executor token 自动重连，无需重新配对"
-    exit 0
+    ready=1
+    break
   fi
   sleep 5
 done
-echo "错误: 健康检查超时。查看日志: ssh $PI_USER@$PI_HOST 'sudo docker logs oxmux-server-1'" >&2
-exit 1
+if [[ -z "$ready" ]]; then
+  echo "错误: 健康检查超时。查看日志: ssh $PI_USER@$PI_HOST 'sudo docker logs oxmux-server-1'" >&2
+  exit 1
+fi
+
+echo "==> [7/7] 升级目标机 host worker（标准 tar 换包，与 /install/worker.sh 同路径）"
+# server 重部署不会带 host 上的 worker；worker 版本号不变时自动更新也不会触发。
+# 这里直接从刚部署的 server 拉 package.tgz，按 worker.sh 的标准做法 tar 解压换目录，
+# 不走 npm install -g（慢、且 npm 生命周期对自包含包无意义）。
+"${SSH[@]}" "SERVER_PORT='$SERVER_PORT' bash -s" <<'REMOTE'
+set -euo pipefail
+
+PKG_NAME="oxmux-worker-preview"
+INSTALL_DIR="$HOME/.oxmux-preview-worker"
+PKG_DIR="$INSTALL_DIR/lib/node_modules/$PKG_NAME"
+SERVICE=""
+
+if [[ ! -d "$PKG_DIR" ]]; then
+  echo "    目标机未安装 host worker（无 $PKG_DIR），跳过"
+  exit 0
+fi
+if systemctl --user is-active --quiet oxmux-worker-preview.service 2>/dev/null; then
+  SERVICE="oxmux-worker-preview.service"
+elif systemctl --user is-active --quiet oxmux-worker.service 2>/dev/null; then
+  SERVICE="oxmux-worker.service"
+fi
+
+TMP_DIR="$(mktemp -d /tmp/oxmux-worker-upgrade.XXXXXX)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+echo "    从本机 server 拉取 worker 包"
+curl -fsSL --max-time 120 "http://127.0.0.1:$SERVER_PORT/install/worker/package.tgz" -o "$TMP_DIR/package.tgz"
+mkdir -p "$TMP_DIR/extract"
+tar -xzf "$TMP_DIR/package.tgz" -C "$TMP_DIR/extract"
+[[ -f "$TMP_DIR/extract/$PKG_NAME/package.json" ]] || { echo "错误: worker 包缺 package.json" >&2; exit 1; }
+NEW_VERSION="$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).version||'?')" "$TMP_DIR/extract/$PKG_NAME/package.json" 2>/dev/null || echo '?')"
+OLD_VERSION="$(node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).version||'?')" "$PKG_DIR/package.json" 2>/dev/null || echo '?')"
+
+if [[ -n "$SERVICE" ]]; then
+  systemctl --user stop "$SERVICE"
+fi
+BACKUP_DIR="$INSTALL_DIR/lib/node_modules/.$PKG_NAME.bak-$(date +%s)"
+mv "$PKG_DIR" "$BACKUP_DIR"
+if ! mv "$TMP_DIR/extract/$PKG_NAME" "$PKG_DIR"; then
+  mv "$BACKUP_DIR" "$PKG_DIR"
+  [[ -n "$SERVICE" ]] && systemctl --user start "$SERVICE"
+  echo "错误: worker 包换入失败，已回滚" >&2
+  exit 1
+fi
+# 自包含包直出时恢复可执行位（与 worker.sh 一致）
+chmod +x "$PKG_DIR/bin/"*.mjs 2>/dev/null || true
+rm -rf "$BACKUP_DIR"
+
+if [[ -n "$SERVICE" ]]; then
+  systemctl --user start "$SERVICE"
+  sleep 4
+  systemctl --user is-active --quiet "$SERVICE" || { echo "错误: worker 服务重启后未激活" >&2; exit 1; }
+  echo "    worker 服务已重启: $SERVICE"
+else
+  echo "    worker 包已换新（服务未在运行，未重启）"
+fi
+echo "    host worker: $OLD_VERSION -> $NEW_VERSION（内容按本次部署刷新）"
+REMOTE
+
+echo "部署完成: http://$PI_HOST:$SERVER_PORT"
+echo "提示: worker 会用 Postgres 里已有的 executor token 自动重连，无需重新配对"

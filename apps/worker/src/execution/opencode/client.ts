@@ -11,7 +11,7 @@ import type { ChildProcess } from 'node:child_process'
 import { createOpencodeClient } from '@opencode-ai/sdk'
 import { parseOpencodeConfigContent } from '@shared/opencode-config'
 import { resolveExecutable } from '../../core/command-utils'
-import { resolveOpencodeExecutable } from '../../core/opencode-runtime'
+import { repairPackagedOpencodePostinstall, resolveOpencodeExecutable } from '../../core/opencode-runtime'
 import { shouldSpawnWithShellOnWindows } from '../agent-runner-shared'
 import { getErrorText, logWorkerOpencodeDebug } from './shared'
 
@@ -214,6 +214,24 @@ const startOpencodeServer = async (key: string, configContent?: string, runtimeE
   return handle
 }
 
+const startOpencodeServerWithRepair = async (key: string, configContent?: string, runtimeEnv?: Record<string, string>) => {
+  try {
+    return await startOpencodeServer(key, configContent, runtimeEnv)
+  } catch (error) {
+    // 打包安装跳过 postinstall 时 opencode serve 必挂：补跑一次后重试，仍失败则抛原始错误
+    if (!/postinstall/i.test(getErrorText(error))) {
+      throw error
+    }
+    logWorkerOpencodeDebug('server:postinstall-repair:start', { error: getErrorText(error) })
+    const repairs = repairPackagedOpencodePostinstall()
+    logWorkerOpencodeDebug('server:postinstall-repair:done', { repairs })
+    if (repairs.length === 0 || repairs.some((repair) => !repair.ok)) {
+      throw error
+    }
+    return await startOpencodeServer(key, configContent, runtimeEnv)
+  }
+}
+
 const getOpencodeServer = async (configContent?: string, runtimeEnv?: Record<string, string>) => {
   const key = buildOpencodeServerCacheKey(configContent, runtimeEnv)
   const existing = serverPool.get(key)
@@ -221,7 +239,7 @@ const getOpencodeServer = async (configContent?: string, runtimeEnv?: Record<str
     return existing
   }
 
-  const next = startOpencodeServer(key, configContent, runtimeEnv).catch((error) => {
+  const next = startOpencodeServerWithRepair(key, configContent, runtimeEnv).catch((error) => {
     serverPool.delete(key)
     throw error
   })

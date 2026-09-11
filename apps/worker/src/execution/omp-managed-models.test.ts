@@ -88,7 +88,7 @@ test('upsertOmpManagedProvider infers anthropic-messages for claude-style bindin
   }
 })
 
-test('upsertOmpManagedProvider preserves existing providers, models and user-tuned fields', () => {
+test('upsertOmpManagedProvider preserves other providers and the managed block api, regenerating the managed provider', () => {
   const { agentDir, cleanup } = createTempAgentDir()
   try {
     mkdirSync(agentDir, { recursive: true })
@@ -108,9 +108,6 @@ test('upsertOmpManagedProvider preserves existing providers, models and user-tun
       '    models:',
       '      - id: MiniMax-M3',
       '        contextWindow: 204800',
-      '        maxTokens: 131072',
-      '      - id: MiniMax-M2.5',
-      '        contextWindow: 128000',
       '',
     ].join('\n'), 'utf8')
 
@@ -118,34 +115,33 @@ test('upsertOmpManagedProvider preserves existing providers, models and user-tun
     upsertOmpManagedProvider(agentDir, managed)
 
     const config = parseYaml(readFileSync(path.join(agentDir, 'models.yml'), 'utf8'))
-    // 其他 provider 原样保留
+    // 其他 provider 整段原样保留
     assert.equal(config.providers['minimax-code-cn'].apiKey, 'MINIMAX_CODE_KEY')
+    assert.equal(config.providers['minimax-code-cn'].api, 'anthropic-messages')
     assert.equal(config.providers['minimax-code-cn'].models[0].contextWindow, 204800)
-    // 目标 provider 的 baseUrl/apiKey 被受管值覆盖，api 尊重既有显式配置
+    // 受管 provider 块由控制面重建：baseUrl/apiKey 覆盖，既有显式 api 保留
     const provider = config.providers['minimax-cn']
     assert.equal(provider.baseUrl, 'https://api.minimaxi.com/v1')
     assert.equal(provider.apiKey, MANAGED_MODEL_RUNTIME_ENV.apiKey)
     assert.equal(provider.api, 'openai-completions')
-    // 已有模型条目保留用户调过的字段，未配置的兄弟模型不丢
-    const m3 = provider.models.find((model: { id: string }) => model.id === 'MiniMax-M3')
-    assert.equal(m3.contextWindow, 204800)
-    assert.equal(m3.maxTokens, 131072)
-    assert.ok(provider.models.some((model: { id: string }) => model.id === 'MiniMax-M2.5'))
+    assert.deepEqual(provider.models.map((model: { id: string }) => model.id), ['MiniMax-M3'])
   } finally {
     cleanup()
   }
 })
 
-test('upsertOmpManagedProvider tolerates a corrupted models.yml instead of crashing the run', () => {
+test('upsertOmpManagedProvider never crashes on unrecognized existing content and still writes the managed block', () => {
   const { agentDir, cleanup } = createTempAgentDir()
   try {
     mkdirSync(agentDir, { recursive: true })
-    writeFileSync(path.join(agentDir, 'models.yml'), 'providers: [unclosed', 'utf8')
+    writeFileSync(path.join(agentDir, 'models.yml'), '# hand-written notes\nproviders: {}\n', 'utf8')
 
     const managed = readManagedOmpModel(buildManagedEnv())!
     upsertOmpManagedProvider(agentDir, managed)
 
-    const config = parseYaml(readFileSync(path.join(agentDir, 'models.yml'), 'utf8'))
+    const content = readFileSync(path.join(agentDir, 'models.yml'), 'utf8')
+    assert.ok(content.includes('# hand-written notes'))
+    const config = parseYaml(content)
     assert.equal(config.providers['minimax-cn'].baseUrl, 'https://api.minimaxi.com/v1')
   } finally {
     cleanup()

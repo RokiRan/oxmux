@@ -1,0 +1,110 @@
+# Oxmux 纯 HTTP 自托管部署（局域网 / 个人实例，无 Caddy/TLS）
+# 由 scripts/deploy-pi.sh 同步到目标机使用，也可手工：
+#   docker compose -f docker-compose.http.yml --env-file .env.production up -d --remove-orphans
+#
+# 组成：Postgres + MinIO（S3 兼容对象存储）+ control-plane（web+server 一体镜像）
+# 对外入口：http://<host>:${SERVER_PORT}（web 与 API 同端口同域）
+# worker 不需要容器化：在目标机器安装 worker 后指向本控制面即可（见 docs/SELF-HOSTING.md）
+#
+# 注意：纯 HTTP 依赖 web 构建产物里的 crypto.randomUUID 内联 polyfill（apps/web/index.html），
+# 非 secure context 浏览器才能正常渲染；敏感部署仍建议自行加 TLS 反代。
+
+name: oxmux
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: oxmux
+      POSTGRES_USER: ${POSTGRES_USER:-oxmux}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.production}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-oxmux} -d oxmux']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - oxmux-postgres-data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY_ID:-oxmux}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORAGE_SECRET_ACCESS_KEY:?set OBJECT_STORAGE_SECRET_ACCESS_KEY in .env.production}
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - oxmux-minio-data:/data
+    ports:
+      - '${MINIO_CONSOLE_PORT:-9001}:9001'
+
+  minio-init:
+    image: minio/mc:latest
+    restart: 'no'
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY_ID:-oxmux}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORAGE_SECRET_ACCESS_KEY}
+      MINIO_BUCKET: ${OBJECT_STORAGE_BUCKET:-oxmux}
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >-
+      /bin/sh -c
+      "mc alias set local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
+       mc mb --ignore-existing local/$${MINIO_BUCKET:-oxmux}"
+
+  server:
+    image: oxmux/control-plane:${OXMUX_VERSION:-local}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    environment:
+      OXMUX_BUNDLED_POSTGRES_ENABLED: 'false'
+      OXMUX_BUNDLED_OBJECT_STORAGE_ENABLED: 'false'
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8989
+      DATABASE_URL: postgres://${POSTGRES_USER:-oxmux}:${POSTGRES_PASSWORD}@postgres:5432/oxmux
+      OBJECT_STORAGE_ENDPOINT: http://minio:9000
+      OBJECT_STORAGE_REGION: ${OBJECT_STORAGE_REGION:-us-east-1}
+      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:-oxmux}
+      OBJECT_STORAGE_ACCESS_KEY_ID: ${OBJECT_STORAGE_ACCESS_KEY_ID:-oxmux}
+      OBJECT_STORAGE_SECRET_ACCESS_KEY: ${OBJECT_STORAGE_SECRET_ACCESS_KEY}
+      # 纯 HTTP 部署：PUBLIC_BASE_URL 协议会被 resolveExternalRequestScheme 消费，
+      # install 脚本 / 预览 URL / auth cookie 都按它生成
+      OXMUX_PUBLIC_BASE_URL: ${OXMUX_PUBLIC_BASE_URL:-http://localhost:8989}
+      OXMUX_PROJECT_PREVIEW_SCHEME: ${OXMUX_PROJECT_PREVIEW_SCHEME:-http}
+      BETTER_AUTH_URL: ${OXMUX_PUBLIC_BASE_URL:-http://localhost:8989}
+      BETTER_AUTH_TRUSTED_ORIGINS: ${OXMUX_PUBLIC_BASE_URL:-http://localhost:8989}
+      OXMUX_USAGE_REPORTING_DISABLED: ${OXMUX_USAGE_REPORTING_DISABLED:-}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env.production}
+      TOKEN_SECRET: ${TOKEN_SECRET:?set TOKEN_SECRET in .env.production}
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY:?set SECRET_ENCRYPTION_KEY in .env.production}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
+      # 可选功能透传：邮件发送 / Google 登录（不配则登录页自动隐藏入口）/ 健康检查 token
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-}
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      OXMUX_HEALTH_TOKEN: ${OXMUX_HEALTH_TOKEN:-}
+    ports:
+      - '${SERVER_PORT:-8989}:8989'
+    volumes:
+      - oxmux-server-runtime:/tmp/oxmux-runtime
+
+volumes:
+  oxmux-postgres-data:
+  oxmux-minio-data:
+  oxmux-server-runtime:

@@ -92,6 +92,7 @@ export const tasksMethods = {
     options?: {
       baseBranch?: string
       agentType?: Task['agentType']
+      executionModel?: string
       includeResources?: boolean
       workingDirectoryMode?: Workspace['workingDirectoryMode']
       workspaceSessionId?: string

@@ -5,7 +5,7 @@
  * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Bot, ChevronRight, Maximize2, Minimize2, Paperclip, UserRound, X } from 'lucide-react'
+import { AlertCircle, Bot, ChevronRight, Maximize2, Minimize2, Paperclip, UserRound, X } from 'lucide-react'
 import { type ProjectAssignee, type TaskQuickCreatePayload } from '../../lib/api'
 import type { Project, Task, TaskStatus } from '@shared/types'
 import { getProjectColor } from '@shared/project-color'
@@ -154,6 +154,7 @@ export function CreateTaskModal({
   const [creatorAgentId, setCreatorAgentId] = useState('')
   const [hydratedProjectId, setHydratedProjectId] = useState('')
   const [createMore, setCreateMore] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [expanded, setExpanded] = useState(false)
   const attachmentInputRef = useRef<HTMLInputElement>(null)
   const activeDraftScope = draftScope ?? (parentTask ? `subtask:${parentTask.id}` : undefined)
@@ -442,6 +443,7 @@ export function CreateTaskModal({
     setCreatorAgentId('')
     setHydratedProjectId('')
     setCreateMore(false)
+    setSubmitError('')
   }
 
   const handleClose = () => {
@@ -455,19 +457,29 @@ export function CreateTaskModal({
     const trimmedQuickCreateRequest = quickCreateRequest.trim()
     if (creationMode === 'agent') {
       if (!trimmedQuickCreateRequest || !creatorAgentId || !onQuickCreate) return
-      const created = await onQuickCreate({
-        creatorAgentId,
-        request: trimmedQuickCreateRequest,
-        projectSelection: localProjectId
-          ? { mode: 'fixed', projectId: localProjectId }
-          : { mode: 'agent' },
-        priority,
-        status: status === 'backlog' ? 'backlog' : 'todo',
-        assignmentStartMode: status === 'backlog' ? 'parked' : assignmentStartMode,
-        idempotencyKey: crypto.randomUUID(),
-      })
-      if (!created) return
+      let quickCreateSucceeded = false
+      try {
+        quickCreateSucceeded = await onQuickCreate({
+          creatorAgentId,
+          request: trimmedQuickCreateRequest,
+          projectSelection: localProjectId
+            ? { mode: 'fixed', projectId: localProjectId }
+            : { mode: 'agent' },
+          priority,
+          status: status === 'backlog' ? 'backlog' : 'todo',
+          assignmentStartMode: status === 'backlog' ? 'parked' : assignmentStartMode,
+          idempotencyKey: crypto.randomUUID(),
+        })
+      } catch (error) {
+        setSubmitError(error instanceof Error && error.message ? error.message : t('kanbanPage.taskCreateFailed'))
+        return
+      }
+      if (!quickCreateSucceeded) {
+        setSubmitError((current) => current || t('kanbanPage.taskCreateFailed'))
+        return
+      }
 
+      setSubmitError('')
       if (createMore) {
         setQuickCreateRequest('')
         return
@@ -480,28 +492,36 @@ export function CreateTaskModal({
     const targetProjectId = localProjectId || currentProject?.id
     if (!targetProjectId) return
 
-    const created = await onCreate({
-      projectId: targetProjectId,
-      title: trimmedTitle || undefined,
-      description: trimmedDescription || trimmedTitle,
-      priority,
-      status,
-      startedAt: resolveStartedAtInputValue(startedAtInput),
-      dueAt: resolveDueAtInputValue(dueAtInput),
-      assigneeId: assigneeId.startsWith('agent:') ? undefined : assigneeId || undefined,
-      assigneeAgentId: assigneeId.startsWith('agent:') ? assigneeId.slice('agent:'.length) : undefined,
-      assignmentStartMode: status === 'backlog' ? 'parked' : assignmentStartMode,
-      handoffPrompt: assignmentStartMode === 'now' ? handoffPrompt.trim() || undefined : undefined,
-      idempotencyKey: crypto.randomUUID(),
-      acceptanceCriteria: acceptanceCriteria.trim() || undefined,
-      requirementType,
-      parentTaskId: parentTask?.id,
-      images,
-    })
+    let created = false
+    try {
+      created = await onCreate({
+        projectId: targetProjectId,
+        title: trimmedTitle || undefined,
+        description: trimmedDescription || trimmedTitle,
+        priority,
+        status,
+        startedAt: resolveStartedAtInputValue(startedAtInput),
+        dueAt: resolveDueAtInputValue(dueAtInput),
+        assigneeId: assigneeId.startsWith('agent:') ? undefined : assigneeId || undefined,
+        assigneeAgentId: assigneeId.startsWith('agent:') ? assigneeId.slice('agent:'.length) : undefined,
+        assignmentStartMode: status === 'backlog' ? 'parked' : assignmentStartMode,
+        handoffPrompt: assignmentStartMode === 'now' ? handoffPrompt.trim() || undefined : undefined,
+        idempotencyKey: crypto.randomUUID(),
+        acceptanceCriteria: acceptanceCriteria.trim() || undefined,
+        requirementType,
+        parentTaskId: parentTask?.id,
+        images,
+      })
+    } catch (error) {
+      setSubmitError(error instanceof Error && error.message ? error.message : t('kanbanPage.taskCreateFailed'))
+      return
+    }
     if (!created) {
+      setSubmitError((current) => current || t('kanbanPage.taskCreateFailed'))
       return
     }
 
+    setSubmitError('')
     clearCreateTaskDraft(targetProjectId, activeDraftScope)
     if (createMore) {
       setTitle('')
@@ -766,6 +786,25 @@ export function CreateTaskModal({
                   containerClassName="px-0 py-0"
                   labelClassName="text-[11px] text-zinc-400"
                 />
+              </div>
+            ) : null}
+            {submitError ? (
+              <div
+                role="alert"
+                aria-live="polite"
+                data-testid="create-task-submit-error"
+                className="mt-3 flex items-start gap-2 rounded-md border border-rose-500/40 bg-rose-500/10 px-2.5 py-2 text-xs text-rose-200"
+              >
+                <AlertCircle className="mt-px h-3.5 w-3.5 shrink-0 text-rose-300" />
+                <span className="min-w-0 flex-1 break-words leading-5">{submitError}</span>
+                <button
+                  type="button"
+                  aria-label={t('common.dismiss', { defaultValue: '忽略' })}
+                  onClick={() => setSubmitError('')}
+                  className="ml-1 shrink-0 rounded p-1 text-rose-300/80 transition-colors hover:bg-rose-500/20 hover:text-rose-100"
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </div>
             ) : null}
 

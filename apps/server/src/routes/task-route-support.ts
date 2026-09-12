@@ -806,6 +806,8 @@ export const ensureWorkspaceSessionRecord = (params: {
   titleOrigin?: WorkspaceSession['titleOrigin']
   customAgentId?: string
   customAgentName?: string
+  agentType?: Task['agentType']
+  executionModel?: string
   agentInvocationMode?: WorkspaceSession['agentInvocationMode']
   sessionKind?: WorkspaceSession['sessionKind']
   sessionRole?: WorkspaceSession['sessionRole']
@@ -828,7 +830,7 @@ export const ensureWorkspaceSessionRecord = (params: {
   if (existing) {
     const nextSession = mergeWorkspaceSession(params.task, existing, {
       executorNodeId: workspaceWorkerId || existing.executorNodeId,
-      agentType: existing.agentType ?? params.task.agentType,
+      agentType: params.agentType ?? existing.agentType ?? params.task.agentType,
       customAgentId: params.customAgentId ?? existing.customAgentId,
       customAgentName: params.customAgentName ?? existing.customAgentName,
       agentInvocationMode: params.agentInvocationMode ?? existing.agentInvocationMode,
@@ -846,7 +848,7 @@ export const ensureWorkspaceSessionRecord = (params: {
       titleOrigin: params.titleOrigin ?? existing.titleOrigin,
       delegatedPrompt: params.delegatedPrompt ?? existing.delegatedPrompt,
       workingDirectoryMode: params.workingDirectoryMode ?? existing.workingDirectoryMode,
-      executionModel: existing.executionModel ?? params.task.executionModel,
+      executionModel: params.executionModel ?? existing.executionModel ?? params.task.executionModel,
       opencodeConfig: existing.opencodeConfig ?? params.task.opencodeConfig,
       gitIdentityMode: existing.gitIdentityMode ?? params.task.gitIdentityMode,
       worktreeUniqueId: existing.worktreeUniqueId ?? allocateWorkspaceWorktreeUniqueId(workspaceWorkerId || existing.executorNodeId, existing.id),
@@ -878,7 +880,13 @@ export const ensureWorkspaceSessionRecord = (params: {
     ? requestedSharedWorktreeSourceSession
     : null
   const session = createWorkspaceSession({
-    task: params.task,
+    task: params.agentType || params.executionModel
+      ? {
+          ...params.task,
+          agentType: params.agentType ?? params.task.agentType,
+          executionModel: params.executionModel ?? params.task.executionModel,
+        }
+      : params.task,
     workspaceId: params.workspaceId,
     displayOrder: resolveNextWorkspaceSessionDisplayOrder(workspaceSessions),
     executorNodeId: workspaceWorkerId || undefined,

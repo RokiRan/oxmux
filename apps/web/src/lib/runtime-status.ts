@@ -1,10 +1,10 @@
 /**
  * [INPUT]: Task, workspace-session, and unread-state runtime projections.
- * [OUTPUT]: Pure task/project runtime phases and activity/attention counts for web UI.
- * [POS]: Web display projection; it does not mutate task or workspace runtime state.
- * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
+…
  */
+import type { InboxGroupSummary } from '@shared/inbox'
 import type { Project, Task, TaskWorkspaceBinding, WorkspaceSession } from '@shared/types'
+import { isInboxWakingKind } from '@shared/inbox'
 import { isWorkspaceSessionUnread, type WorkspaceSessionUnreadOptions } from './workspace-session-attention'
 import { getWorkspaceSessionDisplayStatus } from './workspace-session-status'
 
@@ -181,6 +181,22 @@ export const getProjectWorkspaceUnreadCount = ({
   }
 
   return unreadCount
+}
+
+/** 收件箱里归属当前项目（scope.projectId）的「待处理」分组数，与工作区会话未读是两条独立信号。 */
+export const countInboxProjectGroups = (
+  projectId: string,
+  inboxGroups: readonly InboxGroupSummary[] = [],
+): number => {
+  let count = 0
+  for (const group of inboxGroups) {
+    if (group.section === 'archived' || group.section === 'snoozed') continue
+    if (!isInboxWakingKind(group.latestItem.kind)) continue
+    if (group.latestItem.scope.projectId !== projectId) continue
+    if (group.actionableUnreadCount <= 0) continue
+    count += 1
+  }
+  return count
 }
 
 export const getAllProjectRuntimeSummaries = (

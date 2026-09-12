@@ -7,9 +7,9 @@
 
 import type { AgentRunningStatus, AgentUniverseGraph, WorkspaceSessionRuntimeStatus } from '@shared/types'
 import { readCustomAgentConfig } from '@shared/custom-agent'
-import { inArray } from 'drizzle-orm'
+import { eq, inArray } from 'drizzle-orm'
 import { getDrizzleDb } from '../storage/postgres/drizzle-db'
-import { collabWorkspaces } from '../storage/postgres/schema-core'
+import { collabWorkspaceMembers, collabWorkspaces } from '../storage/postgres/schema-core'
 import { loadState } from '../storage/app-state-store'
 import { agentService } from '../integrations/agent/service'
 import { listVisibleExecutorsForUser } from '../control-plane/collaboration'
@@ -170,6 +170,21 @@ export const buildAgentUniverseGraph = (input: AgentUniverseGraphInput): AgentUn
       }
     }
   }
+  // 没有任何 Agent 通过 defaultExecutorId 引用的「独立节点」也要展示，避免顶部统计漏算。
+  for (const executor of input.executors) {
+    if (nodeKeys.has(`executor:${executor.executorId}`)) continue
+    addNode({
+      id: `executor:${executor.executorId}`,
+      type: 'executor',
+      label: executor.machineName || executor.name,
+      executorId: executor.executorId,
+      machineName: executor.machineName,
+      platform: executor.platform,
+      version: executor.version,
+      status: executor.status,
+      agentCount: 0,
+    })
+  }
 
   // 工作区 → 绑定执行节点（executes_on）：collab_workspaces 无 executorNodeId 列，
   // V1 不产出该边（Agent→机器 runs_on 已覆盖「执行位置」），保留类型供后续扩展。
@@ -239,14 +254,24 @@ export const filterAgentUniverseGraph = (graph: AgentUniverseGraph, workspaceId:
 export const getAgentUniverseGraph = async (userId: string, workspaceFilter?: string): Promise<AgentUniverseGraph> => {
   const agents = agentService.getUserAgents(userId)
   const configs = agents.map((agent) => ({ agent, config: readCustomAgentConfig(agent.config) }))
-  const workspaceIds = Array.from(new Set(configs.flatMap(({ config }) => config.workspaceIds)))
+  const agentReferencedWorkspaceIds = Array.from(new Set(configs.flatMap(({ config }) => config.workspaceIds)))
+
+  // 工作区列表 = 用户作为成员的全部工作区 + Agent 配置引用的工作区（去重）。
+  // 仅取 Agent 引用会让未被任何 Agent 关联的「独立工作区」在宇宙视图中消失，统计口径漏算。
+  const memberWorkspaceRows = await getDrizzleDb()
+    .select({ id: collabWorkspaces.id })
+    .from(collabWorkspaces)
+    .innerJoin(collabWorkspaceMembers, eq(collabWorkspaceMembers.workspaceId, collabWorkspaces.id))
+    .where(eq(collabWorkspaceMembers.userId, userId))
+  const memberWorkspaceIds = memberWorkspaceRows.map((row) => row.id)
+  const allWorkspaceIds = Array.from(new Set([...memberWorkspaceIds, ...agentReferencedWorkspaceIds]))
 
   const [workspaceRows, executors] = await Promise.all([
-    workspaceIds.length > 0
+    allWorkspaceIds.length > 0
       ? getDrizzleDb()
         .select({ id: collabWorkspaces.id, name: collabWorkspaces.name })
         .from(collabWorkspaces)
-        .where(inArray(collabWorkspaces.id, workspaceIds))
+        .where(inArray(collabWorkspaces.id, allWorkspaceIds))
       : Promise.resolve([] as Array<{ id: string; name: string }>),
     Promise.resolve(listVisibleExecutorsForUser(userId)),
   ])

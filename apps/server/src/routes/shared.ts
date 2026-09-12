@@ -693,6 +693,7 @@ export const taskWorkspaceBindingSchema = z.object({
   workspaceId: z.string().trim().min(1),
   baseBranch: z.string().trim().min(1).optional(),
   agentType: serverAgentTypeSchema.optional(),
+  executionModel: z.string().trim().min(1).optional(),
 })
 
 const taskCommentMentionTargetSchema = z.object({

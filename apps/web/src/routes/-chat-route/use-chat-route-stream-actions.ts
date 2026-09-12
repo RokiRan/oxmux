@@ -336,14 +336,23 @@ export function useChatRouteStreamActions({
 
   useEffect(() => {
     // 未指定执行节点时视为「自动分配在线执行器」：不阻塞队列消费。
-    const selectedExecutorOnline = !routeState.effectiveExecutorId
-      || routeState.selectedExecutor?.status === 'online'
+    // effectiveExecutorId 必须进依赖：会话切换会让 effectiveExecutorId 变化（executor 选择条件变化）。
+    // 与 handleSend 的入队口径保持一致：只在「executor 已解析且明确不在线」时阻塞；
+    // executor 尚未解析（列表未加载或不可见）时不阻塞，交由服务端在线性校验回错。
+    const selectedExecutorOffline = Boolean(
+      routeState.effectiveExecutorId
+      && routeState.selectedExecutor
+      && routeState.selectedExecutor.status !== 'online',
+    )
     if (
-      routeState.isStreaming
+      // executor 列表首轮加载完成前不 flush：selectedExecutor 此时必然为 null，
+      // 无法区分「executor 离线」与「还没加载」，贸然发送会把离线场景的消息静默吞掉。
+      (routeState.effectiveExecutorId && !routeState.executorsLoaded)
+      || routeState.isStreaming
       || sendInFlightRef.current
       || routeState.messageQueue.length === 0
       || !routeState.activeSession
-      || !selectedExecutorOnline
+      || selectedExecutorOffline
     ) {
       return
     }
@@ -351,7 +360,14 @@ export function useChatRouteStreamActions({
     const [nextMessage, ...restQueue] = routeState.messageQueue
     routeState.setMessageQueue(restQueue)
     void processSend(nextMessage, routeState.activeSession.id, nextMessage.content)
-  }, [routeState.activeSession, routeState.isStreaming, routeState.messageQueue.length, routeState.selectedExecutor?.status])
+  }, [
+    routeState.activeSession,
+    routeState.effectiveExecutorId,
+    routeState.executorsLoaded,
+    routeState.isStreaming,
+    routeState.messageQueue.length,
+    routeState.selectedExecutor?.status,
+  ])
 
   const handleStopStreaming = () => {
     const activeSessionId = routeState.activeSession?.id

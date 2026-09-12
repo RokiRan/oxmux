@@ -1505,6 +1505,8 @@ export const registerWorkspaceManagementRoutes = (app: Hono, requireAuth: Middle
           title: savedWorkspaceRecord.name,
           titleOrigin: resolveInitialWorkspaceSessionTitleOrigin(workspaceTitleOrigin),
           workingDirectoryMode: effectiveWorkingDirectoryMode,
+          agentType: payload.agentType,
+          executionModel: payload.executionModel?.trim() || undefined,
         }), savedWorkspaceRecord)
       : applyWorkspaceCodeStateToSession(createWorkspaceSession({
           workspaceId: savedWorkspaceRecord.id,

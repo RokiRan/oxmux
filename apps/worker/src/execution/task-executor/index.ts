@@ -279,9 +279,10 @@ export const executeAssignedTask = async (params: {
       env: gitCommandEnv,
     })
     const completedAt = new Date().toISOString()
+    const agentRunFailed = agentResult.ok === false
     const result: TaskExecutionResult = attachTaskResultDelivery({
       taskId: params.task.id,
-      status: 'completed',
+      status: agentRunFailed ? 'failed' : 'completed',
       returnMode: params.task.returnMode,
       summary: [
         executedPresetSteps.length > 0 ? `已执行项目预设命令：\n${executedPresetSteps.map((step) => `- ${step}`).join('\n')}` : undefined,
@@ -308,10 +309,11 @@ export const executeAssignedTask = async (params: {
     return {
       task: {
         ...params.task,
-        status: 'completed' as const,
+        status: agentRunFailed ? ('failed' as const) : ('completed' as const),
         startedAt,
         completedAt,
         updatedAt: completedAt,
+        ...(agentRunFailed ? { errorMessage: agentResult.output } : {}),
         result,
       },
     }

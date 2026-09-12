@@ -1,4 +1,5 @@
 import type { MainChatSession } from '@shared/types'
+import type { ChatBubbleMessage } from './chat-route-types'
 import { PRIMARY_CHAT_AGENT_ID } from './chat-route-helpers'
 
 const STORAGE_KEY = 'vibemux.main-chat.session-preferences'
@@ -152,5 +153,77 @@ export const upsertPersistedMainChatSessionPreference = (
       ...preferences.sessions,
       [normalizedSessionId]: nextPreference,
     },
+  }
+}
+
+// 主聊天消息队列（待发送）：在刷新/重启浏览器后必须能恢复，避免消息凭空消失。
+const QUEUE_STORAGE_KEY = 'vibemux.main-chat.message-queue.v1'
+
+export type PersistedMainChatMessageQueue = {
+  activeSessionId?: string
+  queues: Record<string, ChatBubbleMessage[]>
+}
+
+export const readMainChatMessageQueue = (): PersistedMainChatMessageQueue => {
+  if (typeof window === 'undefined') {
+    return { queues: {} }
+  }
+  try {
+    const raw = window.localStorage.getItem(QUEUE_STORAGE_KEY)
+    if (!raw) {
+      return { queues: {} }
+    }
+    const parsed = JSON.parse(raw) as Partial<PersistedMainChatMessageQueue>
+    if (!parsed || typeof parsed !== 'object') {
+      return { queues: {} }
+    }
+    const queues: Record<string, ChatBubbleMessage[]> = {}
+    if (parsed.queues && typeof parsed.queues === 'object') {
+      for (const [sessionId, items] of Object.entries(parsed.queues)) {
+        const trimmedSessionId = sessionId.trim()
+        if (!trimmedSessionId || !Array.isArray(items)) {
+          continue
+        }
+        const normalizedItems = items
+          .filter((item): item is ChatBubbleMessage => Boolean(item && typeof item === 'object'))
+          .map((item) => ({
+            ...item,
+            timelineOrder: typeof item.timelineOrder === 'number' ? item.timelineOrder : 0,
+          }))
+        if (normalizedItems.length > 0) {
+          queues[trimmedSessionId] = normalizedItems
+        }
+      }
+    }
+    return {
+      activeSessionId: typeof parsed.activeSessionId === 'string' ? parsed.activeSessionId.trim() : undefined,
+      queues,
+    }
+  } catch {
+    return { queues: {} }
+  }
+}
+
+export const writeMainChatMessageQueue = (snapshot: PersistedMainChatMessageQueue) => {
+  if (typeof window === 'undefined') {
+    return
+  }
+  try {
+    window.localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(snapshot))
+  } catch {
+    // 存储失败时静默丢弃：聊天交互不能被持久化阻塞。
+  }
+}
+
+export const clearMainChatMessageQueueSession = (snapshot: PersistedMainChatMessageQueue, sessionId?: string) => {
+  const trimmedSessionId = sessionId?.trim()
+  if (!trimmedSessionId || !(trimmedSessionId in snapshot.queues)) {
+    return snapshot
+  }
+  const nextQueues = { ...snapshot.queues }
+  delete nextQueues[trimmedSessionId]
+  return {
+    activeSessionId: snapshot.activeSessionId === trimmedSessionId ? undefined : snapshot.activeSessionId,
+    queues: nextQueues,
   }
 }

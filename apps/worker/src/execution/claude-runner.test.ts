@@ -23,6 +23,17 @@ test('default permission mode allows read and delegation tools but blocks writes
   assert.equal(shouldAllowClaudeTool('bypassPermissions', 'Bash'), true)
 })
 
+test('platform MCP tools are trusted outside plan mode and ExitPlanMode always exits plan', () => {
+  // oxmux 平台暴露的 MCP 工具（如 mcp__oxmux__task_get）：default/acceptEdits 都应放行
+  assert.equal(shouldAllowClaudeTool('default', 'mcp__oxmux__task.get'), true)
+  assert.equal(shouldAllowClaudeTool('acceptEdits', 'mcp__oxmux__task.delivery.report'), true)
+  // plan 模式：仍要拦截普通工具调用，避免绕过计划审批
+  assert.equal(shouldAllowClaudeTool('plan', 'mcp__oxmux__task.get'), false)
+  // 但 ExitPlanMode 必须放行，否则 agent 永远退不出 plan mode
+  assert.equal(shouldAllowClaudeTool('plan', 'ExitPlanMode'), true)
+  assert.equal(shouldAllowClaudeTool('plan', 'exit_plan_mode'), true)
+})
+
 test('extractClaudeResultUsage maps Claude Code CLI usage to ModelTokenUsage', () => {
   assert.deepEqual(
     extractClaudeResultUsage({

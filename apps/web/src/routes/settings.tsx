@@ -36,6 +36,12 @@ function SettingsRoute() {
   const navigate = Route.useNavigate()
   const { state, settingsDraft, setSettingsDraft, busy, runMutation } = useApp()
   const { user, updateUser } = useAuth()
+  const refreshExperimentalSettings = () => {
+    void api.getMyExperimentalSettings()
+      .then((response) => setExperimentalSettingsDraft(response.settings))
+      .catch(() => undefined)
+  }
+
   const [notificationSettingsDraft, setNotificationSettingsDraft] = useState<UserNotificationSettings>(defaultUserNotificationSettings())
   const [experimentalSettingsDraft, setExperimentalSettingsDraft] = useState<UserExperimentalSettings>(defaultUserExperimentalSettings())
   const [browserNotificationPermission, setBrowserNotificationPermission] = useState<BrowserNotificationPermission>('unsupported')
@@ -65,6 +71,10 @@ function SettingsRoute() {
       })
       .finally(() => setLocalWorkerHealthChecking(false))
   }
+
+  useEffect(() => {
+    refreshExperimentalSettings()
+  }, [])
 
   useEffect(() => {
     if (search.section !== 'runtime') {

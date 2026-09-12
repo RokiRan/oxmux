@@ -528,9 +528,9 @@ export const registerTaskRoutes = (app: Hono, requireAuth: MiddlewareHandler) =>
       createNewSession,
     })
     const requestedAgentType = payload.agentType ?? runtimeTemplate?.agentType ?? workspace.agentType
-    const requestedExecutionModel = requestedAgentType === (runtimeTemplate?.agentType ?? workspace.agentType)
-      ? runtimeTemplate?.executionModel
-      : undefined
+    const agentTypeUnchanged = requestedAgentType === (runtimeTemplate?.agentType ?? workspace.agentType)
+    const requestedExecutionModel = payload.executionModel?.trim()
+      || (agentTypeUnchanged ? runtimeTemplate?.executionModel : undefined)
     const requestedExecutorNodeId = resolveWorkspaceSessionExecutorId(runtimeTemplate, workspace.executorNodeId)
     const sessionTask = {
       ...bindingState.task,

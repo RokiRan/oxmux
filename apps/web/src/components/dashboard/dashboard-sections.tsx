@@ -602,12 +602,9 @@ function OverviewTrendChart({
   emptyLabel: string
 }) {
   const maxValue = Math.max(...values, 0)
+  // 即使没有有效数据，也要画坐标轴/刻度线，让「14 天近空白」的视觉与满数据时一致。
+  // 仅在确实无数据时才短路到 emptyLabel。
   const hasData = values.some((value) => value > 0)
-
-  if (!hasData) {
-    return <p className="text-xs text-zinc-500">{emptyLabel}</p>
-  }
-
   const width = 320
   const height = 96
   const paddingLeft = 8
@@ -617,13 +614,6 @@ function OverviewTrendChart({
   const innerWidth = width - paddingLeft - paddingRight
   const innerHeight = height - paddingTop - paddingBottom
   const step = points.length > 1 ? innerWidth / (points.length - 1) : 0
-  const coordinates = values.map((value, index) => {
-    const x = paddingLeft + step * index
-    const y = paddingTop + innerHeight - (maxValue > 0 ? (value / maxValue) * innerHeight : 0)
-    return { x, y, value, label: points[index]?.label ?? '' }
-  })
-  const linePath = coordinates.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
-  const areaPath = `${linePath} L ${paddingLeft + innerWidth} ${paddingTop + innerHeight} L ${paddingLeft} ${paddingTop + innerHeight} Z`
 
   return (
     <div>
@@ -640,19 +630,43 @@ function OverviewTrendChart({
           return <line key={offset} x1={paddingLeft} x2={paddingLeft + innerWidth} y1={y} y2={y} stroke="rgba(63,63,70,0.65)" strokeDasharray="4 5" />
         })}
 
-        <path d={areaPath} fill="url(#dashboard-overview-trend-fill)" />
-        <path d={linePath} fill="none" stroke="#d4d4d8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.25" />
+        {!hasData && (
+          <text
+            x={paddingLeft + innerWidth / 2}
+            y={paddingTop + innerHeight / 2 + 4}
+            textAnchor="middle"
+            className="fill-zinc-600"
+            fontSize="10"
+          >
+            {emptyLabel}
+          </text>
+        )}
 
-        {coordinates.map((point, index) => (
-          <circle
-            key={`${point.label}-${index}`}
-            cx={point.x}
-            cy={point.y}
-            r={index === coordinates.length - 1 ? 4 : 3}
-            fill={index === coordinates.length - 1 ? '#f4f4f5' : '#a1a1aa'}
-            opacity={point.value > 0 ? 1 : 0.55}
-          />
-        ))}
+        {hasData ? (() => {
+          const coordinates = values.map((value, index) => {
+            const x = paddingLeft + step * index
+            const y = paddingTop + innerHeight - (maxValue > 0 ? (value / maxValue) * innerHeight : 0)
+            return { x, y, value, label: points[index]?.label ?? '' }
+          })
+          const linePath = coordinates.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
+          const areaPath = `${linePath} L ${paddingLeft + innerWidth} ${paddingTop + innerHeight} L ${paddingLeft} ${paddingTop + innerHeight} Z`
+          return (
+            <>
+              <path d={areaPath} fill="url(#dashboard-overview-trend-fill)" />
+              <path d={linePath} fill="none" stroke="#d4d4d8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.25" />
+              {coordinates.map((point, index) => (
+                <circle
+                  key={`${point.label}-${index}`}
+                  cx={point.x}
+                  cy={point.y}
+                  r={index === coordinates.length - 1 ? 4 : 3}
+                  fill={index === coordinates.length - 1 ? '#f4f4f5' : '#a1a1aa'}
+                  opacity={point.value > 0 ? 1 : 0.55}
+                />
+              ))}
+            </>
+          )
+        })() : null}
       </svg>
       <ChartLabels points={points} />
     </div>

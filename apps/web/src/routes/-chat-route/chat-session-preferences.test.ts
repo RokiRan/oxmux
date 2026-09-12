@@ -2,10 +2,11 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { PRIMARY_CHAT_AGENT_ID } from './chat-route-helpers'
 import {
+  readMainChatMessageQueue,
   readMainChatPreferences,
   resolveMainChatSessionSelectedModel,
+  writeMainChatMessageQueue,
 } from './chat-session-preferences'
-
 const STORAGE_KEY = 'vibemux.main-chat.session-preferences'
 
 const createLocalStorage = () => {
@@ -98,4 +99,77 @@ test('resolveMainChatSessionSelectedModel prefers the current session over stale
     undefined,
     { executionModel: 'openai/gpt-5' },
   ), 'openai/gpt-5')
+})
+
+test('readMainChatMessageQueue restores per-session queued messages across reloads', () => {
+  const { localStorage, restore } = installWindow()
+
+  try {
+    localStorage.setItem('vibemux.main-chat.message-queue.v1', JSON.stringify({
+      activeSessionId: 'session-A',
+      queues: {
+        'session-A': [
+          { id: 'm1', role: 'user', content: '你好', createdAt: '2025-01-01T00:00:00Z', timelineOrder: 1 },
+        ],
+        'session-B': [
+          { id: 'm2', role: 'user', content: '在吗', createdAt: '2025-01-01T00:00:01Z', timelineOrder: 2 },
+          { id: 'm3', role: 'user', content: '还在吗', createdAt: '2025-01-01T00:00:02Z', timelineOrder: 3 },
+        ],
+      },
+    }))
+
+    const snapshot = readMainChatMessageQueue()
+    assert.equal(snapshot.activeSessionId, 'session-A')
+    assert.equal(snapshot.queues['session-A']?.length, 1)
+    assert.equal(snapshot.queues['session-A']?.[0]?.content, '你好')
+    assert.equal(snapshot.queues['session-B']?.length, 2)
+  } finally {
+    restore()
+  }
+})
+
+test('readMainChatMessageQueue drops malformed entries and skips sessions with no valid messages', () => {
+  const { localStorage, restore } = installWindow()
+
+  try {
+    localStorage.setItem('vibemux.main-chat.message-queue.v1', JSON.stringify({
+      activeSessionId: 42,
+      queues: {
+        'session-A': 'not-an-array',
+        'session-B': [
+          { id: 'm1', role: 'user', content: 'hi' },
+          null,
+        ],
+      },
+    }))
+
+    const snapshot = readMainChatMessageQueue()
+    assert.equal(snapshot.activeSessionId, undefined)
+    assert.equal(snapshot.queues['session-A'], undefined)
+    assert.equal(snapshot.queues['session-B']?.length, 1)
+    assert.equal(snapshot.queues['session-B']?.[0]?.content, 'hi')
+  } finally {
+    restore()
+  }
+})
+
+test('writeMainChatMessageQueue persists and survives a fresh read', () => {
+  const { localStorage, restore } = installWindow()
+
+  try {
+    writeMainChatMessageQueue({
+      activeSessionId: 'session-X',
+      queues: {
+        'session-X': [
+          { id: 'm1', role: 'user', content: '持久化测试', createdAt: '2025-01-01T00:00:00Z', timelineOrder: 1 },
+        ],
+      },
+    })
+
+    const snapshot = readMainChatMessageQueue()
+    assert.equal(snapshot.activeSessionId, 'session-X')
+    assert.equal(snapshot.queues['session-X']?.[0]?.content, '持久化测试')
+  } finally {
+    restore()
+  }
 })

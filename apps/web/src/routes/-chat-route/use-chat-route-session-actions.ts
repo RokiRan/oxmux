@@ -41,7 +41,18 @@ export function useChatRouteSessionActions({
 
     const targetAgentId = routeState.selectedChatAgent.id
     const agentDefaultExecutorId = resolveAgentDefaultExecutorId(routeState.activeCustomAgent)
-    const inheritedExecutorId = routeState.activeSession?.executorId || agentDefaultExecutorId
+    const inheritedExecutorId = (() => {
+      // 只在被继承节点当前在线时继承；离线节点（重配对换 id 后）会让新会话绑死、队列无法 flush。
+      const candidate = routeState.activeSession?.executorId || agentDefaultExecutorId
+      if (!candidate) {
+        return ''
+      }
+      if (!routeState.executorsLoaded) {
+        return candidate
+      }
+      const record = routeState.executors.find((executor) => executor.executorId === candidate)
+      return record?.status === 'online' ? candidate : ''
+    })()
     const createPayload = routeState.activeSession || agentDefaultExecutorId
       ? {
           executorId: inheritedExecutorId || undefined,

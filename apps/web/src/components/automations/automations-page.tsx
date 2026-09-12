@@ -148,10 +148,14 @@ const TIMEZONE_OPTIONS = [
   { value: 'Europe/London', label: 'Europe/London (GMT)' },
 ]
 
-const createFormFromAutomation = (automation?: AutomationDetail | null, fallbackWorkspaceId = ''): AutomationFormState => ({
+const createFormFromAutomation = (
+  automation?: AutomationDetail | null,
+  fallbackWorkspaceId = '',
+  fallbackAgentType: AutomationFormState['agentType'] = 'OpenCode',
+): AutomationFormState => ({
   title: automation?.title ?? '',
   prompt: automation?.description ?? '',
-  agentType: automation?.agentType ?? 'OpenCode',
+  agentType: automation?.agentType ?? fallbackAgentType,
   workspaceId: automation?.workspaceId ?? fallbackWorkspaceId,
 })
 
@@ -272,7 +276,12 @@ export function AutomationsPage() {
       setSelectedAutomationId('')
       setSelectedAutomation(null)
       setIsCreating(false)
-      setForm(createFormFromAutomation())
+      setForm((current) => ({
+        title: '',
+        prompt: '',
+        agentType: current.agentType || 'OpenCode',
+        workspaceId: '',
+      }))
       setSchedule(cronToScheduleState())
       return
     }
@@ -280,7 +289,12 @@ export function AutomationsPage() {
     setWorkspaces([])
     setSelectedAutomation(null)
     setSelectedAutomationId('')
-    setForm(createFormFromAutomation())
+    setForm((current) => ({
+      title: '',
+      prompt: '',
+      agentType: current.agentType || 'OpenCode',
+      workspaceId: '',
+    }))
     setSchedule(cronToScheduleState())
     void loadProjectData(currentProject.id)
   }, [currentProject?.id, loadProjectData])
@@ -289,14 +303,14 @@ export function AutomationsPage() {
     if (isCreating) {
       setSelectedAutomation(null)
       setSelectedAutomationId('')
-      setForm(createFormFromAutomation(undefined, workspaces[0]?.id ?? ''))
+      setForm((current) => createFormFromAutomation(undefined, workspaces[0]?.id ?? '', current.agentType))
       setSchedule(cronToScheduleState())
       return
     }
     if (automations.length === 0) {
       setSelectedAutomationId('')
       setSelectedAutomation(null)
-      setForm(createFormFromAutomation(undefined, workspaces[0]?.id ?? ''))
+      setForm((current) => createFormFromAutomation(undefined, workspaces[0]?.id ?? '', current.agentType))
       return
     }
     if (automations.some((item) => item.id === selectedAutomationId)) return
@@ -330,12 +344,15 @@ export function AutomationsPage() {
 
   const handleCreateMode = () => {
     setIsCreating(true)
-    setForm(createFormFromAutomation(undefined, workspaces[0]?.id ?? ''))
+    setForm((current) => createFormFromAutomation(undefined, workspaces[0]?.id ?? '', current.agentType))
     setSchedule(cronToScheduleState())
   }
 
   const handleSave = async () => {
-    if (!currentProject?.id) return
+    if (!currentProject?.id) {
+      toast.error(tr(language, '当前未选择项目，无法保存。', 'No project selected. Pick a project first.'))
+      return
+    }
     if (!form.title.trim()) {
       toast.error(tr(language, '请输入自动化名称。', 'Please enter a name.'))
       return
@@ -749,16 +766,36 @@ export function AutomationsPage() {
                       <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-zinc-500">
                         {tr(language, '工作区', 'Workspace')}
                       </label>
-                      <SearchableSelect
-                        value={form.workspaceId}
-                        onChange={(value) => setForm((current) => ({ ...current, workspaceId: value }))}
-                        options={workspaceOptions}
-                        placeholder={tr(language, '选择工作区', 'Select workspace')}
-                        emptyText={tr(language, '无可用工作区', 'No workspace')}
-                        searchPlaceholder={tr(language, '搜索', 'Search')}
-                        disabled={workspaceOptions.length === 0}
-                        triggerClassName="h-8 rounded-lg px-2.5 text-xs"
-                      />
+                      <div
+                        title={workspaceOptions.length === 0
+                          ? tr(
+                            language,
+                            '当前项目还没有工作区。请先在「工作区」页面为该项目创建工作区。',
+                            'This project has no workspace yet. Create one from the Workspaces page first.',
+                          )
+                          : undefined}
+                        className={cn(workspaceOptions.length === 0 && 'cursor-not-allowed')}
+                      >
+                        <SearchableSelect
+                          value={form.workspaceId}
+                          onChange={(value) => setForm((current) => ({ ...current, workspaceId: value }))}
+                          options={workspaceOptions}
+                          placeholder={tr(language, '选择工作区', 'Select workspace')}
+                          emptyText={tr(language, '无可用工作区', 'No workspace')}
+                          searchPlaceholder={tr(language, '搜索', 'Search')}
+                          disabled={workspaceOptions.length === 0}
+                          triggerClassName="h-8 rounded-lg px-2.5 text-xs"
+                        />
+                      </div>
+                      {workspaceOptions.length === 0 ? (
+                        <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
+                          {tr(
+                            language,
+                            '当前项目还没有工作区。请先到「工作区」页面为该项目创建一个工作区后，再来新建自动化。',
+                            'This project has no workspace yet. Create a workspace for this project from the Workspaces page first, then come back here.',
+                          )}
+                        </p>
+                      ) : null}
                     </div>
 
                     {/* Agent */}

@@ -965,13 +965,18 @@ export function TaskDetailPanel({
   }
 
   const handleCreateSubtaskFromModal = async (payload: CreateTaskFormPayload) => {
-    await onCreateSubtask(task.id, {
-      ...payload,
-      projectId: task.projectId,
-      parentTaskId: task.id,
-      requirementType: 'task',
-    })
-    return true
+    try {
+      await onCreateSubtask(task.id, {
+        ...payload,
+        projectId: task.projectId,
+        parentTaskId: task.id,
+        requirementType: 'task',
+      })
+      return true
+    } catch (error) {
+      toast.error(error instanceof Error && error.message ? error.message : '创建子任务失败')
+      throw error
+    }
   }
 
   const syncTaskInputsFromTask = (nextTask: Task) => {
@@ -1152,6 +1157,7 @@ export function TaskDetailPanel({
         const response = await api.createWorkspace(task.projectId, {
           executorNodeId: newWorkspaceExecutorId || selectedExecutorId,
           agentType: workspaceAgentType,
+          executionModel: selectedModel || undefined,
           name: newWorkspaceName,
           nameOrigin: 'manual',
           titleOrigin: 'manual',
@@ -1179,6 +1185,7 @@ export function TaskDetailPanel({
       const bindResponse = await api.bindTaskWorkspace(task.id, workspaceId, {
         baseBranch: selectedBaseBranch || undefined,
         agentType: workspaceAgentType,
+        executionModel: selectedModel || undefined,
         workingDirectoryMode: workspaceWorkingDirectoryMode,
       })
       setState((current) => applyWorkspaceBindingResponseToState(current, bindResponse))

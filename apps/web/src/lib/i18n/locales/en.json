@@ -61,7 +61,9 @@
     "universe": "Agent Universe",
     "usage": "Usage",
     "integrations": "Integrations",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "profile": "Profile",
+    "agentProfile": "Agent Profile"
   },
   "auth": {
     "login": "Login",

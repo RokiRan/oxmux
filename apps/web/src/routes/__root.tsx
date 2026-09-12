@@ -20,7 +20,7 @@ import { AuthProvider, useAuth, type User } from '../lib/auth-context'
 import { trackGoogleAnalyticsPageView } from '../lib/analytics'
 import { useRealtimeNotifier, useAutoPushSubscription } from '../lib/notifications/notifier'
 import { useUserNotificationSettings } from '../lib/use-user-notification-settings'
-import { withDevDocumentTitlePrefix } from '../lib/document-title'
+import { applyRouteDocumentTitle, withDevDocumentTitlePrefix } from '../lib/document-title'
 import i18n from '../lib/i18n'
 import { useTranslation } from '../lib/i18n/react'
 import { InboxProvider } from '../lib/inbox-provider'
@@ -113,11 +113,16 @@ function AppShell() {
   const isOnboardingPage = pathname === '/onboarding'
   const isAdminPage = pathname === '/admin' || pathname.startsWith('/admin/')
   const isEmbedPage = pathname.startsWith('/embed/')
-
+  const { language } = useTranslation()
   useEffect(() => {
-    trackGoogleAnalyticsPageView(`${location.pathname}${location.searchStr || ''}`, document.title)
-  }, [location.pathname, location.searchStr])
+    // 各路由都没声明 head meta，TanStack Router 也不会自动刷新 document.title，
+    // 必须由 AppShell 根据 pathname + 当前语言主动写入。
+    applyRouteDocumentTitle(location.pathname)
+  }, [location.pathname, language])
 
+   useEffect(() => {
+     trackGoogleAnalyticsPageView(`${location.pathname}${location.searchStr || ''}`, document.title)
+   }, [location.pathname, location.searchStr])
   if (isEmbedPage) {
     return <Outlet />
   }

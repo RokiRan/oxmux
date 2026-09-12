@@ -35,7 +35,7 @@ import {
   Workflow,
   Wrench,
 } from "lucide-react"
-import { lazy, Suspense, type DragEventHandler, type ReactNode, useCallback, useEffect, useRef, useState } from "react"
+import { lazy, Suspense, type DragEventHandler, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 import { buildProjectPayload, createEmptyProjectDraft, projectToDraft, type ProjectFormDraft } from "../lib/project-form"
 import { useAuth } from "../lib/auth-context"
@@ -61,7 +61,7 @@ import { changeLanguage } from '../lib/i18n'
 import { useExperimentalSettings } from '../lib/use-experimental-settings'
 import { getAgentAvatarAccent } from "../lib/agent-avatar"
 import { isNodeVersionOutdated } from "../lib/node-version"
-import { getProjectRuntimeSummary, getProjectWorkspaceUnreadCount, type ProjectRuntimeSummary } from "../lib/runtime-status"
+import { getProjectRuntimeSummary, getProjectWorkspaceUnreadCount, countInboxProjectGroups, type ProjectRuntimeSummary } from "../lib/runtime-status"
 import { isDevEnvironment, isReviewCenterEnabled } from "../lib/runtime-config"
 import { isMacNativeClient } from "../lib/native-client"
 import { loadAvailableAgents } from "../lib/use-available-agents"
@@ -736,7 +736,9 @@ export function AppSidebar() {
   const { collapsed, setCollapsed, isMobile, mobileOpen, setMobileOpen } = useSidebar()
   const isMacNative = !isMobile && isMacNativeClient()
   const workspaceSessionUnreadState = useWorkspaceSessionUnreadSnapshot()
-  const { badgeCount: inboxUnreadGroups } = useInbox()
+  const inboxState = useInbox()
+  const inboxUnreadGroups = inboxState.badgeCount
+  const inboxGroups = inboxState.groups
   const chatTotalUnread = useChatTotalUnread()
   const { executors, refreshExecutors } = useExecutorRuntimeData()
   const [createModalOpen, setCreateModalOpen] = useState(false)
@@ -789,6 +791,22 @@ export function AppSidebar() {
   const reviewCenterEnabled = isReviewCenterEnabled()
   // 收件箱未读 group 数（实时 SSE 驱动）。
   const inboxBadgeCount = inboxUnreadGroups
+  // 触发一次「全部」section 加载，让侧边栏项目未读计数能合并收件箱条目。
+  useEffect(() => {
+    if (!inboxGroups.all.loaded && !inboxGroups.all.loading) {
+      void inboxState.refreshGroups('all').catch(() => undefined)
+    }
+  }, [inboxGroups.all.loaded, inboxGroups.all.loading, inboxState])
+
+  // 合并所有已加载 section 的收件箱 group，用于按 projectId 计数，融入侧边栏项目未读。
+  const inboxGroupEntries = useMemo(
+    () => [
+      ...inboxGroups.action.entries,
+      ...inboxGroups.following.entries,
+      ...inboxGroups.all.entries,
+    ],
+    [inboxGroups.action.entries, inboxGroups.following.entries, inboxGroups.all.entries],
+  )
 
   const isReviewPageActive = currentPath === '/review' && currentSearchParams.get('mode') !== 'issues' && !currentSearchParams.get('issueId')
   const isIssuesPageActive = currentPath === '/review' && (currentSearchParams.get('mode') === 'issues' || Boolean(currentSearchParams.get('issueId')))
@@ -1618,13 +1636,16 @@ export function AppSidebar() {
                           taskWorkspaceBindings: state.taskWorkspaceBindings,
                           workspaceSessions: state.workspaceSessions,
                         })
-                        const unreadCount = getProjectWorkspaceUnreadCount({
+                        const workspaceUnread = getProjectWorkspaceUnreadCount({
                           projectId: project.id,
                           tasks: state.tasks,
                           taskWorkspaceBindings: state.taskWorkspaceBindings,
                           workspaceSessions: state.workspaceSessions,
                           unreadOptions: workspaceSessionUnreadState,
                         })
+                        // 把收件箱里归属此项目的待处理 group 数也并入未读，避免「侧边栏 1 ↔ 收件箱 0」的观感不一致。
+                        const inboxUnread = countInboxProjectGroups(project.id, inboxGroupEntries)
+                        const unreadCount = workspaceUnread + inboxUnread
                         const isDragging = draggedProjectItem?.projectId === project.id
                         const showDropPreview = projectDropTarget?.projectId === project.id && draggedProjectItem
                         const dropPreviewHeight = Math.max(draggedProjectItem?.rowHeight ?? 0, 48)
@@ -1751,13 +1772,15 @@ export function AppSidebar() {
                           taskWorkspaceBindings: state.taskWorkspaceBindings,
                           workspaceSessions: state.workspaceSessions,
                         })
-                        const unreadCount = getProjectWorkspaceUnreadCount({
+                        const workspaceUnread = getProjectWorkspaceUnreadCount({
                           projectId: project.id,
                           tasks: state.tasks,
                           taskWorkspaceBindings: state.taskWorkspaceBindings,
                           workspaceSessions: state.workspaceSessions,
                           unreadOptions: workspaceSessionUnreadState,
                         })
+                        const inboxUnread = countInboxProjectGroups(project.id, inboxGroupEntries)
+                        const unreadCount = workspaceUnread + inboxUnread
                         const isDragging = draggedProjectItem?.projectId === project.id
                         const showDropPreview = projectDropTarget?.projectId === project.id && draggedProjectItem
                         const dropPreviewHeight = Math.max(draggedProjectItem?.rowHeight ?? 0, 48)
@@ -1884,14 +1907,15 @@ export function AppSidebar() {
                           taskWorkspaceBindings: state.taskWorkspaceBindings,
                           workspaceSessions: state.workspaceSessions,
                         })
-                        const unreadCount = getProjectWorkspaceUnreadCount({
+                        const workspaceUnread = getProjectWorkspaceUnreadCount({
                           projectId: project.id,
                           tasks: state.tasks,
                           taskWorkspaceBindings: state.taskWorkspaceBindings,
                           workspaceSessions: state.workspaceSessions,
                           unreadOptions: workspaceSessionUnreadState,
                         })
-
+                        const inboxUnread = countInboxProjectGroups(project.id, inboxGroupEntries)
+                        const unreadCount = workspaceUnread + inboxUnread
                         return (
                           <div key={project.id} className="group flex items-center gap-1.5">
                             <ProjectSidebarButton

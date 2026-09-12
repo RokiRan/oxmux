@@ -67,7 +67,7 @@ const normalizeMcpToolsCallRequest = async (request: Request): Promise<Request> 
 }
 
 export const registerMcpRoutes = (app: Hono, requireAuth: MiddlewareHandler) => {
-  app.all('/mcp/executor', async (c) => {
+  app.on(['POST', 'DELETE', 'PUT'], '/mcp/executor', async (c) => {
     const token = c.req.header('Authorization')?.replace(/^Bearer\s+/, '') || c.req.header('x-executor-token')
     if (!token) {
       return c.json({ message: '缺少 executor token。' }, 401)
@@ -100,7 +100,7 @@ export const registerMcpRoutes = (app: Hono, requireAuth: MiddlewareHandler) => 
     return transport.handleRequest(await normalizeMcpToolsCallRequest(c.req.raw))
   })
 
-  app.all('/mcp', requireAuth, async (c) => {
+  app.on(['POST', 'DELETE', 'PUT'], '/mcp', requireAuth, async (c) => {
     const userId = await getUserIdFromHeaderAsync(c)
     if (!userId) {
       return c.json({ message: '未登录' }, 401)

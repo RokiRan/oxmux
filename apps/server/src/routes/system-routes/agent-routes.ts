@@ -794,8 +794,18 @@ export const registerAgentSystemRoutes = (app: Hono, requireAuth: MiddlewareHand
     const agentDefaultExecutorId = (agent.config && typeof agent.config === 'object' && 'defaultExecutorId' in agent.config)
       ? (agent.config as { defaultExecutorId?: string }).defaultExecutorId?.trim() || ''
       : ''
-    const requestedExecutorId = payload.executorId?.trim() || defaults.executorId || agentDefaultExecutorId
-    if (requestedExecutorId && payload.executorId?.trim()) {
+    // 与 /api/ai/sessions 同一口径：继承/默认 executor 若当前不在线则放弃（undefined = 派发时自动分配），
+    // 避免旧节点失效后新会话永久绑死离线节点、消息队列无法 flush。
+    const onlineExecutorIds = new Set(
+      listVisibleExecutorsForUser(userId)
+        .filter((executor) => executor.status === 'online')
+        .map((executor) => executor.executorId),
+    )
+    const explicitExecutorId = payload.executorId?.trim() || ''
+    const requestedExecutorId = explicitExecutorId
+      || [defaults.executorId, agentDefaultExecutorId].find((id) => id && onlineExecutorIds.has(id))
+      || undefined
+    if (requestedExecutorId && explicitExecutorId) {
       const visibleExecutorIds = new Set(listVisibleExecutorsForUser(userId).map((executor) => executor.executorId))
       if (!visibleExecutorIds.has(requestedExecutorId)) {
         return c.json({ message: '执行节点不可见或无权限访问。' }, 403)

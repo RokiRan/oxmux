@@ -151,8 +151,11 @@ export const extractClaudeResultUsage = (payload: {
 
 const READ_ONLY_TOOLS = new Set(['Glob', 'Grep', 'LS', 'NotebookRead', 'Read', 'Task', 'TodoRead'])
 const EDIT_TOOLS = new Set(['Edit', 'MultiEdit', 'TodoWrite', 'Write'])
+const PLAN_MODE_EXIT_TOOLS = new Set(['ExitPlanMode', 'exit_plan_mode'])
 
 const normalizeToolName = (value: string) => value.split('(')[0]?.trim() || value.trim()
+
+const isMcpToolName = (name: string) => name.startsWith('mcp__')
 
 export const resolveClaudePermissionMode = (settings: ClaudeCodeAgentSettings | undefined) => {
   if (settings?.planMode) {
@@ -179,11 +182,21 @@ export const shouldAllowClaudeTool = (
     return true
   }
 
+  // ExitPlanMode 必须放行，否则 plan mode 永远无法退出；bypassPermissions 已在上面短路。
+  if (PLAN_MODE_EXIT_TOOLS.has(normalized)) {
+    return true
+  }
+
   if (READ_ONLY_TOOLS.has(normalized)) {
     return true
   }
 
   if (mode === 'acceptEdits' && EDIT_TOOLS.has(normalized)) {
+    return true
+  }
+
+  // 平台暴露的 oxmux MCP 工具默认受信任；只有 plan mode 会再次拦截（见下）。
+  if (mode !== 'plan' && isMcpToolName(normalized)) {
     return true
   }
 
@@ -259,6 +272,10 @@ const runClaudeCodePromptCore = async (params: WorkerAgentPromptParams): Promise
     let completed = false
     /** Claude Code CLI result 消息携带的 token 用量。 */
     let claudeUsage: ModelTokenUsage | undefined
+    /** 累计被权限网关拒绝的工具调用次数（含 MCP 工具）。 */
+    let deniedToolCount = 0
+    /** 累计成功发起的工具调用（assistant 消息里的 tool_use）。 */
+    let successfulToolCount = 0
     const textState = new Map<string, string>()
     const reasoningState = new Map<string, string>()
 
@@ -335,6 +352,7 @@ const runClaudeCodePromptCore = async (params: WorkerAgentPromptParams): Promise
       const allowed = shouldAllowClaudeTool(effectivePermissionMode, toolName)
 
       if (!allowed) {
+        deniedToolCount += 1
         emitPendingInteraction({
           id: payload.request.tool_use_id?.trim() || payload.request_id,
           type: 'permission',
@@ -466,6 +484,7 @@ const runClaudeCodePromptCore = async (params: WorkerAgentPromptParams): Promise
           }
 
           if (content.type === 'tool_use') {
+            successfulToolCount += 1
             emitAgentEvent('ClaudeCode', params.onEvent, {
               type: 'message.part.updated',
               properties: {
@@ -578,9 +597,14 @@ const runClaudeCodePromptCore = async (params: WorkerAgentPromptParams): Promise
         return
       }
 
+      // 即便 CLI 自己报 completed，只要所有工具调用都被权限拦截且无真实工具成果，
+      // 也必须如实标记失败，让控制面把交付状态翻成 failed（而不是误导性的 completed）。
+      const blockedByPermissions = deniedToolCount > 0 && successfulToolCount === 0
       resolve({
-        ok: true,
-        output: finalOutput || stderrBuffer.trim().split('\n').filter(Boolean).at(-1) || 'Claude Code 未返回文本输出。',
+        ok: !blockedByPermissions,
+        output: blockedByPermissions
+          ? `Claude Code 工具调用全部被权限拦截（${deniedToolCount} 次拒绝）。请检查 Agent 的 Claude Code 设置：plan mode 会阻塞工具调用；非 plan 模式下应使用 bypassPermissions。`
+          : finalOutput || stderrBuffer.trim().split('\n').filter(Boolean).at(-1) || 'Claude Code 未返回文本输出。',
         sessionId: sessionId || undefined,
         usage: claudeUsage,
       })

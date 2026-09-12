@@ -50,12 +50,15 @@ import {
   upsertToolTimelineEntry,
 } from './chat-route-helpers'
 import {
+  clearMainChatMessageQueueSession,
   getPersistedMainChatSessionPreference,
   type PersistedMainChatPreferences,
+  readMainChatMessageQueue,
   readMainChatPreferences,
   resolveMainChatSessionSelectedModel,
   setPersistedMainChatLastSelectedAgent,
   upsertPersistedMainChatSessionPreference,
+  writeMainChatMessageQueue,
   writeMainChatPreferences,
 } from './chat-session-preferences'
 import type { ChatAgentListItem, ChatBubbleMessage, ChatImage, ChatTimelineEntry } from './chat-route-types'
@@ -133,6 +136,7 @@ export function useChatRouteState({ language }: UseChatRouteStateParams) {
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamStatus, setStreamStatus] = useState(text(language, '等待输入', 'Waiting for input'))
   const [executors, setExecutors] = useState<ExecutorRecord[]>([])
+  const [executorsLoaded, setExecutorsLoaded] = useState(false)
   const [modelOptions, setModelOptions] = useState<ExecutionModelOption[]>([])
   const [defaultModel, setDefaultModel] = useState('')
   const [modelMessage, setModelMessage] = useState('')
@@ -158,8 +162,17 @@ export function useChatRouteState({ language }: UseChatRouteStateParams) {
   const [images, setImages] = useState<ChatImage[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [configLoading, setConfigLoading] = useState(false)
-  const [messageQueue, setMessageQueue] = useState<ChatBubbleMessage[]>([])
+  // 持久化消息队列（per-session）：刷新/重启浏览器后能恢复，避免消息丢失。
+  const persistedMessageQueueRef = useRef(readMainChatMessageQueue())
+  const [messageQueue, setMessageQueue] = useState<ChatBubbleMessage[]>(() => {
+    const activeId = persistedMessageQueueRef.current.activeSessionId
+    if (!activeId) {
+      return []
+    }
+    return persistedMessageQueueRef.current.queues[activeId] ?? []
+  })
   const [sessionActivityById, setSessionActivityById] = useState<Record<string, 'running' | 'completed'>>({})
+
   const [pendingSessionSelectionId, setPendingSessionSelectionId] = useState<string | null>(null)
   const [loadingOlderTranscriptTurns, setLoadingOlderTranscriptTurns] = useState(false)
   const [visibleTranscriptTurnCount, setVisibleTranscriptTurnCount] = useState(INITIAL_VISIBLE_TRANSCRIPT_TURNS)
@@ -262,6 +275,45 @@ export function useChatRouteState({ language }: UseChatRouteStateParams) {
       void markMainChatRead(activeSession.id)
     }
   }, [activeSession?.id, markMainChatRead])
+
+  // 队列切换：active session 改变时把存储里该 session 的队列加载回来。
+  useEffect(() => {
+    const activeId = activeSession?.id
+    if (!activeId) {
+      // 会话还没解析出来（冷加载/HMR 中途）时绝不能清空队列——
+      // 初始值刚从 localStorage 恢复，此刻清空会把持久化队列抹掉。
+      return
+    }
+    const snapshot = persistedMessageQueueRef.current
+    const stored = snapshot.queues[activeId] ?? []
+    if (
+      stored.length !== messageQueue.length
+      || stored.some((item, index) => messageQueue[index]?.id !== item.id)
+    ) {
+      setMessageQueue(stored)
+    }
+  }, [activeSession?.id])
+
+  // 队列变更（含入队 / 出队 / 清空）时同步到 localStorage。
+  useEffect(() => {
+    const snapshot = persistedMessageQueueRef.current
+    const activeId = activeSession?.id ?? ''
+    if (!activeId) {
+      // 会话未解析时不写回：否则会把队列挂到空串 key 或整体覆盖掉。
+      return
+    }
+    const otherQueues = Object.fromEntries(
+      Object.entries(snapshot.queues).filter(([sessionId]) => sessionId !== activeId),
+    )
+    const nextSnapshot = {
+      activeSessionId: activeId,
+      queues: messageQueue.length > 0
+        ? { ...otherQueues, [activeId]: messageQueue }
+        : otherQueues,
+    }
+    persistedMessageQueueRef.current = nextSnapshot
+    writeMainChatMessageQueue(nextSnapshot)
+  }, [activeSession?.id, messageQueue])
   // 线程级已确认消息（冷加载/增量），会话切换时自动重置；流式增量仍走本地
   // messages/timelineEntries buffer（P2.4 收口：AppState 不再携带消息）。
   // 路由重挂载时先用模块级缓存种子即时渲染，冷加载照常后台静默刷新（避免每次切页空加载闪烁）。
@@ -532,6 +584,10 @@ export function useChatRouteState({ language }: UseChatRouteStateParams) {
       } catch (error) {
         if (!cancelled) {
           toast.error(error instanceof Error ? error.message : text(language, '执行节点列表加载失败', 'Failed to load executors'))
+        }
+      } finally {
+        if (!cancelled) {
+          setExecutorsLoaded(true)
         }
       }
     }
@@ -1065,6 +1121,7 @@ export function useChatRouteState({ language }: UseChatRouteStateParams) {
     setConfigLoading,
     setDefaultModel,
     setExecutors,
+    executorsLoaded,
     setImages,
     setIsStreaming,
     setIsUploading,

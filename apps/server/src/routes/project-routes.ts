@@ -575,6 +575,7 @@ export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler)
       return jsonError(c, projectResult.message, projectResult.status)
     }
 
+    const projectWorkspaceId = projectResult.project.workspaceId
     const agents = getAllAgents()
       .filter((agent) => agent.type.trim().toLowerCase() !== 'main')
       .flatMap((agent) => {
@@ -582,10 +583,15 @@ export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler)
           agent,
           userId,
           projectId,
-          collaborationWorkspaceId: projectResult.project.workspaceId,
+          collaborationWorkspaceId: projectWorkspaceId,
           mode: 'delegate',
         })
         if (!access.ok) return []
+        // 项目负责人候选只接受「当前用户自己的 Agent」或「已显式归属该组织工作区的共享 Agent」，
+        // 避免其他用户自动创建的同名默认 Agent（如 CEO Agent）全库涌进本项目下拉。
+        if (agent.ownerUserId?.trim() !== userId && (!projectWorkspaceId || !access.profile.workspaceIds.includes(projectWorkspaceId))) {
+          return []
+        }
         return {
           id: `agent:${agent.id}`,
           email: '',
@@ -938,9 +944,15 @@ export const registerProjectRoutes = (app: Hono, requireAuth: MiddlewareHandler)
       sessions: state.mainChatSessions,
       selectedSessionId: state.selectedMainChatSessionId,
     })
-    const requestedExecutorId = payload.executorId?.trim() || defaults.executorId
+    // 继承历史会话的 executorId 时，若该节点当前不在线则放弃继承（undefined = 派发时自动分配在线节点），
+    // 否则旧节点重配对换新 id 后，新会话会永久绑死离线节点、消息队列无法 flush。
+    const visibleExecutors = listVisibleExecutorsForUser(userId)
+    const onlineExecutorIds = new Set(visibleExecutors.filter((executor) => executor.status === 'online').map((executor) => executor.executorId))
+    const inheritedExecutorId = payload.executorId?.trim() ? '' : (defaults.executorId || '')
+    const requestedExecutorId = payload.executorId?.trim()
+      || (inheritedExecutorId && onlineExecutorIds.has(inheritedExecutorId) ? inheritedExecutorId : '')
+      || undefined
     if (requestedExecutorId && payload.executorId?.trim()) {
-      const visibleExecutors = listVisibleExecutorsForUser(userId)
       const visibleExecutorIds = new Set(visibleExecutors.map((executor) => executor.executorId))
       if (!visibleExecutorIds.has(requestedExecutorId)) {
         return c.json({ message: '执行节点不可见或无权限访问。' }, 403)

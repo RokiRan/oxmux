@@ -7,7 +7,7 @@ import { and, eq, inArray } from 'drizzle-orm'
 import type { OrgGraph, OrgGraphEdge, OrgGraphNode } from '@shared/types'
 import { getDrizzleDb } from '../storage/postgres/drizzle-db'
 import { agents } from '../storage/postgres/schema'
-import { collabWorkspaceProjects, conversations, driveFiles, users } from '../storage/postgres/schema-core'
+import { collabWorkspaceProjects, conversations, driveFiles, projects, users } from '../storage/postgres/schema-core'
 import { listWorkspaceMembers } from '../repositories/workspace'
 
 
@@ -67,11 +67,16 @@ export const getOrgGraph = async (workspaceId: string): Promise<OrgGraph> => {
 
   // 项目（成员归属）
   const projectRows = await getDrizzleDb()
-    .select({ project_id: collabWorkspaceProjects.projectId })
+    .select({ project_id: collabWorkspaceProjects.projectId, name: projects.name })
     .from(collabWorkspaceProjects)
+    .leftJoin(projects, eq(projects.id, collabWorkspaceProjects.projectId))
     .where(eq(collabWorkspaceProjects.workspaceId, workspaceId))
   for (const project of projectRows) {
-    addNode({ id: `project:${project.project_id}`, type: 'project', label: project.project_id })
+    addNode({
+      id: `project:${project.project_id}`,
+      type: 'project',
+      label: project.name?.trim() || project.project_id,
+    })
     for (const member of members) addEdge(`user:${member.id}`, `project:${project.project_id}`, 'member')
   }
 

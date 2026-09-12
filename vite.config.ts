@@ -117,19 +117,11 @@ const shouldProxyControlPlaneRequest = (pathname: string) => {
   if (pathname === '/api/rpc' || pathname.startsWith('/api/rpc/')) {
     return false
   }
-
   return pathname === '/api'
     || pathname.startsWith('/api/')
     || pathname === '/install'
-    || pathname.startsWith('/install/')
-    || pathname === '/install.ps1'
     || pathname === '/uploads'
-    || pathname.startsWith('/uploads/')
-    || pathname === '/mcp'
-    || pathname.startsWith('/mcp/')
 }
-
-const resolveControlPlaneProxyUrl = (requestUrl: string) => new URL(requestUrl, controlPlaneProxyOrigin)
 
 const collectProxyHeaders = (req: IncomingMessage, targetUrl: URL, includeUpgradeHeaders = false) => {
   const headers: OutgoingHttpHeaders = {}
